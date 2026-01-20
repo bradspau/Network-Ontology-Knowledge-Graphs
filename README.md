@@ -21,3 +21,12 @@ Current Content
 Python yang2owl 
 - execution  yang2oel.py --yang-dir <directory of the yang files> --modules <yang model to create ttl for> --base-uri <owl base uri> --output <turtle file> --verbose 
 
+    Current include capabilities
+    - import
+    - augment
+    - contraints
+    - datatype restrictions
+    - individual enumeration
+    - grouping
+    - leafref
+    - identityref
