@@ -30,3 +30,64 @@ Python yang2owl
     - grouping
     - leafref
     - identityref
+
+    The script loads one or more YANG modules with pyang, walks their schema tree, and emits an OWL/RDF ontology (Turtle) describing the model, including constraints and metadata.
+    ​
+
+    High-level flow
+        The main function parses CLI arguments (YANG directory, main module name, base URI, output path, verbosity), sets up logging, and instantiates YANGToOWL with the chosen directory and base URI, then calls convert().
+        ​
+
+        YANGToOWL.convert() loads all YANG modules, initializes helper resolvers, processes modules into OWL classes and properties, then writes the resulting RDF graph to a Turtle file and logs counts of generated triples, constraints, enumerations, etc.
+    ​
+
+    Key helper components
+        YANGDependencyResolver uses pyang’s Context and FileRepository to load the main module and any other .yang files in the directory, exposing them in self.modules.
+    ​
+
+        YANGTypeResolver maps YANG built-in types and typedef chains to XSD datatypes and cooperates with YANGConstraintExtractor to collect range, length, and pattern constraints from type statements.
+    ​
+
+        IdentityResolver scans all modules for identity statements and records their base identities and descriptions, enabling later creation of an OWL class hierarchy for identities.
+        ​
+
+        EnhancedLeafrefResolver resolves leafref XPaths (absolute, relative, and current()-based), normalizes paths, and maps them to class_paths so that leafrefs become OWL object properties with correct domain/range.
+        ​
+
+        GroupingResolver plus RefineResolver and GroupingContextTracker collect grouping definitions, expand uses (including nested ones), and apply refine statements, treating groupings as abstract OWL classes and expanding their members into concrete locations.
+    ​
+
+    YANG → OWL mapping
+        The central class YANGToOWL maintains an rdflib Graph, an ex namespace (from the base URI), and registries such as class_paths (normalized YANG path → OWL class URI) and various counters.
+        ​
+
+        _normalize_path() adds module-qualified prefixes and strips prefixes like nw:/nt:/st: to produce consistent, fully-qualified paths such as /ietf-network/networks/network, keyed by the current module name.
+        ​
+
+        For top-level and nested container/list/leaf nodes, _process_module(), _process_container(), _process_list(), and _process_leaf() create OWL classes (for containers/lists) and datatype or object properties (for leaves), attach labels/descriptions, and register the normalized path in class_paths.
+        ​
+
+        identityref leaves become OWL object properties whose range is the identity class; leafref leaves become object properties linked to the referenced container/list class via the resolved path; other leaves become datatype properties with appropriate XSD range.
+        ​
+
+        augment statements are normalized to a target path (e.g. re-anchored under ietf-network for /networks/...), the target class is stubbed if needed, and the augment’s children are processed as if physically present under the target.
+    ​
+
+    Additional features
+        Groupings are first turned into abstract OWL classes, then all uses statements (in modules and within augments) are expanded so that grouping members are materialized and optionally constrained (e.g. mandatory → minCardinality 1).
+        ​
+
+        _process_containers_for_properties() adds synthetic containment properties (hasChildName) between parent and child classes for each one-level path extension in class_paths.
+        ​
+
+        _generate_cardinality_constraints() sets a default minCardinality 0 on every OWL object property, then refine/uses logic can add stricter constraints.
+        ​
+
+        _process_xsd_constraints() and _add_constraint_triples() traverse typedefs and leaves to emit XSD-based constraint triples (min/max inclusive, min/max length, patterns) for elements, while _create_owl_datatype_restrictions() builds OWL datatype restriction datatypes and connects typedef classes to them.
+        ​
+
+        _process_enumerations() and _create_enumeration_class() turn YANG enumeration typedefs into OWL classes plus NamedIndividuals for each enum value, including labels and optional descriptions.
+        ​
+
+        _add_prov_metadata() annotates every class, datatype property, and object property with PROV wasDerivedFrom URIs that encode the originating YANG path and element type.
+    ​
