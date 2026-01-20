@@ -1,0 +1,241 @@
+module ietf-simap-topology {
+  yang-version 1.1;
+  namespace "urn:ietf:params:xml:ns:yang:ietf-simap-topology";
+  prefix st;
+
+  import ietf-network {
+    prefix nw;
+    reference
+      "RFC 8345: A YANG Data Model for Network Topologies";
+  }
+  import ietf-network-topology {
+    prefix nt;
+    reference
+      "RFC 8345: A YANG Data Model for Network Topologies";
+  }
+  import ietf-yang-types {
+    prefix yang;
+  }
+  import ietf-inet-types {
+    prefix inet;
+  }
+
+  organization
+    "Network Management Operations (NMOP) Working Group";
+  contact
+    "WG Web: <https://datatracker.ietf.org/group/nmop/>
+     WG List: <mailto:nmop@ietf.org>
+     Editor: Olga Havel <mailto:havel.olga@huawei.com>
+     Editor: Nigel Davis <mailto:ndavis@ciena.com>";
+
+  description
+    "This module defines the SIMAP core topology model based on the
+     requirements defined in draft-ietf-nmop-simap-concept.";
+
+  revision 2025-01-01 {
+    description
+      "Initial revision.";
+    reference
+      "XXX: A YANG Data Model for SIMAP Core Topologies";
+  }
+
+  /* Identities */
+
+  identity network-category {
+    description "Base identity for the network category";
+  }
+
+  identity network-category-none {
+    description "Default value when endpoint selection determines category.";
+  }
+
+  identity network-category-live {
+    base st:network-category;
+    description "Live topology, typically only one instance.";
+  }
+
+  identity network-category-potential {
+    base st:network-category;
+    description "Potential topology for what-if scenarios.";
+  }
+
+  identity network-category-intended {
+    base st:network-category;
+    description "Intended topology, not necessarily discovered.";
+  }
+
+  identity link-direction {
+    description "Base identity for link directionality.";
+  }
+
+  identity link-direction-uni {
+    base st:link-direction;
+    description "Unidirectional link.";
+  }
+
+  identity link-direction-bi {
+    base st:link-direction;
+    description "Bidirectional link.";
+  }
+
+  identity link-type {
+    description "Base identity for internal structure of the link.";
+  }
+
+  identity link-type-p2p {
+    base st:link-type;
+    description "Point to point link.";
+  }
+
+  identity link-type-p2mp {
+    base st:link-type;
+    description "Point to multi-point link.";
+  }
+
+  identity link-type-mp2mp {
+    base st:link-type;
+    description "Multi-point to multi-point link.";
+  }
+
+  identity tp-role {
+    description "Base identity for termination point roles.";
+  }
+
+  identity tp-direction {
+    description "Base identity for directionality of the tp.";
+  }
+
+  identity tp-direction-symmetric {
+    base st:tp-direction;
+    description "TP in a bidirectional link.";
+  }
+
+  identity tp-direction-source {
+    base st:tp-direction;
+    description "TP is the source in the link.";
+  }
+
+  identity tp-direction-destination {
+    base st:tp-direction;
+    description "TP is the destination in the link.";
+  }
+
+  /* Groupings */
+
+  grouping simap-common {
+    description "Reusable set of optional extensions.";
+    leaf name {
+      type string;
+      description "User friendly name.";
+    }
+    leaf-list label {
+      type string;
+      description "Optional labels for the instance.";
+    }
+    leaf description {
+      type string;
+      description "Optional description.";
+    }
+    anydata extension {
+      config false;
+      description "Extension point for metadata.";
+    }
+  }
+
+  /* Model Structure */
+
+  container networks-history {
+    config false;
+    description "Retrieval of historical topology snapshots.";
+    list network-history {
+      key "live-network-ref timestamp";
+      leaf live-network-ref {
+        type leafref {
+          path "/nw:networks/nw:network/nw:network-id";
+        }
+      }
+      leaf timestamp {
+        type yang:date-and-time;
+      }
+      leaf file-id {
+        type inet:uri;
+      }
+    }
+  }
+
+  /* Augmentations */
+
+  augment "/nw:networks/nw:network" {
+    uses st:simap-common;
+    leaf network-category {
+      type identityref {
+        base st:network-category;
+      }
+      default "st:network-category-live";
+    }
+    leaf live-network-ref {
+      type leafref {
+        path "/nw:networks/nw:network/nw:network-id";
+      }
+      require-instance false;
+    }
+    leaf timestamp {
+      type yang:date-and-time;
+    }
+    list subnetwork {
+      key "network-ref";
+      leaf network-ref {
+        type leafref {
+          path "/nw:networks/nw:network/nw:network-id";
+        }
+        require-instance false;
+      }
+    }
+  }
+
+  augment "/nw:networks/nw:network/nw:node" {
+    uses st:simap-common;
+    list linked-node {
+      config false;
+      key "network-ref node-ref";
+      uses nw:node-ref;
+    }
+  }
+
+  augment "/nw:networks/nw:network/nw:node/nt:termination-point" {
+    uses st:simap-common;
+    list linked-termination-point {
+      config false;
+      key "network-ref node-ref tp-ref";
+      uses nt:tp-ref;
+    }
+  }
+
+  augment "/nw:networks/nw:network/nt:link" {
+    uses st:simap-common;
+    leaf link-type {
+      type identityref {
+        base st:link-type;
+      }
+    }
+    leaf link-direction {
+      type identityref {
+        base st:link-direction;
+      }
+    }
+    list tp {
+      key "network-ref node-ref tp-ref";
+      uses nt:tp-ref;
+      leaf tp-role {
+        type identityref {
+          base st:tp-role;
+        }
+      }
+      leaf tp-direction {
+        type identityref {
+          base st:tp-direction;
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,234 @@
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<http://www.huawei.com/ontology/ietf-network/networks/hasNetwork> a owl:ObjectProperty ;
+    rdfs:label "hasNetwork" ;
+    rdfs:comment "Containment relation (parent --> child)." ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-network/networks> ;
+    rdfs:range <http://www.huawei.com/ontology/ietf-network/networks/network> ;
+    prov:wasDerivedFrom "nw:networks?container/hasNetwork" .
+
+<http://www.huawei.com/ontology/ietf-network/networks/network/hasNetworkTypes> a owl:ObjectProperty ;
+    rdfs:label "hasNetworkTypes" ;
+    rdfs:comment "Containment relation (parent --> child)." ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-network/networks/network> ;
+    rdfs:range <http://www.huawei.com/ontology/ietf-network/networks/network/network-types> ;
+    prov:wasDerivedFrom "nw:networks?container/nw:network?list/hasNetworkTypes" .
+
+<http://www.huawei.com/ontology/ietf-network/networks/network/link/destination/dest-node> a owl:ObjectProperty ;
+    rdfs:label "dest-node" ;
+    rdfs:comment "Leafref object property." ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-network/networks/network/link/destination> ;
+    rdfs:range <http://www.huawei.com/ontology/ietf-network/networks/network/node> ;
+    prov:wasDerivedFrom "/nw:networks?container/nw:network?list/link?list/nw:destination?container/nw:dest-node?leaf" .
+
+<http://www.huawei.com/ontology/ietf-network/networks/network/link/destination/dest-tp> a owl:ObjectProperty ;
+    rdfs:label "dest-tp" ;
+    rdfs:comment "Leafref object property." ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-network/networks/network/link/destination> ;
+    rdfs:range <http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point> ;
+    prov:wasDerivedFrom "/nw:networks?container/nw:network?list/link?list/nw:destination?container/nw:dest-tp?leaf" .
+
+<http://www.huawei.com/ontology/ietf-network/networks/network/link/hasDest> a owl:ObjectProperty ;
+    rdfs:label "hasDest" ;
+    rdfs:comment "Explicit relation: Link --> Dest (holder for dest-node/dest-tp)." ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-network/networks/network/link> ;
+    rdfs:range <http://www.huawei.com/ontology/ietf-network/networks/network/link/destination> ;
+    prov:wasDerivedFrom "nw:networks?container/nw:network?list/link?list/hasDest" .
+
+<http://www.huawei.com/ontology/ietf-network/networks/network/link/hasSource> a owl:ObjectProperty ;
+    rdfs:label "hasSource" ;
+    rdfs:comment "Explicit relation: Link --> Source (holder for source-node/source-tp)." ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-network/networks/network/link> ;
+    rdfs:range <http://www.huawei.com/ontology/ietf-network/networks/network/link/source> ;
+    prov:wasDerivedFrom "nw:networks?container/nw:network?list/link?list/hasSource" .
+
+<http://www.huawei.com/ontology/ietf-network/networks/network/link/link-id> a owl:DatatypeProperty ;
+    rdfs:label "link-id" ;
+    rdfs:comment """The identifier of a link in the topology.
+A link is specific to a topology to which it belongs.""" ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-network/networks/network/link> ;
+    rdfs:range xsd:string ;
+    prov:wasDerivedFrom "/nw:networks?container/nw:network?list/link?list/nw:link-id?leaf" .
+
+<http://www.huawei.com/ontology/ietf-network/networks/network/link/source/source-node> a owl:ObjectProperty ;
+    rdfs:label "source-node" ;
+    rdfs:comment "Leafref object property." ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-network/networks/network/link/source> ;
+    rdfs:range <http://www.huawei.com/ontology/ietf-network/networks/network/node> ;
+    prov:wasDerivedFrom "/nw:networks?container/nw:network?list/link?list/nw:source?container/nw:source-node?leaf" .
+
+<http://www.huawei.com/ontology/ietf-network/networks/network/link/source/source-tp> a owl:ObjectProperty ;
+    rdfs:label "source-tp" ;
+    rdfs:comment "Leafref object property." ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-network/networks/network/link/source> ;
+    rdfs:range <http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point> ;
+    prov:wasDerivedFrom "/nw:networks?container/nw:network?list/link?list/nw:source?container/nw:source-tp?leaf" .
+
+<http://www.huawei.com/ontology/ietf-network/networks/network/link/supporting-link/link-ref> a owl:ObjectProperty ;
+    rdfs:label "link-ref" ;
+    rdfs:comment "Leafref object property." ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-network/networks/network/link/supporting-link> ;
+    rdfs:range <http://www.huawei.com/ontology/ietf-network/networks/network/link> ;
+    prov:wasDerivedFrom "/nw:networks?container/nw:network?list/link?list/nw:supporting-link?list/nw:link-ref?leaf" .
+
+<http://www.huawei.com/ontology/ietf-network/networks/network/link/supporting-link/network-ref> a owl:ObjectProperty ;
+    rdfs:label "network-ref" ;
+    rdfs:comment "Leafref object property." ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-network/networks/network/link/supporting-link> ;
+    rdfs:range <http://www.huawei.com/ontology/ietf-network/networks/network> ;
+    prov:wasDerivedFrom "/nw:networks?container/nw:network?list/link?list/nw:supporting-link?list/nw:network-ref?leaf" .
+
+<http://www.huawei.com/ontology/ietf-network/networks/network/network-id> a owl:DatatypeProperty ;
+    rdfs:label "network-id" ;
+    rdfs:comment "Identifies a network." ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-network/networks/network> ;
+    rdfs:range xsd:string ;
+    prov:wasDerivedFrom "/nw:networks?container/nw:network?list/nw:network-id?leaf" .
+
+<http://www.huawei.com/ontology/ietf-network/networks/network/node/node-id> a owl:DatatypeProperty ;
+    rdfs:label "node-id" ;
+    rdfs:comment """Uniquely identifies a node within the containing
+network.""" ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-network/networks/network/node> ;
+    rdfs:range xsd:string ;
+    prov:wasDerivedFrom "/nw:networks?container/nw:network?list/nw:node?list/nw:node-id?leaf" .
+
+<http://www.huawei.com/ontology/ietf-network/networks/network/node/supporting-node/network-ref> a owl:ObjectProperty ;
+    rdfs:label "network-ref" ;
+    rdfs:comment "Leafref object property." ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-network/networks/network/node/supporting-node> ;
+    rdfs:range <http://www.huawei.com/ontology/ietf-network/networks/network> ;
+    prov:wasDerivedFrom "/nw:networks?container/nw:network?list/nw:node?list/nw:supporting-node?list/nw:network-ref?leaf" .
+
+<http://www.huawei.com/ontology/ietf-network/networks/network/node/supporting-node/node-ref> a owl:ObjectProperty ;
+    rdfs:label "node-ref" ;
+    rdfs:comment "Leafref object property." ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-network/networks/network/node/supporting-node> ;
+    rdfs:range <http://www.huawei.com/ontology/ietf-network/networks/network/node> ;
+    prov:wasDerivedFrom "/nw:networks?container/nw:network?list/nw:node?list/nw:supporting-node?list/nw:node-ref?leaf" .
+
+<http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/supporting-termination-point/network-ref> a owl:ObjectProperty ;
+    rdfs:label "network-ref" ;
+    rdfs:comment "Leafref object property." ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/supporting-termination-point> ;
+    rdfs:range <http://www.huawei.com/ontology/ietf-network/networks/network> ;
+    prov:wasDerivedFrom "/nw:networks?container/nw:network?list/nw:node?list/termination-point?list/nw:supporting-termination-point?list/nw:network-ref?leaf" .
+
+<http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/supporting-termination-point/node-ref> a owl:ObjectProperty ;
+    rdfs:label "node-ref" ;
+    rdfs:comment "Leafref object property." ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/supporting-termination-point> ;
+    rdfs:range <http://www.huawei.com/ontology/ietf-network/networks/network/node> ;
+    prov:wasDerivedFrom "/nw:networks?container/nw:network?list/nw:node?list/termination-point?list/nw:supporting-termination-point?list/nw:node-ref?leaf" .
+
+<http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/supporting-termination-point/tp-ref> a owl:ObjectProperty ;
+    rdfs:label "tp-ref" ;
+    rdfs:comment "Leafref object property." ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/supporting-termination-point> ;
+    prov:wasDerivedFrom "/nw:networks?container/nw:network?list/nw:node?list/termination-point?list/nw:supporting-termination-point?list/nw:tp-ref?leaf" .
+
+<http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/tp-id> a owl:DatatypeProperty ;
+    rdfs:label "tp-id" ;
+    rdfs:comment "Termination point identifier." ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point> ;
+    rdfs:range xsd:string ;
+    prov:wasDerivedFrom "/nw:networks?container/nw:network?list/nw:node?list/termination-point?list/nw:tp-id?leaf" .
+
+<http://www.huawei.com/ontology/ietf-network/networks/network/supporting-network/network-ref> a owl:ObjectProperty ;
+    rdfs:label "network-ref" ;
+    rdfs:comment "Leafref object property." ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-network/networks/network/supporting-network> ;
+    rdfs:range <http://www.huawei.com/ontology/ietf-network/networks/network> ;
+    prov:wasDerivedFrom "/nw:networks?container/nw:network?list/nw:supporting-network?list/nw:network-ref?leaf" .
+
+<http://www.huawei.com/ontology/ietf-network/networks> a owl:Class ;
+    rdfs:label "networks" ;
+    rdfs:comment "Serves as a top-level container for a list of networks." ;
+    prov:wasDerivedFrom "/nw:networks?container" .
+
+<http://www.huawei.com/ontology/ietf-network/networks/network/network-types> a owl:Class ;
+    rdfs:label "network-types" ;
+    rdfs:comment """Serves as an augmentation target.
+The network type is indicated through corresponding
+presence containers augmented into this container.""" ;
+    prov:wasDerivedFrom "/nw:networks?container/nw:network?list/nw:network-types?container" .
+
+<http://www.huawei.com/ontology/ietf-network/networks/network/supporting-network> a owl:Class ;
+    rdfs:label "supporting-network" ;
+    rdfs:comment """An underlay network, used to represent layered network
+topologies.""" ;
+    prov:wasDerivedFrom "/nw:networks?container/nw:network?list/nw:supporting-network?list" .
+
+<http://www.huawei.com/ontology/ietf-network/networks/network/link/supporting-link> a owl:Class ;
+    rdfs:label "supporting-link" ;
+    rdfs:comment "Identifies the link or links on which this link depends." ;
+    prov:wasDerivedFrom "/nw:networks?container/nw:network?list/link?list/nw:supporting-link?list" .
+
+<http://www.huawei.com/ontology/ietf-network/networks/network/node/supporting-node> a owl:Class ;
+    rdfs:label "supporting-node" ;
+    rdfs:comment """Represents another node that is in an underlay network
+and that supports this node.  Used to represent layering
+structure.""" ;
+    prov:wasDerivedFrom "/nw:networks?container/nw:network?list/nw:node?list/nw:supporting-node?list" .
+
+<http://www.huawei.com/ontology/ietf-network/networks/network/link/destination> a owl:Class ;
+    rdfs:label "destination" ;
+    rdfs:comment """This container holds the logical destination of a
+particular link.""" ;
+    prov:wasDerivedFrom "/nw:networks?container/nw:network?list/link?list/nw:destination?container" .
+
+<http://www.huawei.com/ontology/ietf-network/networks/network/link/source> a owl:Class ;
+    rdfs:label "source" ;
+    rdfs:comment """This container holds the logical source of a particular
+link.""" ;
+    prov:wasDerivedFrom "/nw:networks?container/nw:network?list/link?list/nw:source?container" .
+
+<http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point> a owl:Class ;
+    rdfs:label "termination-point" ;
+    rdfs:comment """A termination point can terminate a link.
+Depending on the type of topology, a termination point
+could, for example, refer to a port or an interface.""" ;
+    prov:wasDerivedFrom "/nw:networks?container/nw:network?list/nw:node?list/termination-point?list" .
+
+<http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/supporting-termination-point> a owl:Class ;
+    rdfs:label "supporting-termination-point" ;
+    rdfs:comment """This list identifies any termination points on which a
+given termination point depends or onto which it maps.
+Those termination points will themselves be contained
+in a supporting node.  This dependency information can be
+inferred from the dependencies between links.  Therefore,
+this item is not separately configurable.  Hence, no
+corresponding constraint needs to be articulated.
+The corresponding information is simply provided by the
+implementing system.""" ;
+    prov:wasDerivedFrom "/nw:networks?container/nw:network?list/nw:node?list/termination-point?list/nw:supporting-termination-point?list" .
+
+<http://www.huawei.com/ontology/ietf-network/networks/network/link> a owl:Class ;
+    rdfs:label "link" ;
+    rdfs:comment """A network link connects a local (source) node and
+a remote (destination) node via a set of the respective
+node's termination points.  It is possible to have several
+links between the same source and destination nodes.
+Likewise, a link could potentially be re-homed between
+termination points.  Therefore, in order to ensure that we
+would always know to distinguish between links, every link
+is identified by a dedicated link identifier.  Note that a
+link models a point-to-point link, not a multipoint link.""" ;
+    prov:wasDerivedFrom "/nw:networks?container/nw:network?list/link?list" .
+
+<http://www.huawei.com/ontology/ietf-network/networks/network/node> a owl:Class ;
+    rdfs:label "node" ;
+    rdfs:comment "The inventory of nodes of this network." ;
+    prov:wasDerivedFrom "/nw:networks?container/nw:network?list/nw:node?list" .
+
+<http://www.huawei.com/ontology/ietf-network/networks/network> a owl:Class ;
+    rdfs:label "network" ;
+    rdfs:comment """Describes a network.
+A network typically contains an inventory of nodes,
+topological information (augmented through the
+network-topology data model), and layering information.""" ;
+    prov:wasDerivedFrom "/nw:networks?container/nw:network?list" .
+

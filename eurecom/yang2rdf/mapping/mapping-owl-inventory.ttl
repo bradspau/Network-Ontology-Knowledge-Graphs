@@ -1,0 +1,699 @@
+@base <http://example.com/mappings/> .
+
+@prefix rr: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rml: <http://semweb.mmlab.be/ns/rml#> .
+@prefix ql: <http://semweb.mmlab.be/ns/ql#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix ex: <http://example.com/nwi/> .
+@prefix kg: <http://example.com/kg#> .
+@prefix yang: <http://example.com/yang#> .
+@prefix nwi: <urn:ietf:params:xml:ns:yang:ietf-network-inventory#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+# ============================================================================
+# OWL Ontology Definition
+# ============================================================================
+
+<http://example.com/nwi-ontology> a owl:Ontology ;
+  rdfs:label "Network Inventory YANG OWL Ontology"@en ;
+  rdfs:comment "OWL representation of ietf-network-inventory YANG model"@en ;
+  owl:versionInfo "1.0" ;
+  rdfs:seeAlso <urn:ietf:params:xml:ns:yang:ietf-network-inventory> .
+
+# ============================================================================
+# CLASS DEFINITIONS - Network Element Classes
+# ============================================================================
+
+<NetworkInventoryClassMap> a rr:TriplesMap ;
+  rml:logicalSource [ 
+    rml:source "source.xml" ;
+    rml:referenceFormulation ql:XPath ;
+    rml:iterator "/yin:module/yin:namespace[@uri='urn:ietf:params:xml:ns:yang:ietf-network-inventory']"
+  ] ;
+  rr:subjectMap [ rr:constant ex:NetworkInventory ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdf:type ;
+    rr:objectMap [ rr:constant owl:Class ]
+  ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdfs:label ;
+    rr:objectMap [ rr:constant "Network Inventory"@en ]
+  ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdfs:comment ;
+    rr:objectMap [ rr:constant "Top-level container for network inventory data model"@en ]
+  ] .
+
+<NetworkElementClassMap> a rr:TriplesMap ;
+  rml:logicalSource [ 
+    rml:source "source.xml" ;
+    rml:referenceFormulation ql:XPath ;
+    rml:iterator "/yin:module/yin:container[@name='network-inventory']/yin:container[@name='network-elements']/yin:list[@name='network-element']"
+  ] ;
+  rr:subjectMap [ rr:constant ex:NetworkElement ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdf:type ;
+    rr:objectMap [ rr:constant owl:Class ]
+  ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdfs:label ;
+    rr:objectMap [ rr:constant "Network Element"@en ]
+  ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdfs:comment ;
+    rr:objectMap [ rr:constant "A network element identified by ne-id with inventory attributes"@en ]
+  ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdfs:subClassOf ;
+    rr:objectMap [ rr:constant ex:InventoryObject ]
+  ] .
+
+<ComponentClassMap> a rr:TriplesMap ;
+  rml:logicalSource [ 
+    rml:source "source.xml" ;
+    rml:referenceFormulation ql:XPath ;
+    rml:iterator "/yin:module/yin:container[@name='network-inventory']/yin:container[@name='network-elements']/yin:list[@name='network-element']/yin:container[@name='components']/yin:list[@name='component']"
+  ] ;
+  rr:subjectMap [ rr:constant ex:Component ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdf:type ;
+    rr:objectMap [ rr:constant owl:Class ]
+  ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdfs:label ;
+    rr:objectMap [ rr:constant "Network Element Component"@en ]
+  ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdfs:comment ;
+    rr:objectMap [ rr:constant "A hardware or software component within a network element"@en ]
+  ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdfs:subClassOf ;
+    rr:objectMap [ rr:constant ex:InventoryObject ]
+  ] .
+
+<SoftwareRevisionClassMap> a rr:TriplesMap ;
+  rml:logicalSource [ 
+    rml:source "source.xml" ;
+    rml:referenceFormulation ql:XPath ;
+    rml:iterator "/yin:module/yin:grouping[@name='ne-component-common-entity-attributes']/yin:list[@name='software-rev']"
+  ] ;
+  rr:subjectMap [ rr:constant ex:SoftwareRevision ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdf:type ;
+    rr:objectMap [ rr:constant owl:Class ]
+  ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdfs:label ;
+    rr:objectMap [ rr:constant "Software Revision"@en ]
+  ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdfs:comment ;
+    rr:objectMap [ rr:constant "Software module attributes for an entity (NE or component)"@en ]
+  ] .
+
+<InventoryObjectClassMap> a rr:TriplesMap ;
+  rml:logicalSource [ 
+    rml:source "source.xml" ;
+    rml:referenceFormulation ql:XPath ;
+    rml:iterator "/yin:module"
+  ] ;
+  rr:subjectMap [ rr:constant ex:InventoryObject ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdf:type ;
+    rr:objectMap [ rr:constant owl:Class ]
+  ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdfs:label ;
+    rr:objectMap [ rr:constant "Inventory Object (Abstract)"@en ]
+  ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdfs:comment ;
+    rr:objectMap [ rr:constant "Abstract base class for all inventory entities with common attributes"@en ]
+  ] .
+
+# ============================================================================
+# DATATYPE PROPERTY DEFINITIONS
+# ============================================================================
+
+<neIdPropertyMap> a rr:TriplesMap ;
+  rml:logicalSource [ 
+    rml:source "source.xml" ;
+    rml:referenceFormulation ql:XPath ;
+    rml:iterator "/yin:module/yin:container[@name='network-inventory']/yin:container[@name='network-elements']/yin:list[@name='network-element']/yin:leaf[@name='ne-id']"
+  ] ;
+  rr:subjectMap [ rr:constant ex:neId ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdf:type ;
+    rr:objectMap [ rr:constant owl:DatatypeProperty ]
+  ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdfs:label ;
+    rr:objectMap [ rr:constant "Network Element ID"@en ]
+  ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdfs:comment ;
+    rr:objectMap [ rr:constant "Unique identifier for the network element within the network"@en ]
+  ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdfs:domain ;
+    rr:objectMap [ rr:constant ex:NetworkElement ]
+  ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdfs:range ;
+    rr:objectMap [ rr:constant xsd:string ]
+  ] .
+
+<componentIdPropertyMap> a rr:TriplesMap ;
+  rml:logicalSource [ 
+    rml:source "source.xml" ;
+    rml:referenceFormulation ql:XPath ;
+    rml:iterator "/yin:module/yin:grouping[@name='component-attributes']/yin:leaf[@name='component-id']"
+  ] ;
+  rr:subjectMap [ rr:constant ex:componentId ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdf:type ;
+    rr:objectMap [ rr:constant owl:DatatypeProperty ]
+  ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdfs:label ;
+    rr:objectMap [ rr:constant "Component ID"@en ]
+  ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdfs:comment ;
+    rr:objectMap [ rr:constant "Unique identifier for component within a network element"@en ]
+  ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdfs:domain ;
+    rr:objectMap [ rr:constant ex:Component ]
+  ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdfs:range ;
+    rr:objectMap [ rr:constant xsd:string ]
+  ] .
+
+<componentClassPropertyMap> a rr:TriplesMap ;
+  rml:logicalSource [ 
+    rml:source "source.xml" ;
+    rml:referenceFormulation ql:XPath ;
+    rml:iterator "/yin:module/yin:grouping[@name='component-attributes']/yin:leaf[@name='class']"
+  ] ;
+  rr:subjectMap [ rr:constant ex:componentClass ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdf:type ;
+    rr:objectMap [ rr:constant owl:DatatypeProperty ]
+  ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdfs:label ;
+    rr:objectMap [ rr:constant "Component Class"@en ]
+  ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdfs:comment ;
+    rr:objectMap [ rr:constant "Type of component (e.g., chassis, module, port)"@en ]
+  ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdfs:domain ;
+    rr:objectMap [ rr:constant ex:Component ]
+  ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdfs:range ;
+    rr:objectMap [ rr:constant xsd:string ]
+  ] .
+
+<serialNumberPropertyMap> a rr:TriplesMap ;
+  rml:logicalSource [ 
+    rml:source "source.xml" ;
+    rml:referenceFormulation ql:XPath ;
+    rml:iterator "/yin:module/yin:grouping[@name='component-attributes']/yin:leaf[@name='serial-number']"
+  ] ;
+  rr:subjectMap [ rr:constant ex:serialNumber ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdf:type ;
+    rr:objectMap [ rr:constant owl:DatatypeProperty ]
+  ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdfs:label ;
+    rr:objectMap [ rr:constant "Serial Number"@en ]
+  ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdfs:comment ;
+    rr:objectMap [ rr:constant "Vendor-specific serial number of the component instance"@en ]
+  ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdfs:domain ;
+    rr:objectMap [ rr:constant ex:Component ]
+  ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdfs:range ;
+    rr:objectMap [ rr:constant xsd:string ]
+  ] .
+
+<uuidPropertyMap> a rr:TriplesMap ;
+  rml:logicalSource [ 
+    rml:source "source.xml" ;
+    rml:referenceFormulation ql:XPath ;
+    rml:iterator "/yin:module/yin:grouping[@name='basic-common-entity-attributes']/yin:leaf[@name='uuid']"
+  ] ;
+  rr:subjectMap [ rr:constant ex:uuid ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdf:type ;
+    rr:objectMap [ rr:constant owl:DatatypeProperty ]
+  ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdfs:label ;
+    rr:objectMap [ rr:constant "UUID"@en ]
+  ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdfs:comment ;
+    rr:objectMap [ rr:constant "Universally unique identifier assigned by the server"@en ]
+  ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdfs:domain ;
+    rr:objectMap [ rr:constant ex:InventoryObject ]
+  ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdfs:range ;
+    rr:objectMap [ rr:constant xsd:string ]
+  ] .
+
+<namePropertyMap> a rr:TriplesMap ;
+  rml:logicalSource [ 
+    rml:source "source.xml" ;
+    rml:referenceFormulation ql:XPath ;
+    rml:iterator "/yin:module/yin:grouping[@name='basic-common-entity-attributes']/yin:leaf[@name='name']"
+  ] ;
+  rr:subjectMap [ rr:constant ex:name ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdf:type ;
+    rr:objectMap [ rr:constant owl:DatatypeProperty ]
+  ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdfs:label ;
+    rr:objectMap [ rr:constant "Name"@en ]
+  ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdfs:comment ;
+    rr:objectMap [ rr:constant "Human-interpretable label for the entity"@en ]
+  ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdfs:domain ;
+    rr:objectMap [ rr:constant ex:InventoryObject ]
+  ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdfs:range ;
+    rr:objectMap [ rr:constant xsd:string ]
+  ] .
+
+<descriptionPropertyMap> a rr:TriplesMap ;
+  rml:logicalSource [ 
+    rml:source "source.xml" ;
+    rml:referenceFormulation ql:XPath ;
+    rml:iterator "/yin:module/yin:grouping[@name='basic-common-entity-attributes']/yin:leaf[@name='description']"
+  ] ;
+  rr:subjectMap [ rr:constant ex:description ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdf:type ;
+    rr:objectMap [ rr:constant owl:DatatypeProperty ]
+  ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdfs:label ;
+    rr:objectMap [ rr:constant "Description"@en ]
+  ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdfs:comment ;
+    rr:objectMap [ rr:constant "Textual description of the entity"@en ]
+  ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdfs:domain ;
+    rr:objectMap [ rr:constant ex:InventoryObject ]
+  ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdfs:range ;
+    rr:objectMap [ rr:constant xsd:string ]
+  ] .
+
+<productNamePropertyMap> a rr:TriplesMap ;
+  rml:logicalSource [ 
+    rml:source "source.xml" ;
+    rml:referenceFormulation ql:XPath ;
+    rml:iterator "/yin:module/yin:grouping[@name='ne-component-common-entity-attributes']/yin:leaf[@name='product-name']"
+  ] ;
+  rr:subjectMap [ rr:constant ex:productName ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdf:type ;
+    rr:objectMap [ rr:constant owl:DatatypeProperty ]
+  ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdfs:label ;
+    rr:objectMap [ rr:constant "Product Name"@en ]
+  ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdfs:comment ;
+    rr:objectMap [ rr:constant "Vendor-specific product name"@en ]
+  ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdfs:domain ;
+    rr:objectMap [ rr:constant ex:InventoryObject ]
+  ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdfs:range ;
+    rr:objectMap [ rr:constant xsd:string ]
+  ] .
+
+<partNumberPropertyMap> a rr:TriplesMap ;
+  rml:logicalSource [ 
+    rml:source "source.xml" ;
+    rml:referenceFormulation ql:XPath ;
+    rml:iterator "/yin:module/yin:grouping[@name='component-attributes']/yin:leaf[@name='part-number']"
+  ] ;
+  rr:subjectMap [ rr:constant ex:partNumber ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdf:type ;
+    rr:objectMap [ rr:constant owl:DatatypeProperty ]
+  ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdfs:label ;
+    rr:objectMap [ rr:constant "Part Number"@en ]
+  ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdfs:comment ;
+    rr:objectMap [ rr:constant "Vendor-specific part number for component type"@en ]
+  ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdfs:domain ;
+    rr:objectMap [ rr:constant ex:Component ]
+  ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdfs:range ;
+    rr:objectMap [ rr:constant xsd:string ]
+  ] .
+
+<assetIdPropertyMap> a rr:TriplesMap ;
+  rml:logicalSource [ 
+    rml:source "source.xml" ;
+    rml:referenceFormulation ql:XPath ;
+    rml:iterator "/yin:module/yin:grouping[@name='component-attributes']/yin:leaf[@name='asset-id']"
+  ] ;
+  rr:subjectMap [ rr:constant ex:assetId ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdf:type ;
+    rr:objectMap [ rr:constant owl:DatatypeProperty ]
+  ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdfs:label ;
+    rr:objectMap [ rr:constant "Asset ID"@en ]
+  ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdfs:comment ;
+    rr:objectMap [ rr:constant "Asset tracking identifier assigned by operator"@en ]
+  ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdfs:domain ;
+    rr:objectMap [ rr:constant ex:Component ]
+  ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdfs:range ;
+    rr:objectMap [ rr:constant xsd:string ]
+  ] .
+
+<isFruPropertyMap> a rr:TriplesMap ;
+  rml:logicalSource [ 
+    rml:source "source.xml" ;
+    rml:referenceFormulation ql:XPath ;
+    rml:iterator "/yin:module/yin:grouping[@name='component-attributes']/yin:leaf[@name='is-fru']"
+  ] ;
+  rr:subjectMap [ rr:constant ex:isFru ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdf:type ;
+    rr:objectMap [ rr:constant owl:DatatypeProperty ]
+  ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdfs:label ;
+    rr:objectMap [ rr:constant "Is Field-Replaceable Unit"@en ]
+  ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdfs:comment ;
+    rr:objectMap [ rr:constant "Boolean indicating if component is a field-replaceable unit"@en ]
+  ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdfs:domain ;
+    rr:objectMap [ rr:constant ex:Component ]
+  ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdfs:range ;
+    rr:objectMap [ rr:constant xsd:boolean ]
+  ] .
+
+# ============================================================================
+# OBJECT PROPERTY DEFINITIONS
+# ============================================================================
+
+<hasComponentPropertyMap> a rr:TriplesMap ;
+  rml:logicalSource [ 
+    rml:source "source.xml" ;
+    rml:referenceFormulation ql:XPath ;
+    rml:iterator "/yin:module/yin:container[@name='network-inventory']/yin:container[@name='network-elements']/yin:list[@name='network-element']/yin:container[@name='components']"
+  ] ;
+  rr:subjectMap [ rr:constant ex:hasComponent ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdf:type ;
+    rr:objectMap [ rr:constant owl:ObjectProperty ]
+  ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdfs:label ;
+    rr:objectMap [ rr:constant "Has Component"@en ]
+  ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdfs:comment ;
+    rr:objectMap [ rr:constant "Relationship: NetworkElement contains/has Component"@en ]
+  ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdfs:domain ;
+    rr:objectMap [ rr:constant ex:NetworkElement ]
+  ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdfs:range ;
+    rr:objectMap [ rr:constant ex:Component ]
+  ] .
+
+<hasSoftwareRevisionPropertyMap> a rr:TriplesMap ;
+  rml:logicalSource [ 
+    rml:source "source.xml" ;
+    rml:referenceFormulation ql:XPath ;
+    rml:iterator "/yin:module/yin:grouping[@name='ne-component-common-entity-attributes']/yin:list[@name='software-rev']"
+  ] ;
+  rr:subjectMap [ rr:constant ex:hasSoftwareRevision ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdf:type ;
+    rr:objectMap [ rr:constant owl:ObjectProperty ]
+  ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdfs:label ;
+    rr:objectMap [ rr:constant "Has Software Revision"@en ]
+  ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdfs:comment ;
+    rr:objectMap [ rr:constant "Relationship: InventoryObject has configured software revisions"@en ]
+  ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdfs:domain ;
+    rr:objectMap [ rr:constant ex:InventoryObject ]
+  ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdfs:range ;
+    rr:objectMap [ rr:constant ex:SoftwareRevision ]
+  ] .
+
+<parentComponentPropertyMap> a rr:TriplesMap ;
+  rml:logicalSource [ 
+    rml:source "source.xml" ;
+    rml:referenceFormulation ql:XPath ;
+    rml:iterator "/yin:module/yin:container[@name='network-inventory']/yin:container[@name='network-elements']/yin:list[@name='network-element']/yin:container[@name='components']/yin:list[@name='component']/yin:leaf-list[@name='parent']"
+  ] ;
+  rr:subjectMap [ rr:constant ex:parentComponent ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdf:type ;
+    rr:objectMap [ rr:constant owl:ObjectProperty ]
+  ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdfs:label ;
+    rr:objectMap [ rr:constant "Parent Component"@en ]
+  ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdfs:comment ;
+    rr:objectMap [ rr:constant "Component hierarchical containment: child component references parent"@en ]
+  ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdfs:domain ;
+    rr:objectMap [ rr:constant ex:Component ]
+  ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdfs:range ;
+    rr:objectMap [ rr:constant ex:Component ]
+  ] ;
+  rr:predicateObjectMap [
+    rr:predicate owl:inverseOf ;
+    rr:objectMap [ rr:constant ex:childComponent ]
+  ] .
+
+<childComponentPropertyMap> a rr:TriplesMap ;
+  rml:logicalSource [ 
+    rml:source "source.xml" ;
+    rml:referenceFormulation ql:XPath ;
+    rml:iterator "/yin:module"
+  ] ;
+  rr:subjectMap [ rr:constant ex:childComponent ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdf:type ;
+    rr:objectMap [ rr:constant owl:ObjectProperty ]
+  ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdfs:label ;
+    rr:objectMap [ rr:constant "Child Component"@en ]
+  ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdfs:comment ;
+    rr:objectMap [ rr:constant "Inverse of parentComponent: parent references contained children"@en ]
+  ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdfs:domain ;
+    rr:objectMap [ rr:constant ex:Component ]
+  ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdfs:range ;
+    rr:objectMap [ rr:constant ex:Component ]
+  ] ;
+  rr:predicateObjectMap [
+    rr:predicate owl:inverseOf ;
+    rr:objectMap [ rr:constant ex:parentComponent ]
+  ] .
+
+<belongsToNetworkElementPropertyMap> a rr:TriplesMap ;
+  rml:logicalSource [ 
+    rml:source "source.xml" ;
+    rml:referenceFormulation ql:XPath ;
+    rml:iterator "/yin:module"
+  ] ;
+  rr:subjectMap [ rr:constant ex:belongsToNetworkElement ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdf:type ;
+    rr:objectMap [ rr:constant owl:ObjectProperty ]
+  ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdfs:label ;
+    rr:objectMap [ rr:constant "Belongs to Network Element"@en ]
+  ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdfs:comment ;
+    rr:objectMap [ rr:constant "Component membership in a network element"@en ]
+  ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdfs:domain ;
+    rr:objectMap [ rr:constant ex:Component ]
+  ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdfs:range ;
+    rr:objectMap [ rr:constant ex:NetworkElement ]
+  ] ;
+  rr:predicateObjectMap [
+    rr:predicate owl:inverseOf ;
+    rr:objectMap [ rr:constant ex:contains ]
+  ] .
+
+<containsPropertyMap> a rr:TriplesMap ;
+  rml:logicalSource [ 
+    rml:source "source.xml" ;
+    rml:referenceFormulation ql:XPath ;
+    rml:iterator "/yin:module"
+  ] ;
+  rr:subjectMap [ rr:constant ex:contains ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdf:type ;
+    rr:objectMap [ rr:constant owl:ObjectProperty ]
+  ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdfs:label ;
+    rr:objectMap [ rr:constant "Contains"@en ]
+  ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdfs:comment ;
+    rr:objectMap [ rr:constant "Inverse of belongsToNetworkElement"@en ]
+  ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdfs:domain ;
+    rr:objectMap [ rr:constant ex:NetworkElement ]
+  ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdfs:range ;
+    rr:objectMap [ rr:constant ex:Component ]
+  ] ;
+  rr:predicateObjectMap [
+    rr:predicate owl:inverseOf ;
+    rr:objectMap [ rr:constant ex:belongsToNetworkElement ]
+  ] .
+
+# ============================================================================
+# ADDITIONAL AXIOMS
+# ============================================================================
+
+<DisjointNEComponent> a rr:TriplesMap ;
+  rml:logicalSource [ 
+    rml:source "source.xml" ;
+    rml:referenceFormulation ql:XPath ;
+    rml:iterator "/yin:module"
+  ] ;
+  rr:subjectMap [ rr:constant ex:NetworkElement ] ;
+  rr:predicateObjectMap [
+    rr:predicate owl:disjointWith ;
+    rr:objectMap [ rr:constant ex:Component ]
+  ] .
+
+<NeIdFunctional> a rr:TriplesMap ;
+  rml:logicalSource [ 
+    rml:source "source.xml" ;
+    rml:referenceFormulation ql:XPath ;
+    rml:iterator "/yin:module"
+  ] ;
+  rr:subjectMap [ rr:constant ex:neId ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdf:type ;
+    rr:objectMap [ rr:constant owl:FunctionalProperty ]
+  ] .
+
+<ComponentIdFunctional> a rr:TriplesMap ;
+  rml:logicalSource [ 
+    rml:source "source.xml" ;
+    rml:referenceFormulation ql:XPath ;
+    rml:iterator "/yin:module"
+  ] ;
+  rr:subjectMap [ rr:constant ex:componentId ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdf:type ;
+    rr:objectMap [ rr:constant owl:FunctionalProperty ]
+  ] .
+
+<UuidFunctional> a rr:TriplesMap ;
+  rml:logicalSource [ 
+    rml:source "source.xml" ;
+    rml:referenceFormulation ql:XPath ;
+    rml:iterator "/yin:module"
+  ] ;
+  rr:subjectMap [ rr:constant ex:uuid ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdf:type ;
+    rr:objectMap [ rr:constant owl:FunctionalProperty ]
+  ] .
+
+<ParentComponentTransitive> a rr:TriplesMap ;
+  rml:logicalSource [ 
+    rml:source "source.xml" ;
+    rml:referenceFormulation ql:XPath ;
+    rml:iterator "/yin:module"
+  ] ;
+  rr:subjectMap [ rr:constant ex:parentComponent ] ;
+  rr:predicateObjectMap [
+    rr:predicate rdf:type ;
+    rr:objectMap [ rr:constant owl:TransitiveProperty ]
+  ] .
