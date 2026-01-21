@@ -1,4 +1,4 @@
-Mechanism for converting yang to owl for network semantic modelin
+Mechanism for converting yang to owl for network semantic modeling
 
 Objective
 - Investigate the options for automated conversion of yang data model to RDFS/owl 
@@ -15,11 +15,11 @@ Current Content
 - simap-rdfs-schema.ttl - IETF124 ttl utilised for reference on either tool for validation of output
 - simap-yang - all yang data models for simap
 - yang-ivy - all yang models for IETF network inventory, passive, location
-- yang2owl.py - yang2owl in python
+- yang4owl.py - yang4owl in python
 - simap-ontology-python.ttl - current output of yang2owl for comparison against the IETF 124 simap-rdfs-schema
 
 Python yang2owl 
-- execution  yang2oel.py --yang-dir <directory of the yang files> --modules <yang model to create ttl for> --base-uri <owl base uri> --output <turtle file> --verbose 
+- execution  yang4owl.py --yang-dir <directory of the yang files> --modules <yang model to create ttl for> --base-uri <owl base uri> --output <turtle file> --verbose 
 
     Current include capabilities
     - import
