@@ -59,51 +59,63 @@ ex:host a sh:NodeShape ;
 
 <http://www.huawei.com/ontology/identity/link-direction-bi> a owl:Class ;
     rdfs:label "link-direction-bi" ;
-    rdfs:comment "Bidirectional link." .
+    rdfs:comment "Bidirectional link." ;
+    prov:wasDerivedFrom "st:link-direction-bi?identity" .
 
 <http://www.huawei.com/ontology/identity/link-direction-uni> a owl:Class ;
     rdfs:label "link-direction-uni" ;
-    rdfs:comment "Unidirectional link." .
+    rdfs:comment "Unidirectional link." ;
+    prov:wasDerivedFrom "st:link-direction-uni?identity" .
 
 <http://www.huawei.com/ontology/identity/link-type-mp2mp> a owl:Class ;
     rdfs:label "link-type-mp2mp" ;
-    rdfs:comment "Multi-point to multi-point link." .
+    rdfs:comment "Multi-point to multi-point link." ;
+    prov:wasDerivedFrom "st:link-type-mp2mp?identity" .
 
 <http://www.huawei.com/ontology/identity/link-type-p2mp> a owl:Class ;
     rdfs:label "link-type-p2mp" ;
-    rdfs:comment "Point to multi-point link." .
+    rdfs:comment "Point to multi-point link." ;
+    prov:wasDerivedFrom "st:link-type-p2mp?identity" .
 
 <http://www.huawei.com/ontology/identity/link-type-p2p> a owl:Class ;
     rdfs:label "link-type-p2p" ;
-    rdfs:comment "Point to point link." .
+    rdfs:comment "Point to point link." ;
+    prov:wasDerivedFrom "st:link-type-p2p?identity" .
 
 <http://www.huawei.com/ontology/identity/network-category-intended> a owl:Class ;
     rdfs:label "network-category-intended" ;
-    rdfs:comment "Intended topology, not necessarily discovered." .
+    rdfs:comment "Intended topology, not necessarily discovered." ;
+    prov:wasDerivedFrom "st:network-category-intended?identity" .
 
 <http://www.huawei.com/ontology/identity/network-category-live> a owl:Class ;
     rdfs:label "network-category-live" ;
-    rdfs:comment "Live topology, typically only one instance." .
+    rdfs:comment "Live topology, typically only one instance." ;
+    prov:wasDerivedFrom "st:network-category-live?identity" .
 
 <http://www.huawei.com/ontology/identity/network-category-none> a owl:Class ;
     rdfs:label "network-category-none" ;
-    rdfs:comment "Default value when endpoint selection determines category." .
+    rdfs:comment "Default value when endpoint selection determines category." ;
+    prov:wasDerivedFrom "st:network-category-none?identity" .
 
 <http://www.huawei.com/ontology/identity/network-category-potential> a owl:Class ;
     rdfs:label "network-category-potential" ;
-    rdfs:comment "Potential topology for what-if scenarios." .
+    rdfs:comment "Potential topology for what-if scenarios." ;
+    prov:wasDerivedFrom "st:network-category-potential?identity" .
 
 <http://www.huawei.com/ontology/identity/tp-direction-destination> a owl:Class ;
     rdfs:label "tp-direction-destination" ;
-    rdfs:comment "TP is the destination in the link." .
+    rdfs:comment "TP is the destination in the link." ;
+    prov:wasDerivedFrom "st:tp-direction-destination?identity" .
 
 <http://www.huawei.com/ontology/identity/tp-direction-source> a owl:Class ;
     rdfs:label "tp-direction-source" ;
-    rdfs:comment "TP is the source in the link." .
+    rdfs:comment "TP is the source in the link." ;
+    prov:wasDerivedFrom "st:tp-direction-source?identity" .
 
 <http://www.huawei.com/ontology/identity/tp-direction-symmetric> a owl:Class ;
     rdfs:label "tp-direction-symmetric" ;
-    rdfs:comment "TP in a bidirectional link." .
+    rdfs:comment "TP in a bidirectional link." ;
+    prov:wasDerivedFrom "st:tp-direction-symmetric?identity" .
 
 <http://www.huawei.com/ontology/ietf-network/networks/hasNetwork> a owl:ObjectProperty ;
     rdfs:label "hasNetwork" ;
@@ -496,7 +508,9 @@ ex:port-number a sh:NodeShape ;
     sh:maxInclusive 65535 ;
     sh:minInclusive 0 .
 
-<http://www.huawei.com/ontology/simap-yang/networks> a owl:Class .
+<http://www.huawei.com/ontology/simap-yang/networks> a owl:Class ;
+    rdfs:comment "Serves as a top-level container for a list of networks." ;
+    prov:wasDerivedFrom "nw:networks?container" .
 
 <http://www.huawei.com/ontology/simap-yang/networks-history/hasNetworkHistory> a owl:ObjectProperty ;
     rdfs:label "hasNetworkHistory" ;
@@ -581,23 +595,28 @@ ex:zero-based-counter64 a sh:NodeShape ;
 
 <http://www.huawei.com/ontology/identity/link-direction> a owl:Class ;
     rdfs:label "link-direction" ;
-    rdfs:comment "Base identity for link directionality." .
+    rdfs:comment "Base identity for link directionality." ;
+    prov:wasDerivedFrom "st:link-direction?identity" .
 
 <http://www.huawei.com/ontology/identity/link-type> a owl:Class ;
     rdfs:label "link-type" ;
-    rdfs:comment "Base identity for internal structure of the link." .
+    rdfs:comment "Base identity for internal structure of the link." ;
+    prov:wasDerivedFrom "st:link-type?identity" .
 
 <http://www.huawei.com/ontology/identity/network-category> a owl:Class ;
     rdfs:label "network-category" ;
-    rdfs:comment "Base identity for the network category" .
+    rdfs:comment "Base identity for the network category" ;
+    prov:wasDerivedFrom "st:network-category?identity" .
 
 <http://www.huawei.com/ontology/identity/tp-direction> a owl:Class ;
     rdfs:label "tp-direction" ;
-    rdfs:comment "Base identity for directionality of the tp." .
+    rdfs:comment "Base identity for directionality of the tp." ;
+    prov:wasDerivedFrom "st:tp-direction?identity" .
 
 <http://www.huawei.com/ontology/identity/tp-role> a owl:Class ;
     rdfs:label "tp-role" ;
-    rdfs:comment "Base identity for termination point roles." .
+    rdfs:comment "Base identity for termination point roles." ;
+    prov:wasDerivedFrom "st:tp-role?identity" .
 
 <http://www.huawei.com/ontology/ietf-network/networks> a owl:Class ;
     rdfs:label "networks" ;

@@ -1156,8 +1156,38 @@ class YANGToOWL:
 
         self.identityref_resolved_count = 0
 
+        # ADD THIS: Registry for schema paths to support PROV
         self.prov_paths: Dict[str, str] = {}
 
+    def _get_stmt_prefix(self, stmt: Any) -> str:
+        """Helper to get the module prefix for a statement"""
+        # 1. Try to get from the statement's i_module (pyang injected)
+        if hasattr(stmt, 'i_module') and stmt.i_module:
+            if hasattr(stmt.i_module, 'i_prefix'):
+                return stmt.i_module.i_prefix
+            if hasattr(stmt.i_module, 'prefix'):
+                return stmt.i_module.prefix
+
+        # 2. Fallback to the top-level module wrapper
+        if hasattr(stmt, 'top') and stmt.top:
+            if hasattr(stmt.top, 'i_prefix'):
+                return stmt.top.i_prefix
+            # Manually search for prefix if not in i_prefix
+            prefix = stmt.top.search_one('prefix')
+            if prefix: return prefix.arg
+
+        # 3. Fallback to current processing context
+        if self.current_module_name in self.module_prefixes:
+            return self.module_prefixes[self.current_module_name]
+        return "ex"
+
+    def _get_prov_segment(self, stmt: Any) -> str:
+        """Builds a single segment like 'st:link-type?identity'"""
+        if not hasattr(stmt, 'arg') or not hasattr(stmt, 'keyword'):
+            return ""
+        prefix = self._get_stmt_prefix(stmt)
+        return f"{prefix}:{stmt.arg}?{stmt.keyword}"
+    
     def _get_stmt_prefix(self, stmt: Any) -> str:
         """Helper to get the module prefix for a statement"""
         # 1. Try to get from the statement's i_module (pyang injected)
@@ -1543,7 +1573,7 @@ class YANGToOWL:
 
         self.processed.add(full_path)
 
-        self.triple_count += 3
+        self.triple_count += 4
 
         if hasattr(stmt, 'substmts'):
 
@@ -1584,7 +1614,7 @@ class YANGToOWL:
 
                     normalized_child_path = self._normalize_path(f"{full_path}/{sub.arg}")
 
-                    self._process_leaf_list(sub, normalized_child_path, uri)
+                    self._process_leaf_list(sub, normalized_child_path, uri, full_prov)
 
                 elif keyword == 'uses':
 
@@ -1636,7 +1666,7 @@ class YANGToOWL:
 
         self.processed.add(full_path)
 
-        self.triple_count += 3
+        self.triple_count += 4
 
         if hasattr(stmt, 'substmts'):
 
@@ -1844,13 +1874,17 @@ class YANGToOWL:
 
         uri = self.ex[f"identity/{name}"]
 
+        # NEW: Add PROV metadata
+        prov_path = self._get_prov_segment(stmt)
+        self.graph.add((uri, PROV.wasDerivedFrom, Literal(prov_path)))
+
         self.graph.add((uri, RDF.type, OWL.Class))
 
         self.graph.add((uri, RDFS.label, Literal(name)))
 
         self.identity_class_uris[name] = uri
 
-        self.triple_count += 2
+        self.triple_count += 3
 
         if hasattr(stmt, 'substmts'):
 
@@ -2171,11 +2205,24 @@ class YANGToOWL:
 
                         uri = self.ex[normalized_path.lstrip('/')]
 
+                        # NEW: Add PROV
+                        prov_path = self._get_prov_segment(stmt)
+                        self.graph.add((uri, PROV.wasDerivedFrom, Literal(prov_path)))
+
                         self.graph.add((uri, RDF.type, OWL.Class))
 
                         self.class_paths[normalized_path] = uri
 
-                        self.triple_count += 1
+                        self.triple_count += 2
+                        
+                        # NEW: Add Description
+                        if hasattr(stmt, 'substmts'):
+                            for sub in stmt.substmts:
+                                if hasattr(sub, 'keyword') and sub.keyword == 'description':
+                                    if hasattr(sub, 'arg'):
+                                        self.graph.add((uri, RDFS.comment, Literal(sub.arg)))
+                                        self.triple_count += 1
+                                    break
 
                         log.debug(f" Imported class: {normalized_path}")
 
