@@ -62,9 +62,13 @@ ENHANCEMENTS IN v4.3:
 
 - ✅ ENHANCEMENT 8: Augment within uses statement handling
 
+- ✅ ENHANCEMENT 9: Stop generating triples for TypeDefs and generate shacl for patterns as required
+
+- ✅ ENHANCEMENT 10: fix provenance to point to incoming yang rather than outgoing owl
+
 Author: YANG-to-OWL Converter v4.5 (ENHANCED WITH PATH NORMALIZATION)
 
-Date: 2026-01-19
+Date: 2026-01-22
 
 """
 
@@ -93,6 +97,8 @@ except ImportError:
 from rdflib import Graph, Namespace, URIRef, Literal, RDF, RDFS, XSD
 
 from rdflib.namespace import OWL, PROV
+
+SH = Namespace("http://www.w3.org/ns/shacl#")
 
 logging.basicConfig(
 
@@ -1100,6 +1106,8 @@ class YANGToOWL:
 
         self.graph.bind('prov', PROV)
 
+        self.graph.bind('sh', SH)
+
         self.processed: Set[str] = set()
 
         self.class_paths: Dict[str, URIRef] = {}
@@ -1148,6 +1156,41 @@ class YANGToOWL:
 
         self.identityref_resolved_count = 0
 
+        self.prov_paths: Dict[str, str] = {}
+
+    def _get_stmt_prefix(self, stmt: Any) -> str:
+        """Helper to get the module prefix for a statement"""
+        # 1. Try to get from the statement's i_module (pyang injected)
+        if hasattr(stmt, 'i_module') and stmt.i_module:
+            if hasattr(stmt.i_module, 'i_prefix'):
+                return stmt.i_module.i_prefix
+            if hasattr(stmt.i_module, 'prefix'):
+                return stmt.i_module.prefix
+
+        # 2. Fallback to the top-level module wrapper (top)
+        if hasattr(stmt, 'top') and stmt.top:
+            # Check i_prefix first (standard pyang attribute after validation)
+            if hasattr(stmt.top, 'i_prefix'):
+                return stmt.top.i_prefix
+            
+            # Fallback: manually search for the 'prefix' substatement
+            # This is necessary if validation hasn't fully populated i_prefix
+            prefix_stmt = stmt.top.search_one('prefix')
+            if prefix_stmt:
+                return prefix_stmt.arg
+
+        # 3. Fallback to current processing context map
+        if self.current_module_name in self.module_prefixes:
+            return self.module_prefixes[self.current_module_name]
+            
+        return "ex"
+
+    def _get_prov_segment(self, stmt: Any) -> str:
+        """Builds a single segment like 'nw:networks?container'"""
+        if not hasattr(stmt, 'arg') or not hasattr(stmt, 'keyword'):
+            return ""
+        prefix = self._get_stmt_prefix(stmt)
+        return f"{prefix}:{stmt.arg}?{stmt.keyword}"
 
     def _is_enumeration_type(self, type_stmt: Any) -> bool:
 
@@ -1238,7 +1281,11 @@ class YANGToOWL:
 
         log.info("[Step 5] Processing YANG data model...")
 
-        for module_name, module in self.resolver.modules.items():
+        # Sort by module name to process 'ietf-*' before 'simap-*'
+        sorted_modules = sorted(self.resolver.modules.items(), key=lambda x: x[0])
+
+        #for module_name, module in self.resolver.modules.items():
+        for module_name, module in sorted_modules:
 
             log.info(f" Processing: {module_name}")
 
@@ -1286,7 +1333,7 @@ class YANGToOWL:
 
         log.info("[Step 12] Adding PROV metadata...")
 
-        self._add_prov_metadata()
+        #self._add_prov_metadata()
 
         # Step 13: Extract XSD constraints
 
@@ -1296,9 +1343,14 @@ class YANGToOWL:
 
         # Step 14: Create OWL Datatype Restrictions
 
-        log.info("[Step 14] Creating OWL Datatype Restrictions...")
+        #log.info("[Step 14] Creating OWL Datatype Restrictions...")
 
-        self._create_owl_datatype_restrictions()
+        #self._create_owl_datatype_restrictions()
+        
+        # Step 14: Create SHACL Shapes for Typedefs
+        log.info("[Step 14] Creating SHACL Shapes for Typedefs...")
+        # REPLACE: self._create_owl_datatype_restrictions()
+        self._create_shacl_typedef_shapes()
 
         # Step 15: Process Enumerations
 
@@ -1447,8 +1499,8 @@ class YANGToOWL:
 
             self.type_resolver.register_typedef(stmt.arg, stmt)
 
-    def _process_container(self, stmt: Any, path: str, parent_uri: Optional[URIRef] = None) -> URIRef:
-
+    #def _process_container(self, stmt: Any, path: str, parent_uri: Optional[URIRef] = None) -> URIRef:
+    def _process_container(self, stmt: Any, path: str, parent_uri: Optional[URIRef] = None, parent_prov: str = "") -> URIRef:
         """⭐ UPDATED in v4.5: Process container statement with normalized paths"""
 
         if not hasattr(stmt, 'arg'):
@@ -1460,6 +1512,16 @@ class YANGToOWL:
         full_path = path
 
         uri = self.ex[full_path.lstrip('/')]
+
+        # 1. Generate PROV path (Schema-based, independent of base_uri)
+        current_segment = self._get_prov_segment(stmt)
+        
+        full_prov = f"{parent_prov}/{current_segment}" if parent_prov else current_segment
+        
+        # 2. Store for lookups and Add Triple
+        self.prov_paths[full_path] = full_prov
+
+        self.graph.add((uri, PROV.wasDerivedFrom, Literal(full_prov)))
 
         self.graph.add((uri, RDF.type, OWL.Class))
 
@@ -1499,19 +1561,24 @@ class YANGToOWL:
 
                     normalized_child_path = self._normalize_path(f"{full_path}/{sub.arg}")
 
-                    self._process_container(sub, normalized_child_path, uri)
+                    #self._process_container(sub, normalized_child_path, uri)
+                    self._process_container(sub, normalized_child_path, uri, full_prov) # Pass full_prov
 
                 elif keyword == 'list':
 
                     normalized_child_path = self._normalize_path(f"{full_path}/{sub.arg}")
 
-                    self._process_list(sub, normalized_child_path, uri)
+                    self._process_list(sub, normalized_child_path, uri, full_prov)      # Pass full_prov
+
+                    #self._process_list(sub, normalized_child_path, uri)
 
                 elif keyword == 'leaf':
 
                     normalized_child_path = self._normalize_path(f"{full_path}/{sub.arg}")
 
-                    self._process_leaf(sub, normalized_child_path, uri)
+                    #self._process_leaf(sub, normalized_child_path, uri)
+
+                    self._process_leaf(sub, normalized_child_path, uri, full_prov)      # Pass full_prov
 
                 elif keyword == 'leaf-list':
 
@@ -1525,8 +1592,8 @@ class YANGToOWL:
 
         return uri
 
-    def _process_list(self, stmt: Any, path: str, parent_uri: Optional[URIRef] = None) -> URIRef:
-
+    #def _process_list(self, stmt: Any, path: str, parent_uri: Optional[URIRef] = None) -> URIRef:
+    def _process_list(self, stmt: Any, path: str, parent_uri: Optional[URIRef] = None, parent_prov: str = "") -> URIRef:
         """⭐ UPDATED in v4.5: Process list statement with normalized paths"""
 
         if not hasattr(stmt, 'arg'):
@@ -1538,6 +1605,16 @@ class YANGToOWL:
         full_path = path
 
         uri = self.ex[full_path.lstrip('/')]
+
+        # 1. Generate PROV path (Schema-based, independent of base_uri)
+        current_segment = self._get_prov_segment(stmt)
+        
+        full_prov = f"{parent_prov}/{current_segment}" if parent_prov else current_segment
+        
+        # 2. Store for lookups and Add Triple
+        self.prov_paths[full_path] = full_prov
+
+        self.graph.add((uri, PROV.wasDerivedFrom, Literal(full_prov)))
 
         self.graph.add((uri, RDF.type, OWL.Class))
 
@@ -1575,25 +1652,32 @@ class YANGToOWL:
 
                     normalized_child_path = self._normalize_path(f"{full_path}/{sub.arg}")
 
-                    self._process_container(sub, normalized_child_path, uri)
+                    #self._process_container(sub, normalized_child_path, uri)
+
+                    self._process_container(sub, normalized_child_path, uri, full_prov) # Pass full_prov
 
                 elif keyword == 'list':
 
                     normalized_child_path = self._normalize_path(f"{full_path}/{sub.arg}")
 
-                    self._process_list(sub, normalized_child_path, uri)
+                    #self._process_list(sub, normalized_child_path, uri)
+
+                    self._process_list(sub, normalized_child_path, uri, full_prov)      # Pass full_prov
 
                 elif keyword == 'leaf':
 
                     normalized_child_path = self._normalize_path(f"{full_path}/{sub.arg}")
 
-                    self._process_leaf(sub, normalized_child_path, uri)
+                    #self._process_leaf(sub, normalized_child_path, uri)
+
+                    self._process_leaf(sub, normalized_child_path, uri, full_prov)      # Pass full_prov
 
                 elif keyword == 'leaf-list':
 
                     normalized_child_path = self._normalize_path(f"{full_path}/{sub.arg}")
 
-                    self._process_leaf_list(sub, normalized_child_path, uri)
+                    #self._process_leaf_list(sub, normalized_child_path, uri)
+                    self._process_leaf_list(sub, normalized_child_path, uri, full_prov)
 
                 elif keyword == 'uses':
 
@@ -1601,7 +1685,8 @@ class YANGToOWL:
 
         return uri
 
-    def _process_leaf(self, stmt: Any, path: str, parent_uri: Optional[URIRef] = None, is_leaf_list: bool = False) -> None:
+    #def _process_leaf(self, stmt: Any, path: str, parent_uri: Optional[URIRef] = None, is_leaf_list: bool = False) -> None:
+    def _process_leaf(self, stmt: Any, path: str, parent_uri: Optional[URIRef] = None, parent_prov: str = "", is_leaf_list: bool = False) -> None:
             """
             Enhanced leaf processing with identityref and leafref resolution.
             """
@@ -1611,6 +1696,14 @@ class YANGToOWL:
             name = stmt.arg
             full_path = path
             uri = self.ex[full_path.lstrip('/')]
+
+            # 1. Generate PROV path
+            current_segment = self._get_prov_segment(stmt)
+            full_prov = f"{parent_prov}/{current_segment}" if parent_prov else current_segment
+            
+            # 2. Add Triple
+            self.graph.add((uri, PROV.wasDerivedFrom, Literal(full_prov)))
+        
             type_stmt = None
             
             # Extract type information
@@ -1684,11 +1777,12 @@ class YANGToOWL:
                             self.triple_count += 1
                         break
 
-    def _process_leaf_list(self, stmt: Any, path: str, parent_uri: Optional[URIRef] = None) -> None:
-
+    #def _process_leaf_list(self, stmt: Any, path: str, parent_uri: Optional[URIRef] = None) -> None:
+    def _process_leaf_list(self, stmt: Any, path: str, parent_uri: Optional[URIRef] = None, parent_prov: str = "") -> None:
         """Process leaf-list statement"""
 
-        self._process_leaf(stmt, path, parent_uri, is_leaf_list=True)
+        #self._process_leaf(stmt, path, parent_uri, is_leaf_list=True)
+        self._process_leaf(stmt, path, parent_uri, parent_prov, is_leaf_list=True)
 
     def _process_augment(self, stmt: Any) -> None:
         """Step 7: Correctly resolves SIMAP augments into the IETF registry."""
@@ -1714,6 +1808,10 @@ class YANGToOWL:
         if target_path not in self.class_paths:
             self.graph.add((target_uri, RDF.type, OWL.Class))
             self.class_paths[target_path] = target_uri
+        
+        # 1. Lookup Parent PROV from registry
+        # This works because we process base modules first (see Step 6 below)
+        parent_prov = self.prov_paths.get(target_path, "")
 
         # 4. Process children
         if hasattr(stmt, 'substmts'):
@@ -1726,11 +1824,13 @@ class YANGToOWL:
                 child_path = f"{target_path}/{child_name}"
                 
                 if keyword == 'leaf':
-                    self._process_leaf(sub, child_path, target_uri)
+                    #self._process_leaf(sub, child_path, target_uri)
+                    self._process_leaf(sub, child_path, target_uri, parent_prov) # Pass parent_prov
                 elif keyword == 'uses':
                     self._process_uses_in_container(sub, target_path, target_uri)
                 elif keyword in ('container', 'list'):
-                    self._process_container(sub, child_path, target_uri)
+                    #self._process_container(sub, child_path, target_uri)
+                    self._process_container(sub, child_path, target_uri, parent_prov) # Pass parent_prov
 
     def _process_identity(self, stmt: Any) -> None:
 
@@ -2014,6 +2114,13 @@ class YANGToOWL:
 
                 child_uri = self.class_paths[child_path]
 
+                # NEW: Add PROV based on parent schema path + property name
+                parent_prov = self.prov_paths.get(path, "")
+                if parent_prov:
+                    # yang2rdf format: schema_path/generatedPropertyName
+                    prov_string = f"{parent_prov}/{prop_name}"
+                    self.graph.add((prop_uri, PROV.wasDerivedFrom, Literal(prov_string)))
+
                 self.graph.add((prop_uri, RDF.type, OWL.ObjectProperty))
 
                 self.graph.add((prop_uri, RDFS.label, Literal(prop_name)))
@@ -2140,23 +2247,23 @@ class YANGToOWL:
 
                     continue
 
-                if stmt.keyword == 'typedef':
+                #if stmt.keyword == 'typedef':
 
-                    if not hasattr(stmt, 'arg'):
+                #    if not hasattr(stmt, 'arg'):
 
-                        continue
+                #        continue
 
-                    typedef_name = stmt.arg
+                #    typedef_name = stmt.arg
 
-                    constraints = constraint_extractor.extract_constraints(stmt)
+                #    constraints = constraint_extractor.extract_constraints(stmt)
 
-                    if constraints:
+                #    if constraints:
 
-                        self._add_constraint_triples(typedef_name, constraints)
+                #        self._add_constraint_triples(typedef_name, constraints)
 
-                elif stmt.keyword in ('container', 'list'):
+                #elif stmt.keyword in ('container', 'list'):
 
-                    self._extract_leaf_constraints(stmt, constraint_extractor)
+                #    self._extract_leaf_constraints(stmt, constraint_extractor)
 
         log.info(f" Found {constraint_extractor.constraints_found} YANG constraints")
 
@@ -2300,37 +2407,108 @@ class YANGToOWL:
 
                 self.triple_count += 1
 
-    def _create_owl_datatype_restrictions(self) -> None:
+    #def _create_owl_datatype_restrictions(self) -> None:
 
-        """Create OWL Datatype Restrictions for YANG typedefs"""
+    #    """Create OWL Datatype Restrictions for YANG typedefs"""
 
-        log.info(" Creating OWL Datatype Restrictions for typedefs...")
+    #    log.info(" Creating OWL Datatype Restrictions for typedefs...")
 
+    #    constraint_extractor = YANGConstraintExtractor()
+
+    #    for module_name, module in self.resolver.modules.items():
+
+    #        if not hasattr(module, 'substmts'):
+
+    #            continue
+
+    #        for stmt in module.substmts:
+
+    #            if not hasattr(stmt, 'keyword'):
+
+    #                continue
+
+    #            if stmt.keyword == 'typedef' and hasattr(stmt, 'arg'):
+
+    #                typedef_name = stmt.arg
+
+    #                constraints = constraint_extractor.extract_constraints(stmt)
+
+    #                if constraints:
+
+    #                    self._create_datatype_restriction(typedef_name, constraints, stmt)
+
+    #    log.info(f" Created {len(self.typedef_restrictions)} OWL Datatype Restrictions")
+
+    def _create_shacl_typedef_shapes(self) -> None:
+        """Create SHACL Shapes for YANG typedefs"""
+        log.info(" Creating SHACL Shapes for typedefs...")
         constraint_extractor = YANGConstraintExtractor()
 
         for module_name, module in self.resolver.modules.items():
-
             if not hasattr(module, 'substmts'):
-
                 continue
-
             for stmt in module.substmts:
-
                 if not hasattr(stmt, 'keyword'):
-
                     continue
 
+                # Process typedefs
                 if stmt.keyword == 'typedef' and hasattr(stmt, 'arg'):
-
                     typedef_name = stmt.arg
+                    
+                    # Skip enumerations (handled elsewhere)
+                    is_enum = False
+                    if hasattr(stmt, 'substmts'):
+                        for sub in stmt.substmts:
+                            if sub.keyword == 'type' and self._is_enumeration_type(sub):
+                                is_enum = True
+                    if is_enum: continue
 
+                    # Extract constraints
                     constraints = constraint_extractor.extract_constraints(stmt)
+                    
+                    # Create Shape URI (e.g., ex:hex-string)
+                    shape_uri = self.ex[typedef_name]
+                    
+                    # Define as NodeShape
+                    self.graph.add((shape_uri, RDF.type, SH.NodeShape))
+                    self.graph.add((shape_uri, RDFS.label, Literal(typedef_name)))
+                    
+                    # Resolve base type for sh:datatype
+                    base_type = XSD.string
+                    if hasattr(stmt, 'substmts'):
+                        for sub in stmt.substmts:
+                            if sub.keyword == 'type':
+                                base_type = self.type_resolver.resolve_type(sub)
+                    
+                    self.graph.add((shape_uri, SH.datatype, base_type))
 
+                    # Map Constraints to SHACL
                     if constraints:
+                        # Pattern
+                        if 'patterns' in constraints:
+                            for pattern in constraints['patterns']:
+                                self.graph.add((shape_uri, SH.pattern, Literal(pattern)))
+                        
+                        # Length
+                        if 'length' in constraints:
+                            l = constraints['length']
+                            if 'minLength' in l: 
+                                self.graph.add((shape_uri, SH.minLength, Literal(l['minLength'])))
+                            if 'maxLength' in l: 
+                                self.graph.add((shape_uri, SH.maxLength, Literal(l['maxLength'])))
+                        
+                        # Range
+                        if 'range' in constraints:
+                            r = constraints['range']
+                            if 'min' in r: 
+                                self.graph.add((shape_uri, SH.minInclusive, Literal(r['min'])))
+                            if 'max' in r: 
+                                self.graph.add((shape_uri, SH.maxInclusive, Literal(r['max'])))
 
-                        self._create_datatype_restriction(typedef_name, constraints, stmt)
+                    self.typedef_restrictions[typedef_name] = shape_uri
+                    self.constraint_count += 1
 
-        log.info(f" Created {len(self.typedef_restrictions)} OWL Datatype Restrictions")
+        log.info(f" Created SHACL shapes for {len(self.typedef_restrictions)} typedefs")
 
     def _create_datatype_restriction(self, typedef_name: str, constraints: Dict[str, Any], stmt: Any) -> None:
 
