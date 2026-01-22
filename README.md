@@ -30,6 +30,7 @@ Python yang2owl
     - grouping
     - leafref
     - identityref
+    - provenance to the yang models
 
     The script loads one or more YANG modules with pyang, walks their schema tree, and emits an OWL/RDF ontology (Turtle) describing the model, including constraints and metadata.
     ​
