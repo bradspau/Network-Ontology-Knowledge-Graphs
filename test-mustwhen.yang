@@ -1,0 +1,18 @@
+module test-constraints {
+  namespace "urn:test:constraints";
+  prefix tcon;
+
+  container interface {
+    leaf mtu {
+      type uint16;
+      must ". >= 1500" {
+        error-message "MTU must be at least 1500 for this interface type.";
+      }
+    }
+    leaf jumbo-frames {
+      when "../mtu > 9000";
+      type boolean;
+      description "Only configurable if MTU is set for jumbo frames.";
+    }
+  }
+}

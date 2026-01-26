@@ -1,0 +1,49 @@
+module test-comprehensive {
+  yang-version 1.1;
+  namespace "urn:test:comprehensive";
+  prefix tc;
+
+  // 1. Identity Punning Test
+  identity protocol-base;
+  identity ospf { base tc:protocol-base; }
+  identity bgp  { base tc:protocol-base; }
+
+  // 2. Union and Typedef Test
+  typedef id-or-port {
+    type union {
+      type uint16;
+      type identityref {
+        base tc:protocol-base;
+      }
+    }
+  }
+
+  container network-system {
+    
+    // 3. Choice Disjointness Test
+    choice operation-mode {
+      case physical-mode {
+        container hardware-config {
+          leaf slot-id { type uint8; }
+        }
+      }
+      case virtual-mode {
+        container cloud-config {
+          leaf region { type string; }
+        }
+      }
+    }
+
+    // 4. Union Subclassing Test
+    leaf active-id {
+      type tc:id-or-port;
+      description "Should trigger the Union_active-id subclass hierarchy.";
+    }
+
+    // 5. Instance-Identifier Test
+    leaf target-node {
+      type instance-identifier;
+      description "Should be tagged as an ObjectProperty with isInstanceIdentifier.";
+    }
+  }
+}

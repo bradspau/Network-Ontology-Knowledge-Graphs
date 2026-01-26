@@ -1,0 +1,23 @@
+module test-union {
+  namespace "urn:test:union";
+  prefix tu;
+
+  identity protocol-id;
+  identity snmp { base tu:protocol-id; }
+
+  typedef protocol-or-port {
+    type union {
+      type uint16;              // Range 0-65535
+      type identityref {
+        base tu:protocol-id;    // Or a specific identity
+      }
+    }
+  }
+
+  container service {
+    leaf config-value {
+      type tu:protocol-or-port;
+      description "Testing union of built-in and identityref.";
+    }
+  }
+}

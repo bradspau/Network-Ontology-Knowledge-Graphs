@@ -38,7 +38,14 @@ ALL IMPROVEMENTS IMPLEMENTED:
 
 15. ⭐ ENHANCED IdentityRef to Objectproperty ✅ (v4.6 NEW) with owl punning for class and instance for a reasoner RESOLUTION  - CONSISTENT XPATH MATCHING
 
-16. ⭐ ENHANCED Choices and Cases to disjoint classes 
+16. ⭐ ENHANCED Choices and Cases to disjoint classes (v4.6)
+
+17. Yang Union types implemented by sublasses so that owl reasoners with profiles RL, EL etc rather than DL
+
+ENHANCEMENTS IN v4.7:
+- ✅ ENHANCED Addressing Yang union type which allows a leaf to be several types.Instead of using owl:unionOf, we will create a Common Parent Class for the union and make each member type a subClassOf that parent. This keeps the ontology within the OWL 2 RL profile
+- ✅ ENHANCED Yang instance identifier addressed
+- ✅ ENHANCED Yang must and when addressed in SHACL
 
 ENHANCEMENTS IN v4.6:
 - ✅ ENHANCED IdentityRef to Objectproperty
@@ -80,6 +87,7 @@ Date: 2026-01-26
 
 """
 
+from os import name
 import sys
 
 import argparse
@@ -319,25 +327,20 @@ class YANGTypeResolver:
         self.typedefs[name] = typedef
 
     def resolve_type(self, type_stmt: Any) -> URIRef:
-
-        if not hasattr(type_stmt, 'name'):
-
+        """⭐ FIXED: Use .arg and correct typedef traversal"""
+        type_name = getattr(type_stmt, 'arg', None)
+        if not type_name:
             return XSD.string
 
-        type_name = type_stmt.name
-
         if type_name in self.BUILTIN_TYPES:
-
             return self.BUILTIN_TYPES[type_name]
 
         if type_name in self.typedefs:
-
-            typedef = self.typedefs[type_name]
-
-            if hasattr(typedef, 'type_') and typedef.type_:
-
-                return self.resolve_type(typedef.type_)
-
+            typedef_stmt = self.typedefs[type_name]
+            if hasattr(typedef_stmt, 'substmts'):
+                for sub in typedef_stmt.substmts:
+                    if sub.keyword == 'type':
+                        return self.resolve_type(sub)
         return XSD.string
 
 class YANGDependencyResolver:
@@ -425,26 +428,19 @@ class IdentityResolver:
         self._collect_all_identities()
 
     def _collect_all_identities(self) -> None:
-
-        """Traverse all modules and collect identity definitions"""
-
-        for module_name, module in self.modules.items():
-
-            if not hasattr(module, 'identities') or not module.identities:
-
-                continue
-
-            for identity_name, identity_stmt in module.identities.items():
-
-                self.identity_map[identity_name] = identity_stmt
-
-                self.identity_modules[identity_name] = module_name
-
-                base_name = self._extract_base_identity(identity_stmt)
-
-                self.identity_bases[identity_name] = base_name
-
-                log.debug(f" Identity: {identity_name} base={base_name}")
+            """⭐ FIXED: Correctly traverse substmts to collect identities"""
+            for module_name, module in self.modules.items():
+                if not hasattr(module, 'substmts'):
+                    continue
+                # pyang ModuleStatement stores identities in substmts, not an attribute
+                for stmt in module.substmts:
+                    if hasattr(stmt, 'keyword') and stmt.keyword == 'identity':
+                        identity_name = stmt.arg
+                        self.identity_map[identity_name] = stmt
+                        self.identity_modules[identity_name] = module_name
+                        base_name = self._extract_base_identity(stmt)
+                        self.identity_bases[identity_name] = base_name
+                        log.debug(f" Identity Found: {identity_name} -> base: {base_name}")
 
     def _extract_base_identity(self, identity_stmt: Any) -> Optional[str]:
 
@@ -521,14 +517,8 @@ class EnhancedLeafrefResolver:
         self.xpath_cache: Dict[str, Optional[Tuple[str, URIRef]]] = {}
 
     def is_leafref(self, type_stmt: Any) -> bool:
-
-        """Check if a type statement is a leafref"""
-
-        if not hasattr(type_stmt, 'name'):
-
-            return False
-
-        return type_stmt.name == 'leafref'
+        # Use .arg to correctly identify the leafref keyword in pyang
+        return getattr(type_stmt, 'arg', None) == 'leafref'
 
     def extract_xpath_path(self, leafref_type: Any) -> Optional[str]:
 
@@ -1166,6 +1156,38 @@ class YANGToOWL:
 
         # ADD THIS: Registry for schema paths to support PROV
         self.prov_paths: Dict[str, str] = {}
+        
+    def _is_enumeration_type(self, type_stmt: Any) -> bool:
+        return getattr(type_stmt, 'arg', None) == 'enumeration'
+    
+    def _process_xpath_constraints(self, stmt: Any, uri: URIRef) -> None:
+        """
+        ⭐ NEW: Maps YANG must/when constraints to SHACL metadata.
+        Ensures complex validation logic is preserved for commercial SHACL engines.
+        """
+        if not hasattr(stmt, 'substmts'):
+            return
+
+        for sub in stmt.substmts:
+            if not hasattr(sub, 'keyword'):
+                continue
+
+            # Handle 'must' constraints
+            if sub.keyword == 'must':
+                xpath_expr = sub.arg if hasattr(sub, 'arg') else ""
+                self.graph.add((uri, SH.condition, Literal(xpath_expr)))
+                # Extract error-message if present
+                for detail in sub.substmts:
+                    if detail.keyword == 'error-message':
+                        self.graph.add((uri, SH.message, Literal(detail.arg)))
+                self.triple_count += 2
+
+            # Handle 'when' conditional existence
+            elif sub.keyword == 'when':
+                xpath_expr = sub.arg if hasattr(sub, 'arg') else ""
+                self.graph.add((uri, SH.deactivated, Literal(xpath_expr))) # Tagging for conditional logic
+                self.graph.add((uri, RDFS.comment, Literal(f"Conditional: exists when {xpath_expr}")))
+                self.triple_count += 2
 
     def _get_stmt_prefix(self, stmt: Any) -> str:
         """Helper to get the module prefix for a statement"""
@@ -1230,23 +1252,9 @@ class YANGToOWL:
         prefix = self._get_stmt_prefix(stmt)
         return f"{prefix}:{stmt.arg}?{stmt.keyword}"
 
-    def _is_enumeration_type(self, type_stmt: Any) -> bool:
-
-        """Properly detect if a type statement is an enumeration"""
-
-        if hasattr(type_stmt, 'name') and type_stmt.name == 'enumeration':
-
-            return True
-
-        if hasattr(type_stmt, 'substmts'):
-
-            for sub in type_stmt.substmts:
-
-                if hasattr(sub, 'keyword') and sub.keyword == 'enum':
-
-                    return True
-
-        return False
+    def is_leafref(self, type_stmt: Any) -> bool:
+            """⭐ FIXED: Check .arg for leafref keyword"""
+            return getattr(type_stmt, 'arg', None) == 'leafref'
 
     def _normalize_path(self, path: str) -> str:
         """
@@ -1631,7 +1639,7 @@ class YANGToOWL:
                 elif keyword == 'choice':
                     # full_path is the path of the container/list we are currently in
                     self._process_choice_disjointness(sub, full_path)
-
+        self._process_xpath_constraints(stmt, uri)
         return uri
 
     #def _process_list(self, stmt: Any, path: str, parent_uri: Optional[URIRef] = None) -> URIRef:
@@ -1724,7 +1732,7 @@ class YANGToOWL:
                 elif keyword == 'uses':
 
                     self._process_uses_in_container(sub, full_path, uri)
-
+        self._process_xpath_constraints(stmt, uri)        
         return uri
     
     def _process_choice_disjointness(self, choice_stmt: Any, parent_path: str) -> None:
@@ -1761,7 +1769,7 @@ class YANGToOWL:
     #def _process_leaf(self, stmt: Any, path: str, parent_uri: Optional[URIRef] = None, is_leaf_list: bool = False) -> None:
     def _process_leaf(self, stmt: Any, path: str, parent_uri: Optional[URIRef] = None, parent_prov: str = "", is_leaf_list: bool = False) -> None:
             """
-            Enhanced leaf processing with identityref and leafref resolution.
+            Enhanced leaf processing with identityref, leafref, and deep union resolution.
             """
             if not hasattr(stmt, 'arg'):
                 return
@@ -1778,59 +1786,115 @@ class YANGToOWL:
             self.graph.add((uri, PROV.wasDerivedFrom, Literal(full_prov)))
         
             type_stmt = None
-            
-            # Extract type information
             if hasattr(stmt, 'substmts'):
                 for sub in stmt.substmts:
                     if hasattr(sub, 'keyword') and sub.keyword == 'type':
                         type_stmt = sub
                         break
-
             if not type_stmt:
                 return
 
-            # 1. Handle identityref (New Logic)
+            # --- FIX: RESOLVE TYPEDEF TO BASE TYPE (With Prefix Handling) ---
+            is_union = False
+            resolved_type_stmt = type_stmt
+            
+            # Strip prefix for lookup (e.g., tu:protocol-or-port -> protocol-or-port)
+            type_name_raw = type_stmt.arg if hasattr(type_stmt, 'arg') else None
+            type_name_clean = type_name_raw.split(':')[-1] if type_name_raw else None
+
+            if type_name_clean in self.type_resolver.typedefs:
+                typedef_stmt = self.type_resolver.typedefs[type_name_clean]
+                # ⭐ Correctly search substmts for the 'type' statement
+                if hasattr(typedef_stmt, 'substmts'):
+                    for sub in typedef_stmt.substmts:
+                        if sub.keyword == 'type':
+                            resolved_type_stmt = sub
+                            break
+
+            # Check the base type for the 'union' keyword
+            if hasattr(resolved_type_stmt, 'arg') and resolved_type_stmt.arg == 'union':
+                is_union = True
+            # ----------------------------------------------------------------
+
+            # 1. Handle identityref (Direct)
             if hasattr(type_stmt, 'arg') and type_stmt.arg == 'identityref':
                 base_identity = None
                 for sub in type_stmt.substmts:
                     if hasattr(sub, 'keyword') and sub.keyword == 'base':
-                        base_identity = sub.arg
-                        if ':' in base_identity:
-                            base_identity = base_identity.split(':')[1]
+                        base_identity = sub.arg.split(':')[-1]
                         break
                 self.identityref_resolved_count += 1
                 self.graph.add((uri, RDF.type, OWL.ObjectProperty))
                 self.graph.add((uri, RDFS.label, Literal(name)))
-                
                 if base_identity:
-                    # Link to the identity class URI
                     target_identity_uri = self.ex[f"identity/{base_identity}"]
                     self.graph.add((uri, RDFS.range, target_identity_uri))
-                    self.graph.add((uri, RDFS.comment, Literal(f"Identityref base: {base_identity}")))
+                if parent_uri:
+                    self.graph.add((uri, RDFS.domain, parent_uri))
+                self.triple_count += 4
+
+            # 2. Handle leafref
+            elif self.leafref_resolver.is_leafref(type_stmt):
+                resolution_result = self.leafref_resolver.resolve_leafref_target(type_stmt, full_path)
+                if resolution_result:
+                    _, _, xpath_path = resolution_result
+                    target_class_uri = self.leafref_resolver.get_target_class_from_path(resolution_result[0])
+                    self.graph.add((uri, RDF.type, OWL.ObjectProperty))
+                    self.graph.add((uri, self.ex.xpathPath, Literal(xpath_path)))
+                    if target_class_uri: self.graph.add((uri, RDFS.range, target_class_uri))
+                    if parent_uri: self.graph.add((uri, RDFS.domain, parent_uri))
+                    self.leafref_resolved_count += 1
+                else:
+                    self.graph.add((uri, RDF.type, OWL.ObjectProperty))
+                    self.leafref_unresolved_count += 1
+
+            # ⭐ UPGRADED: Handle union correctly (typedef-aware)
+            elif is_union:
+                union_parent_name = f"Union_{name}"
+                union_parent_uri = self.ex[f"types/{union_parent_name}"]
+                
+                self.graph.add((union_parent_uri, RDF.type, OWL.Class))
+                self.graph.add((union_parent_uri, RDFS.label, Literal(f"Union Parent: {name}")))
+                
+                if hasattr(resolved_type_stmt, 'substmts'):
+                    for union_sub in resolved_type_stmt.substmts:
+                        if hasattr(union_sub, 'keyword') and union_sub.keyword == 'type':
+                            # FIX: Handle identityref specifically inside unions
+                            if union_sub.arg == 'identityref':
+                                base_id = None
+                                for sub in union_sub.substmts:
+                                    if sub.keyword == 'base':
+                                        base_id = sub.arg.split(':')[-1]
+                                        break
+                                if base_id:
+                                    member_uri = self.ex[f"identity/{base_id}"]
+                                    self.graph.add((member_uri, RDFS.subClassOf, union_parent_uri))
+                            else:
+                                member_uri = self.type_resolver.resolve_type(union_sub)
+                                # Link only non-W3C URIs (Identities/Enums) as subclasses
+                                if isinstance(member_uri, URIRef) and "www.w3.org" not in str(member_uri):
+                                    self.graph.add((member_uri, RDFS.subClassOf, union_parent_uri))
+                            self.triple_count += 1
+
+                self.graph.add((uri, RDF.type, OWL.ObjectProperty))
+                self.graph.add((uri, RDFS.range, union_parent_uri))
+                if parent_uri:
+                    self.graph.add((uri, RDFS.domain, parent_uri))
+                self.triple_count += 5
+                log.debug(f"✓ Processed union via typedef resolution: {name}")
+            # 4. Handle instance-identifier (New Logic)
+            elif hasattr(type_stmt, 'arg') and type_stmt.arg == 'instance-identifier':
+                self.graph.add((uri, RDF.type, OWL.ObjectProperty))
+                self.graph.add((uri, RDFS.label, Literal(name)))
+                # Tag for downstream URI resolution
+                self.graph.add((uri, self.ex.isInstanceIdentifier, Literal(True, datatype=XSD.boolean)))
+                self.graph.add((uri, RDFS.comment, Literal("A semantic pointer to a specific data node instance.")))
                 
                 if parent_uri:
                     self.graph.add((uri, RDFS.domain, parent_uri))
                 
                 self.triple_count += 4
-                log.debug(f"✓ Processed identityref: {name} -> {base_identity}")
-
-            # 2. Handle leafref (Existing Logic)
-            elif self.leafref_resolver.is_leafref(type_stmt):
-                resolution_result = self.leafref_resolver.resolve_leafref_target(type_stmt, full_path)
-                if resolution_result:
-                    target_path, target_uri, xpath_path = resolution_result
-                    target_class_uri = self.leafref_resolver.get_target_class_from_path(target_path)
-                    self.graph.add((uri, RDF.type, OWL.ObjectProperty))
-                    self.graph.add((uri, RDFS.label, Literal(name)))
-                    self.graph.add((uri, self.ex.xpathPath, Literal(xpath_path)))
-                    if target_class_uri:
-                        self.graph.add((uri, RDFS.range, target_class_uri))
-                    if parent_uri:
-                        self.graph.add((uri, RDFS.domain, parent_uri))
-                    self.leafref_resolved_count += 1
-                else:
-                    self.graph.add((uri, RDF.type, OWL.ObjectProperty))
-                    self.leafref_unresolved_count += 1
+                log.debug(f"✓ Processed instance-identifier: {name}")
 
             # 3. Handle regular leaves
             else:
@@ -1842,7 +1906,7 @@ class YANGToOWL:
                     self.graph.add((uri, RDFS.domain, parent_uri))
                 self.triple_count += 4
 
-            # Add common description
+            # ⭐ ADD BACK: Common metadata and descriptions
             if hasattr(stmt, 'substmts'):
                 for sub in stmt.substmts:
                     if hasattr(sub, 'keyword') and sub.keyword == 'description':
@@ -1850,6 +1914,9 @@ class YANGToOWL:
                             self.graph.add((uri, RDFS.comment, Literal(sub.arg)))
                             self.triple_count += 1
                         break
+
+            # ⭐ NEW: Process XPath constraints for this leaf
+            self._process_xpath_constraints(stmt, uri)
 
     #def _process_leaf_list(self, stmt: Any, path: str, parent_uri: Optional[URIRef] = None) -> None:
     def _process_leaf_list(self, stmt: Any, path: str, parent_uri: Optional[URIRef] = None, parent_prov: str = "") -> None:
@@ -2476,33 +2543,33 @@ class YANGToOWL:
                     log.debug(f" Constraint: {element_name} xsd:pattern {pattern}")
 
     def _process_identities(self) -> None:
-
-        """Process identity hierarchies"""
-
+        """
+        ⭐ MASTER LEVEL: Process identity hierarchies for commercial reasoners.
+        Ensures transitive subclassing and maintains the punning logic.
+        """
         if not self.identity_resolver:
-
             return
 
         for identity_name in self.identity_resolver.identity_map.keys():
-
+            # Use the class registry to ensure URI consistency
             uri = self.ex[f"identity/{identity_name}"]
-
+            
+            # 1. Establish the Class Hierarchy
             base_name = self.identity_resolver.get_identity_base(identity_name)
-
             if base_name:
-
-                base_uri = self.ex[f"identity/{base_name}"]
-
+                # Clean prefixes if they exist (e.g., 'tv:base-protocol' -> 'base-protocol')
+                clean_base = base_name.split(':')[-1]
+                base_uri = self.ex[f"identity/{clean_base}"]
+                
+                # Assert that the specific identity is a subclass of its base
                 self.graph.add((uri, RDFS.subClassOf, base_uri))
-
                 self.triple_count += 1
+                log.debug(f" Identity Hierarchy: {identity_name} ⊑ {clean_base}")
 
+            # 2. Add Metadata
             desc = self.identity_resolver.get_identity_description(identity_name)
-
             if desc:
-
                 self.graph.add((uri, RDFS.comment, Literal(desc)))
-
                 self.triple_count += 1
 
     #def _create_owl_datatype_restrictions(self) -> None:
@@ -2538,75 +2605,90 @@ class YANGToOWL:
     #    log.info(f" Created {len(self.typedef_restrictions)} OWL Datatype Restrictions")
 
     def _create_shacl_typedef_shapes(self) -> None:
-        """Create SHACL Shapes for YANG typedefs"""
-        log.info(" Creating SHACL Shapes for typedefs...")
-        constraint_extractor = YANGConstraintExtractor()
+            """
+            ⭐ UPDATED: Create SHACL Shapes for YANG typedefs.
+            Skips unions and enums to prevent semantic clashing with OWL hierarchies.
+            """
+            log.info(" Creating SHACL Shapes for typedefs...")
+            constraint_extractor = YANGConstraintExtractor()
 
-        for module_name, module in self.resolver.modules.items():
-            if not hasattr(module, 'substmts'):
-                continue
-            for stmt in module.substmts:
-                if not hasattr(stmt, 'keyword'):
+            for module_name, module in self.resolver.modules.items():
+                if not hasattr(module, 'substmts'):
                     continue
+                for stmt in module.substmts:
+                    if not hasattr(stmt, 'keyword'):
+                        continue
 
-                # Process typedefs
-                if stmt.keyword == 'typedef' and hasattr(stmt, 'arg'):
-                    typedef_name = stmt.arg
-                    
-                    # Skip enumerations (handled elsewhere)
-                    is_enum = False
-                    if hasattr(stmt, 'substmts'):
-                        for sub in stmt.substmts:
-                            if sub.keyword == 'type' and self._is_enumeration_type(sub):
-                                is_enum = True
-                    if is_enum: continue
-
-                    # Extract constraints
-                    constraints = constraint_extractor.extract_constraints(stmt)
-                    
-                    # Create Shape URI (e.g., ex:hex-string)
-                    shape_uri = self.ex[typedef_name]
-                    
-                    # Define as NodeShape
-                    self.graph.add((shape_uri, RDF.type, SH.NodeShape))
-                    self.graph.add((shape_uri, RDFS.label, Literal(typedef_name)))
-                    
-                    # Resolve base type for sh:datatype
-                    base_type = XSD.string
-                    if hasattr(stmt, 'substmts'):
-                        for sub in stmt.substmts:
-                            if sub.keyword == 'type':
-                                base_type = self.type_resolver.resolve_type(sub)
-                    
-                    self.graph.add((shape_uri, SH.datatype, base_type))
-
-                    # Map Constraints to SHACL
-                    if constraints:
-                        # Pattern
-                        if 'patterns' in constraints:
-                            for pattern in constraints['patterns']:
-                                self.graph.add((shape_uri, SH.pattern, Literal(pattern)))
+                    # Process typedefs
+                    if stmt.keyword == 'typedef' and hasattr(stmt, 'arg'):
+                        typedef_name = stmt.arg
                         
-                        # Length
-                        if 'length' in constraints:
-                            l = constraints['length']
-                            if 'minLength' in l: 
-                                self.graph.add((shape_uri, SH.minLength, Literal(l['minLength'])))
-                            if 'maxLength' in l: 
-                                self.graph.add((shape_uri, SH.maxLength, Literal(l['maxLength'])))
+                        # 1. Skip enumerations (Handled separately as OWL Classes/Individuals)
+                        is_enum = False
+                        if hasattr(stmt, 'substmts'):
+                            for sub in stmt.substmts:
+                                if sub.keyword == 'type' and self._is_enumeration_type(sub):
+                                    is_enum = True
+                        if is_enum: continue
+
+                        # 2. ⭐ NEW: Skip Unions
+                        # This prevents SHACL from overriding the OWL subclass hierarchy with xsd:string
+                        is_union_typedef = False
+                        if hasattr(stmt, 'substmts'):
+                            for sub in stmt.substmts:
+                                if sub.keyword == 'type' and hasattr(sub, 'arg') and sub.arg == 'union':
+                                    is_union_typedef = True
+                                    break
+                        if is_union_typedef: 
+                            log.debug(f" Skipping SHACL shape for union-based typedef: {typedef_name}")
+                            continue
+
+                        # Extract constraints
+                        constraints = constraint_extractor.extract_constraints(stmt)
                         
-                        # Range
-                        if 'range' in constraints:
-                            r = constraints['range']
-                            if 'min' in r: 
-                                self.graph.add((shape_uri, SH.minInclusive, Literal(r['min'])))
-                            if 'max' in r: 
-                                self.graph.add((shape_uri, SH.maxInclusive, Literal(r['max'])))
+                        # Create Shape URI (e.g., ex:hex-string)
+                        shape_uri = self.ex[typedef_name]
+                        
+                        # Define as NodeShape
+                        self.graph.add((shape_uri, RDF.type, SH.NodeShape))
+                        self.graph.add((shape_uri, RDFS.label, Literal(typedef_name)))
+                        
+                        # Resolve base type for sh:datatype
+                        base_type = XSD.string
+                        if hasattr(stmt, 'substmts'):
+                            for sub in stmt.substmts:
+                                if sub.keyword == 'type':
+                                    base_type = self.type_resolver.resolve_type(sub)
+                        
+                        self.graph.add((shape_uri, SH.datatype, base_type))
 
-                    self.typedef_restrictions[typedef_name] = shape_uri
-                    self.constraint_count += 1
+                        # Map Constraints to SHACL
+                        if constraints:
+                            # Pattern
+                            if 'patterns' in constraints:
+                                for pattern in constraints['patterns']:
+                                    self.graph.add((shape_uri, SH.pattern, Literal(pattern)))
+                            
+                            # Length
+                            if 'length' in constraints:
+                                l = constraints['length']
+                                if 'minLength' in l: 
+                                    self.graph.add((shape_uri, SH.minLength, Literal(l['minLength'])))
+                                if 'maxLength' in l: 
+                                    self.graph.add((shape_uri, SH.maxLength, Literal(l['maxLength'])))
+                            
+                            # Range
+                            if 'range' in constraints:
+                                r = constraints['range']
+                                if 'min' in r: 
+                                    self.graph.add((shape_uri, SH.minInclusive, Literal(r['min'])))
+                                if 'max' in r: 
+                                    self.graph.add((shape_uri, SH.maxInclusive, Literal(r['max'])))
 
-        log.info(f" Created SHACL shapes for {len(self.typedef_restrictions)} typedefs")
+                        self.typedef_restrictions[typedef_name] = shape_uri
+                        self.constraint_count += 1
+
+            log.info(f" Created SHACL shapes for {len(self.typedef_restrictions)} typedefs")
 
     def _create_datatype_restriction(self, typedef_name: str, constraints: Dict[str, Any], stmt: Any) -> None:
 
