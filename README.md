@@ -105,7 +105,9 @@ Python yang2owl
     5. Yang must and when statement contain complex xpath logic that owl would struggle to express. Challenge to update the SHACL generation.
 
     Done
+
     2. Added new function for adding disjointness for choice and cases.
+    
     3. InYang identity is both a category (used for inheritence) and a value (used in data). To achieve ths owl punning is implemented which declares each identity as a Class and also a namedindividual so it can be the object of a property. In some commercial databases punning needs to be explicitly enabled. eg. If you have an identity ospf that has a base routing-protocol, and a leaf protocol-type (identityref to routing-protocol), a standard reasoner might not realise ospf is a valid "Individual" to put in that leaf without the NamedIndividual declaration. Punning allows the reasoner to treat ospf as a value (Individual) while still recognizing it inherits all characteristics of routing-protocol (Class). eg
 
     module network-routing {
