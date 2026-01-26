@@ -96,9 +96,9 @@ Python yang2owl
   Updated v4.6 to v4.7
   Design decisions made on the conversion to align the semantics with performance and use with commercial reasoners and w3c RL profile. In short, avoiding the full description logic.
 
-    1. Yang union allows a leaf to be one of several types. OWL only supports one type as data property. Challenge is that owl unionof is typically not supported in commercial reasoners due to it being out of polynomial time reasoning. Inclusion of owl unionof probably would imly a user to refactor the turtle. 
+    1. Yang union allows a leaf to be one of several types. OWL only supports one type as data property. Challenge is that owl unionof is typically not supported in commercial reasoners due to it being out of polynomial time reasoning. Inclusion of owl unionof probably would imply a user would refactor the turtle. 
 
-    2. Mappng of yag choices and cases. In yang this makes data nodes mutually excusive. Challenge map these to owl class disjointness.
+    2. Mapping of yag choices and cases. In yang this makes data nodes mutually excusive. Challenge map these to owl class disjointness.
 
     3. Identityref to ObjectProperty Trasition. Script currently recognises identityref and tags the leaf as ObjectProperty and points it to a specific URI. Treting the identity as a flat value rater than navigable class. _process_identitie processes identites as rdfs:subClassOf but when processing the leaf links to the base identity inhibiting a reasoner to understand sub-identity is a valid value. The rdfs:range of the ObjectProperty should point to individuals that are members of the identity class (or subclass).
 
