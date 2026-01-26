@@ -36,6 +36,14 @@ ALL IMPROVEMENTS IMPLEMENTED:
 
 14. ⭐ PATH NORMALIZATION ✅ (v4.5 NEW) - FULLY QUALIFIED MODULE PATHS
 
+15. ⭐ ENHANCED IdentityRef to Objectproperty ✅ (v4.6 NEW) with owl punning for class and instance for a reasoner RESOLUTION  - CONSISTENT XPATH MATCHING
+
+16. ⭐ ENHANCED Choices and Cases to disjoint classes 
+
+ENHANCEMENTS IN v4.6:
+- ✅ ENHANCED IdentityRef to Objectproperty
+- ✅ ENHANCED Choices and Cases to disjoint classes
+
 ENHANCEMENTS IN v4.5:
 
 - ✅ ENHANCEMENT 1: Full module-qualified path normalization (e.g., /ietf-network/networks/network)
@@ -66,9 +74,9 @@ ENHANCEMENTS IN v4.3:
 
 - ✅ ENHANCEMENT 10: fix provenance to point to incoming yang rather than outgoing owl
 
-Author: YANG-to-OWL Converter v4.5 (ENHANCED WITH PATH NORMALIZATION)
+Author: YANG-to-OWL Converter v4.6 
 
-Date: 2026-01-22
+Date: 2026-01-26
 
 """
 
@@ -1619,6 +1627,10 @@ class YANGToOWL:
                 elif keyword == 'uses':
 
                     self._process_uses_in_container(sub, full_path, uri)
+ 
+                elif keyword == 'choice':
+                    # full_path is the path of the container/list we are currently in
+                    self._process_choice_disjointness(sub, full_path)
 
         return uri
 
@@ -1714,7 +1726,38 @@ class YANGToOWL:
                     self._process_uses_in_container(sub, full_path, uri)
 
         return uri
-
+    
+    def _process_choice_disjointness(self, choice_stmt: Any, parent_path: str) -> None:
+        """
+        ⭐ NEW: Implements mutual exclusivity between YANG choice cases.
+        Ensures commercial reasoners can flag invalid data co-existence.
+        """
+        case_classes = set() # Use a set to ensure unique URIs
+        
+        # 1. Collect URIs for all case-holding classes within this choice
+        if hasattr(choice_stmt, 'substmts'):
+            for sub in choice_stmt.substmts:
+                if not hasattr(sub, 'keyword'): continue
+                
+                # Identify the path for Explicit or Implicit cases
+                if sub.keyword in ('case', 'container', 'list'):
+                    case_path = self._normalize_path(f"{parent_path}/{sub.arg}")
+                    
+                    # Check registry, but fall back to manual URI generation
+                    if case_path in self.class_paths:
+                        case_classes.add(self.class_paths[case_path])
+                    else:
+                        # Generate URI manually to solve the registry latency issue
+                        generated_uri = self.ex[case_path.lstrip('/')]
+                        case_classes.add(generated_uri)
+                            
+        # 2. Assert disjointness between all unique pairs (Combination logic)
+        case_list = list(case_classes)
+        for i, class_a in enumerate(case_list):
+            for class_b in case_list[i+1:]:
+                self.graph.add((class_a, OWL.disjointWith, class_b))
+                self.triple_count += 1
+                log.debug(f" Asserted Disjoint: {class_a.split('/')[-1]} ⟷ {class_b.split('/')[-1]}")
     #def _process_leaf(self, stmt: Any, path: str, parent_uri: Optional[URIRef] = None, is_leaf_list: bool = False) -> None:
     def _process_leaf(self, stmt: Any, path: str, parent_uri: Optional[URIRef] = None, parent_prov: str = "", is_leaf_list: bool = False) -> None:
             """
@@ -1760,6 +1803,7 @@ class YANGToOWL:
                 self.graph.add((uri, RDFS.label, Literal(name)))
                 
                 if base_identity:
+                    # Link to the identity class URI
                     target_identity_uri = self.ex[f"identity/{base_identity}"]
                     self.graph.add((uri, RDFS.range, target_identity_uri))
                     self.graph.add((uri, RDFS.comment, Literal(f"Identityref base: {base_identity}")))
@@ -1865,6 +1909,7 @@ class YANGToOWL:
     def _process_identity(self, stmt: Any) -> None:
 
         """Process identity statement"""
+        """Enhanced Identity processing with OWL Punning."""
 
         if not hasattr(stmt, 'arg'):
 
@@ -1882,9 +1927,12 @@ class YANGToOWL:
 
         self.graph.add((uri, RDFS.label, Literal(name)))
 
+        # Punning: Also declare as NamedIndividual    
+        self.graph.add((uri, RDF.type, OWL.NamedIndividual))
+
         self.identity_class_uris[name] = uri
 
-        self.triple_count += 3
+        self.triple_count += 4
 
         if hasattr(stmt, 'substmts'):
 
@@ -2031,6 +2079,9 @@ class YANGToOWL:
                                 self.triple_count += 1
 
                             break
+            elif keyword == 'choice':
+                # Process choice within grouping
+                self._process_choice_disjointness(child_stmt, target_path)
 
         log.debug(f" Uses expanded: {grouping_name} into {target_path}")
 

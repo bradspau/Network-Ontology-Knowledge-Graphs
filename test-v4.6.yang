@@ -1,0 +1,41 @@
+module test-validation {
+  namespace "urn:test:validation";
+  prefix tv;
+
+  // --- Step 1 Test: Identity Hierarchy ---
+  identity base-protocol;
+  
+  identity bgp {
+    base tv:base-protocol;
+  }
+
+  identity ospf {
+    base tv:base-protocol;
+  }
+
+  // --- Step 2 Test: Choice/Case Structures ---
+  container network-node {
+    leaf active-protocol {
+      type identityref {
+        base tv:base-protocol;
+      }
+    }
+
+    choice acceleration-type {
+      case hardware {
+        container fpga-settings {
+          leaf board-id { type string; }
+        }
+      }
+      case software {
+        container kernel-offload {
+          leaf threads { type uint8; }
+        }
+      }
+      // Implicit Case (Direct Container)
+      container no-acceleration {
+        leaf reason { type string; }
+      }
+    }
+  }
+}
