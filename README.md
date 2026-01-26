@@ -93,7 +93,9 @@ Python yang2owl
         _add_prov_metadata() annotates every class, datatype property, and object property with PROV wasDerivedFrom URIs that encode the originating YANG path and element type.
     ​
 
-    To Do.
+  Updated v4.6 to v4.7
+  Design decisions made on the conversion to align the semantics with performance and use with commercial reasoners and w3c RL profile. In short, avoiding the full description logic.
+
     1. Yang union allows a leaf to be one of several types. OWL only supports one type as data property. Challenge is that owl unionof is typically not supported in commercial reasoners due to it being out of polynomial time reasoning. Inclusion of owl unionof probably would imly a user to refactor the turtle. 
 
     2. Mappng of yag choices and cases. In yang this makes data nodes mutually excusive. Challenge map these to owl class disjointness.
@@ -104,36 +106,4 @@ Python yang2owl
 
     5. Yang must and when statement contain complex xpath logic that owl would struggle to express. Challenge to update the SHACL generation.
 
-    Done
-
-    2. Added new function for adding disjointness for choice and cases.
     
-    3. InYang identity is both a category (used for inheritence) and a value (used in data). To achieve ths owl punning is implemented which declares each identity as a Class and also a namedindividual so it can be the object of a property. In some commercial databases punning needs to be explicitly enabled. eg. If you have an identity ospf that has a base routing-protocol, and a leaf protocol-type (identityref to routing-protocol), a standard reasoner might not realise ospf is a valid "Individual" to put in that leaf without the NamedIndividual declaration. Punning allows the reasoner to treat ospf as a value (Individual) while still recognizing it inherits all characteristics of routing-protocol (Class). eg
-
-    module network-routing {
-    namespace "urn:example:routing";
-    prefix rt;
-
-    // 1. Define the base identity
-    identity routing-protocol {
-        description "Base identity for all routing protocols.";
-    }
-
-    // 2. Define a specific protocol that 'derives' from the base
-    identity ospf {
-        base rt:routing-protocol;
-        description "Open Shortest Path First (OSPF) protocol.";
-    }
-
-    container router {
-        // 3. Define a leaf that references the identity hierarchy
-        leaf protocol-type {
-        type identityref {
-            base rt:routing-protocol;
-        }
-        description "The specific routing protocol type used.";
-        }
-    }
-    }
-
-
