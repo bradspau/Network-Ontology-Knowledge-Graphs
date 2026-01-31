@@ -1,0 +1,56 @@
+@prefix ex: <http://www.huawei.com/ontology/> .
+@prefix hw: <http://www.huawei.com/ontology/ietf-hardware/hardware/component/> .
+@prefix nwi: <http://www.huawei.com/ontology/ietf-network-inventory-txt/network-inventory/network-elements/network-element/> .
+@prefix nil: <http://www.huawei.com/ontology/ietf-ni-location/locations/location/> .
+@prefix id: <http://www.huawei.com/ontology/identity/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+# --- Location & Rack Definitions ---
+
+# Sydney Site
+<http://data.example.com/location/LOC-SYD-01> a <http://www.huawei.com/ontology/ietf-ni-location/locations/location> ;
+    ex:id "LOC-SYD-01" ;
+    ex:type "Site" .
+
+# Rack 01 in Sydney (Row 1, Column 1)
+<http://data.example.com/rack/RACK-SYD-01> a <http://www.huawei.com/ontology/ietf-ni-location/locations/racks/rack> ;
+    ex:id "RACK-SYD-01" ;
+    <http://www.huawei.com/ontology/ietf-ni-location/locations/location/ni-location-ref> "LOC-SYD-01" ;
+    <http://www.huawei.com/ontology/ietf-ni-location/locations/racks/rack/rack-location/row-number> 1 ;
+    <http://www.huawei.com/ontology/ietf-ni-location/locations/racks/rack/rack-location/column-number> 1 .
+
+# Melbourne Site
+<http://data.example.com/location/LOC-MEL-02> a <http://www.huawei.com/ontology/ietf-ni-location/locations/location> ;
+    ex:id "LOC-MEL-02" ;
+    ex:type "Building" .
+
+# Rack 01 in Melbourne (Row 5, Column 12)
+<http://data.example.com/rack/RACK-MEL-01> a <http://www.huawei.com/ontology/ietf-ni-location/locations/racks/rack> ;
+    ex:id "RACK-MEL-01" ;
+    <http://www.huawei.com/ontology/ietf-ni-location/locations/location/ni-location-ref> "LOC-MEL-02" ;
+    <http://www.huawei.com/ontology/ietf-ni-location/locations/racks/rack/rack-location/row-number> 5 ;
+    <http://www.huawei.com/ontology/ietf-ni-location/locations/racks/rack/rack-location/column-number> 12 .
+
+# --- Network Elements and Contained Chassis ---
+
+# Sydney Core Chassis
+<http://data.example.com/component/CHASSIS-01> a <http://www.huawei.com/ontology/ietf-network-inventory-txt/network-inventory/network-elements/network-element/components/component> ;
+    ex:component-id "CHASSIS-01" ;
+    ex:class id:chassis .
+
+<http://data.example.com/rack/RACK-SYD-01> <http://www.huawei.com/ontology/ietf-ni-location/locations/racks/rack/contained-chassis> [
+    ex:relative-position 1 ;
+    ex:ne-ref "NE-CORE-01" ;
+    ex:component-ref "CHASSIS-01" 
+] .
+
+# Melbourne Aggregation Chassis
+<http://data.example.com/component/CHASSIS-03> a <http://www.huawei.com/ontology/ietf-network-inventory-txt/network-inventory/network-elements/network-element/components/component> ;
+    ex:component-id "CHASSIS-03" ;
+    ex:class id:chassis .
+
+<http://data.example.com/rack/RACK-MEL-01> <http://www.huawei.com/ontology/ietf-ni-location/locations/racks/rack/contained-chassis> [
+    ex:relative-position 10 ;
+    ex:ne-ref "NE-AGG-01" ;
+    ex:component-ref "CHASSIS-03" 
+] .

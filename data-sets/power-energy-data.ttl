@@ -1,0 +1,101 @@
+@prefix ex: <http://www.huawei.com/ontology/> .
+@prefix id: <http://www.huawei.com/ontology/identity/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix eo-p: <http://www.huawei.com/ontology/ietf-power-and-energy-txt/energy-objects/power-entry/> .
+
+# --- Top-level Energy Objects Container ---
+<http://data.example.com/power/ENERGY-STATS-01> a <http://www.huawei.com/ontology/ietf-power-and-energy-txt/energy-objects> ;
+    ex:label "Network Power Statistics" ;
+    <http://www.huawei.com/ontology/ietf-power-and-energy-txt/energy-objects/hasPowerEntry> 
+        <http://data.example.com/power-entry/PE-01>, <http://data.example.com/power-entry/PE-02>,
+        <http://data.example.com/power-entry/PE-03>, <http://data.example.com/power-entry/PE-04>,
+        <http://data.example.com/power-entry/PE-05>, <http://data.example.com/power-entry/PE-06>,
+        <http://data.example.com/power-entry/PE-07>, <http://data.example.com/power-entry/PE-08>,
+        <http://data.example.com/power-entry/PE-09>, <http://data.example.com/power-entry/PE-10> .
+
+# --- Power Entries for the 10 Chassis ---
+
+# Sydney Core (High Usage)
+<http://data.example.com/power-entry/PE-01> a <http://www.huawei.com/ontology/ietf-power-and-energy-txt/energy-objects/power-entry> ;
+    eo-p:object-id "PE-CH-01" ;
+    eo-p:source-component-id <http://data.example.com/component/CHASSIS-01> ;
+    eo-p:eo-power 1250 ;
+    eo-p:eo-power-nameplate 2000 ;
+    eo-p:eo-power-unit-multiplier id:multiplier-none ;
+    eo-p:eo-power-data-source-accuracy id:accuracy-measured-gold ;
+    eo-p:eo-power-measurement-local true .
+
+<http://data.example.com/power-entry/PE-02> a <http://www.huawei.com/ontology/ietf-power-and-energy-txt/energy-objects/power-entry> ;
+    eo-p:object-id "PE-CH-02" ;
+    eo-p:source-component-id <http://data.example.com/component/CHASSIS-02> ;
+    eo-p:eo-power 1180 ;
+    eo-p:eo-power-nameplate 2000 ;
+    eo-p:eo-power-unit-multiplier id:multiplier-none ;
+    eo-p:eo-power-data-source-accuracy id:accuracy-measured-gold ;
+    eo-p:eo-power-measurement-local true .
+
+# Melbourne Aggregation
+<http://data.example.com/power-entry/PE-03> a <http://www.huawei.com/ontology/ietf-power-and-energy-txt/energy-objects/power-entry> ;
+    eo-p:object-id "PE-CH-03" ;
+    eo-p:source-component-id <http://data.example.com/component/CHASSIS-03> ;
+    eo-p:eo-power 650 ;
+    eo-p:eo-power-nameplate 1000 ;
+    eo-p:eo-power-unit-multiplier id:multiplier-none ;
+    eo-p:eo-power-data-source-accuracy id:accuracy-measured-silver .
+
+<http://data.example.com/power-entry/PE-04> a <http://www.huawei.com/ontology/ietf-power-and-energy-txt/energy-objects/power-entry> ;
+    eo-p:object-id "PE-CH-04" ;
+    eo-p:source-component-id <http://data.example.com/component/CHASSIS-04> ;
+    eo-p:eo-power 645 ;
+    eo-p:eo-power-nameplate 1000 ;
+    eo-p:eo-power-unit-multiplier id:multiplier-none ;
+    eo-p:eo-power-data-source-accuracy id:accuracy-measured-silver .
+
+<http://data.example.com/power-entry/PE-05> a <http://www.huawei.com/ontology/ietf-power-and-energy-txt/energy-objects/power-entry> ;
+    eo-p:object-id "PE-CH-05" ;
+    eo-p:source-component-id <http://data.example.com/component/CHASSIS-05> ;
+    eo-p:eo-power 300 ;
+    eo-p:eo-power-nameplate 500 ;
+    eo-p:eo-power-unit-multiplier id:multiplier-none ;
+    eo-p:eo-power-data-source-accuracy id:accuracy-static .
+
+<http://data.example.com/power-entry/PE-06> a <http://www.huawei.com/ontology/ietf-power-and-energy-txt/energy-objects/power-entry> ;
+    eo-p:object-id "PE-CH-06" ;
+    eo-p:source-component-id <http://data.example.com/component/CHASSIS-06> ;
+    eo-p:eo-power 310 ;
+    eo-p:eo-power-nameplate 500 ;
+    eo-p:eo-power-unit-multiplier id:multiplier-none ;
+    eo-p:eo-power-data-source-accuracy id:accuracy-static .
+
+# Sydney TOR (Low/Variable Usage)
+<http://data.example.com/power-entry/PE-07> a <http://www.huawei.com/ontology/ietf-power-and-energy-txt/energy-objects/power-entry> ;
+    eo-p:object-id "PE-CH-07" ;
+    eo-p:source-component-id <http://data.example.com/component/CHASSIS-07> ;
+    eo-p:eo-power 150 ;
+    eo-p:eo-power-nameplate 400 ;
+    eo-p:eo-power-unit-multiplier id:multiplier-none ;
+    eo-p:eo-power-data-source-accuracy id:accuracy-measured-gold .
+
+<http://data.example.com/power-entry/PE-08> a <http://www.huawei.com/ontology/ietf-power-and-energy-txt/energy-objects/power-entry> ;
+    eo-p:object-id "PE-CH-08" ;
+    eo-p:source-component-id <http://data.example.com/component/CHASSIS-08> ;
+    eo-p:eo-power 155 ;
+    eo-p:eo-power-nameplate 400 ;
+    eo-p:eo-power-unit-multiplier id:multiplier-none ;
+    eo-p:eo-power-data-source-accuracy id:accuracy-measured-gold .
+
+<http://data.example.com/power-entry/PE-09> a <http://www.huawei.com/ontology/ietf-power-and-energy-txt/energy-objects/power-entry> ;
+    eo-p:object-id "PE-CH-09" ;
+    eo-p:source-component-id <http://data.example.com/component/CHASSIS-09> ;
+    eo-p:eo-power 148 ;
+    eo-p:eo-power-nameplate 400 ;
+    eo-p:eo-power-unit-multiplier id:multiplier-none ;
+    eo-p:eo-power-data-source-accuracy id:accuracy-measured-gold .
+
+<http://data.example.com/power-entry/PE-10> a <http://www.huawei.com/ontology/ietf-power-and-energy-txt/energy-objects/power-entry> ;
+    eo-p:object-id "PE-CH-10" ;
+    eo-p:source-component-id <http://data.example.com/component/CHASSIS-10> ;
+    eo-p:eo-power 160 ;
+    eo-p:eo-power-nameplate 400 ;
+    eo-p:eo-power-unit-multiplier id:multiplier-none ;
+    eo-p:eo-power-data-source-accuracy id:accuracy-measured-gold .

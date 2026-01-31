@@ -107,3 +107,94 @@ Python yang2owl
     5. Yang must and when statement contain complex xpath logic that owl would struggle to express. Challenge to update the SHACL generation.
 
     
+    IETF-ni-location.ttl
+
+    Running the script upon the ietf-ni-location.yang file subsumes all the associated yang files referenced by that module before producing the output. If running the script on ietf-ni-location.yang there for produces the ontology ietf-ni-location-python.ttl which includes the iana-hardware, ietf-hardware, ietf-network-topology and ietf-nwi-passive-topology. 
+
+    I probably could have, should have, made these separate ontologies but is what it is. 
+
+
+(Still testing these as I am having dificulty creating variants)
+Chassis Query
+    Query to retrieve the unique identifier of every component classified as a chassis, its nae, the specific network element and its physical location. 
+
+    PREFIX ex: <http://www.huawei.com/ontology/>
+    PREFIX hw: <http://www.huawei.com/ontology/ietf-hardware/hardware/component/>
+    PREFIX nwi: <http://www.huawei.com/ontology/ietf-network-inventory-txt/network-inventory/network-elements/network-element/>
+    PREFIX nil: <http://www.huawei.com/ontology/ietf-ni-location/locations/location/>
+    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+    SELECT ?componentID ?componentName ?networkElementID ?locationID
+    WHERE {
+    # 1. Find components classified specifically as a 'chassis'
+    ?component a <http://www.huawei.com/ontology/ietf-network-inventory-txt/network-inventory/network-elements/network-element/components/component> ;
+                ex:class <http://www.huawei.com/ontology/identity/chassis> ;
+                ex:component-id ?componentID .
+    
+    # 2. Get the optional human-readable name
+    OPTIONAL { ?component ex:name ?componentName . }
+
+    # 3. Trace which Network Element (NE) this component belongs to
+    ?ne <http://www.huawei.com/ontology/ietf-network-inventory-txt/network-inventory/network-elements/network-element/components/hasComponent> ?component ;
+        nwi:ne-id ?networkElementID .
+
+    # 4. Link the Network Element to its physical Location ID
+    ?ne <http://www.huawei.com/ontology/ietf-ni-location/locations/location> ?locationID .
+    }
+    ORDER BY ?locationID ?networkElementID
+
+Locate Chassis in Rack
+
+    Find exactly which rack, row and column a chassis is located in.
+
+    PREFIX ex: <http://www.huawei.com/ontology/>
+    PREFIX hw: <http://www.huawei.com/ontology/ietf-hardware/hardware/component/>
+    PREFIX nwi: <http://www.huawei.com/ontology/ietf-network-inventory-txt/network-inventory/network-elements/network-element/>
+    PREFIX nil: <http://www.huawei.com/ontology/ietf-ni-location/locations/location/>
+    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+    SELECT ?componentID ?componentName ?networkElementID ?locationID
+    WHERE {
+    # 1. Find components classified specifically as a 'chassis'
+    ?component a <http://www.huawei.com/ontology/ietf-network-inventory-txt/network-inventory/network-elements/network-element/components/component> ;
+                ex:class <http://www.huawei.com/ontology/identity/chassis> ;
+                ex:component-id ?componentID .
+    
+    # 2. Get the optional human-readable name
+    OPTIONAL { ?component ex:name ?componentName . }
+
+    # 3. Trace which Network Element (NE) this component belongs to
+    ?ne <http://www.huawei.com/ontology/ietf-network-inventory-txt/network-inventory/network-elements/network-element/components/hasComponent> ?component ;
+        nwi:ne-id ?networkElementID .
+
+    # 4. Link the Network Element to its physical Location ID
+    ?ne <http://www.huawei.com/ontology/ietf-ni-location/locations/location> ?locationID .
+    }
+    ORDER BY ?locationID ?networkElementID
+
+Power Energy Query 
+    PREFIX ex: <http://www.huawei.com/ontology/>
+    PREFIX eo-p: <http://www.huawei.com/ontology/ietf-power-and-energy-txt/energy-objects/power-entry/>
+    PREFIX id: <http://www.huawei.com/ontology/identity/>
+
+    SELECT ?chassisName ?locationID ?rackID ?row ?col ?currentPower
+    WHERE {
+    # Link Chassis to Power
+    ?powerEntry a <http://www.huawei.com/ontology/ietf-power-and-energy-txt/energy-objects/power-entry> ;
+                eo-p:source-component-id ?chassis ;
+                eo-p:eo-power ?currentPower .
+    
+    ?chassis ex:name ?chassisName ;
+            ex:component-id ?chID .
+
+    # Link Chassis to Rack
+    ?rack a <http://www.huawei.com/ontology/ietf-ni-location/locations/racks/rack> ;
+            ex:id ?rackID ;
+            <http://www.huawei.com/ontology/ietf-ni-location/locations/location/ni-location-ref> ?locationID ;
+            <http://www.huawei.com/ontology/ietf-ni-location/locations/racks/rack/rack-location/row-number> ?row ;
+            <http://www.huawei.com/ontology/ietf-ni-location/locations/racks/rack/rack-location/column-number> ?col ;
+            <http://www.huawei.com/ontology/ietf-ni-location/locations/racks/rack/contained-chassis> ?container .
+            
+    ?container ex:component-ref ?chID .
+    }
+    ORDER BY DESC(?currentPower)
