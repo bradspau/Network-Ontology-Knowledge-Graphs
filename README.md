@@ -18,7 +18,7 @@ Current Content
 - yang4owl.py - yang4owl in python
 - simap-ontology-python.ttl - current output of yang2owl for comparison against the IETF 124 simap-rdfs-schema
 
-Python yang2owl 
+Python yang4owl 
 - execution  yang4owl.py --yang-dir <directory of the yang files> --modules <yang model to create ttl for> --base-uri <owl base uri> --output <turtle file> --verbose 
 
     Current include capabilities
