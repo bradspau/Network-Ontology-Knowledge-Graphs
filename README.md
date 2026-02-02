@@ -115,8 +115,24 @@ Python yang4owl
 
 
 (Still testing these as I am having dificulty creating variants)
+What is at a location? (works)
+PREFIX ex: <http://www.huawei.com/ontology/>
+PREFIX hw: <http://www.huawei.com/ontology/ietf-hardware/hardware/component/>
+PREFIX nwi: <http://www.huawei.com/ontology/ietf-network-inventory-txt/network-inventory/network-elements/network-element/>
+PREFIX nil: <http://www.huawei.com/ontology/ietf-ni-location/locations/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+
+SELECT ?location ?id ?name ?type
+WHERE {
+  ?location a nil:location .
+  ?location ex:id ?id .
+  ?location ex:name ?name .
+  ?location ex:type ?type .
+}
+
 Chassis Query
-    Query to retrieve the unique identifier of every component classified as a chassis, its nae, the specific network element and its physical location. 
+    Query to retrieve the unique identifier of every component classified as a chassis, its name, the specific network element and its physical location. 
 
     PREFIX ex: <http://www.huawei.com/ontology/>
     PREFIX hw: <http://www.huawei.com/ontology/ietf-hardware/hardware/component/>
@@ -134,7 +150,7 @@ Chassis Query
     # 2. Get the optional human-readable name
     OPTIONAL { ?component ex:name ?componentName . }
 
-    # 3. Trace which Network Element (NE) this component belongs to
+    # 3. Trace which Network Element (NE) this component belongs to <this part is broken at present>
     ?ne <http://www.huawei.com/ontology/ietf-network-inventory-txt/network-inventory/network-elements/network-element/components/hasComponent> ?component ;
         nwi:ne-id ?networkElementID .
 
