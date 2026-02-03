@@ -48,6 +48,37 @@ ex:gauge64 a sh:NodeShape ;
     rdfs:label "gauge64" ;
     sh:datatype xsd:unsignedLong .
 
+<http://www.huawei.com/ontology/grouping/link-ref> a owl:Class ;
+    rdfs:label "link-ref" ;
+    rdfs:comment "Grouping definition: link-ref",
+        """This grouping can be used to reference a link in a specific
+network.  Although it is not used in this module, it is
+defined here for the convenience of augmenting modules.""" .
+
+<http://www.huawei.com/ontology/grouping/network-ref> a owl:Class ;
+    rdfs:label "network-ref" ;
+    rdfs:comment """Contains the information necessary to reference a network --
+for example, an underlay network.""",
+        "Grouping definition: network-ref" .
+
+<http://www.huawei.com/ontology/grouping/node-ref> a owl:Class ;
+    rdfs:label "node-ref" ;
+    rdfs:comment "Contains the information necessary to reference a node.",
+        "Grouping definition: node-ref" .
+
+<http://www.huawei.com/ontology/grouping/simap-common> a owl:Class ;
+    rdfs:label "simap-common" ;
+    rdfs:comment "Grouping definition: simap-common",
+        "Reusable set of optional extensions." .
+
+<http://www.huawei.com/ontology/grouping/tp-ref> a owl:Class ;
+    rdfs:label "tp-ref" ;
+    rdfs:comment "Grouping definition: tp-ref",
+        """This grouping can be used to reference a termination point
+in a specific node.  Although it is not used in this module,
+it is defined here for the convenience of augmenting
+modules.""" .
+
 ex:hex-string a sh:NodeShape ;
     rdfs:label "hex-string" ;
     sh:datatype xsd:string ;
@@ -144,6 +175,19 @@ ex:hex-string a sh:NodeShape ;
     owl:minCardinality 0 ;
     prov:wasDerivedFrom "nw:networks?container/hasNetwork" .
 
+<http://www.huawei.com/ontology/ietf-network/networks/network/description> a owl:DatatypeProperty ;
+    rdfs:label "description" ;
+    rdfs:comment "Optional description." ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-network/networks/network> ;
+    rdfs:range xsd:string .
+
+<http://www.huawei.com/ontology/ietf-network/networks/network/extension> a owl:DatatypeProperty ;
+    rdfs:label "extension" ;
+    rdfs:comment "Anydata: Arbitrary structure extension point",
+        "Extension point for metadata." ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-network/networks/network> ;
+    rdfs:range xsd:string .
+
 <http://www.huawei.com/ontology/ietf-network/networks/network/hasLink> a owl:ObjectProperty ;
     rdfs:label "hasLink" ;
     rdfs:comment "Containment relation (parent --> child)." ;
@@ -184,6 +228,18 @@ ex:hex-string a sh:NodeShape ;
     owl:minCardinality 0 ;
     prov:wasDerivedFrom "nw:networks?container/nw:network?list/hasSupportingNetwork" .
 
+<http://www.huawei.com/ontology/ietf-network/networks/network/label> a owl:DatatypeProperty ;
+    rdfs:label "label" ;
+    rdfs:comment "Optional labels for the instance." ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-network/networks/network> ;
+    rdfs:range xsd:string .
+
+<http://www.huawei.com/ontology/ietf-network/networks/network/link/description> a owl:DatatypeProperty ;
+    rdfs:label "description" ;
+    rdfs:comment "Optional description." ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-network/networks/network/link> ;
+    rdfs:range xsd:string .
+
 <http://www.huawei.com/ontology/ietf-network/networks/network/link/destination/dest-node> a owl:ObjectProperty ;
     ex:xpathPath "../../../nw:node/nw:node-id" ;
     rdfs:comment """Destination node identifier.  Must be in the same
@@ -201,6 +257,13 @@ destination node and terminates the link.""" ;
     rdfs:range <http://www.huawei.com/ontology/ietf-network/networks/network> ;
     owl:minCardinality 0 ;
     prov:wasDerivedFrom "nt:link?list/nt:destination?container/nt:dest-tp?leaf" .
+
+<http://www.huawei.com/ontology/ietf-network/networks/network/link/extension> a owl:DatatypeProperty ;
+    rdfs:label "extension" ;
+    rdfs:comment "Anydata: Arbitrary structure extension point",
+        "Extension point for metadata." ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-network/networks/network/link> ;
+    rdfs:range xsd:string .
 
 <http://www.huawei.com/ontology/ietf-network/networks/network/link/hasDestination> a owl:ObjectProperty ;
     rdfs:label "hasDestination" ;
@@ -234,6 +297,12 @@ destination node and terminates the link.""" ;
     owl:minCardinality 0 ;
     prov:wasDerivedFrom "nt:link?list/hasTp" .
 
+<http://www.huawei.com/ontology/ietf-network/networks/network/link/label> a owl:DatatypeProperty ;
+    rdfs:label "label" ;
+    rdfs:comment "Optional labels for the instance." ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-network/networks/network/link> ;
+    rdfs:range xsd:string .
+
 <http://www.huawei.com/ontology/ietf-network/networks/network/link/link-direction> a owl:ObjectProperty ;
     rdfs:label "link-direction" ;
     rdfs:domain <http://www.huawei.com/ontology/ietf-network/networks/network/link> ;
@@ -246,7 +315,7 @@ destination node and terminates the link.""" ;
     rdfs:comment """The identifier of a link in the topology.
 A link is specific to a topology to which it belongs.""" ;
     rdfs:domain <http://www.huawei.com/ontology/ietf-network/networks/network/link> ;
-    rdfs:range xsd:string ;
+    rdfs:range xsd:anyURI ;
     prov:wasDerivedFrom "nt:link?list/nt:link-id?leaf" .
 
 <http://www.huawei.com/ontology/ietf-network/networks/network/link/link-type> a owl:ObjectProperty ;
@@ -255,6 +324,12 @@ A link is specific to a topology to which it belongs.""" ;
     rdfs:range <http://www.huawei.com/ontology/identity/link-type> ;
     owl:minCardinality 0 ;
     prov:wasDerivedFrom "nt:link?list/st:link-type?leaf" .
+
+<http://www.huawei.com/ontology/ietf-network/networks/network/link/name> a owl:DatatypeProperty ;
+    rdfs:label "name" ;
+    rdfs:comment "User friendly name." ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-network/networks/network/link> ;
+    rdfs:range xsd:string .
 
 <http://www.huawei.com/ontology/ietf-network/networks/network/link/source/source-node> a owl:ObjectProperty ;
     ex:xpathPath "../../../nw:node/nw:node-id" ;
@@ -290,12 +365,35 @@ the supporting link is present.""" ;
     owl:minCardinality 0 ;
     prov:wasDerivedFrom "nt:link?list/nt:supporting-link?list/nt:network-ref?leaf" .
 
+<http://www.huawei.com/ontology/ietf-network/networks/network/link/tp/network-ref> a owl:DatatypeProperty ;
+    rdfs:label "network-ref" ;
+    rdfs:comment """Used to reference a network -- for example, an underlay
+network.""" ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-network/networks/network/link/tp> ;
+    rdfs:range xsd:string .
+
+<http://www.huawei.com/ontology/ietf-network/networks/network/link/tp/node-ref> a owl:DatatypeProperty ;
+    rdfs:label "node-ref" ;
+    rdfs:comment """Used to reference a node.
+Nodes are identified relative to the network that
+contains them.""" ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-network/networks/network/link/tp> ;
+    rdfs:range xsd:string .
+
 <http://www.huawei.com/ontology/ietf-network/networks/network/link/tp/tp-direction> a owl:ObjectProperty ;
     rdfs:label "tp-direction" ;
     rdfs:domain <http://www.huawei.com/ontology/ietf-network/networks/network/link/tp> ;
     rdfs:range <http://www.huawei.com/ontology/identity/tp-direction> ;
     owl:minCardinality 0 ;
     prov:wasDerivedFrom "nt:link?list/st:tp?list/st:tp-direction?leaf" .
+
+<http://www.huawei.com/ontology/ietf-network/networks/network/link/tp/tp-ref> a owl:DatatypeProperty ;
+    rdfs:label "tp-ref" ;
+    rdfs:comment """A type for an absolute reference to a termination point.
+(This type should not be used for relative references.
+In such a case, a relative path should be used instead.)""" ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-network/networks/network/link/tp> ;
+    rdfs:range xsd:string .
 
 <http://www.huawei.com/ontology/ietf-network/networks/network/link/tp/tp-role> a owl:ObjectProperty ;
     rdfs:label "tp-role" ;
@@ -308,6 +406,12 @@ the supporting link is present.""" ;
     owl:minCardinality 0 ;
     prov:wasDerivedFrom "nw:networks?container/nw:network?list/st:live-network-ref?leaf" .
 
+<http://www.huawei.com/ontology/ietf-network/networks/network/name> a owl:DatatypeProperty ;
+    rdfs:label "name" ;
+    rdfs:comment "User friendly name." ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-network/networks/network> ;
+    rdfs:range xsd:string .
+
 <http://www.huawei.com/ontology/ietf-network/networks/network/network-category> a owl:ObjectProperty ;
     rdfs:label "network-category" ;
     rdfs:domain <http://www.huawei.com/ontology/ietf-network/networks/network> ;
@@ -319,8 +423,21 @@ the supporting link is present.""" ;
     rdfs:label "network-id" ;
     rdfs:comment "Identifies a network." ;
     rdfs:domain <http://www.huawei.com/ontology/ietf-network/networks/network> ;
-    rdfs:range xsd:string ;
+    rdfs:range xsd:anyURI ;
     prov:wasDerivedFrom "nw:networks?container/nw:network?list/nw:network-id?leaf" .
+
+<http://www.huawei.com/ontology/ietf-network/networks/network/node/description> a owl:DatatypeProperty ;
+    rdfs:label "description" ;
+    rdfs:comment "Optional description." ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-network/networks/network/node> ;
+    rdfs:range xsd:string .
+
+<http://www.huawei.com/ontology/ietf-network/networks/network/node/extension> a owl:DatatypeProperty ;
+    rdfs:label "extension" ;
+    rdfs:comment "Anydata: Arbitrary structure extension point",
+        "Extension point for metadata." ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-network/networks/network/node> ;
+    rdfs:range xsd:string .
 
 <http://www.huawei.com/ontology/ietf-network/networks/network/node/hasLinkedNode> a owl:ObjectProperty ;
     rdfs:label "hasLinkedNode" ;
@@ -346,12 +463,39 @@ the supporting link is present.""" ;
     owl:minCardinality 0 ;
     prov:wasDerivedFrom "nw:networks?container/nw:network?list/nw:node?list/hasTerminationPoint" .
 
+<http://www.huawei.com/ontology/ietf-network/networks/network/node/label> a owl:DatatypeProperty ;
+    rdfs:label "label" ;
+    rdfs:comment "Optional labels for the instance." ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-network/networks/network/node> ;
+    rdfs:range xsd:string .
+
+<http://www.huawei.com/ontology/ietf-network/networks/network/node/linked-node/network-ref> a owl:DatatypeProperty ;
+    rdfs:label "network-ref" ;
+    rdfs:comment """Used to reference a network -- for example, an underlay
+network.""" ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-network/networks/network/node/linked-node> ;
+    rdfs:range xsd:string .
+
+<http://www.huawei.com/ontology/ietf-network/networks/network/node/linked-node/node-ref> a owl:DatatypeProperty ;
+    rdfs:label "node-ref" ;
+    rdfs:comment """Used to reference a node.
+Nodes are identified relative to the network that
+contains them.""" ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-network/networks/network/node/linked-node> ;
+    rdfs:range xsd:string .
+
+<http://www.huawei.com/ontology/ietf-network/networks/network/node/name> a owl:DatatypeProperty ;
+    rdfs:label "name" ;
+    rdfs:comment "User friendly name." ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-network/networks/network/node> ;
+    rdfs:range xsd:string .
+
 <http://www.huawei.com/ontology/ietf-network/networks/network/node/node-id> a owl:DatatypeProperty ;
     rdfs:label "node-id" ;
     rdfs:comment """Uniquely identifies a node within the containing
 network.""" ;
     rdfs:domain <http://www.huawei.com/ontology/ietf-network/networks/network/node> ;
-    rdfs:range xsd:string ;
+    rdfs:range xsd:anyURI ;
     prov:wasDerivedFrom "nw:networks?container/nw:network?list/nw:node?list/nw:node-id?leaf" .
 
 <http://www.huawei.com/ontology/ietf-network/networks/network/node/supporting-node/network-ref> a owl:ObjectProperty ;
@@ -368,6 +512,19 @@ underlay node is a part.""" ;
     owl:minCardinality 0 ;
     prov:wasDerivedFrom "nw:networks?container/nw:network?list/nw:node?list/nw:supporting-node?list/nw:node-ref?leaf" .
 
+<http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/description> a owl:DatatypeProperty ;
+    rdfs:label "description" ;
+    rdfs:comment "Optional description." ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point> ;
+    rdfs:range xsd:string .
+
+<http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/extension> a owl:DatatypeProperty ;
+    rdfs:label "extension" ;
+    rdfs:comment "Anydata: Arbitrary structure extension point",
+        "Extension point for metadata." ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point> ;
+    rdfs:range xsd:string .
+
 <http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/hasLinkedTerminationPoint> a owl:ObjectProperty ;
     rdfs:label "hasLinkedTerminationPoint" ;
     rdfs:comment "Containment relation (parent --> child)." ;
@@ -383,6 +540,41 @@ underlay node is a part.""" ;
     rdfs:range <http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/supporting-termination-point> ;
     owl:minCardinality 0 ;
     prov:wasDerivedFrom "nt:termination-point?list/hasSupportingTerminationPoint" .
+
+<http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/label> a owl:DatatypeProperty ;
+    rdfs:label "label" ;
+    rdfs:comment "Optional labels for the instance." ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point> ;
+    rdfs:range xsd:string .
+
+<http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/linked-termination-point/network-ref> a owl:DatatypeProperty ;
+    rdfs:label "network-ref" ;
+    rdfs:comment """Used to reference a network -- for example, an underlay
+network.""" ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/linked-termination-point> ;
+    rdfs:range xsd:string .
+
+<http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/linked-termination-point/node-ref> a owl:DatatypeProperty ;
+    rdfs:label "node-ref" ;
+    rdfs:comment """Used to reference a node.
+Nodes are identified relative to the network that
+contains them.""" ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/linked-termination-point> ;
+    rdfs:range xsd:string .
+
+<http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/linked-termination-point/tp-ref> a owl:DatatypeProperty ;
+    rdfs:label "tp-ref" ;
+    rdfs:comment """A type for an absolute reference to a termination point.
+(This type should not be used for relative references.
+In such a case, a relative path should be used instead.)""" ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/linked-termination-point> ;
+    rdfs:range xsd:string .
+
+<http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/name> a owl:DatatypeProperty ;
+    rdfs:label "name" ;
+    rdfs:comment "User friendly name." ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point> ;
+    rdfs:range xsd:string .
 
 <http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/supporting-termination-point/network-ref> a owl:ObjectProperty ;
     ex:xpathPath "../../../nw:supporting-node/nw:network-ref" ;
@@ -412,7 +604,7 @@ be in a different topology).""" ;
     rdfs:label "tp-id" ;
     rdfs:comment "Termination point identifier." ;
     rdfs:domain <http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point> ;
-    rdfs:range xsd:string ;
+    rdfs:range xsd:anyURI ;
     prov:wasDerivedFrom "nt:termination-point?list/nt:tp-id?leaf" .
 
 <http://www.huawei.com/ontology/ietf-network/networks/network/subnetwork/network-ref> a owl:ObjectProperty ;
@@ -470,7 +662,7 @@ ex:ipv6-prefix a sh:NodeShape ;
 
 ex:link-id a sh:NodeShape ;
     rdfs:label "link-id" ;
-    sh:datatype xsd:string .
+    sh:datatype xsd:anyURI .
 
 ex:mac-address a sh:NodeShape ;
     rdfs:label "mac-address" ;
@@ -479,11 +671,11 @@ ex:mac-address a sh:NodeShape ;
 
 ex:network-id a sh:NodeShape ;
     rdfs:label "network-id" ;
-    sh:datatype xsd:string .
+    sh:datatype xsd:anyURI .
 
 ex:node-id a sh:NodeShape ;
     rdfs:label "node-id" ;
-    sh:datatype xsd:string .
+    sh:datatype xsd:anyURI .
 
 ex:object-identifier a sh:NodeShape ;
     rdfs:label "object-identifier" ;
@@ -521,7 +713,7 @@ ex:port-number a sh:NodeShape ;
 <http://www.huawei.com/ontology/simap-yang/networks-history/network-history/file-id> a owl:DatatypeProperty ;
     rdfs:label "file-id" ;
     rdfs:domain <http://www.huawei.com/ontology/simap-yang/networks-history/network-history> ;
-    rdfs:range xsd:string ;
+    rdfs:range xsd:anyURI ;
     prov:wasDerivedFrom "st:networks-history?container/st:network-history?list/st:file-id?leaf" .
 
 <http://www.huawei.com/ontology/simap-yang/networks-history/network-history/live-network-ref> a owl:ObjectProperty ;
@@ -544,7 +736,7 @@ ex:timeticks a sh:NodeShape ;
 
 ex:tp-id a sh:NodeShape ;
     rdfs:label "tp-id" ;
-    sh:datatype xsd:string .
+    sh:datatype xsd:anyURI .
 
 <http://www.huawei.com/ontology/types/ip-version/ipv4> a <http://www.huawei.com/ontology/types/ip-version>,
         owl:NamedIndividual ;
@@ -607,14 +799,6 @@ The network type is indicated through corresponding
 presence containers augmented into this container.""" ;
     prov:wasDerivedFrom "nw:networks?container/nw:network?list/nw:network-types?container" .
 
-<http://www.huawei.com/ontology/ietf-network/networks/network/node/linked-node> a owl:Class ;
-    rdfs:label "linked-node" ;
-    prov:wasDerivedFrom "nw:networks?container/nw:network?list/nw:node?list/st:linked-node?list" .
-
-<http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/linked-termination-point> a owl:Class ;
-    rdfs:label "linked-termination-point" ;
-    prov:wasDerivedFrom "nt:termination-point?list/st:linked-termination-point?list" .
-
 <http://www.huawei.com/ontology/ietf-network/networks/network/subnetwork> a owl:Class ;
     rdfs:label "subnetwork" ;
     prov:wasDerivedFrom "nw:networks?container/nw:network?list/st:subnetwork?list" .
@@ -660,9 +844,9 @@ particular link.""" ;
 link.""" ;
     prov:wasDerivedFrom "nt:link?list/nt:source?container" .
 
-<http://www.huawei.com/ontology/ietf-network/networks/network/link/tp> a owl:Class ;
-    rdfs:label "tp" ;
-    prov:wasDerivedFrom "nt:link?list/st:tp?list" .
+<http://www.huawei.com/ontology/ietf-network/networks/network/node/linked-node> a owl:Class ;
+    rdfs:label "linked-node" ;
+    prov:wasDerivedFrom "nw:networks?container/nw:network?list/nw:node?list/st:linked-node?list" .
 
 <http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/supporting-termination-point> a owl:Class ;
     rdfs:label "supporting-termination-point" ;
@@ -701,6 +885,14 @@ implementing system.""" ;
     rdfs:label "tp-direction" ;
     rdfs:comment "Base identity for directionality of the tp." ;
     prov:wasDerivedFrom "st:tp-direction?identity" .
+
+<http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/linked-termination-point> a owl:Class ;
+    rdfs:label "linked-termination-point" ;
+    prov:wasDerivedFrom "nt:termination-point?list/st:linked-termination-point?list" .
+
+<http://www.huawei.com/ontology/ietf-network/networks/network/link/tp> a owl:Class ;
+    rdfs:label "tp" ;
+    prov:wasDerivedFrom "nt:link?list/st:tp?list" .
 
 <http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point> a owl:Class ;
     rdfs:label "termination-point" ;

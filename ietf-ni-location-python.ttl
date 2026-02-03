@@ -52,6 +52,121 @@ ex:gauge64 a sh:NodeShape ;
     rdfs:label "gauge64" ;
     sh:datatype xsd:unsignedLong .
 
+<http://www.huawei.com/ontology/grouping/basic-common-entity-attributes> a owl:Class ;
+    rdfs:label "basic-common-entity-attributes" ;
+    rdfs:comment "Grouping definition: basic-common-entity-attributes",
+        """The set of basic attributes which are common to all the
+entities (e.g., component, network elements, location, passive
+entities) defined in this module and in other inventory
+modules.""" .
+
+<http://www.huawei.com/ontology/grouping/cable-attributes> a owl:Class ;
+    rdfs:label "cable-attributes" ;
+    rdfs:comment "Attributes of cables.",
+        "Grouping definition: cable-attributes" .
+
+<http://www.huawei.com/ontology/grouping/cables> a owl:Class ;
+    rdfs:label "cables" ;
+    rdfs:comment "Attributes applicable to cables.",
+        "Grouping definition: cables" .
+
+<http://www.huawei.com/ontology/grouping/child-cables> a owl:Class ;
+    rdfs:label "child-cables" ;
+    rdfs:comment """Attributes applicable to child cables that are concatnated
+to form the cable.""",
+        "Grouping definition: child-cables" .
+
+<http://www.huawei.com/ontology/grouping/common-cable-attributes> a owl:Class ;
+    rdfs:label "common-cable-attributes" ;
+    rdfs:comment """Common attributes of cables applicable to the cable
+and its child cables.""",
+        "Grouping definition: common-cable-attributes" .
+
+<http://www.huawei.com/ontology/grouping/component-attributes> a owl:Class ;
+    rdfs:label "component-attributes" ;
+    rdfs:comment "Grouping definition: component-attributes",
+        """The set of common attributes of a component.
+
+This grouping is intended also to be re-used by data models
+that need to report the common attributes of a component.""" .
+
+<http://www.huawei.com/ontology/grouping/connected-device-end> a owl:Class ;
+    rdfs:label "connected-device-end" ;
+    rdfs:comment "Attributes applicable to connected device end.",
+        "Grouping definition: connected-device-end" .
+
+<http://www.huawei.com/ontology/grouping/connected-device-ref> a owl:Class ;
+    rdfs:label "connected-device-ref" ;
+    rdfs:comment "Attributes applicable to connected devices.",
+        "Grouping definition: connected-device-ref" .
+
+<http://www.huawei.com/ontology/grouping/geo-location> a owl:Class ;
+    rdfs:label "geo-location" ;
+    rdfs:comment "Grouping definition: geo-location",
+        "Grouping to identify a location on an astronomical object." .
+
+<http://www.huawei.com/ontology/grouping/link-ref> a owl:Class ;
+    rdfs:label "link-ref" ;
+    rdfs:comment "Grouping definition: link-ref",
+        """This grouping can be used to reference a link in a specific
+network.  Although it is not used in this module, it is
+defined here for the convenience of augmenting modules.""" .
+
+<http://www.huawei.com/ontology/grouping/locations> a owl:Class ;
+    rdfs:label "locations" ;
+    rdfs:comment "Grouping definition: locations",
+        "The grouping of the locations." .
+
+<http://www.huawei.com/ontology/grouping/locations-ref> a owl:Class ;
+    rdfs:label "locations-ref" ;
+    rdfs:comment "Grouping definition: locations-ref",
+        "The attributes of the locations." .
+
+<http://www.huawei.com/ontology/grouping/ne-component-common-entity-attributes> a owl:Class ;
+    rdfs:label "ne-component-common-entity-attributes" ;
+    rdfs:comment "Grouping definition: ne-component-common-entity-attributes",
+        """The set of attributes which are common to all the entities
+(e.g., component, network elements) defined in this module.""" .
+
+<http://www.huawei.com/ontology/grouping/optical-cable-attributes> a owl:Class ;
+    rdfs:label "optical-cable-attributes" ;
+    rdfs:comment "Attributes applicable to fiber optic cables.",
+        "Grouping definition: optical-cable-attributes" .
+
+<http://www.huawei.com/ontology/grouping/passive-device-ports> a owl:Class ;
+    rdfs:label "passive-device-ports" ;
+    rdfs:comment "Attributes applicable to passive device ports.",
+        "Grouping definition: passive-device-ports" .
+
+<http://www.huawei.com/ontology/grouping/passive-devices> a owl:Class ;
+    rdfs:label "passive-devices" ;
+    rdfs:comment "Attributes applicable to passive devices.",
+        "Grouping definition: passive-devices" .
+
+<http://www.huawei.com/ontology/grouping/physical-address> a owl:Class ;
+    rdfs:label "physical-address" ;
+    rdfs:comment "Grouping definition: physical-address",
+        "The grouping of the physical address." .
+
+<http://www.huawei.com/ontology/grouping/port-ref> a owl:Class ;
+    rdfs:label "port-ref" ;
+    rdfs:comment "Grouping definition: port-ref",
+        """This grouping is intended to be used by data models that need
+to reference a port component within a Network Element.""" .
+
+<http://www.huawei.com/ontology/grouping/racks> a owl:Class ;
+    rdfs:label "racks" ;
+    rdfs:comment "Grouping definition: racks",
+        "The attributes of the rack." .
+
+<http://www.huawei.com/ontology/grouping/tp-ref> a owl:Class ;
+    rdfs:label "tp-ref" ;
+    rdfs:comment "Grouping definition: tp-ref",
+        """This grouping can be used to reference a termination point
+in a specific node.  Although it is not used in this module,
+it is defined here for the convenience of augmenting
+modules.""" .
+
 ex:hex-string a sh:NodeShape ;
     rdfs:label "hex-string" ;
     sh:datatype xsd:string ;
@@ -946,7 +1061,7 @@ will therefore only exhibit values of 'idle' and
     rdfs:comment """This node contains identification information about the
 component.""" ;
     rdfs:domain <http://www.huawei.com/ontology/ietf-hardware/hardware/component> ;
-    rdfs:range xsd:string ;
+    rdfs:range xsd:anyURI ;
     prov:wasDerivedFrom "hw:hardware?container/hw:component?list/hw:uri?leaf-list" .
 
 <http://www.huawei.com/ontology/ietf-hardware/hardware/component/uuid> a owl:DatatypeProperty ;
@@ -972,23 +1087,102 @@ operational state.""" ;
     rdfs:range xsd:dateTime ;
     prov:wasDerivedFrom "hw:hardware?container/hw:last-change?leaf" .
 
-<http://www.huawei.com/ontology/ietf-network-inventory-txt/network-inventory/hasNetworkElements> a owl:ObjectProperty ;
+<http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/hasNetworkElements> a owl:ObjectProperty ;
     rdfs:label "hasNetworkElements" ;
     rdfs:comment "Containment relation (parent --> child)." ;
-    rdfs:domain <http://www.huawei.com/ontology/ietf-network-inventory-txt/network-inventory> ;
-    rdfs:range <http://www.huawei.com/ontology/ietf-network-inventory-txt/network-inventory/network-elements> ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory> ;
+    rdfs:range <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements> ;
     owl:minCardinality 0 ;
     prov:wasDerivedFrom "nwi:network-inventory?container/hasNetworkElements" .
 
-<http://www.huawei.com/ontology/ietf-network-inventory-txt/network-inventory/network-elements/hasNetworkElement> a owl:ObjectProperty ;
+<http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/hasNetworkElement> a owl:ObjectProperty ;
     rdfs:label "hasNetworkElement" ;
     rdfs:comment "Containment relation (parent --> child)." ;
-    rdfs:domain <http://www.huawei.com/ontology/ietf-network-inventory-txt/network-inventory/network-elements> ;
-    rdfs:range <http://www.huawei.com/ontology/ietf-network-inventory-txt/network-inventory/network-elements/network-element> ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements> ;
+    rdfs:range <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element> ;
     owl:minCardinality 0 ;
     prov:wasDerivedFrom "nwi:network-inventory?container/nwi:network-elements?container/hasNetworkElement" .
 
-<http://www.huawei.com/ontology/ietf-network-inventory-txt/network-inventory/network-elements/network-element/components/component/is-main> a owl:DatatypeProperty ;
+<http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/alias> a owl:DatatypeProperty ;
+    rdfs:label "alias" ;
+    rdfs:comment """The alias name of the entity (e.g., component). This alias
+name can be specified by a network operator.""" ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element> ;
+    rdfs:range xsd:string .
+
+<http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component/alias> a owl:DatatypeProperty ;
+    rdfs:label "alias" ;
+    rdfs:comment """The alias name of the entity (e.g., component). This alias
+name can be specified by a network operator.""" ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component> ;
+    rdfs:range xsd:string .
+
+<http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component/asset-id> a owl:DatatypeProperty ;
+    rdfs:label "asset-id" ;
+    rdfs:comment """This node is an asset tracking identifier for the component,
+as specified by a network operator.
+
+A server implementation MAY map this leaf to the
+entPhysicalAssetID MIB object.  Such an
+implementation needs to use some mechanism to handle
+the differences in size and characters allowed
+between this leaf and entPhysicalAssetID.
+
+The definition of such a mechanism is outside the
+scope of this document.""" ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component> ;
+    rdfs:range xsd:string .
+
+<http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component/class> a owl:DatatypeProperty ;
+    rdfs:label "class" ;
+    rdfs:comment "The type of the component." ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component> ;
+    rdfs:range xsd:string .
+
+<http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component/component-id> a owl:DatatypeProperty ;
+    rdfs:label "component-id" ;
+    rdfs:comment """An identifier that uniquely identifies the component
+in a node.""" ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component> ;
+    rdfs:range xsd:string .
+
+<http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component/description> a owl:DatatypeProperty ;
+    rdfs:label "description" ;
+    rdfs:comment "The textual description of the entity (e.g., component)." ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component> ;
+    rdfs:range xsd:string .
+
+<http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component/hardware-rev> a owl:DatatypeProperty ;
+    rdfs:label "hardware-rev" ;
+    rdfs:comment """The vendor-specific hardware revision string for the
+component.
+
+The preferred value is the hardware revision identifier
+actually printed on the component itself (if present).""" ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component> ;
+    rdfs:range xsd:string .
+
+<http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component/hasSoftwareRev> a owl:ObjectProperty ;
+    rdfs:label "hasSoftwareRev" ;
+    rdfs:comment "Containment relation (parent --> child)." ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component> ;
+    rdfs:range <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component/software-rev> ;
+    owl:minCardinality 0 ;
+    prov:wasDerivedFrom "nwi:network-inventory?container/nwi:network-elements?container/nwi:network-element?list/nwi:components?container/nwi:component?list/hasSoftwareRev" .
+
+<http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component/is-fru> a owl:DatatypeProperty ;
+    rdfs:label "is-fru" ;
+    rdfs:comment """This node indicates whether or not this component is
+considered a 'field-replaceable unit' by the vendor.
+If this node contains the value 'true', then this
+component identifies a field-replaceable unit.
+For all components that are permanently contained
+within a field-replaceable unit, the value 'false'
+should be returned for this node.""" ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component> ;
+    rdfs:range xsd:string .
+
+<http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component/is-main> a owl:DatatypeProperty ;
     rdfs:label "is-main" ;
     rdfs:comment "Conditional: exists when derived-from-or-self(../nwi:class, 'ianahw:chassis')",
         """This node indicates whether the chassis is taking or
@@ -998,12 +1192,38 @@ This node is applicable only to scenarios where
 there are chassis components which can take the
 'main' role (e.g., multi-chassis network elements),
 otherwise it is omitted.""" ;
-    rdfs:domain <http://www.huawei.com/ontology/ietf-network-inventory-txt/network-inventory/network-elements/network-element/components/component> ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component> ;
     rdfs:range xsd:boolean ;
     prov:wasDerivedFrom "nwi:network-inventory?container/nwi:network-elements?container/nwi:network-element?list/nwi:components?container/nwi:component?list/nwi:is-main?leaf" ;
     sh:deactivated "derived-from-or-self(../nwi:class, 'ianahw:chassis')" .
 
-<http://www.huawei.com/ontology/ietf-network-inventory-txt/network-inventory/network-elements/network-element/components/component/parent> a owl:ObjectProperty ;
+<http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component/mfg-date> a owl:DatatypeProperty ;
+    rdfs:label "mfg-date" ;
+    rdfs:comment "The date of manufacturing of the component." ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component> ;
+    rdfs:range xsd:string .
+
+<http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component/mfg-name> a owl:DatatypeProperty ;
+    rdfs:label "mfg-name" ;
+    rdfs:comment """The name of the manufacturer of this entity
+(e.g., component).""" ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component> ;
+    rdfs:range xsd:string .
+
+<http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component/name> a owl:DatatypeProperty ;
+    rdfs:label "name" ;
+    rdfs:comment """The name of the  entity (e.g., component), as specified by
+a network operator, that provides a non-volatile 'handle'
+for the entity and that can be modified anytime during the
+entity lifetime.
+
+If no value is discovered, the server MAY set the value of
+this node to a locally unique value in the operational
+state.""" ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component> ;
+    rdfs:range xsd:string .
+
+<http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component/parent> a owl:ObjectProperty ;
     ex:xpathPath "../../component/component-id" ;
     rdfs:comment """The identifiers of all the components that
 physically contain this component.
@@ -1011,60 +1231,218 @@ physically contain this component.
 If this list is empty, this component is not
 contained in any other component but it is contained
 in the network-element.""" ;
-    rdfs:domain <http://www.huawei.com/ontology/ietf-network-inventory-txt/network-inventory/network-elements/network-element/components/component> ;
-    rdfs:range <http://www.huawei.com/ontology/ietf-network-inventory-txt/network-inventory/network-elements/network-element/components/component> ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component> ;
+    rdfs:range <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component> ;
     owl:minCardinality 0 ;
     prov:wasDerivedFrom "nwi:network-inventory?container/nwi:network-elements?container/nwi:network-element?list/nwi:components?container/nwi:component?list/nwi:parent?leaf-list" .
 
-<http://www.huawei.com/ontology/ietf-network-inventory-txt/network-inventory/network-elements/network-element/components/component/parent-rel-pos> a owl:DatatypeProperty ;
+<http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component/parent-rel-pos> a owl:DatatypeProperty ;
     rdfs:label "parent-rel-pos" ;
     rdfs:comment "Conditional: exists when count(../parent) < 2",
         """The relative position with respect to the parent
 component among all the sibling components.""" ;
-    rdfs:domain <http://www.huawei.com/ontology/ietf-network-inventory-txt/network-inventory/network-elements/network-element/components/component> ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component> ;
     rdfs:range xsd:int ;
     prov:wasDerivedFrom "nwi:network-inventory?container/nwi:network-elements?container/nwi:network-element?list/nwi:components?container/nwi:component?list/nwi:parent-rel-pos?leaf" ;
     sh:deactivated "count(../parent) < 2" .
 
-<http://www.huawei.com/ontology/ietf-network-inventory-txt/network-inventory/network-elements/network-element/components/hasComponent> a owl:ObjectProperty ;
+<http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component/part-number> a owl:DatatypeProperty ;
+    rdfs:label "part-number" ;
+    rdfs:comment """The vendor-specific part number of the component
+type. It is expected that vendors assign unique part
+numbers to different component types within the
+scope of the vendor.""" ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component> ;
+    rdfs:range xsd:string .
+
+<http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component/product-name> a owl:DatatypeProperty ;
+    rdfs:label "product-name" ;
+    rdfs:comment """The vendor-specific and human-interpretable string
+describing the entity (e.g., component) type. It is expected
+that vendors assign unique product names to different entity
+(e.g., component) types within the scope of the vendor.""" ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component> ;
+    rdfs:range xsd:string .
+
+<http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component/serial-number> a owl:DatatypeProperty ;
+    rdfs:label "serial-number" ;
+    rdfs:comment """The vendor-specific serial number of the component instance.
+
+It is expected that vendors assign unique serial numbers to
+different component instances within the scope of the
+'part-number'.""" ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component> ;
+    rdfs:range xsd:string .
+
+<http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component/software-rev/hasPatch> a owl:ObjectProperty ;
+    rdfs:label "hasPatch" ;
+    rdfs:comment "Containment relation (parent --> child)." ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component/software-rev> ;
+    rdfs:range <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component/software-rev/patch> ;
+    owl:minCardinality 0 ;
+    prov:wasDerivedFrom "nwi:network-inventory?container/nwi:network-elements?container/nwi:network-element?list/nwi:components?container/nwi:component?list/nwi:software-rev?list/hasPatch" .
+
+<http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component/software-rev/name> a owl:DatatypeProperty ;
+    rdfs:label "name" ;
+    rdfs:comment "The vendor-specific name of the software module." ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component/software-rev> ;
+    rdfs:range xsd:string ;
+    prov:wasDerivedFrom "nwi:network-inventory?container/nwi:network-elements?container/nwi:network-element?list/nwi:components?container/nwi:component?list/nwi:software-rev?list/nwi:name?leaf" .
+
+<http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component/software-rev/patch/revision> a owl:DatatypeProperty ;
+    rdfs:label "revision" ;
+    rdfs:comment """The vendor-specific revision string of the software
+patch when not implicitly defined as part of the name or
+revision of the software module.""" ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component/software-rev/patch> ;
+    rdfs:range xsd:string ;
+    prov:wasDerivedFrom "nwi:network-inventory?container/nwi:network-elements?container/nwi:network-element?list/nwi:components?container/nwi:component?list/nwi:software-rev?list/nwi:patch?list/nwi:revision?leaf" .
+
+<http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component/software-rev/revision> a owl:DatatypeProperty ;
+    rdfs:label "revision" ;
+    rdfs:comment """The vendor-specific revision string of the software
+module when not implicitly defined as part of the name of
+the software module.""" ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component/software-rev> ;
+    rdfs:range xsd:string ;
+    prov:wasDerivedFrom "nwi:network-inventory?container/nwi:network-elements?container/nwi:network-element?list/nwi:components?container/nwi:component?list/nwi:software-rev?list/nwi:revision?leaf" .
+
+<http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component/uri> a owl:DatatypeProperty ;
+    rdfs:label "uri" ;
+    rdfs:comment """This node contains identification information about
+the component.""" ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component> ;
+    rdfs:range xsd:string .
+
+<http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component/uuid> a owl:DatatypeProperty ;
+    rdfs:label "uuid" ;
+    rdfs:comment """The Universally Unique Identifier of the entity
+(e.g., component).""" ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component> ;
+    rdfs:range xsd:string .
+
+<http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/hasComponent> a owl:ObjectProperty ;
     rdfs:label "hasComponent" ;
     rdfs:comment "Containment relation (parent --> child)." ;
-    rdfs:domain <http://www.huawei.com/ontology/ietf-network-inventory-txt/network-inventory/network-elements/network-element/components> ;
-    rdfs:range <http://www.huawei.com/ontology/ietf-network-inventory-txt/network-inventory/network-elements/network-element/components/component> ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components> ;
+    rdfs:range <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component> ;
     owl:minCardinality 0 ;
     prov:wasDerivedFrom "nwi:network-inventory?container/nwi:network-elements?container/nwi:network-element?list/nwi:components?container/hasComponent" .
 
-<http://www.huawei.com/ontology/ietf-network-inventory-txt/network-inventory/network-elements/network-element/hasComponents> a owl:ObjectProperty ;
+<http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/description> a owl:DatatypeProperty ;
+    rdfs:label "description" ;
+    rdfs:comment "The textual description of the entity (e.g., component)." ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element> ;
+    rdfs:range xsd:string .
+
+<http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/hasComponents> a owl:ObjectProperty ;
     rdfs:label "hasComponents" ;
     rdfs:comment "Containment relation (parent --> child)." ;
-    rdfs:domain <http://www.huawei.com/ontology/ietf-network-inventory-txt/network-inventory/network-elements/network-element> ;
-    rdfs:range <http://www.huawei.com/ontology/ietf-network-inventory-txt/network-inventory/network-elements/network-element/components> ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element> ;
+    rdfs:range <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components> ;
     owl:minCardinality 0 ;
     prov:wasDerivedFrom "nwi:network-inventory?container/nwi:network-elements?container/nwi:network-element?list/hasComponents" .
 
-<http://www.huawei.com/ontology/ietf-network-inventory-txt/network-inventory/network-elements/network-element/ne-id> a owl:DatatypeProperty ;
+<http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/hasSoftwareRev> a owl:ObjectProperty ;
+    rdfs:label "hasSoftwareRev" ;
+    rdfs:comment "Containment relation (parent --> child)." ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element> ;
+    rdfs:range <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/software-rev> ;
+    owl:minCardinality 0 ;
+    prov:wasDerivedFrom "nwi:network-inventory?container/nwi:network-elements?container/nwi:network-element?list/hasSoftwareRev" .
+
+<http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/mfg-name> a owl:DatatypeProperty ;
+    rdfs:label "mfg-name" ;
+    rdfs:comment """The name of the manufacturer of this entity
+(e.g., component).""" ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element> ;
+    rdfs:range xsd:string .
+
+<http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/name> a owl:DatatypeProperty ;
+    rdfs:label "name" ;
+    rdfs:comment """The name of the  entity (e.g., component), as specified by
+a network operator, that provides a non-volatile 'handle'
+for the entity and that can be modified anytime during the
+entity lifetime.
+
+If no value is discovered, the server MAY set the value of
+this node to a locally unique value in the operational
+state.""" ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element> ;
+    rdfs:range xsd:string .
+
+<http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/ne-id> a owl:DatatypeProperty ;
     rdfs:label "ne-id" ;
     rdfs:comment """An identifier that uniquely identifies the NE in
 a network.""" ;
-    rdfs:domain <http://www.huawei.com/ontology/ietf-network-inventory-txt/network-inventory/network-elements/network-element> ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element> ;
     rdfs:range xsd:string ;
     prov:wasDerivedFrom "nwi:network-inventory?container/nwi:network-elements?container/nwi:network-element?list/nwi:ne-id?leaf" .
 
-<http://www.huawei.com/ontology/ietf-network-inventory-txt/network-inventory/network-elements/network-element/ne-type> a owl:ObjectProperty ;
+<http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/ne-type> a owl:ObjectProperty ;
     rdfs:label "ne-type" ;
     rdfs:comment "The network element type." ;
-    rdfs:domain <http://www.huawei.com/ontology/ietf-network-inventory-txt/network-inventory/network-elements/network-element> ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element> ;
     rdfs:range <http://www.huawei.com/ontology/identity/ne-type> ;
     owl:minCardinality 0 ;
     prov:wasDerivedFrom "nwi:network-inventory?container/nwi:network-elements?container/nwi:network-element?list/nwi:ne-type?leaf" .
 
-<http://www.huawei.com/ontology/ietf-network-inventory-txt/network-inventory/network-elements/network-element/product-rev> a owl:DatatypeProperty ;
+<http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/product-name> a owl:DatatypeProperty ;
+    rdfs:label "product-name" ;
+    rdfs:comment """The vendor-specific and human-interpretable string
+describing the entity (e.g., component) type. It is expected
+that vendors assign unique product names to different entity
+(e.g., component) types within the scope of the vendor.""" ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element> ;
+    rdfs:range xsd:string .
+
+<http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/product-rev> a owl:DatatypeProperty ;
     rdfs:label "product-rev" ;
     rdfs:comment """The vendor-specific product revision string for the
 network-element.""" ;
-    rdfs:domain <http://www.huawei.com/ontology/ietf-network-inventory-txt/network-inventory/network-elements/network-element> ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element> ;
     rdfs:range xsd:string ;
     prov:wasDerivedFrom "nwi:network-inventory?container/nwi:network-elements?container/nwi:network-element?list/nwi:product-rev?leaf" .
+
+<http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/software-rev/hasPatch> a owl:ObjectProperty ;
+    rdfs:label "hasPatch" ;
+    rdfs:comment "Containment relation (parent --> child)." ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/software-rev> ;
+    rdfs:range <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/software-rev/patch> ;
+    owl:minCardinality 0 ;
+    prov:wasDerivedFrom "nwi:network-inventory?container/nwi:network-elements?container/nwi:network-element?list/nwi:software-rev?list/hasPatch" .
+
+<http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/software-rev/name> a owl:DatatypeProperty ;
+    rdfs:label "name" ;
+    rdfs:comment "The vendor-specific name of the software module." ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/software-rev> ;
+    rdfs:range xsd:string ;
+    prov:wasDerivedFrom "nwi:network-inventory?container/nwi:network-elements?container/nwi:network-element?list/nwi:software-rev?list/nwi:name?leaf" .
+
+<http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/software-rev/patch/revision> a owl:DatatypeProperty ;
+    rdfs:label "revision" ;
+    rdfs:comment """The vendor-specific revision string of the software
+patch when not implicitly defined as part of the name or
+revision of the software module.""" ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/software-rev/patch> ;
+    rdfs:range xsd:string ;
+    prov:wasDerivedFrom "nwi:network-inventory?container/nwi:network-elements?container/nwi:network-element?list/nwi:software-rev?list/nwi:patch?list/nwi:revision?leaf" .
+
+<http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/software-rev/revision> a owl:DatatypeProperty ;
+    rdfs:label "revision" ;
+    rdfs:comment """The vendor-specific revision string of the software
+module when not implicitly defined as part of the name of
+the software module.""" ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/software-rev> ;
+    rdfs:range xsd:string ;
+    prov:wasDerivedFrom "nwi:network-inventory?container/nwi:network-elements?container/nwi:network-element?list/nwi:software-rev?list/nwi:revision?leaf" .
+
+<http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/uuid> a owl:DatatypeProperty ;
+    rdfs:label "uuid" ;
+    rdfs:comment """The Universally Unique Identifier of the entity
+(e.g., component).""" ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element> ;
+    rdfs:range xsd:string .
 
 <http://www.huawei.com/ontology/ietf-network/networks/network/hasLink> a owl:ObjectProperty ;
     rdfs:label "hasLink" ;
@@ -1127,7 +1505,7 @@ destination node and terminates the link.""" ;
     rdfs:comment """The identifier of a link in the topology.
 A link is specific to a topology to which it belongs.""" ;
     rdfs:domain <http://www.huawei.com/ontology/ietf-network/networks/network/link> ;
-    rdfs:range xsd:string ;
+    rdfs:range xsd:anyURI ;
     prov:wasDerivedFrom "nt:link?list/nt:link-id?leaf" .
 
 <http://www.huawei.com/ontology/ietf-network/networks/network/link/source/source-node> a owl:ObjectProperty ;
@@ -1207,8 +1585,550 @@ be in a different topology).""" ;
     rdfs:label "tp-id" ;
     rdfs:comment "Termination point identifier." ;
     rdfs:domain <http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point> ;
-    rdfs:range xsd:string ;
+    rdfs:range xsd:anyURI ;
     prov:wasDerivedFrom "nt:termination-point?list/nt:tp-id?leaf" .
+
+<http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/location/alias> a owl:DatatypeProperty ;
+    rdfs:label "alias" ;
+    rdfs:comment """The alias name of the entity (e.g., component). This alias
+name can be specified by a network operator.""" ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/location> ;
+    rdfs:range xsd:string .
+
+<http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/location/child> a owl:ObjectProperty ;
+    ex:xpathPath "../../location/id" ;
+    rdfs:comment "The name of the contained child locations." ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/location> ;
+    rdfs:range <http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/location> ;
+    owl:minCardinality 0 ;
+    prov:wasDerivedFrom "nil:locations?container/nil:location?list/nil:child?leaf-list" .
+
+<http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/location/description> a owl:DatatypeProperty ;
+    rdfs:label "description" ;
+    rdfs:comment "The textual description of the entity (e.g., component)." ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/location> ;
+    rdfs:range xsd:string .
+
+<http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/location/geo-location/ellipsoid> owl:disjointWith <http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/location/geo-location/cartesian> .
+
+<http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/location/geo-location/hasReferenceFrame> a owl:ObjectProperty ;
+    rdfs:label "hasReferenceFrame" ;
+    rdfs:comment "Containment relation (parent --> child)." ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/location/geo-location> ;
+    rdfs:range <http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/location/geo-location/reference-frame> ;
+    owl:minCardinality 0 ;
+    prov:wasDerivedFrom "nil:locations?container/nil:location?list/geo:geo-location?container/hasReferenceFrame" .
+
+<http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/location/geo-location/hasVelocity> a owl:ObjectProperty ;
+    rdfs:label "hasVelocity" ;
+    rdfs:comment "Containment relation (parent --> child)." ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/location/geo-location> ;
+    rdfs:range <http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/location/geo-location/velocity> ;
+    owl:minCardinality 0 ;
+    prov:wasDerivedFrom "nil:locations?container/nil:location?list/geo:geo-location?container/hasVelocity" .
+
+<http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/location/geo-location/reference-frame/alternate-system> a owl:DatatypeProperty ;
+    rdfs:label "alternate-system" ;
+    rdfs:comment """The system in which the astronomical body and
+geodetic-datum is defined.  Normally, this value is not
+present and the system is the natural universe; however,
+when present, this value allows for specifying alternate
+systems (e.g., virtual realities).  An alternate-system
+modifies the definition (but not the type) of the other
+values in the reference frame.""" ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/location/geo-location/reference-frame> ;
+    rdfs:range xsd:string ;
+    prov:wasDerivedFrom "nil:locations?container/nil:location?list/geo:geo-location?container/geo:reference-frame?container/geo:alternate-system?leaf" .
+
+<http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/location/geo-location/reference-frame/astronomical-body> a owl:DatatypeProperty ;
+    rdfs:label "astronomical-body" ;
+    rdfs:comment """An astronomical body as named by the International
+Astronomical Union (IAU) or according to the alternate
+system if specified.  Examples include 'sun' (our star),
+'earth' (our planet), 'moon' (our moon), 'enceladus' (a
+moon of Saturn), 'ceres' (an asteroid), and
+'67p/churyumov-gerasimenko (a comet).  The ASCII value
+SHOULD have uppercase converted to lowercase and not
+include control characters (i.e., values 32..64, and
+91..126).  Any preceding 'the' in the name SHOULD NOT be
+included.""" ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/location/geo-location/reference-frame> ;
+    rdfs:range xsd:string ;
+    prov:wasDerivedFrom "nil:locations?container/nil:location?list/geo:geo-location?container/geo:reference-frame?container/geo:astronomical-body?leaf" .
+
+<http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/location/geo-location/reference-frame/geodetic-system/coord-accuracy> a owl:DatatypeProperty ;
+    rdfs:label "coord-accuracy" ;
+    rdfs:comment """The accuracy of the latitude/longitude pair for
+ellipsoidal coordinates, or the X, Y, and Z components
+for Cartesian coordinates.  When coord-accuracy is
+specified, it indicates how precisely the coordinates
+in the associated list of locations have been
+determined with respect to the coordinate system
+defined by the geodetic-datum.  For example, there
+might be uncertainty due to measurement error if an
+experimental measurement was made to determine each
+location.""" ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/location/geo-location/reference-frame/geodetic-system> ;
+    rdfs:range xsd:decimal ;
+    prov:wasDerivedFrom "nil:locations?container/nil:location?list/geo:geo-location?container/geo:reference-frame?container/geo:geodetic-system?container/geo:coord-accuracy?leaf" .
+
+<http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/location/geo-location/reference-frame/geodetic-system/geodetic-datum> a owl:DatatypeProperty ;
+    rdfs:label "geodetic-datum" ;
+    rdfs:comment """A geodetic-datum defining the meaning of latitude,
+longitude, and height.  The default when the
+astronomical body is 'earth' is 'wgs-84', which is
+used by the Global Positioning System (GPS).  The
+ASCII value SHOULD have uppercase converted to
+lowercase and not include control characters
+(i.e., values 32..64, and 91..126).  The IANA registry
+further restricts the value by converting all spaces
+(' ') to dashes ('-').
+The specification for the geodetic-datum indicates
+how accurately it models the astronomical body in
+question, both for the 'horizontal'
+latitude/longitude coordinates and for height
+coordinates.""" ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/location/geo-location/reference-frame/geodetic-system> ;
+    rdfs:range xsd:string ;
+    prov:wasDerivedFrom "nil:locations?container/nil:location?list/geo:geo-location?container/geo:reference-frame?container/geo:geodetic-system?container/geo:geodetic-datum?leaf" .
+
+<http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/location/geo-location/reference-frame/geodetic-system/height-accuracy> a owl:DatatypeProperty ;
+    rdfs:label "height-accuracy" ;
+    rdfs:comment """The accuracy of the height value for ellipsoidal
+coordinates; this value is not used with Cartesian
+coordinates.  When height-accuracy is specified, it
+indicates how precisely the heights in the
+associated list of locations have been determined
+with respect to the coordinate system defined by the
+geodetic-datum.  For example, there might be
+uncertainty due to measurement error if an
+experimental measurement was made to determine each
+location.""" ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/location/geo-location/reference-frame/geodetic-system> ;
+    rdfs:range xsd:decimal ;
+    prov:wasDerivedFrom "nil:locations?container/nil:location?list/geo:geo-location?container/geo:reference-frame?container/geo:geodetic-system?container/geo:height-accuracy?leaf" .
+
+<http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/location/geo-location/reference-frame/hasGeodeticSystem> a owl:ObjectProperty ;
+    rdfs:label "hasGeodeticSystem" ;
+    rdfs:comment "Containment relation (parent --> child)." ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/location/geo-location/reference-frame> ;
+    rdfs:range <http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/location/geo-location/reference-frame/geodetic-system> ;
+    owl:minCardinality 0 ;
+    prov:wasDerivedFrom "nil:locations?container/nil:location?list/geo:geo-location?container/geo:reference-frame?container/hasGeodeticSystem" .
+
+<http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/location/geo-location/timestamp> a owl:DatatypeProperty ;
+    rdfs:label "timestamp" ;
+    rdfs:comment "Reference time when location was recorded." ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/location/geo-location> ;
+    rdfs:range xsd:dateTime ;
+    prov:wasDerivedFrom "nil:locations?container/nil:location?list/geo:geo-location?container/geo:timestamp?leaf" .
+
+<http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/location/geo-location/valid-until> a owl:DatatypeProperty ;
+    rdfs:label "valid-until" ;
+    rdfs:comment """The timestamp for which this geo-location is valid until.
+If unspecified, the geo-location has no specific
+expiration time.""" ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/location/geo-location> ;
+    rdfs:range xsd:dateTime ;
+    prov:wasDerivedFrom "nil:locations?container/nil:location?list/geo:geo-location?container/geo:valid-until?leaf" .
+
+<http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/location/geo-location/velocity/v-east> a owl:DatatypeProperty ;
+    rdfs:label "v-east" ;
+    rdfs:comment """v-east is the rate of change (i.e., speed) perpendicular
+to the right of true north as defined by
+the geodetic-system.""" ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/location/geo-location/velocity> ;
+    rdfs:range xsd:decimal ;
+    prov:wasDerivedFrom "nil:locations?container/nil:location?list/geo:geo-location?container/geo:velocity?container/geo:v-east?leaf" .
+
+<http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/location/geo-location/velocity/v-north> a owl:DatatypeProperty ;
+    rdfs:label "v-north" ;
+    rdfs:comment """v-north is the rate of change (i.e., speed) towards
+true north as defined by the geodetic-system.""" ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/location/geo-location/velocity> ;
+    rdfs:range xsd:decimal ;
+    prov:wasDerivedFrom "nil:locations?container/nil:location?list/geo:geo-location?container/geo:velocity?container/geo:v-north?leaf" .
+
+<http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/location/geo-location/velocity/v-up> a owl:DatatypeProperty ;
+    rdfs:label "v-up" ;
+    rdfs:comment """v-up is the rate of change (i.e., speed) away from the
+center of mass.""" ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/location/geo-location/velocity> ;
+    rdfs:range xsd:decimal ;
+    prov:wasDerivedFrom "nil:locations?container/nil:location?list/geo:geo-location?container/geo:velocity?container/geo:v-up?leaf" .
+
+<http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/location/hasGeoLocation> a owl:ObjectProperty ;
+    rdfs:label "hasGeoLocation" ;
+    rdfs:comment "Containment relation (parent --> child)." ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/location> ;
+    rdfs:range <http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/location/geo-location> ;
+    owl:minCardinality 0 ;
+    prov:wasDerivedFrom "nil:locations?container/nil:location?list/hasGeoLocation" .
+
+<http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/location/hasPhysicalAddress> a owl:ObjectProperty ;
+    rdfs:label "hasPhysicalAddress" ;
+    rdfs:comment "Containment relation (parent --> child)." ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/location> ;
+    rdfs:range <http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/location/physical-address> ;
+    owl:minCardinality 0 ;
+    prov:wasDerivedFrom "nil:locations?container/nil:location?list/hasPhysicalAddress" .
+
+<http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/location/id> a owl:DatatypeProperty ;
+    rdfs:label "id" ;
+    rdfs:comment "An identifier of the location." ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/location> ;
+    rdfs:range xsd:string ;
+    prov:wasDerivedFrom "nil:locations?container/nil:location?list/nil:id?leaf" .
+
+<http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/location/name> a owl:DatatypeProperty ;
+    rdfs:label "name" ;
+    rdfs:comment """The name of the  entity (e.g., component), as specified by
+a network operator, that provides a non-volatile 'handle'
+for the entity and that can be modified anytime during the
+entity lifetime.
+
+If no value is discovered, the server MAY set the value of
+this node to a locally unique value in the operational
+state.""" ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/location> ;
+    rdfs:range xsd:string .
+
+<http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/location/parent> a owl:ObjectProperty ;
+    ex:xpathPath "../../location/id" ;
+    rdfs:comment """The name of the location that physically contains this
+location.""" ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/location> ;
+    rdfs:range <http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/location> ;
+    owl:minCardinality 0 ;
+    prov:wasDerivedFrom "nil:locations?container/nil:location?list/nil:parent?leaf" .
+
+<http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/location/physical-address/address> a owl:DatatypeProperty ;
+    rdfs:label "address" ;
+    rdfs:comment "Specifies an address (number and street)." ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/location/physical-address> ;
+    rdfs:range xsd:string ;
+    prov:wasDerivedFrom "nil:locations?container/nil:location?list/nil:physical-address?container/nil:address?leaf" .
+
+<http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/location/physical-address/city> a owl:DatatypeProperty ;
+    rdfs:label "city" ;
+    rdfs:comment "Specifies a city." ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/location/physical-address> ;
+    rdfs:range xsd:string ;
+    prov:wasDerivedFrom "nil:locations?container/nil:location?list/nil:physical-address?container/nil:city?leaf" .
+
+<http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/location/physical-address/country-code> a owl:DatatypeProperty ;
+    rdfs:label "country-code" ;
+    rdfs:comment """Specifies a country.
+Expressed as ISO ALPHA-2 code.""" ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/location/physical-address> ;
+    rdfs:range xsd:string ;
+    prov:wasDerivedFrom "nil:locations?container/nil:location?list/nil:physical-address?container/nil:country-code?leaf" .
+
+<http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/location/physical-address/postal-code> a owl:DatatypeProperty ;
+    rdfs:label "postal-code" ;
+    rdfs:comment "Specifies a postal code." ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/location/physical-address> ;
+    rdfs:range xsd:string ;
+    prov:wasDerivedFrom "nil:locations?container/nil:location?list/nil:physical-address?container/nil:postal-code?leaf" .
+
+<http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/location/physical-address/state> a owl:DatatypeProperty ;
+    rdfs:label "state" ;
+    rdfs:comment """Specifies a state. This leaf can also be
+used to describe a region for a country that
+does not have states.""" ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/location/physical-address> ;
+    rdfs:range xsd:string ;
+    prov:wasDerivedFrom "nil:locations?container/nil:location?list/nil:physical-address?container/nil:state?leaf" .
+
+<http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/location/timestamp> a owl:DatatypeProperty ;
+    rdfs:label "timestamp" ;
+    rdfs:comment "Reference time when location was recorded." ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/location> ;
+    rdfs:range xsd:dateTime ;
+    prov:wasDerivedFrom "nil:locations?container/nil:location?list/nil:timestamp?leaf" .
+
+<http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/location/type> a owl:DatatypeProperty ;
+    rdfs:label "type" ;
+    rdfs:comment """The type of network inventory location, e.g.
+equipment room, building, or site.
+
+This allows operators to flexibly define custom location
+types (e.g., 'pole', 'roof', 'floor') based on their
+specific network scenarios without requiring model
+extensions. String-based types enable dynamic adaptation
+to heterogeneous organizational naming conventions.""" ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/location> ;
+    rdfs:range xsd:string ;
+    prov:wasDerivedFrom "nil:locations?container/nil:location?list/nil:type?leaf" .
+
+<http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/location/uuid> a owl:DatatypeProperty ;
+    rdfs:label "uuid" ;
+    rdfs:comment """The Universally Unique Identifier of the entity
+(e.g., component).""" ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/location> ;
+    rdfs:range xsd:string .
+
+<http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/location/valid-until> a owl:DatatypeProperty ;
+    rdfs:label "valid-until" ;
+    rdfs:comment """The timestamp for which this location is valid until.
+If unspecified, the location has no specific
+expiration time.""" ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/location> ;
+    rdfs:range xsd:dateTime ;
+    prov:wasDerivedFrom "nil:locations?container/nil:location?list/nil:valid-until?leaf" .
+
+<http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/racks/rack/alias> a owl:DatatypeProperty ;
+    rdfs:label "alias" ;
+    rdfs:comment """The alias name of the entity (e.g., component). This alias
+name can be specified by a network operator.""" ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/racks/rack> ;
+    rdfs:range xsd:string .
+
+<http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/racks/rack/contained-chassis/component-ref> a owl:ObjectProperty ;
+    rdfs:comment """The reference to the chassis component within
+the network element and contained by the rack.""" ;
+    owl:minCardinality 0 ;
+    prov:wasDerivedFrom "nil:locations?container/nil:racks?container/nil:rack?list/nil:contained-chassis?list/nil:component-ref?leaf" .
+
+<http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/racks/rack/contained-chassis/ne-ref> a owl:ObjectProperty ;
+    rdfs:comment """The reference to the network element containing
+the chassis component.""" ;
+    owl:minCardinality 0 ;
+    prov:wasDerivedFrom "nil:locations?container/nil:racks?container/nil:rack?list/nil:contained-chassis?list/nil:ne-ref?leaf" .
+
+<http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/racks/rack/contained-chassis/relative-position> a owl:DatatypeProperty ;
+    rdfs:label "relative-position" ;
+    rdfs:comment """A relative position of chassis within
+the rack""" ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/racks/rack/contained-chassis> ;
+    rdfs:range xsd:unsignedByte ;
+    prov:wasDerivedFrom "nil:locations?container/nil:racks?container/nil:rack?list/nil:contained-chassis?list/nil:relative-position?leaf" .
+
+<http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/racks/rack/depth> a owl:DatatypeProperty ;
+    rdfs:label "depth" ;
+    rdfs:comment "Rack depth." ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/racks/rack> ;
+    rdfs:range xsd:unsignedShort ;
+    prov:wasDerivedFrom "nil:locations?container/nil:racks?container/nil:rack?list/nil:depth?leaf" .
+
+<http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/racks/rack/description> a owl:DatatypeProperty ;
+    rdfs:label "description" ;
+    rdfs:comment "The textual description of the entity (e.g., component)." ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/racks/rack> ;
+    rdfs:range xsd:string .
+
+<http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/racks/rack/hasContainedChassis> a owl:ObjectProperty ;
+    rdfs:label "hasContainedChassis" ;
+    rdfs:comment "Containment relation (parent --> child)." ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/racks/rack> ;
+    rdfs:range <http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/racks/rack/contained-chassis> ;
+    owl:minCardinality 0 ;
+    prov:wasDerivedFrom "nil:locations?container/nil:racks?container/nil:rack?list/hasContainedChassis" .
+
+<http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/racks/rack/hasRackLocation> a owl:ObjectProperty ;
+    rdfs:label "hasRackLocation" ;
+    rdfs:comment "Containment relation (parent --> child)." ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/racks/rack> ;
+    rdfs:range <http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/racks/rack/rack-location> ;
+    owl:minCardinality 0 ;
+    prov:wasDerivedFrom "nil:locations?container/nil:racks?container/nil:rack?list/hasRackLocation" .
+
+<http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/racks/rack/height> a owl:DatatypeProperty ;
+    rdfs:label "height" ;
+    rdfs:comment "Rack height." ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/racks/rack> ;
+    rdfs:range xsd:unsignedShort ;
+    prov:wasDerivedFrom "nil:locations?container/nil:racks?container/nil:rack?list/nil:height?leaf" .
+
+<http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/racks/rack/id> a owl:DatatypeProperty ;
+    rdfs:label "id" ;
+    rdfs:comment """An identifier that uniquely identifies the rack
+within a location, e.g. equipment room.""" ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/racks/rack> ;
+    rdfs:range xsd:string ;
+    prov:wasDerivedFrom "nil:locations?container/nil:racks?container/nil:rack?list/nil:id?leaf" .
+
+<http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/racks/rack/max-allocated-power> a owl:DatatypeProperty ;
+    rdfs:label "max-allocated-power" ;
+    rdfs:comment "The maximum allocated power to the rack." ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/racks/rack> ;
+    rdfs:range xsd:unsignedShort ;
+    prov:wasDerivedFrom "nil:locations?container/nil:racks?container/nil:rack?list/nil:max-allocated-power?leaf" .
+
+<http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/racks/rack/max-voltage> a owl:DatatypeProperty ;
+    rdfs:label "max-voltage" ;
+    rdfs:comment "The maximum voltage could be supported by the rack." ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/racks/rack> ;
+    rdfs:range xsd:unsignedShort ;
+    prov:wasDerivedFrom "nil:locations?container/nil:racks?container/nil:rack?list/nil:max-voltage?leaf" .
+
+<http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/racks/rack/name> a owl:DatatypeProperty ;
+    rdfs:label "name" ;
+    rdfs:comment """The name of the  entity (e.g., component), as specified by
+a network operator, that provides a non-volatile 'handle'
+for the entity and that can be modified anytime during the
+entity lifetime.
+
+If no value is discovered, the server MAY set the value of
+this node to a locally unique value in the operational
+state.""" ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/racks/rack> ;
+    rdfs:range xsd:string .
+
+<http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/racks/rack/rack-location/column-number> a owl:DatatypeProperty ;
+    rdfs:label "column-number" ;
+    rdfs:comment """Identifies the physical location of the rack within
+the column.""" ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/racks/rack/rack-location> ;
+    rdfs:range xsd:unsignedInt ;
+    prov:wasDerivedFrom "nil:locations?container/nil:racks?container/nil:rack?list/nil:rack-location?container/nil:column-number?leaf" .
+
+<http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/racks/rack/rack-location/location-ref> a owl:DatatypeProperty ;
+    rdfs:label "location-ref" ;
+    rdfs:comment "Name of location where this rack is located." ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/racks/rack/rack-location> ;
+    rdfs:range xsd:string ;
+    prov:wasDerivedFrom "nil:locations?container/nil:racks?container/nil:rack?list/nil:rack-location?container/nil:location-ref?leaf" .
+
+<http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/racks/rack/rack-location/row-number> a owl:DatatypeProperty ;
+    rdfs:label "row-number" ;
+    rdfs:comment """Identifies the row within the equipment room where
+the rack is located.""" ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/racks/rack/rack-location> ;
+    rdfs:range xsd:unsignedInt ;
+    prov:wasDerivedFrom "nil:locations?container/nil:racks?container/nil:rack?list/nil:rack-location?container/nil:row-number?leaf" .
+
+<http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/racks/rack/timestamp> a owl:DatatypeProperty ;
+    rdfs:label "timestamp" ;
+    rdfs:comment "Reference time when location was recorded." ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/racks/rack> ;
+    rdfs:range xsd:dateTime ;
+    prov:wasDerivedFrom "nil:locations?container/nil:racks?container/nil:rack?list/nil:timestamp?leaf" .
+
+<http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/racks/rack/uuid> a owl:DatatypeProperty ;
+    rdfs:label "uuid" ;
+    rdfs:comment """The Universally Unique Identifier of the entity
+(e.g., component).""" ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/racks/rack> ;
+    rdfs:range xsd:string .
+
+<http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/racks/rack/valid-until> a owl:DatatypeProperty ;
+    rdfs:label "valid-until" ;
+    rdfs:comment """The timestamp for which this location is valid until.
+If unspecified, the location has no specific
+expiration time.""" ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/racks/rack> ;
+    rdfs:range xsd:dateTime ;
+    prov:wasDerivedFrom "nil:locations?container/nil:racks?container/nil:rack?list/nil:valid-until?leaf" .
+
+<http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/racks/rack/width> a owl:DatatypeProperty ;
+    rdfs:label "width" ;
+    rdfs:comment "Rack width." ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/racks/rack> ;
+    rdfs:range xsd:unsignedShort ;
+    prov:wasDerivedFrom "nil:locations?container/nil:racks?container/nil:rack?list/nil:width?leaf" .
+
+<http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/nwi:network-elements/nwi:network-element/locations/location> a owl:DatatypeProperty ;
+    rdfs:label "location" ;
+    rdfs:comment "The reference of the location." ;
+    rdfs:domain <http://www.huawei.com/ontology/nwi:network-inventory/nwi:network-elements/nwi:network-element/locations> ;
+    rdfs:range xsd:string ;
+    prov:wasDerivedFrom "nil:locations?container/nil:location?leaf-list" .
+
+<http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/nwi:network-elements/nwi:network-element/locations/rack> a owl:ObjectProperty ;
+    rdfs:comment "The reference to the rack." ;
+    owl:minCardinality 0 ;
+    prov:wasDerivedFrom "nil:locations?container/nil:rack?leaf" .
+
+<http://www.huawei.com/ontology/ietf-nwi-passive-inventory/nwi:network-inventory/cable/a-end/passive> owl:disjointWith <http://www.huawei.com/ontology/ietf-nwi-passive-inventory/nwi:network-inventory/cable/a-end/active> .
+
+<http://www.huawei.com/ontology/ietf-nwi-passive-inventory/nwi:network-inventory/cable/child-cable/a-end/active> owl:disjointWith <http://www.huawei.com/ontology/ietf-nwi-passive-inventory/nwi:network-inventory/cable/child-cable/a-end/passive> .
+
+<http://www.huawei.com/ontology/ietf-nwi-passive-inventory/nwi:network-inventory/cable/child-cable/index> a owl:DatatypeProperty ;
+    rdfs:label "index" ;
+    rdfs:comment """An index number used to identify the concatenation
+order of the child cables.""" ;
+    rdfs:domain <http://www.huawei.com/ontology/nwi:network-inventory/cable/child-cable> ;
+    rdfs:range xsd:unsignedByte ;
+    prov:wasDerivedFrom "nwi-passive:cable?list/nwi-passive:child-cable?list/nwi-passive:index?leaf" .
+
+<http://www.huawei.com/ontology/ietf-nwi-passive-inventory/nwi:network-inventory/cable/child-cable/z-end/passive> owl:disjointWith <http://www.huawei.com/ontology/ietf-nwi-passive-inventory/nwi:network-inventory/cable/child-cable/z-end/active> .
+
+<http://www.huawei.com/ontology/ietf-nwi-passive-inventory/nwi:network-inventory/cable/optical-cable/attenuation> a owl:DatatypeProperty ;
+    rdfs:label "attenuation" ;
+    rdfs:comment "The fiber attenuation in dB." ;
+    rdfs:domain <http://www.huawei.com/ontology/nwi:network-inventory/cable/optical-cable> ;
+    rdfs:range xsd:decimal ;
+    prov:wasDerivedFrom "nwi-passive:cable?list/nwi-passive:optical-cable?container/nwi-passive:attenuation?leaf" .
+
+<http://www.huawei.com/ontology/ietf-nwi-passive-inventory/nwi:network-inventory/cable/optical-cable/fiber-core-num> a owl:DatatypeProperty ;
+    rdfs:label "fiber-core-num" ;
+    rdfs:comment "Number of fiber cores within the cable." ;
+    rdfs:domain <http://www.huawei.com/ontology/nwi:network-inventory/cable/optical-cable> ;
+    rdfs:range xsd:unsignedInt ;
+    prov:wasDerivedFrom "nwi-passive:cable?list/nwi-passive:optical-cable?container/nwi-passive:fiber-core-num?leaf" .
+
+<http://www.huawei.com/ontology/ietf-nwi-passive-inventory/nwi:network-inventory/cable/optical-cable/fiber-type> a owl:ObjectProperty ;
+    rdfs:label "fiber-type" ;
+    rdfs:comment "Type of fiber contained in the cable." ;
+    rdfs:domain <http://www.huawei.com/ontology/nwi:network-inventory/cable/optical-cable> ;
+    rdfs:range <http://www.huawei.com/ontology/identity/fiber-type> ;
+    owl:minCardinality 0 ;
+    prov:wasDerivedFrom "nwi-passive:cable?list/nwi-passive:optical-cable?container/nwi-passive:fiber-type?leaf" .
+
+<http://www.huawei.com/ontology/ietf-nwi-passive-inventory/nwi:network-inventory/cable/z-end/passive> owl:disjointWith <http://www.huawei.com/ontology/ietf-nwi-passive-inventory/nwi:network-inventory/cable/z-end/active> .
+
+<http://www.huawei.com/ontology/ietf-nwi-passive-inventory/nwi:network-inventory/passive-device/custom-tags> a owl:DatatypeProperty ;
+    rdfs:label "custom-tags" ;
+    rdfs:comment """Customized tags, e.g. RFID, QR code that are
+attached to the device.""" ;
+    rdfs:domain <http://www.huawei.com/ontology/nwi:network-inventory/passive-device> ;
+    rdfs:range xsd:string ;
+    prov:wasDerivedFrom "nwi-passive:passive-device?list/nwi-passive:custom-tags?leaf-list" .
+
+<http://www.huawei.com/ontology/ietf-nwi-passive-inventory/nwi:network-inventory/passive-device/device-type> a owl:ObjectProperty ;
+    rdfs:label "device-type" ;
+    rdfs:comment "Type of passive device." ;
+    rdfs:domain <http://www.huawei.com/ontology/nwi:network-inventory/passive-device> ;
+    rdfs:range <http://www.huawei.com/ontology/identity/passive-device-type> ;
+    owl:minCardinality 0 ;
+    prov:wasDerivedFrom "nwi-passive:passive-device?list/nwi-passive:device-type?leaf" .
+
+<http://www.huawei.com/ontology/ietf-nwi-passive-inventory/nwi:network-inventory/passive-device/id> a owl:DatatypeProperty ;
+    rdfs:label "id" ;
+    rdfs:comment "Cable identifier." ;
+    rdfs:domain <http://www.huawei.com/ontology/nwi:network-inventory/passive-device> ;
+    rdfs:range xsd:string ;
+    prov:wasDerivedFrom "nwi-passive:passive-device?list/nwi-passive:id?leaf" .
+
+<http://www.huawei.com/ontology/ietf-nwi-passive-inventory/nwi:network-inventory/passive-device/location-ref> a owl:DatatypeProperty ;
+    rdfs:label "location-ref" ;
+    rdfs:comment "Referenced location for the passive device." ;
+    rdfs:domain <http://www.huawei.com/ontology/nwi:network-inventory/passive-device> ;
+    rdfs:range xsd:string ;
+    prov:wasDerivedFrom "nwi-passive:passive-device?list/nwi-passive:location-ref?leaf" .
+
+<http://www.huawei.com/ontology/ietf-nwi-passive-inventory/nwi:network-inventory/passive-device/passive-port/fiber-core-num> a owl:DatatypeProperty ;
+    rdfs:label "fiber-core-num" ;
+    rdfs:comment "Number of fiber cores within the port." ;
+    rdfs:domain <http://www.huawei.com/ontology/nwi:network-inventory/passive-device/passive-port> ;
+    rdfs:range xsd:unsignedInt ;
+    prov:wasDerivedFrom "nwi-passive:passive-device?list/nwi-passive:passive-port?list/nwi-passive:fiber-core-num?leaf" .
+
+<http://www.huawei.com/ontology/ietf-nwi-passive-inventory/nwi:network-inventory/passive-device/passive-port/id> a owl:DatatypeProperty ;
+    rdfs:label "id" ;
+    rdfs:comment "Port identifier." ;
+    rdfs:domain <http://www.huawei.com/ontology/nwi:network-inventory/passive-device/passive-port> ;
+    rdfs:range xsd:string ;
+    prov:wasDerivedFrom "nwi-passive:passive-device?list/nwi-passive:passive-port?list/nwi-passive:id?leaf" .
+
+<http://www.huawei.com/ontology/ietf-nwi-passive-inventory/nwi:network-inventory/passive-device/passive-port/port-type> a owl:ObjectProperty ;
+    rdfs:label "port-type" ;
+    rdfs:comment "Type of passive port." ;
+    rdfs:domain <http://www.huawei.com/ontology/nwi:network-inventory/passive-device/passive-port> ;
+    rdfs:range <http://www.huawei.com/ontology/identity/passive-port-type> ;
+    owl:minCardinality 0 ;
+    prov:wasDerivedFrom "nwi-passive:passive-device?list/nwi-passive:passive-port?list/nwi-passive:port-type?leaf" .
 
 <http://www.huawei.com/ontology/ietf-power-and-energy-txt/energy-objects/hasPowerEntry> a owl:ObjectProperty ;
     rdfs:label "hasPowerEntry" ;
@@ -1342,7 +2262,7 @@ ex:ipv6-prefix a sh:NodeShape ;
 
 ex:link-id a sh:NodeShape ;
     rdfs:label "link-id" ;
-    sh:datatype xsd:string .
+    sh:datatype xsd:anyURI .
 
 ex:mac-address a sh:NodeShape ;
     rdfs:label "mac-address" ;
@@ -1366,9 +2286,256 @@ ex:ni-location-ref a sh:NodeShape ;
 <http://www.huawei.com/ontology/notification/hardware-state-oper-enabled> a owl:Class ;
     rdfs:label "hardware-state-oper-enabled" .
 
-<http://www.huawei.com/ontology/nwi:network-inventory> a owl:Class .
+<http://www.huawei.com/ontology/nwi:network-inventory/cable/a-end/device-type> a owl:DatatypeProperty ;
+    rdfs:label "device-type" ;
+    rdfs:comment "Type of connected device." ;
+    rdfs:domain <http://www.huawei.com/ontology/nwi:network-inventory/cable/a-end> ;
+    rdfs:range xsd:string .
 
-<http://www.huawei.com/ontology/nwi:network-inventory/nwi:network-elements/nwi:network-element> a owl:Class .
+<http://www.huawei.com/ontology/nwi:network-inventory/cable/alias> a owl:DatatypeProperty ;
+    rdfs:label "alias" ;
+    rdfs:comment """The alias name of the entity (e.g., component). This alias
+name can be specified by a network operator.""" ;
+    rdfs:domain <http://www.huawei.com/ontology/nwi:network-inventory/cable> ;
+    rdfs:range xsd:string .
+
+<http://www.huawei.com/ontology/nwi:network-inventory/cable/cable-role> a owl:DatatypeProperty ;
+    rdfs:label "cable-role" ;
+    rdfs:comment "Role of cable." ;
+    rdfs:domain <http://www.huawei.com/ontology/nwi:network-inventory/cable> ;
+    rdfs:range xsd:string .
+
+<http://www.huawei.com/ontology/nwi:network-inventory/cable/cable-type> a owl:DatatypeProperty ;
+    rdfs:label "cable-type" ;
+    rdfs:comment "Type of cable." ;
+    rdfs:domain <http://www.huawei.com/ontology/nwi:network-inventory/cable> ;
+    rdfs:range xsd:string .
+
+<http://www.huawei.com/ontology/nwi:network-inventory/cable/child-cable/a-end/device-type> a owl:DatatypeProperty ;
+    rdfs:label "device-type" ;
+    rdfs:comment "Type of connected device." ;
+    rdfs:domain <http://www.huawei.com/ontology/nwi:network-inventory/cable/child-cable/a-end> ;
+    rdfs:range xsd:string .
+
+<http://www.huawei.com/ontology/nwi:network-inventory/cable/child-cable/hasAEnd> a owl:ObjectProperty ;
+    rdfs:label "hasAEnd" ;
+    rdfs:comment "Containment relation (parent --> child)." ;
+    rdfs:domain <http://www.huawei.com/ontology/nwi:network-inventory/cable/child-cable> ;
+    rdfs:range <http://www.huawei.com/ontology/nwi:network-inventory/cable/child-cable/a-end> ;
+    owl:minCardinality 0 ;
+    prov:wasDerivedFrom "nwi-passive:cable?list/nwi-passive:child-cable?list/hasAEnd" .
+
+<http://www.huawei.com/ontology/nwi:network-inventory/cable/child-cable/hasZEnd> a owl:ObjectProperty ;
+    rdfs:label "hasZEnd" ;
+    rdfs:comment "Containment relation (parent --> child)." ;
+    rdfs:domain <http://www.huawei.com/ontology/nwi:network-inventory/cable/child-cable> ;
+    rdfs:range <http://www.huawei.com/ontology/nwi:network-inventory/cable/child-cable/z-end> ;
+    owl:minCardinality 0 ;
+    prov:wasDerivedFrom "nwi-passive:cable?list/nwi-passive:child-cable?list/hasZEnd" .
+
+<http://www.huawei.com/ontology/nwi:network-inventory/cable/child-cable/id> a owl:DatatypeProperty ;
+    rdfs:label "id" ;
+    rdfs:comment "Cable identifier." ;
+    rdfs:domain <http://www.huawei.com/ontology/nwi:network-inventory/cable/child-cable> ;
+    rdfs:range xsd:string .
+
+<http://www.huawei.com/ontology/nwi:network-inventory/cable/child-cable/length> a owl:DatatypeProperty ;
+    rdfs:label "length" ;
+    rdfs:comment "Length of the cable in meter." ;
+    rdfs:domain <http://www.huawei.com/ontology/nwi:network-inventory/cable/child-cable> ;
+    rdfs:range xsd:string .
+
+<http://www.huawei.com/ontology/nwi:network-inventory/cable/child-cable/z-end/device-type> a owl:DatatypeProperty ;
+    rdfs:label "device-type" ;
+    rdfs:comment "Type of connected device." ;
+    rdfs:domain <http://www.huawei.com/ontology/nwi:network-inventory/cable/child-cable/z-end> ;
+    rdfs:range xsd:string .
+
+<http://www.huawei.com/ontology/nwi:network-inventory/cable/description> a owl:DatatypeProperty ;
+    rdfs:label "description" ;
+    rdfs:comment "The textual description of the entity (e.g., component)." ;
+    rdfs:domain <http://www.huawei.com/ontology/nwi:network-inventory/cable> ;
+    rdfs:range xsd:string .
+
+<http://www.huawei.com/ontology/nwi:network-inventory/cable/hasAEnd> a owl:ObjectProperty ;
+    rdfs:label "hasAEnd" ;
+    rdfs:comment "Containment relation (parent --> child)." ;
+    rdfs:domain <http://www.huawei.com/ontology/nwi:network-inventory/cable> ;
+    rdfs:range <http://www.huawei.com/ontology/nwi:network-inventory/cable/a-end> ;
+    owl:minCardinality 0 ;
+    prov:wasDerivedFrom "nwi-passive:cable?list/hasAEnd" .
+
+<http://www.huawei.com/ontology/nwi:network-inventory/cable/hasChildCable> a owl:ObjectProperty ;
+    rdfs:label "hasChildCable" ;
+    rdfs:comment "Containment relation (parent --> child)." ;
+    rdfs:domain <http://www.huawei.com/ontology/nwi:network-inventory/cable> ;
+    rdfs:range <http://www.huawei.com/ontology/nwi:network-inventory/cable/child-cable> ;
+    owl:minCardinality 0 ;
+    prov:wasDerivedFrom "nwi-passive:cable?list/hasChildCable" .
+
+<http://www.huawei.com/ontology/nwi:network-inventory/cable/hasOpticalCable> a owl:ObjectProperty ;
+    rdfs:label "hasOpticalCable" ;
+    rdfs:comment "Containment relation (parent --> child)." ;
+    rdfs:domain <http://www.huawei.com/ontology/nwi:network-inventory/cable> ;
+    rdfs:range <http://www.huawei.com/ontology/nwi:network-inventory/cable/optical-cable> ;
+    owl:minCardinality 0 ;
+    prov:wasDerivedFrom "nwi-passive:cable?list/hasOpticalCable" .
+
+<http://www.huawei.com/ontology/nwi:network-inventory/cable/hasZEnd> a owl:ObjectProperty ;
+    rdfs:label "hasZEnd" ;
+    rdfs:comment "Containment relation (parent --> child)." ;
+    rdfs:domain <http://www.huawei.com/ontology/nwi:network-inventory/cable> ;
+    rdfs:range <http://www.huawei.com/ontology/nwi:network-inventory/cable/z-end> ;
+    owl:minCardinality 0 ;
+    prov:wasDerivedFrom "nwi-passive:cable?list/hasZEnd" .
+
+<http://www.huawei.com/ontology/nwi:network-inventory/cable/id> a owl:DatatypeProperty ;
+    rdfs:label "id" ;
+    rdfs:comment "Cable identifier." ;
+    rdfs:domain <http://www.huawei.com/ontology/nwi:network-inventory/cable> ;
+    rdfs:range xsd:string .
+
+<http://www.huawei.com/ontology/nwi:network-inventory/cable/length> a owl:DatatypeProperty ;
+    rdfs:label "length" ;
+    rdfs:comment "Length of the cable in meter." ;
+    rdfs:domain <http://www.huawei.com/ontology/nwi:network-inventory/cable> ;
+    rdfs:range xsd:string .
+
+<http://www.huawei.com/ontology/nwi:network-inventory/cable/name> a owl:DatatypeProperty ;
+    rdfs:label "name" ;
+    rdfs:comment """The name of the  entity (e.g., component), as specified by
+a network operator, that provides a non-volatile 'handle'
+for the entity and that can be modified anytime during the
+entity lifetime.
+
+If no value is discovered, the server MAY set the value of
+this node to a locally unique value in the operational
+state.""" ;
+    rdfs:domain <http://www.huawei.com/ontology/nwi:network-inventory/cable> ;
+    rdfs:range xsd:string .
+
+<http://www.huawei.com/ontology/nwi:network-inventory/cable/uuid> a owl:DatatypeProperty ;
+    rdfs:label "uuid" ;
+    rdfs:comment """The Universally Unique Identifier of the entity
+(e.g., component).""" ;
+    rdfs:domain <http://www.huawei.com/ontology/nwi:network-inventory/cable> ;
+    rdfs:range xsd:string .
+
+<http://www.huawei.com/ontology/nwi:network-inventory/cable/z-end/device-type> a owl:DatatypeProperty ;
+    rdfs:label "device-type" ;
+    rdfs:comment "Type of connected device." ;
+    rdfs:domain <http://www.huawei.com/ontology/nwi:network-inventory/cable/z-end> ;
+    rdfs:range xsd:string .
+
+<http://www.huawei.com/ontology/nwi:network-inventory/hasCable> a owl:ObjectProperty ;
+    rdfs:label "hasCable" ;
+    rdfs:comment "Containment relation (parent --> child)." ;
+    rdfs:domain <http://www.huawei.com/ontology/nwi:network-inventory> ;
+    rdfs:range <http://www.huawei.com/ontology/nwi:network-inventory/cable> ;
+    owl:minCardinality 0 .
+
+<http://www.huawei.com/ontology/nwi:network-inventory/hasLocations> a owl:ObjectProperty ;
+    rdfs:label "hasLocations" ;
+    rdfs:comment "Containment relation (parent --> child)." ;
+    rdfs:domain <http://www.huawei.com/ontology/nwi:network-inventory> ;
+    rdfs:range <http://www.huawei.com/ontology/nwi:network-inventory/locations> ;
+    owl:minCardinality 0 .
+
+<http://www.huawei.com/ontology/nwi:network-inventory/hasPassiveDevice> a owl:ObjectProperty ;
+    rdfs:label "hasPassiveDevice" ;
+    rdfs:comment "Containment relation (parent --> child)." ;
+    rdfs:domain <http://www.huawei.com/ontology/nwi:network-inventory> ;
+    rdfs:range <http://www.huawei.com/ontology/nwi:network-inventory/passive-device> ;
+    owl:minCardinality 0 .
+
+<http://www.huawei.com/ontology/nwi:network-inventory/locations/hasRacks> a owl:ObjectProperty ;
+    rdfs:label "hasRacks" ;
+    rdfs:comment "Containment relation (parent --> child)." ;
+    rdfs:domain <http://www.huawei.com/ontology/nwi:network-inventory/locations> ;
+    rdfs:range <http://www.huawei.com/ontology/nwi:network-inventory/locations/racks> ;
+    owl:minCardinality 0 ;
+    prov:wasDerivedFrom "nil:locations?container/hasRacks" .
+
+<http://www.huawei.com/ontology/nwi:network-inventory/nwi:network-elements/nwi:network-element/hasLocations> a owl:ObjectProperty ;
+    rdfs:label "hasLocations" ;
+    rdfs:comment "Containment relation (parent --> child)." ;
+    rdfs:domain <http://www.huawei.com/ontology/nwi:network-inventory/nwi:network-elements/nwi:network-element> ;
+    rdfs:range <http://www.huawei.com/ontology/nwi:network-inventory/nwi:network-elements/nwi:network-element/locations> ;
+    owl:minCardinality 0 .
+
+<http://www.huawei.com/ontology/nwi:network-inventory/passive-device/alias> a owl:DatatypeProperty ;
+    rdfs:label "alias" ;
+    rdfs:comment """The alias name of the entity (e.g., component). This alias
+name can be specified by a network operator.""" ;
+    rdfs:domain <http://www.huawei.com/ontology/nwi:network-inventory/passive-device> ;
+    rdfs:range xsd:string .
+
+<http://www.huawei.com/ontology/nwi:network-inventory/passive-device/description> a owl:DatatypeProperty ;
+    rdfs:label "description" ;
+    rdfs:comment "The textual description of the entity (e.g., component)." ;
+    rdfs:domain <http://www.huawei.com/ontology/nwi:network-inventory/passive-device> ;
+    rdfs:range xsd:string .
+
+<http://www.huawei.com/ontology/nwi:network-inventory/passive-device/hasPassivePort> a owl:ObjectProperty ;
+    rdfs:label "hasPassivePort" ;
+    rdfs:comment "Containment relation (parent --> child)." ;
+    rdfs:domain <http://www.huawei.com/ontology/nwi:network-inventory/passive-device> ;
+    rdfs:range <http://www.huawei.com/ontology/nwi:network-inventory/passive-device/passive-port> ;
+    owl:minCardinality 0 ;
+    prov:wasDerivedFrom "nwi-passive:passive-device?list/hasPassivePort" .
+
+<http://www.huawei.com/ontology/nwi:network-inventory/passive-device/name> a owl:DatatypeProperty ;
+    rdfs:label "name" ;
+    rdfs:comment """The name of the  entity (e.g., component), as specified by
+a network operator, that provides a non-volatile 'handle'
+for the entity and that can be modified anytime during the
+entity lifetime.
+
+If no value is discovered, the server MAY set the value of
+this node to a locally unique value in the operational
+state.""" ;
+    rdfs:domain <http://www.huawei.com/ontology/nwi:network-inventory/passive-device> ;
+    rdfs:range xsd:string .
+
+<http://www.huawei.com/ontology/nwi:network-inventory/passive-device/passive-port/alias> a owl:DatatypeProperty ;
+    rdfs:label "alias" ;
+    rdfs:comment """The alias name of the entity (e.g., component). This alias
+name can be specified by a network operator.""" ;
+    rdfs:domain <http://www.huawei.com/ontology/nwi:network-inventory/passive-device/passive-port> ;
+    rdfs:range xsd:string .
+
+<http://www.huawei.com/ontology/nwi:network-inventory/passive-device/passive-port/description> a owl:DatatypeProperty ;
+    rdfs:label "description" ;
+    rdfs:comment "The textual description of the entity (e.g., component)." ;
+    rdfs:domain <http://www.huawei.com/ontology/nwi:network-inventory/passive-device/passive-port> ;
+    rdfs:range xsd:string .
+
+<http://www.huawei.com/ontology/nwi:network-inventory/passive-device/passive-port/name> a owl:DatatypeProperty ;
+    rdfs:label "name" ;
+    rdfs:comment """The name of the  entity (e.g., component), as specified by
+a network operator, that provides a non-volatile 'handle'
+for the entity and that can be modified anytime during the
+entity lifetime.
+
+If no value is discovered, the server MAY set the value of
+this node to a locally unique value in the operational
+state.""" ;
+    rdfs:domain <http://www.huawei.com/ontology/nwi:network-inventory/passive-device/passive-port> ;
+    rdfs:range xsd:string .
+
+<http://www.huawei.com/ontology/nwi:network-inventory/passive-device/passive-port/uuid> a owl:DatatypeProperty ;
+    rdfs:label "uuid" ;
+    rdfs:comment """The Universally Unique Identifier of the entity
+(e.g., component).""" ;
+    rdfs:domain <http://www.huawei.com/ontology/nwi:network-inventory/passive-device/passive-port> ;
+    rdfs:range xsd:string .
+
+<http://www.huawei.com/ontology/nwi:network-inventory/passive-device/uuid> a owl:DatatypeProperty ;
+    rdfs:label "uuid" ;
+    rdfs:comment """The Universally Unique Identifier of the entity
+(e.g., component).""" ;
+    rdfs:domain <http://www.huawei.com/ontology/nwi:network-inventory/passive-device> ;
+    rdfs:range xsd:string .
 
 ex:object-identifier a sh:NodeShape ;
     rdfs:label "object-identifier" ;
@@ -1497,6 +2664,237 @@ this information.""" ;
     rdfs:comment "Top-level container for network inventory." ;
     prov:wasDerivedFrom "nwi:network-inventory?container" .
 
+<http://www.huawei.com/ontology/power-and-energy-txt/network-inventory/network-elements/network-element/alias> a owl:DatatypeProperty ;
+    rdfs:label "alias" ;
+    rdfs:comment """The alias name of the entity (e.g., component). This alias
+name can be specified by a network operator.""" ;
+    rdfs:domain <http://www.huawei.com/ontology/power-and-energy-txt/network-inventory/network-elements/network-element> ;
+    rdfs:range xsd:string .
+
+<http://www.huawei.com/ontology/power-and-energy-txt/network-inventory/network-elements/network-element/components/component/alias> a owl:DatatypeProperty ;
+    rdfs:label "alias" ;
+    rdfs:comment """The alias name of the entity (e.g., component). This alias
+name can be specified by a network operator.""" ;
+    rdfs:domain <http://www.huawei.com/ontology/power-and-energy-txt/network-inventory/network-elements/network-element/components/component> ;
+    rdfs:range xsd:string .
+
+<http://www.huawei.com/ontology/power-and-energy-txt/network-inventory/network-elements/network-element/components/component/asset-id> a owl:DatatypeProperty ;
+    rdfs:label "asset-id" ;
+    rdfs:comment """This node is an asset tracking identifier for the component,
+as specified by a network operator.
+
+A server implementation MAY map this leaf to the
+entPhysicalAssetID MIB object.  Such an
+implementation needs to use some mechanism to handle
+the differences in size and characters allowed
+between this leaf and entPhysicalAssetID.
+
+The definition of such a mechanism is outside the
+scope of this document.""" ;
+    rdfs:domain <http://www.huawei.com/ontology/power-and-energy-txt/network-inventory/network-elements/network-element/components/component> ;
+    rdfs:range xsd:string .
+
+<http://www.huawei.com/ontology/power-and-energy-txt/network-inventory/network-elements/network-element/components/component/class> a owl:DatatypeProperty ;
+    rdfs:label "class" ;
+    rdfs:comment "The type of the component." ;
+    rdfs:domain <http://www.huawei.com/ontology/power-and-energy-txt/network-inventory/network-elements/network-element/components/component> ;
+    rdfs:range xsd:string .
+
+<http://www.huawei.com/ontology/power-and-energy-txt/network-inventory/network-elements/network-element/components/component/component-id> a owl:DatatypeProperty ;
+    rdfs:label "component-id" ;
+    rdfs:comment """An identifier that uniquely identifies the component
+in a node.""" ;
+    rdfs:domain <http://www.huawei.com/ontology/power-and-energy-txt/network-inventory/network-elements/network-element/components/component> ;
+    rdfs:range xsd:string .
+
+<http://www.huawei.com/ontology/power-and-energy-txt/network-inventory/network-elements/network-element/components/component/description> a owl:DatatypeProperty ;
+    rdfs:label "description" ;
+    rdfs:comment "The textual description of the entity (e.g., component)." ;
+    rdfs:domain <http://www.huawei.com/ontology/power-and-energy-txt/network-inventory/network-elements/network-element/components/component> ;
+    rdfs:range xsd:string .
+
+<http://www.huawei.com/ontology/power-and-energy-txt/network-inventory/network-elements/network-element/components/component/hardware-rev> a owl:DatatypeProperty ;
+    rdfs:label "hardware-rev" ;
+    rdfs:comment """The vendor-specific hardware revision string for the
+component.
+
+The preferred value is the hardware revision identifier
+actually printed on the component itself (if present).""" ;
+    rdfs:domain <http://www.huawei.com/ontology/power-and-energy-txt/network-inventory/network-elements/network-element/components/component> ;
+    rdfs:range xsd:string .
+
+<http://www.huawei.com/ontology/power-and-energy-txt/network-inventory/network-elements/network-element/components/component/is-fru> a owl:DatatypeProperty ;
+    rdfs:label "is-fru" ;
+    rdfs:comment """This node indicates whether or not this component is
+considered a 'field-replaceable unit' by the vendor.
+If this node contains the value 'true', then this
+component identifies a field-replaceable unit.
+For all components that are permanently contained
+within a field-replaceable unit, the value 'false'
+should be returned for this node.""" ;
+    rdfs:domain <http://www.huawei.com/ontology/power-and-energy-txt/network-inventory/network-elements/network-element/components/component> ;
+    rdfs:range xsd:string .
+
+<http://www.huawei.com/ontology/power-and-energy-txt/network-inventory/network-elements/network-element/components/component/mfg-date> a owl:DatatypeProperty ;
+    rdfs:label "mfg-date" ;
+    rdfs:comment "The date of manufacturing of the component." ;
+    rdfs:domain <http://www.huawei.com/ontology/power-and-energy-txt/network-inventory/network-elements/network-element/components/component> ;
+    rdfs:range xsd:string .
+
+<http://www.huawei.com/ontology/power-and-energy-txt/network-inventory/network-elements/network-element/components/component/mfg-name> a owl:DatatypeProperty ;
+    rdfs:label "mfg-name" ;
+    rdfs:comment """The name of the manufacturer of this entity
+(e.g., component).""" ;
+    rdfs:domain <http://www.huawei.com/ontology/power-and-energy-txt/network-inventory/network-elements/network-element/components/component> ;
+    rdfs:range xsd:string .
+
+<http://www.huawei.com/ontology/power-and-energy-txt/network-inventory/network-elements/network-element/components/component/name> a owl:DatatypeProperty ;
+    rdfs:label "name" ;
+    rdfs:comment """The name of the  entity (e.g., component), as specified by
+a network operator, that provides a non-volatile 'handle'
+for the entity and that can be modified anytime during the
+entity lifetime.
+
+If no value is discovered, the server MAY set the value of
+this node to a locally unique value in the operational
+state.""" ;
+    rdfs:domain <http://www.huawei.com/ontology/power-and-energy-txt/network-inventory/network-elements/network-element/components/component> ;
+    rdfs:range xsd:string .
+
+<http://www.huawei.com/ontology/power-and-energy-txt/network-inventory/network-elements/network-element/components/component/part-number> a owl:DatatypeProperty ;
+    rdfs:label "part-number" ;
+    rdfs:comment """The vendor-specific part number of the component
+type. It is expected that vendors assign unique part
+numbers to different component types within the
+scope of the vendor.""" ;
+    rdfs:domain <http://www.huawei.com/ontology/power-and-energy-txt/network-inventory/network-elements/network-element/components/component> ;
+    rdfs:range xsd:string .
+
+<http://www.huawei.com/ontology/power-and-energy-txt/network-inventory/network-elements/network-element/components/component/product-name> a owl:DatatypeProperty ;
+    rdfs:label "product-name" ;
+    rdfs:comment """The vendor-specific and human-interpretable string
+describing the entity (e.g., component) type. It is expected
+that vendors assign unique product names to different entity
+(e.g., component) types within the scope of the vendor.""" ;
+    rdfs:domain <http://www.huawei.com/ontology/power-and-energy-txt/network-inventory/network-elements/network-element/components/component> ;
+    rdfs:range xsd:string .
+
+<http://www.huawei.com/ontology/power-and-energy-txt/network-inventory/network-elements/network-element/components/component/serial-number> a owl:DatatypeProperty ;
+    rdfs:label "serial-number" ;
+    rdfs:comment """The vendor-specific serial number of the component instance.
+
+It is expected that vendors assign unique serial numbers to
+different component instances within the scope of the
+'part-number'.""" ;
+    rdfs:domain <http://www.huawei.com/ontology/power-and-energy-txt/network-inventory/network-elements/network-element/components/component> ;
+    rdfs:range xsd:string .
+
+<http://www.huawei.com/ontology/power-and-energy-txt/network-inventory/network-elements/network-element/components/component/software-rev/name> a owl:DatatypeProperty ;
+    rdfs:label "name" ;
+    rdfs:comment "The vendor-specific name of the software module." ;
+    rdfs:domain <http://www.huawei.com/ontology/power-and-energy-txt/network-inventory/network-elements/network-element/components/component/software-rev> ;
+    rdfs:range xsd:string ;
+    prov:wasDerivedFrom "nwi:software-rev?list/nwi:name?leaf" .
+
+<http://www.huawei.com/ontology/power-and-energy-txt/network-inventory/network-elements/network-element/components/component/software-rev/patch/revision> a owl:DatatypeProperty ;
+    rdfs:label "revision" ;
+    rdfs:comment """The vendor-specific revision string of the software
+patch when not implicitly defined as part of the name or
+revision of the software module.""" ;
+    rdfs:domain <http://www.huawei.com/ontology/power-and-energy-txt/network-inventory/network-elements/network-element/components/component/software-rev/patch> ;
+    rdfs:range xsd:string ;
+    prov:wasDerivedFrom "nwi:software-rev?list/nwi:patch?list/nwi:revision?leaf" .
+
+<http://www.huawei.com/ontology/power-and-energy-txt/network-inventory/network-elements/network-element/components/component/software-rev/revision> a owl:DatatypeProperty ;
+    rdfs:label "revision" ;
+    rdfs:comment """The vendor-specific revision string of the software
+module when not implicitly defined as part of the name of
+the software module.""" ;
+    rdfs:domain <http://www.huawei.com/ontology/power-and-energy-txt/network-inventory/network-elements/network-element/components/component/software-rev> ;
+    rdfs:range xsd:string ;
+    prov:wasDerivedFrom "nwi:software-rev?list/nwi:revision?leaf" .
+
+<http://www.huawei.com/ontology/power-and-energy-txt/network-inventory/network-elements/network-element/components/component/uri> a owl:DatatypeProperty ;
+    rdfs:label "uri" ;
+    rdfs:comment """This node contains identification information about
+the component.""" ;
+    rdfs:domain <http://www.huawei.com/ontology/power-and-energy-txt/network-inventory/network-elements/network-element/components/component> ;
+    rdfs:range xsd:string .
+
+<http://www.huawei.com/ontology/power-and-energy-txt/network-inventory/network-elements/network-element/components/component/uuid> a owl:DatatypeProperty ;
+    rdfs:label "uuid" ;
+    rdfs:comment """The Universally Unique Identifier of the entity
+(e.g., component).""" ;
+    rdfs:domain <http://www.huawei.com/ontology/power-and-energy-txt/network-inventory/network-elements/network-element/components/component> ;
+    rdfs:range xsd:string .
+
+<http://www.huawei.com/ontology/power-and-energy-txt/network-inventory/network-elements/network-element/description> a owl:DatatypeProperty ;
+    rdfs:label "description" ;
+    rdfs:comment "The textual description of the entity (e.g., component)." ;
+    rdfs:domain <http://www.huawei.com/ontology/power-and-energy-txt/network-inventory/network-elements/network-element> ;
+    rdfs:range xsd:string .
+
+<http://www.huawei.com/ontology/power-and-energy-txt/network-inventory/network-elements/network-element/mfg-name> a owl:DatatypeProperty ;
+    rdfs:label "mfg-name" ;
+    rdfs:comment """The name of the manufacturer of this entity
+(e.g., component).""" ;
+    rdfs:domain <http://www.huawei.com/ontology/power-and-energy-txt/network-inventory/network-elements/network-element> ;
+    rdfs:range xsd:string .
+
+<http://www.huawei.com/ontology/power-and-energy-txt/network-inventory/network-elements/network-element/name> a owl:DatatypeProperty ;
+    rdfs:label "name" ;
+    rdfs:comment """The name of the  entity (e.g., component), as specified by
+a network operator, that provides a non-volatile 'handle'
+for the entity and that can be modified anytime during the
+entity lifetime.
+
+If no value is discovered, the server MAY set the value of
+this node to a locally unique value in the operational
+state.""" ;
+    rdfs:domain <http://www.huawei.com/ontology/power-and-energy-txt/network-inventory/network-elements/network-element> ;
+    rdfs:range xsd:string .
+
+<http://www.huawei.com/ontology/power-and-energy-txt/network-inventory/network-elements/network-element/product-name> a owl:DatatypeProperty ;
+    rdfs:label "product-name" ;
+    rdfs:comment """The vendor-specific and human-interpretable string
+describing the entity (e.g., component) type. It is expected
+that vendors assign unique product names to different entity
+(e.g., component) types within the scope of the vendor.""" ;
+    rdfs:domain <http://www.huawei.com/ontology/power-and-energy-txt/network-inventory/network-elements/network-element> ;
+    rdfs:range xsd:string .
+
+<http://www.huawei.com/ontology/power-and-energy-txt/network-inventory/network-elements/network-element/software-rev/name> a owl:DatatypeProperty ;
+    rdfs:label "name" ;
+    rdfs:comment "The vendor-specific name of the software module." ;
+    rdfs:domain <http://www.huawei.com/ontology/power-and-energy-txt/network-inventory/network-elements/network-element/software-rev> ;
+    rdfs:range xsd:string ;
+    prov:wasDerivedFrom "nwi:software-rev?list/nwi:name?leaf" .
+
+<http://www.huawei.com/ontology/power-and-energy-txt/network-inventory/network-elements/network-element/software-rev/patch/revision> a owl:DatatypeProperty ;
+    rdfs:label "revision" ;
+    rdfs:comment """The vendor-specific revision string of the software
+patch when not implicitly defined as part of the name or
+revision of the software module.""" ;
+    rdfs:domain <http://www.huawei.com/ontology/power-and-energy-txt/network-inventory/network-elements/network-element/software-rev/patch> ;
+    rdfs:range xsd:string ;
+    prov:wasDerivedFrom "nwi:software-rev?list/nwi:patch?list/nwi:revision?leaf" .
+
+<http://www.huawei.com/ontology/power-and-energy-txt/network-inventory/network-elements/network-element/software-rev/revision> a owl:DatatypeProperty ;
+    rdfs:label "revision" ;
+    rdfs:comment """The vendor-specific revision string of the software
+module when not implicitly defined as part of the name of
+the software module.""" ;
+    rdfs:domain <http://www.huawei.com/ontology/power-and-energy-txt/network-inventory/network-elements/network-element/software-rev> ;
+    rdfs:range xsd:string ;
+    prov:wasDerivedFrom "nwi:software-rev?list/nwi:revision?leaf" .
+
+<http://www.huawei.com/ontology/power-and-energy-txt/network-inventory/network-elements/network-element/uuid> a owl:DatatypeProperty ;
+    rdfs:label "uuid" ;
+    rdfs:comment """The Universally Unique Identifier of the entity
+(e.g., component).""" ;
+    rdfs:domain <http://www.huawei.com/ontology/power-and-energy-txt/network-inventory/network-elements/network-element> ;
+    rdfs:range xsd:string .
+
 ex:power-factor a sh:NodeShape ;
     rdfs:label "power-factor" ;
     sh:datatype xsd:unsignedByte ;
@@ -1525,7 +2923,7 @@ ex:timeticks a sh:NodeShape ;
 
 ex:tp-id a sh:NodeShape ;
     rdfs:label "tp-id" ;
-    sh:datatype xsd:string .
+    sh:datatype xsd:anyURI .
 
 <http://www.huawei.com/ontology/types/admin-state/locked> a <http://www.huawei.com/ontology/types/admin-state>,
         owl:NamedIndividual ;
@@ -1840,7 +3238,7 @@ ex:zero-based-counter64 a sh:NodeShape ;
     rdfs:subClassOf <http://www.huawei.com/ontology/identity/cable-type> ;
     prov:wasDerivedFrom "nwi-passive:electrical-cable?identity" .
 
-<http://www.huawei.com/ontology/ietf-network-inventory-txt/network-inventory> a owl:Class ;
+<http://www.huawei.com/ontology/ietf-network-inventory/network-inventory> a owl:Class ;
     rdfs:label "network-inventory" ;
     rdfs:comment "Top-level container for network inventory." ;
     prov:wasDerivedFrom "nwi:network-inventory?container" .
@@ -1850,10 +3248,29 @@ ex:zero-based-counter64 a sh:NodeShape ;
     rdfs:comment "Energy objects container for power attributes." ;
     prov:wasDerivedFrom "eo:energy-objects?container" .
 
+<http://www.huawei.com/ontology/nwi:network-inventory/locations/racks> a owl:Class ;
+    rdfs:label "racks" ;
+    rdfs:comment "Top level container for the list of racks." ;
+    prov:wasDerivedFrom "nil:locations?container/nil:racks?container" .
+
+<http://www.huawei.com/ontology/nwi:network-inventory/nwi:network-elements/nwi:network-element> a owl:Class .
+
 <http://www.huawei.com/ontology/power-and-energy-txt/energy-objects> a owl:Class ;
     rdfs:label "energy-objects" ;
     rdfs:comment "Energy objects container for power attributes." ;
     prov:wasDerivedFrom "eo:energy-objects?container" .
+
+<http://www.huawei.com/ontology/power-and-energy-txt/network-inventory/network-elements/network-element/components/component/software-rev/patch> a owl:Class ;
+    rdfs:label "patch" ;
+    rdfs:comment """The list of software patches configured to be active for
+the software module.""" ;
+    prov:wasDerivedFrom "nwi:software-rev?list/nwi:patch?list" .
+
+<http://www.huawei.com/ontology/power-and-energy-txt/network-inventory/network-elements/network-element/software-rev/patch> a owl:Class ;
+    rdfs:label "patch" ;
+    rdfs:comment """The list of software patches configured to be active for
+the software module.""" ;
+    prov:wasDerivedFrom "nwi:software-rev?list/nwi:patch?list" .
 
 <http://www.huawei.com/ontology/identity/cable-type> a owl:Class,
         owl:NamedIndividual ;
@@ -1893,22 +3310,81 @@ for the module 'ietf-hardware' in the YANG library provides
 this information.""" ;
     prov:wasDerivedFrom "hw:hardware?container" .
 
-<http://www.huawei.com/ontology/ietf-network-inventory-txt/network-inventory/network-elements> a owl:Class ;
+<http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements> a owl:Class ;
     rdfs:label "network-elements" ;
     rdfs:comment """The top-level container for the list of network elements
 within the network.""" ;
     prov:wasDerivedFrom "nwi:network-inventory?container/nwi:network-elements?container" .
 
-<http://www.huawei.com/ontology/ietf-network-inventory-txt/network-inventory/network-elements/network-element/components> a owl:Class ;
+<http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components> a owl:Class ;
     rdfs:label "components" ;
     rdfs:comment """The top-level container for the list of components
 within a network element.""" ;
     prov:wasDerivedFrom "nwi:network-inventory?container/nwi:network-elements?container/nwi:network-element?list/nwi:components?container" .
 
+<http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component/software-rev/patch> a owl:Class ;
+    rdfs:label "patch" ;
+    rdfs:comment """The list of software patches configured to be active for
+the software module.""" ;
+    prov:wasDerivedFrom "nwi:network-inventory?container/nwi:network-elements?container/nwi:network-element?list/nwi:components?container/nwi:component?list/nwi:software-rev?list/nwi:patch?list" .
+
+<http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/software-rev/patch> a owl:Class ;
+    rdfs:label "patch" ;
+    rdfs:comment """The list of software patches configured to be active for
+the software module.""" ;
+    prov:wasDerivedFrom "nwi:network-inventory?container/nwi:network-elements?container/nwi:network-element?list/nwi:software-rev?list/nwi:patch?list" .
+
 <http://www.huawei.com/ontology/ietf-network/networks/network/link/supporting-link> a owl:Class ;
     rdfs:label "supporting-link" ;
     rdfs:comment "Identifies the link or links on which this link depends." ;
     prov:wasDerivedFrom "nt:link?list/nt:supporting-link?list" .
+
+<http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/racks/rack/contained-chassis> a owl:Class ;
+    rdfs:label "contained-chassis" ;
+    rdfs:comment "The list of chassis within a rack." ;
+    prov:wasDerivedFrom "nil:locations?container/nil:racks?container/nil:rack?list/nil:contained-chassis?list" .
+
+<http://www.huawei.com/ontology/nwi:network-inventory/cable/a-end> a owl:Class ;
+    rdfs:label "a-end" ;
+    rdfs:comment "A-end device reference" ;
+    prov:wasDerivedFrom "nwi-passive:cable?list/nwi-passive:a-end?container" .
+
+<http://www.huawei.com/ontology/nwi:network-inventory/cable/child-cable/a-end> a owl:Class ;
+    rdfs:label "a-end" ;
+    rdfs:comment "A-end device reference" ;
+    prov:wasDerivedFrom "nwi-passive:cable?list/nwi-passive:child-cable?list/nwi-passive:a-end?container" .
+
+<http://www.huawei.com/ontology/nwi:network-inventory/cable/child-cable/z-end> a owl:Class ;
+    rdfs:label "z-end" ;
+    rdfs:comment "Z-end device reference" ;
+    prov:wasDerivedFrom "nwi-passive:cable?list/nwi-passive:child-cable?list/nwi-passive:z-end?container" .
+
+<http://www.huawei.com/ontology/nwi:network-inventory/cable/z-end> a owl:Class ;
+    rdfs:label "z-end" ;
+    rdfs:comment "Z-end device reference" ;
+    prov:wasDerivedFrom "nwi-passive:cable?list/nwi-passive:z-end?container" .
+
+<http://www.huawei.com/ontology/nwi:network-inventory/locations> a owl:Class ;
+    rdfs:label "locations" ;
+    rdfs:comment "The container for the NE location information." ;
+    prov:wasDerivedFrom "nil:locations?container" .
+
+<http://www.huawei.com/ontology/nwi:network-inventory/nwi:network-elements/nwi:network-element/locations> a owl:Class ;
+    rdfs:label "locations" ;
+    rdfs:comment "The container for the location." ;
+    prov:wasDerivedFrom "nil:locations?container" .
+
+<http://www.huawei.com/ontology/power-and-energy-txt/network-inventory/network-elements/network-element/components/component/software-rev> a owl:Class ;
+    rdfs:label "software-rev" ;
+    rdfs:comment """The list of the software modules configured to be active
+within the entity (e.g., component).""" ;
+    prov:wasDerivedFrom "nwi:software-rev?list" .
+
+<http://www.huawei.com/ontology/power-and-energy-txt/network-inventory/network-elements/network-element/software-rev> a owl:Class ;
+    rdfs:label "software-rev" ;
+    rdfs:comment """The list of the software modules configured to be active
+within the entity (e.g., component).""" ;
+    prov:wasDerivedFrom "nwi:software-rev?list" .
 
 <http://www.huawei.com/ontology/identity/accuracy-estimated> a owl:Class,
         owl:NamedIndividual ;
@@ -1950,19 +3426,60 @@ The corresponding information is simply provided by the
 implementing system.""" ;
     prov:wasDerivedFrom "nt:termination-point?list/nt:supporting-termination-point?list" .
 
+<http://www.huawei.com/ontology/nwi:network-inventory> a owl:Class .
+
 <http://www.huawei.com/ontology/types/ip-version> a owl:Class ;
     rdfs:label "ip-version" .
 
 <http://www.huawei.com/ontology/types/sensor-status> a owl:Class ;
     rdfs:label "sensor-status" .
 
-<http://www.huawei.com/ontology/identity/passive-port-type> a owl:Class,
-        owl:NamedIndividual ;
-    rdfs:label "passive-port-type" ;
-    rdfs:comment "Base identity for passive port types." ;
-    prov:wasDerivedFrom "nwi-passive:passive-port-type?identity" .
+<http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component/software-rev> a owl:Class ;
+    rdfs:label "software-rev" ;
+    rdfs:comment """The list of the software modules configured to be active
+within the entity (e.g., component).""" ;
+    prov:wasDerivedFrom "nwi:network-inventory?container/nwi:network-elements?container/nwi:network-element?list/nwi:components?container/nwi:component?list/nwi:software-rev?list" .
+
+<http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/software-rev> a owl:Class ;
+    rdfs:label "software-rev" ;
+    rdfs:comment """The list of the software modules configured to be active
+within the entity (e.g., component).""" ;
+    prov:wasDerivedFrom "nwi:network-inventory?container/nwi:network-elements?container/nwi:network-element?list/nwi:software-rev?list" .
 
 <http://www.huawei.com/ontology/ietf-network/networks/network/node> a owl:Class .
+
+<http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/location/geo-location/reference-frame> a owl:Class ;
+    rdfs:label "reference-frame" ;
+    rdfs:comment "The Frame of Reference for the location values." ;
+    prov:wasDerivedFrom "nil:locations?container/nil:location?list/geo:geo-location?container/geo:reference-frame?container" .
+
+<http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/location/geo-location/reference-frame/geodetic-system> a owl:Class ;
+    rdfs:label "geodetic-system" ;
+    rdfs:comment "The geodetic system of the location data." ;
+    prov:wasDerivedFrom "nil:locations?container/nil:location?list/geo:geo-location?container/geo:reference-frame?container/geo:geodetic-system?container" .
+
+<http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/location/geo-location/velocity> a owl:Class ;
+    rdfs:label "velocity" ;
+    rdfs:comment """If the object is in motion, the velocity vector describes
+this motion at the time given by the timestamp.  For a
+formula to convert these values to speed and heading, see
+RFC 9179.""" ;
+    prov:wasDerivedFrom "nil:locations?container/nil:location?list/geo:geo-location?container/geo:velocity?container" .
+
+<http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/racks/rack/rack-location> a owl:Class ;
+    rdfs:label "rack-location" ;
+    rdfs:comment """The location information of the rack, which
+comprises the name of the location, row number, and
+column number.""" ;
+    prov:wasDerivedFrom "nil:locations?container/nil:racks?container/nil:rack?list/nil:rack-location?container" .
+
+<http://www.huawei.com/ontology/nwi:network-inventory/cable/optical-cable> a owl:Class ;
+    rdfs:label "optical-cable" ;
+    rdfs:comment "Conditional: exists when derived-from-or-self(../cable-type, 'optical-fiber')",
+        """Container for attributes associated with fiber
+optic cables.""" ;
+    prov:wasDerivedFrom "nwi-passive:cable?list/nwi-passive:optical-cable?container" ;
+    sh:deactivated "derived-from-or-self(../cable-type, 'optical-fiber')" .
 
 <http://www.huawei.com/ontology/types/admin-state> a owl:Class ;
     rdfs:label "admin-state" .
@@ -2012,21 +3529,11 @@ data-source-accuracy
 """ ;
     prov:wasDerivedFrom "eo:data-source-accuracy?identity" .
 
-<http://www.huawei.com/ontology/identity/passive-device-type> a owl:Class,
+<http://www.huawei.com/ontology/identity/passive-port-type> a owl:Class,
         owl:NamedIndividual ;
-    rdfs:label "passive-device-type" ;
-    rdfs:comment "Base identity for passive device types." ;
-    prov:wasDerivedFrom "nwi-passive:passive-device-type?identity" .
-
-<http://www.huawei.com/ontology/ietf-network-inventory-txt/network-inventory/network-elements/network-element> a owl:Class ;
-    rdfs:label "network-element" ;
-    rdfs:comment "The list of network elements within the network." ;
-    prov:wasDerivedFrom "nwi:network-inventory?container/nwi:network-elements?container/nwi:network-element?list" .
-
-<http://www.huawei.com/ontology/ietf-network-inventory-txt/network-inventory/network-elements/network-element/components/component> a owl:Class ;
-    rdfs:label "component" ;
-    rdfs:comment "The list of components within a network element." ;
-    prov:wasDerivedFrom "nwi:network-inventory?container/nwi:network-elements?container/nwi:network-element?list/nwi:components?container/nwi:component?list" .
+    rdfs:label "passive-port-type" ;
+    rdfs:comment "Base identity for passive port types." ;
+    prov:wasDerivedFrom "nwi-passive:passive-port-type?identity" .
 
 <http://www.huawei.com/ontology/ietf-network/networks/network/link> a owl:Class ;
     rdfs:label "link" ;
@@ -2041,11 +3548,33 @@ is identified by a dedicated link identifier.  Note that a
 link models a point-to-point link, not a multipoint link.""" ;
     prov:wasDerivedFrom "nt:link?list" .
 
+<http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/location/geo-location> a owl:Class ;
+    rdfs:label "geo-location" ;
+    rdfs:comment """A location on an astronomical body (e.g., 'earth')
+somewhere in a universe.""" ;
+    prov:wasDerivedFrom "nil:locations?container/nil:location?list/geo:geo-location?container" .
+
 <http://www.huawei.com/ontology/identity/cable-role> a owl:Class,
         owl:NamedIndividual ;
     rdfs:label "cable-role" ;
     rdfs:comment "Base identity for cable roles." ;
     prov:wasDerivedFrom "nwi-passive:cable-role?identity" .
+
+<http://www.huawei.com/ontology/identity/passive-device-type> a owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "passive-device-type" ;
+    rdfs:comment "Base identity for passive device types." ;
+    prov:wasDerivedFrom "nwi-passive:passive-device-type?identity" .
+
+<http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/location/physical-address> a owl:Class ;
+    rdfs:label "physical-address" ;
+    rdfs:comment "Top level container for the physical address." ;
+    prov:wasDerivedFrom "nil:locations?container/nil:location?list/nil:physical-address?container" .
+
+<http://www.huawei.com/ontology/nwi:network-inventory/cable/child-cable> a owl:Class ;
+    rdfs:label "child-cable" ;
+    rdfs:comment "Ordered list of concatenated child cables." ;
+    prov:wasDerivedFrom "nwi-passive:cable?list/nwi-passive:child-cable?list" .
 
 <http://www.huawei.com/ontology/ietf-hardware/hardware/component/state> a owl:Class ;
     rdfs:label "state" ;
@@ -2060,6 +3589,11 @@ link models a point-to-point link, not a multipoint link.""" ;
 Each entry contains the complete set of power attributes
 for a specific physical component.""" ;
     prov:wasDerivedFrom "eo:energy-objects?container/eo:power-entry?list" .
+
+<http://www.huawei.com/ontology/nwi:network-inventory/passive-device/passive-port> a owl:Class ;
+    rdfs:label "passive-port" ;
+    rdfs:comment "List of ports on a passive device." ;
+    prov:wasDerivedFrom "nwi-passive:passive-device?list/nwi-passive:passive-port?list" .
 
 <http://www.huawei.com/ontology/power-and-energy-txt/energy-objects/power-entry> a owl:Class ;
     rdfs:label "power-entry" ;
@@ -2077,14 +3611,40 @@ for a specific physical component.""" ;
     sh:deactivated """derived-from-or-self(../class,
                                    "ianahw:sensor")""" .
 
+<http://www.huawei.com/ontology/nwi:network-inventory/passive-device> a owl:Class ;
+    rdfs:label "passive-device" ;
+    rdfs:comment "List of passive devices." ;
+    prov:wasDerivedFrom "nwi-passive:passive-device?list" .
+
+<http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element> a owl:Class ;
+    rdfs:label "network-element" ;
+    rdfs:comment "The list of network elements within the network." ;
+    prov:wasDerivedFrom "nwi:network-inventory?container/nwi:network-elements?container/nwi:network-element?list" .
+
+<http://www.huawei.com/ontology/types/sensor-value-type> a owl:Class ;
+    rdfs:label "sensor-value-type" .
+
 <http://www.huawei.com/ontology/identity/fiber-type> a owl:Class,
         owl:NamedIndividual ;
     rdfs:label "fiber-type" ;
     rdfs:comment "Base identity for fiber types." ;
     prov:wasDerivedFrom "nwi-passive:fiber-type?identity" .
 
-<http://www.huawei.com/ontology/types/sensor-value-type> a owl:Class ;
-    rdfs:label "sensor-value-type" .
+<http://www.huawei.com/ontology/nwi:network-inventory/cable> a owl:Class ;
+    rdfs:label "cable" ;
+    rdfs:comment "List of cables." ;
+    prov:wasDerivedFrom "nwi-passive:cable?list" .
+
+<http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/location> a owl:Class ;
+    rdfs:label "location" ;
+    rdfs:comment "The list of locations within the network." ;
+    prov:wasDerivedFrom "nil:locations?container/nil:location?list" .
+
+<http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/racks/rack> a owl:Class ;
+    rdfs:label "rack" ;
+    rdfs:comment """The list of racks within a location,
+e.g. equipment room.""" ;
+    prov:wasDerivedFrom "nil:locations?container/nil:racks?container/nil:rack?list" .
 
 <http://www.huawei.com/ontology/identity/hardware-class> a owl:Class,
         owl:NamedIndividual ;
@@ -2095,6 +3655,11 @@ identifiers.""" ;
 
 <http://www.huawei.com/ontology/types/sensor-value-scale> a owl:Class ;
     rdfs:label "sensor-value-scale" .
+
+<http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component> a owl:Class ;
+    rdfs:label "component" ;
+    rdfs:comment "The list of components within a network element." ;
+    prov:wasDerivedFrom "nwi:network-inventory?container/nwi:network-elements?container/nwi:network-element?list/nwi:components?container/nwi:component?list" .
 
 <http://www.huawei.com/ontology/ietf-hardware/hardware/component> a owl:Class ;
     rdfs:label "component" ;

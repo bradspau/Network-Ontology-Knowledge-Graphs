@@ -187,7 +187,7 @@ PREFIX loc: <http://www.huawei.com/ontology/ietf-ni-location/locations/>
     }
     ORDER BY ?locationID ?networkElementID
 
-Locate chassis in rack and row <broken> 
+Locate chassis in rack and row <broken - should be fixed in 4.7.1 as the container/leaf in the group was not dealt with properly. Just need to test).
 
 I've some thing missing in the schema...have to review where and why it is not present.
 

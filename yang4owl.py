@@ -81,9 +81,9 @@ ENHANCEMENTS IN v4.3:
 
 - ✅ ENHANCEMENT 10: fix provenance to point to incoming yang rather than outgoing owl
 
-Author: YANG-to-OWL Converter v4.6 
+Author: YANG-to-OWL Converter v4.7.1
 
-Date: 2026-01-26
+Date: 2026-02-03
 
 """
 
@@ -313,6 +313,8 @@ class YANGTypeResolver:
         'yang:counter32': XSD.unsignedInt,
 
         'yang:counter64': XSD.unsignedLong,
+
+        'inet:uri': XSD.anyURI,
 
     }
 
@@ -919,28 +921,47 @@ class GroupingResolver:
         self._collect_all_groupings()
 
     def _collect_all_groupings(self) -> None:
-
-        """Collect all grouping definitions from all modules"""
-
+        """
+        Collect all grouping definitions from all modules.
+        ⭐ PATCH: Scans substmts directly to ensure groupings are found 
+        even if pyang validation hasn't populated the .groupings shortcut.
+        """
+        log.info("--- Collecting Groupings (Robust Scan) ---")
+        
         for module_name, module in self.modules.items():
+            # Method 1: Check standard pyang substmts (The most reliable way for raw parsing)
+            if hasattr(module, 'substmts'):
+                for stmt in module.substmts:
+                    if hasattr(stmt, 'keyword') and stmt.keyword == 'grouping':
+                        group_name = stmt.arg
+                        self.groupings[group_name] = stmt
+                        self.grouping_modules[group_name] = module_name
+                        log.debug(f" Grouping found: {group_name} in {module_name}")
 
-            if not hasattr(module, 'groupings') or not module.groupings:
+            # Method 2: Check pyang's internal index (i_groupings) if it exists
+            if hasattr(module, 'i_groupings') and module.i_groupings:
+                for group_name, group_stmt in module.i_groupings.items():
+                    if group_name not in self.groupings:
+                        self.groupings[group_name] = group_stmt
+                        self.grouping_modules[group_name] = module_name
 
-                continue
-
-            for group_name, group_stmt in module.groupings.items():
-
-                self.groupings[group_name] = group_stmt
-
-                self.grouping_modules[group_name] = module_name
-
-                log.debug(f" Grouping: {group_name} in {module_name}")
+        log.info(f"--- Collection Complete: Found {len(self.groupings)} groupings ---")
 
     def get_grouping(self, grouping_name: str) -> Optional[Any]:
 
         """Get grouping definition"""
-
-        return self.groupings.get(grouping_name)
+        # 1. Exact match (fast path)
+        if grouping_name in self.groupings:
+            return self.groupings[grouping_name]
+        
+        # 2. Namespace Strip (resolution path)
+        # e.g., converts "geo:geo-location" -> "geo-location" to match storage
+        if ':' in grouping_name:
+            local_name = grouping_name.split(':')[-1]
+            if local_name in self.groupings:
+                return self.groupings[local_name]
+                
+        return None
 
     def get_grouping_children(self, grouping_name: str) -> List[Tuple[str, Any]]:
 
@@ -960,7 +981,7 @@ class GroupingResolver:
 
                 keyword = sub.keyword
 
-                if keyword in ('leaf', 'leaf-list', 'container', 'list', 'choice', 'rpc', 'notification', 'uses'):
+                if keyword in ('leaf', 'leaf-list', 'container', 'list', 'choice', 'rpc', 'notification', 'uses', 'anydata'):
 
                     children.append((sub.arg, sub, keyword))
 
@@ -1078,7 +1099,7 @@ class YANGToOWL:
 
     """Converts YANG to OWL - VERSION 4.5 with PATH NORMALIZATION"""
 
-    def __init__(self, yang_dir: str, base_uri: str = "http://www.huawei.com/ontology/"):
+    def __init__(self, yang_dir: str, base_uri: str = "http://example.org/ontology/"):
 
         self.yang_dir = Path(yang_dir)
 
@@ -1289,7 +1310,7 @@ class YANGToOWL:
 
         log.info("=" * 70)
 
-        log.info("YANG to OWL Converter v4.5 - WITH PATH NORMALIZATION")
+        log.info("YANG to OWL Converter v4.7.1 - WITH Grouping fixed")
 
         log.info("=" * 70)
 
@@ -2075,11 +2096,18 @@ class YANGToOWL:
 
         grouping_children = self.grouping_resolver.get_grouping_children(grouping_name)
 
+        if not grouping_children:
+            # This log will help identify if a specific import is missing
+            log.warning(f" Could not resolve grouping: {grouping_name} (imported module loaded?)")
+            return
+
         for child_name, child_stmt, keyword in grouping_children:
 
             # Skip nested uses for now (could handle recursively)
 
             if keyword == 'uses':
+
+                self._process_uses_in_container(child_stmt, target_path, target_uri)
 
                 continue
 
@@ -2091,7 +2119,7 @@ class YANGToOWL:
 
             refine_props = refines.get(child_name, {})
 
-            if keyword == 'leaf' or keyword == 'leaf-list':
+            if keyword == 'leaf' or keyword == 'leaf-list' or keyword == 'anydata':
 
                 self.graph.add((child_uri, RDF.type, OWL.DatatypeProperty))
 
@@ -2100,30 +2128,37 @@ class YANGToOWL:
                 self.graph.add((child_uri, RDFS.domain, target_uri))
 
                 self.graph.add((child_uri, RDFS.range, XSD.string))
-
+                
+                # Special handling for anydata description if needed
+                if keyword == 'anydata':
+                    self.graph.add((child_uri, RDFS.comment, Literal("Anydata: Arbitrary structure extension point")))
+                # Check for mandatory refinement
+                if refine_props.get('mandatory') == 'true':
+                    self.graph.add((child_uri, OWL.minCardinality, Literal(1)))
+                    self.triple_count += 1
+                #Add Metadata
                 if hasattr(child_stmt, 'substmts'):
 
                     for sub in child_stmt.substmts:
 
-                        if hasattr(sub, 'keyword') and sub.keyword == 'description':
+                        #if hasattr(sub, 'keyword') and sub.keyword == 'description':
 
-                            if hasattr(sub, 'arg'):
+                        #   if hasattr(sub, 'arg'):
 
-                                self.graph.add((child_uri, RDFS.comment, Literal(sub.arg)))
+                        #        self.graph.add((child_uri, RDFS.comment, Literal(sub.arg)))
 
-                                self.triple_count += 1
+                        #        self.triple_count += 1
 
+                        #    break
+
+                        if sub.keyword == 'description' and hasattr(sub, 'arg'):
+                            self.graph.add((child_uri, RDFS.comment, Literal(sub.arg)))
                             break
 
                 self.triple_count += 4
 
                 # Apply refine constraints
 
-                if 'mandatory' in refine_props and refine_props['mandatory']:
-
-                    self.graph.add((child_uri, OWL.minCardinality, Literal(1)))
-
-                    self.triple_count += 1
 
             elif keyword == 'container' or keyword == 'list':
 
@@ -2132,6 +2167,13 @@ class YANGToOWL:
                 self.graph.add((child_uri, RDFS.label, Literal(child_name)))
 
                 self.triple_count += 2
+
+                parent_prov = self.prov_paths.get(target_path, "")
+                
+                if keyword == 'container':
+                    self._process_container(child_stmt, child_path, target_uri, parent_prov)
+                elif keyword == 'list':
+                    self._process_list(child_stmt, child_path, target_uri, parent_prov)
 
                 if hasattr(child_stmt, 'substmts'):
 
@@ -3008,7 +3050,7 @@ Features in v4.3:
 
         help='Main module to process (default: simap-yang.yang)')
 
-    parser.add_argument('--base-uri', default='http://www.huawei.com/ontology/',
+    parser.add_argument('--base-uri', default='http://example.org/ontology/',
 
         help='Base URI for ontology')
 
