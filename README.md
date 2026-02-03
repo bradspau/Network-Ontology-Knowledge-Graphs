@@ -131,62 +131,65 @@ WHERE {
   ?location ex:type ?type .
 }
 
-Chassis Query
+Chassis Query (works)
     Query to retrieve the unique identifier of every component classified as a chassis, its name, the specific network element and its physical location. 
 
-    PREFIX ex: <http://www.huawei.com/ontology/>
-    PREFIX hw: <http://www.huawei.com/ontology/ietf-hardware/hardware/component/>
-    PREFIX nwi: <http://www.huawei.com/ontology/ietf-network-inventory-txt/network-inventory/network-elements/network-element/>
-    PREFIX nil: <http://www.huawei.com/ontology/ietf-ni-location/locations/location/>
-    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX ex: <http://www.huawei.com/ontology/>
+PREFIX hw: <http://www.huawei.com/ontology/ietf-hardware/hardware/component/>
+PREFIX nwi: <http://www.huawei.com/ontology/ietf-network-inventory-txt/network-inventory/network-elements/network-element/>
+PREFIX nil: <http://www.huawei.com/ontology/ietf-ni-location/locations/location/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX components: <http://www.huawei.com/ontology/ietf-network-inventory-txt/network-inventory/network-elements/network-element/components/>
+PREFIX identity: <http://www.huawei.com/ontology/identity/>
+PREFIX loc: <http://www.huawei.com/ontology/ietf-ni-location/locations/>
 
-    SELECT ?componentID ?componentName ?networkElementID ?locationID
-    WHERE {
-    # 1. Find components classified specifically as a 'chassis'
-    ?component a <http://www.huawei.com/ontology/ietf-network-inventory-txt/network-inventory/network-elements/network-element/components/component> ;
-                ex:class <http://www.huawei.com/ontology/identity/chassis> ;
-                ex:component-id ?componentID .
-    
-    # 2. Get the optional human-readable name
+SELECT ?componentID ?componentName ?networkElementID ?locationID
+WHERE {
+# 1. Find components classified specifically as a 'chassis'
+?component a components:component ;
+            ex:class identity:chassis ;
+            ex:component-id ?componentID .
+# 2. Get the optional human-readable name
     OPTIONAL { ?component ex:name ?componentName . }
+# 3. Trace which Network Element (NE) this component belongs to
+    ?ne components:hasComponent ?component ;
+        ex:ne-id ?networkElementID ;   
+        loc:location ?locationID .}
+ORDER BY ?locationID ?networkElementID
 
-    # 3. Trace which Network Element (NE) this component belongs to <this part is broken at present>
-    ?ne <http://www.huawei.com/ontology/ietf-network-inventory-txt/network-inventory/network-elements/network-element/components/hasComponent> ?component ;
-        nwi:ne-id ?networkElementID .
+Locate Chassis in location (works)
 
-    # 4. Link the Network Element to its physical Location ID
-    ?ne <http://www.huawei.com/ontology/ietf-ni-location/locations/location> ?locationID .
-    }
-    ORDER BY ?locationID ?networkElementID
+PREFIX ex: <http://www.huawei.com/ontology/>
+PREFIX hw: <http://www.huawei.com/ontology/ietf-hardware/hardware/component/>
+PREFIX nwi: <http://www.huawei.com/ontology/ietf-network-inventory-txt/network-inventory/network-elements/network-element/>
+PREFIX nil: <http://www.huawei.com/ontology/ietf-ni-location/locations/location/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX components: <http://www.huawei.com/ontology/ietf-network-inventory-txt/network-inventory/network-elements/network-element/components/>
+PREFIX identity: <http://www.huawei.com/ontology/identity/>
+PREFIX loc: <http://www.huawei.com/ontology/ietf-ni-location/locations/>
 
-Locate Chassis in Rack
-
-    Find exactly which rack, row and column a chassis is located in.
-
-    PREFIX ex: <http://www.huawei.com/ontology/>
-    PREFIX hw: <http://www.huawei.com/ontology/ietf-hardware/hardware/component/>
-    PREFIX nwi: <http://www.huawei.com/ontology/ietf-network-inventory-txt/network-inventory/network-elements/network-element/>
-    PREFIX nil: <http://www.huawei.com/ontology/ietf-ni-location/locations/location/>
-    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-
-    SELECT ?componentID ?componentName ?networkElementID ?locationID
+   SELECT ?componentID ?componentName ?networkElementID ?locationID
     WHERE {
     # 1. Find components classified specifically as a 'chassis'
-    ?component a <http://www.huawei.com/ontology/ietf-network-inventory-txt/network-inventory/network-elements/network-element/components/component> ;
-                ex:class <http://www.huawei.com/ontology/identity/chassis> ;
+    ?component a components:component ;
+                ex:class identity:chassis ;
                 ex:component-id ?componentID .
     
     # 2. Get the optional human-readable name
     OPTIONAL { ?component ex:name ?componentName . }
 
     # 3. Trace which Network Element (NE) this component belongs to
-    ?ne <http://www.huawei.com/ontology/ietf-network-inventory-txt/network-inventory/network-elements/network-element/components/hasComponent> ?component ;
-        nwi:ne-id ?networkElementID .
+    ?ne components:hasComponent ?component ;
+        ex:ne-id ?networkElementID .
 
     # 4. Link the Network Element to its physical Location ID
-    ?ne <http://www.huawei.com/ontology/ietf-ni-location/locations/location> ?locationID .
+    ?ne loc:location ?locationID .
     }
     ORDER BY ?locationID ?networkElementID
+
+Locate chassis in rack and row <broken> 
+
+I've some thing missing in the schema...have to review where and why it is not present.
 
 Power Energy Query 
     PREFIX ex: <http://www.huawei.com/ontology/>

@@ -9,12 +9,12 @@
 <http://data.example.com/location/LOC-SYD-01> a <http://www.huawei.com/ontology/ietf-ni-location/locations/location> ;
     ex:id "LOC-SYD-01" ;
     ex:name "Sydney Data Center" ;
-    ex:type "Site" . [cite: 602, 604, 605]
+    ex:type "Site" . 
 
 <http://data.example.com/location/LOC-MEL-02> a <http://www.huawei.com/ontology/ietf-ni-location/locations/location> ;
     ex:id "LOC-MEL-02" ;
     ex:name "Melbourne Exchange" ;
-    ex:type "Building" . [cite: 602, 604, 605]
+    ex:type "Building" . 
 
 # --- Network Element and Chassis Instances ---
 
@@ -22,107 +22,106 @@
 <http://data.example.com/ne/NE-CORE-01> a <http://www.huawei.com/ontology/ietf-network-inventory-txt/network-inventory/network-elements/network-element> ;
     ex:ne-id "NE-CORE-01" ;
     <http://www.huawei.com/ontology/ietf-ni-location/locations/location> "LOC-SYD-01" ;
-    <http://www.huawei.com/ontology/ietf-network-inventory-txt/network-inventory/network-elements/network-element/components/hasComponent> <http://data.example.com/component/CHASSIS-01> . [cite: 487, 661]
+    <http://www.huawei.com/ontology/ietf-network-inventory-txt/network-inventory/network-elements/network-element/components/hasComponent> <http://data.example.com/component/CHASSIS-01> . 
 
 <http://data.example.com/component/CHASSIS-01> a <http://www.huawei.com/ontology/ietf-network-inventory-txt/network-inventory/network-elements/network-element/components/component> ;
     ex:component-id "CHASSIS-01" ;
     ex:name "Primary Core Chassis" ;
-    ex:class id:chassis . [cite: 452, 454]
+    ex:class id:chassis . 
 
 <http://data.example.com/ne/NE-CORE-02> a <http://www.huawei.com/ontology/ietf-network-inventory-txt/network-inventory/network-elements/network-element> ;
     ex:ne-id "NE-CORE-02" ;
     <http://www.huawei.com/ontology/ietf-ni-location/locations/location> "LOC-SYD-01" ;
-    <http://www.huawei.com/ontology/ietf-network-inventory-txt/network-inventory/network-elements/network-element/components/hasComponent> <http://data.example.com/component/CHASSIS-02> . [cite: 487, 661]
+    <http://www.huawei.com/ontology/ietf-network-inventory-txt/network-inventory/network-elements/network-element/components/hasComponent> <http://data.example.com/component/CHASSIS-02> . 
 
 <http://data.example.com/component/CHASSIS-02> a <http://www.huawei.com/ontology/ietf-network-inventory-txt/network-inventory/network-elements/network-element/components/component> ;
     ex:component-id "CHASSIS-02" ;
     ex:name "Secondary Core Chassis" ;
-    ex:class id:chassis . [cite: 452, 454]
+    ex:class id:chassis . 
 
 # NE 3-6 in Melbourne
 <http://data.example.com/ne/NE-AGG-01> a <http://www.huawei.com/ontology/ietf-network-inventory-txt/network-inventory/network-elements/network-element> ;
     ex:ne-id "NE-AGG-01" ;
     <http://www.huawei.com/ontology/ietf-ni-location/locations/location> "LOC-MEL-02" ;
-    <http://www.huawei.com/ontology/ietf-network-inventory-txt/network-inventory/network-elements/network-element/components/hasComponent> <http://data.example.com/component/CHASSIS-03> . [cite: 487, 661]
+    <http://www.huawei.com/ontology/ietf-network-inventory-txt/network-inventory/network-elements/network-element/components/hasComponent> <http://data.example.com/component/CHASSIS-03> . 
 
 <http://data.example.com/component/CHASSIS-03> a <http://www.huawei.com/ontology/ietf-network-inventory-txt/network-inventory/network-elements/network-element/components/component> ;
     ex:component-id "CHASSIS-03" ;
     ex:name "Aggregation Chassis 01" ;
-    ex:class id:chassis . [cite: 452, 454]
-
+    ex:class id:chassis . 
 <http://data.example.com/ne/NE-AGG-02> a <http://www.huawei.com/ontology/ietf-network-inventory-txt/network-inventory/network-elements/network-element> ;
     ex:ne-id "NE-AGG-02" ;
     <http://www.huawei.com/ontology/ietf-ni-location/locations/location> "LOC-MEL-02" ;
-    <http://www.huawei.com/ontology/ietf-network-inventory-txt/network-inventory/network-elements/network-element/components/hasComponent> <http://data.example.com/component/CHASSIS-04> . [cite: 487, 661]
+    <http://www.huawei.com/ontology/ietf-network-inventory-txt/network-inventory/network-elements/network-element/components/hasComponent> <http://data.example.com/component/CHASSIS-04> . 
 
 <http://data.example.com/component/CHASSIS-04> a <http://www.huawei.com/ontology/ietf-network-inventory-txt/network-inventory/network-elements/network-element/components/component> ;
     ex:component-id "CHASSIS-04" ;
     ex:name "Aggregation Chassis 02" ;
-    ex:class id:chassis . [cite: 452, 454]
+    ex:class id:chassis . 
 
 <http://data.example.com/ne/NE-EDGE-01> a <http://www.huawei.com/ontology/ietf-network-inventory-txt/network-inventory/network-elements/network-element> ;
     ex:ne-id "NE-EDGE-01" ;
     <http://www.huawei.com/ontology/ietf-ni-location/locations/location> "LOC-MEL-02" ;
-    <http://www.huawei.com/ontology/ietf-network-inventory-txt/network-inventory/network-elements/network-element/components/hasComponent> <http://data.example.com/component/CHASSIS-05> . [cite: 487, 661]
+    <http://www.huawei.com/ontology/ietf-network-inventory-txt/network-inventory/network-elements/network-element/components/hasComponent> <http://data.example.com/component/CHASSIS-05> . 
 
 <http://data.example.com/component/CHASSIS-05> a <http://www.huawei.com/ontology/ietf-network-inventory-txt/network-inventory/network-elements/network-element/components/component> ;
     ex:component-id "CHASSIS-05" ;
     ex:name "Edge Gateway 01" ;
-    ex:class id:chassis . [cite: 452, 454]
+    ex:class id:chassis . 
 
 <http://data.example.com/ne/NE-EDGE-02> a <http://www.huawei.com/ontology/ietf-network-inventory-txt/network-inventory/network-elements/network-element> ;
     ex:ne-id "NE-EDGE-02" ;
     <http://www.huawei.com/ontology/ietf-ni-location/locations/location> "LOC-MEL-02" ;
-    <http://www.huawei.com/ontology/ietf-network-inventory-txt/network-inventory/network-elements/network-element/components/hasComponent> <http://data.example.com/component/CHASSIS-06> . [cite: 487, 661]
+    <http://www.huawei.com/ontology/ietf-network-inventory-txt/network-inventory/network-elements/network-element/components/hasComponent> <http://data.example.com/component/CHASSIS-06> . 
 
 <http://data.example.com/component/CHASSIS-06> a <http://www.huawei.com/ontology/ietf-network-inventory-txt/network-inventory/network-elements/network-element/components/component> ;
     ex:component-id "CHASSIS-06" ;
     ex:name "Edge Gateway 02" ;
-    ex:class id:chassis . [cite: 452, 454]
+    ex:class id:chassis . 
 
 # NE 7-10 in Sydney Room 02 (Sub-location)
 <http://data.example.com/location/LOC-SYD-R02> a <http://www.huawei.com/ontology/ietf-ni-location/locations/location> ;
     ex:id "LOC-SYD-R02" ;
     ex:name "Sydney Server Room 02" ;
     ex:type "Room" ;
-    ex:parent "LOC-SYD-01" . [cite: 602, 604, 605, 608]
+    ex:parent "LOC-SYD-01" . 
 
 <http://data.example.com/ne/NE-TOR-01> a <http://www.huawei.com/ontology/ietf-network-inventory-txt/network-inventory/network-elements/network-element> ;
     ex:ne-id "NE-TOR-01" ;
     <http://www.huawei.com/ontology/ietf-ni-location/locations/location> "LOC-SYD-R02" ;
-    <http://www.huawei.com/ontology/ietf-network-inventory-txt/network-inventory/network-elements/network-element/components/hasComponent> <http://data.example.com/component/CHASSIS-07> . [cite: 487, 661]
+    <http://www.huawei.com/ontology/ietf-network-inventory-txt/network-inventory/network-elements/network-element/components/hasComponent> <http://data.example.com/component/CHASSIS-07> . 
 
 <http://data.example.com/component/CHASSIS-07> a <http://www.huawei.com/ontology/ietf-network-inventory-txt/network-inventory/network-elements/network-element/components/component> ;
     ex:component-id "CHASSIS-07" ;
     ex:name "Top-of-Rack Chassis 01" ;
-    ex:class id:chassis . [cite: 452, 454]
+    ex:class id:chassis . 
 
 <http://data.example.com/ne/NE-TOR-02> a <http://www.huawei.com/ontology/ietf-network-inventory-txt/network-inventory/network-elements/network-element> ;
     ex:ne-id "NE-TOR-02" ;
     <http://www.huawei.com/ontology/ietf-ni-location/locations/location> "LOC-SYD-R02" ;
-    <http://www.huawei.com/ontology/ietf-network-inventory-txt/network-inventory/network-elements/network-element/components/hasComponent> <http://data.example.com/component/CHASSIS-08> . [cite: 487, 661]
+    <http://www.huawei.com/ontology/ietf-network-inventory-txt/network-inventory/network-elements/network-element/components/hasComponent> <http://data.example.com/component/CHASSIS-08> . 
 
 <http://data.example.com/component/CHASSIS-08> a <http://www.huawei.com/ontology/ietf-network-inventory-txt/network-inventory/network-elements/network-element/components/component> ;
     ex:component-id "CHASSIS-08" ;
     ex:name "Top-of-Rack Chassis 02" ;
-    ex:class id:chassis . [cite: 452, 454]
+    ex:class id:chassis . 
 
 <http://data.example.com/ne/NE-TOR-03> a <http://www.huawei.com/ontology/ietf-network-inventory-txt/network-inventory/network-elements/network-element> ;
     ex:ne-id "NE-TOR-03" ;
     <http://www.huawei.com/ontology/ietf-ni-location/locations/location> "LOC-SYD-R02" ;
-    <http://www.huawei.com/ontology/ietf-network-inventory-txt/network-inventory/network-elements/network-element/components/hasComponent> <http://data.example.com/component/CHASSIS-09> . [cite: 487, 661]
+    <http://www.huawei.com/ontology/ietf-network-inventory-txt/network-inventory/network-elements/network-element/components/hasComponent> <http://data.example.com/component/CHASSIS-09> . 
 
 <http://data.example.com/component/CHASSIS-09> a <http://www.huawei.com/ontology/ietf-network-inventory-txt/network-inventory/network-elements/network-element/components/component> ;
     ex:component-id "CHASSIS-09" ;
     ex:name "Top-of-Rack Chassis 03" ;
-    ex:class id:chassis . [cite: 452, 454]
+    ex:class id:chassis . 
 
 <http://data.example.com/ne/NE-TOR-04> a <http://www.huawei.com/ontology/ietf-network-inventory-txt/network-inventory/network-elements/network-element> ;
     ex:ne-id "NE-TOR-04" ;
     <http://www.huawei.com/ontology/ietf-ni-location/locations/location> "LOC-SYD-R02" ;
-    <http://www.huawei.com/ontology/ietf-network-inventory-txt/network-inventory/network-elements/network-element/components/hasComponent> <http://data.example.com/component/CHASSIS-10> . [cite: 487, 661]
+    <http://www.huawei.com/ontology/ietf-network-inventory-txt/network-inventory/network-elements/network-element/components/hasComponent> <http://data.example.com/component/CHASSIS-10> . 
 
 <http://data.example.com/component/CHASSIS-10> a <http://www.huawei.com/ontology/ietf-network-inventory-txt/network-inventory/network-elements/network-element/components/component> ;
     ex:component-id "CHASSIS-10" ;
     ex:name "Top-of-Rack Chassis 04" ;
-    ex:class id:chassis . [cite: 452, 454]
+    ex:class id:chassis . 
