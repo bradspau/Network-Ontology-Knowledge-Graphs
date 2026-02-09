@@ -2,7 +2,7 @@
 
 """
 
-YANG to OWL Ontology Converter - VERSION 4.5 with PATH NORMALIZATION
+YANG to OWL Ontology Converter - VERSION 4.7.2 
 
 SIMAP RDFS Schema Compatible - 650+ Triples Generated + OWL Datatype Restrictions + Enumerations + Groupings
 
@@ -41,6 +41,12 @@ ALL IMPROVEMENTS IMPLEMENTED:
 16. ⭐ ENHANCED Choices and Cases to disjoint classes (v4.6)
 
 17. Yang Union types implemented by sublasses so that owl reasoners with profiles RL, EL etc rather than DL
+
+ENHANCEMENTS IN v4.7.1
+- ✅ ADDED: --html switch to see what the parser was doing given the pyphon api calls. 
+
+ENHANCEMENTS IN v4.7.1
+- ✅ FIXED: grouping not including all leafsinstance duality. This allows identityref statements to be represented as object properties linking to the base identity class, while still allowing the identity itself to be an OWL class. This resolves previous issues where identityrefs were not properly linked in the ontology and enables correct reasoning over identity hierarchies.
 
 ENHANCEMENTS IN v4.7:
 - ✅ ENHANCED Addressing Yang union type which allows a leaf to be several types.Instead of using owl:unionOf, we will create a Common Parent Class for the union and make each member type a subClassOf that parent. This keeps the ontology within the OWL 2 RL profile
@@ -2974,6 +2980,100 @@ class YANGToOWL:
 
         return enum_count
 
+class YANGToHTML:
+    """Generates an HTML Tree view of the parsed YANG modules."""
+    
+    def __init__(self, modules: Dict[str, Any]):
+        self.modules = modules
+        self.css = """
+        <style>
+            body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f9f9f9; padding: 20px; }
+            .module-box { background: white; border: 1px solid #ddd; padding: 15px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+            h2 { color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 5px; font-size: 1.2em; }
+            ul { list-style-type: none; padding-left: 20px; border-left: 1px solid #eee; }
+            li { margin: 5px 0; }
+            .keyword { font-weight: bold; color: #d35400; font-size: 0.9em; text-transform: uppercase; margin-right: 5px; }
+            .arg { font-weight: 600; color: #2980b9; }
+            .type { color: #7f8c8d; font-style: italic; font-size: 0.85em; margin-left: 10px; }
+            .desc { color: #555; font-size: 0.85em; display: block; margin-left: 20px; border-left: 2px solid #eee; padding-left: 5px; margin-top: 2px; }
+            
+            /* Specific Node Colors */
+            .container > .keyword { color: #16a085; }
+            .list > .keyword { color: #f39c12; }
+            .leaf > .keyword { color: #27ae60; }
+            .augment > .keyword { color: #8e44ad; }
+            .grouping > .keyword { color: #2c3e50; }
+        </style>
+        """
+
+    def generate(self, output_filename: str):
+        """Generates the HTML file."""
+        html = ["<!DOCTYPE html><html><head><title>YANG Parse Tree</title>"]
+        html.append(self.css)
+        html.append("</head><body><h1>YANG Parse Tree</h1>")
+
+        # Sort modules to keep output consistent
+        for name in sorted(self.modules.keys()):
+            module = self.modules[name]
+            html.append(f"<div class='module-box'><h2>Module: {name}</h2><ul>")
+            html.append(self._render_stmts(module.substmts))
+            html.append("</ul></div>")
+
+        html.append("</body></html>")
+        
+        with open(output_filename, 'w', encoding='utf-8') as f:
+            f.write("".join(html))
+        log.info(f"✓ HTML Tree saved to: {output_filename}")
+
+    def _render_stmts(self, substmts):
+        """Recursively renders statements into HTML."""
+        output = []
+        if not substmts: return ""
+
+        for stmt in substmts:
+            keyword = stmt.keyword
+            arg = stmt.arg if hasattr(stmt, 'arg') else ""
+            
+            # Filter: Skip boring statements to keep tree clean
+            if keyword in ['description', 'reference', 'organization', 'contact', 'revision']:
+                continue
+
+            # Determine CSS class based on keyword
+            css_class = keyword if keyword in ['container', 'list', 'leaf', 'augment', 'grouping'] else 'other'
+            
+            # Extract Type info if present
+            type_str = ""
+            type_stmt = stmt.search_one('type')
+            if type_stmt and hasattr(type_stmt, 'arg'):
+                type_str = f'<span class="type">({type_stmt.arg})</span>'
+
+            # Extract Description (brief)
+            desc_str = ""
+            desc_stmt = stmt.search_one('description')
+            if desc_stmt and hasattr(desc_stmt, 'arg'):
+                # Take first line only for brevity
+                brief = desc_stmt.arg.split('\n')[0][:60]
+                desc_str = f'<span class="desc">"{brief}..."</span>'
+
+            # Build List Item
+            output.append(f"<li class='{css_class}'>")
+            output.append(f"<span class='keyword'>{keyword}</span>")
+            output.append(f"<span class='arg'>{arg}</span>")
+            output.append(type_str)
+            output.append(desc_str)
+
+            # Recurse for children
+            if hasattr(stmt, 'substmts') and stmt.substmts:
+                # Don't recurse for leaf nodes (they only have type/desc usually)
+                if keyword not in ['leaf', 'leaf-list', 'typedef']:
+                    children_html = self._render_stmts(stmt.substmts)
+                    if children_html:
+                        output.append(f"<ul>{children_html}</ul>")
+            
+            output.append("</li>")
+        
+        return "".join(output)
+    
 def main():
 
     """Main entry point"""
@@ -2994,37 +3094,11 @@ python3 yang2owl_v45.py simap-yang simap-ontology.ttl
 
 With options:
 
-python3 yang2owl_v45.py --yang-dir simap-yang --output simap-ontology.ttl --verbose
+python3 yang4owl.py --yang-dir simap-yang --output simap-ontology.ttl --verbose --html <doc name.html>
 
-Features in v4.5:
+Features in v4.7.2:
 
-- Full path normalization with module names (e.g., /ietf-network/networks/network)
-
-- Consistent leafref XPath matching with absolute paths
-
-- Cross-module augmentation resolution
-
-- Unique node identification across module boundaries
-
-- Enhanced class_paths registry with module context
-
-Features in v4.3:
-
-- Full YANG Grouping Support (uses statements with refine)
-
-- Nested grouping resolution
-
-- Grouping abstract class generation
-
-- Refine statement processing
-
-- Augment within uses handling
-
-- Enumeration types as OWL individuals
-
-- OWL Datatype restrictions
-
-- PROV metadata
+- html docuement generation
 
 '''
 
@@ -3057,6 +3131,9 @@ Features in v4.3:
     parser.add_argument('--verbose', action='store_true',
 
         help='Enable verbose debug logging')
+    
+    parser.add_argument('--html', dest='html_output', default=None, 
+                        help='Optional: Output path for HTML Tree visualization')
 
     args = parser.parse_args()
 
@@ -3101,6 +3178,12 @@ Features in v4.3:
     converter = YANGToOWL(yang_dir, args.base_uri)
 
     converter.convert(args.modules, output_file)
+
+    if args.html_output:
+        log.info("-" * 30)
+        log.info("Generating HTML documentation...")
+        html_gen = YANGToHTML(converter.resolver.modules)
+        html_gen.generate(args.html_output)
 
 if __name__ == "__main__":
 

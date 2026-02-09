@@ -217,3 +217,30 @@ Power Energy Query
     ?container ex:component-ref ?chID .
     }
     ORDER BY DESC(?currentPower)
+
+
+
+
+    -----------------------------------------
+    Because I forget...
+
+    YANG to OWL/RDF Processing Map
+    YANG Construct      OWL/RDF Treatment               Reasoning Category          Domain (rdfs:domain)        Range (rdfs:range)
+    container           owl:Class                       Class Logic                 N/A                         N/A
+    list                owl:Class                       Class Logic                 N/A                         N/A
+    leaf (Standard)     owl:DatatypeProperty            Data Assertions             Parent Class URI            XSD Type (e.g., xsd:string)
+    leaf (identityref)  owl:ObjectProperty              Semantic Relationship       Parent Class URI            Base Identity Class URI 
+    leaf (leafref)      owl:ObjectProperty              Semantic Relationship       Parent Class URI            Target Class URI
+    leaf (union)        owl:ObjectProperty              Logic Profile Compatibility Parent Class URI            Created Union Parent Class 
+    leaf (instance-id)  owl:ObjectProperty              Meta-referencing            Parent Class URI            N/A (Tagged with metadata) 
+    identity            owl:Class & NamedIndividual     Individual Punning          N/A                         N/A
+    identity (base)     rdfs:subClassOf                 Transitive Hierarchy        Specific Identity URI       Base Identity URI 
+    grouping            Abstract owl:Class              Template Modeling           N/A                         N/A
+    uses                Local Property Generation       Schema Flattening           Target Class URI            Resolved Property Range 
+    choice/case         owl:disjointWith                Mutual Exclusivity          Case-holding Class          Opposing Case Class 
+    typedef             sh:NodeShape                    Constraint Validation       N/A                         N/A
+    enum (Definition)   owl:Class & NamedIndividual     Categorical Hierarchy       N/A                         N/A
+    rpc                 owl:Class                       Functional Modeling         N/A                         N/A 
+    notification        owl:Class                       Functional Modeling         N/A                         N/A
+    must/when           sh:condition/sh:deactivated     Conditional Logic           Property/Class URI          N/A (XPath Literal) 
+    Child Containment   has[ChildName] (ObjectProperty) Structural Integrity    Parent Class URI            Child Class URI 
