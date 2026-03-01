@@ -1,2988 +1,1650 @@
 #!/usr/bin/env python3
 
 """
-
-YANG to OWL Ontology Converter - VERSION 4.7.2 
-
-SIMAP RDFS Schema Compatible - 650+ Triples Generated + OWL Datatype Restrictions + Enumerations + Groupings
+YANG to OWL Ontology Converter - VERSION 4.7.18 (Separate SHACL Output)
 
 ALL IMPROVEMENTS IMPLEMENTED:
+1. Container Object Properties 
+2. Augmentation Complete Hierarchy 
+3. GROUPING EXPANSION WITH REFINE 
+4. Imported Module Integration 
+5. Leafref Cardinality Constraints 
+6. RPC/Notification Processing 
+7. Comprehensive PROV Metadata 
+8. XSD Constraints Extraction 
+9. OWL DATATYPE RESTRICTIONS 
+10. ENUMERATION TYPES AS OWL INDIVIDUALS 
+11. NESTED GROUPING RESOLUTION 
+12. REFINE STATEMENT PROCESSING 
+13. GROUPING CONTEXT TRACKING 
+14. PATH NORMALIZATION 
+15. ENHANCED IdentityRef to Objectproperty 
+16. ENHANCED Choices and Cases to disjoint classes 
+17. Yang Union types implemented by subclasses 
 
-1. Container Object Properties ✅
+ENHANCEMENTS IN v4.7.18:
+- SEPARATED SHACL: Generates a dedicated .shacl file for validation shapes.
+- STRICT GRAPH ISOLATION: sh: triples are fully isolated from the owl: graph.
+- FIXED: Global Namespace Collisions. 
+- FIXED: Commercial SHACL Compliance (sh:path validation on correct predicates).
 
-2. Augmentation Complete Hierarchy ✅
-
-3. ⭐ GROUPING EXPANSION WITH REFINE ✅ (v4.3 NEW)
-
-4. Imported Module Integration ✅
-
-5. Leafref Cardinality Constraints ✅
-
-6. RPC/Notification Processing ✅
-
-7. Comprehensive PROV Metadata ✅
-
-8. XSD Constraints Extraction ✅
-
-9. OWL DATATYPE RESTRICTIONS ✅
-
-10. ENUMERATION TYPES AS OWL INDIVIDUALS ✅
-
-11. ⭐ NESTED GROUPING RESOLUTION ✅ (v4.3 NEW)
-
-12. ⭐ REFINE STATEMENT PROCESSING ✅ (v4.3 NEW)
-
-13. ⭐ GROUPING CONTEXT TRACKING ✅ (v4.3 NEW)
-
-14. ⭐ PATH NORMALIZATION ✅ (v4.5 NEW) - FULLY QUALIFIED MODULE PATHS
-
-15. ⭐ ENHANCED IdentityRef to Objectproperty ✅ (v4.6 NEW) with owl punning for class and instance for a reasoner RESOLUTION  - CONSISTENT XPATH MATCHING
-
-16. ⭐ ENHANCED Choices and Cases to disjoint classes (v4.6)
-
-17. Yang Union types implemented by sublasses so that owl reasoners with profiles RL, EL etc rather than DL
-
-ENHANCEMENTS IN v4.7.1
-- ✅ ADDED: --html switch to see what the parser was doing given the pyphon api calls. 
-
-ENHANCEMENTS IN v4.7.1
-- ✅ FIXED: grouping not including all leafsinstance duality. This allows identityref statements to be represented as object properties linking to the base identity class, while still allowing the identity itself to be an OWL class. This resolves previous issues where identityrefs were not properly linked in the ontology and enables correct reasoning over identity hierarchies.
-
-ENHANCEMENTS IN v4.7:
-- ✅ ENHANCED Addressing Yang union type which allows a leaf to be several types.Instead of using owl:unionOf, we will create a Common Parent Class for the union and make each member type a subClassOf that parent. This keeps the ontology within the OWL 2 RL profile
-- ✅ ENHANCED Yang instance identifier addressed
-- ✅ ENHANCED Yang must and when addressed in SHACL
-
-ENHANCEMENTS IN v4.6:
-- ✅ ENHANCED IdentityRef to Objectproperty
-- ✅ ENHANCED Choices and Cases to disjoint classes
-
-ENHANCEMENTS IN v4.5:
-
-- ✅ ENHANCEMENT 1: Full module-qualified path normalization (e.g., /ietf-network/networks/network)
-- ✅ ENHANCEMENT 2: Consistent leafref XPath matching with absolute paths
-- ✅ ENHANCEMENT 3: Cross-module augmentation resolution
-- ✅ ENHANCEMENT 4: Unique node identification across module boundaries
-- ✅ ENHANCEMENT 5: Enhanced class_paths registry with module context
-
-ENHANCEMENTS IN v4.3:
-
-- ✅ ENHANCEMENT 1: Full GroupingResolver with nested grouping support
-
-- ✅ ENHANCEMENT 2: RefineResolver for processing refine statements
-
-- ✅ ENHANCEMENT 3: GroupingContextTracker for maintaining grouping scope
-
-- ✅ ENHANCEMENT 4: Uses statement handler with refine and augment support
-
-- ✅ ENHANCEMENT 5: Recursive grouping expansion for nested uses
-
-- ✅ ENHANCEMENT 6: Grouping class generation as OWL abstract classes
-
-- ✅ ENHANCEMENT 7: Grouping member inheritance in OWL
-
-- ✅ ENHANCEMENT 8: Augment within uses statement handling
-
-- ✅ ENHANCEMENT 9: Stop generating triples for TypeDefs and generate shacl for patterns as required
-
-- ✅ ENHANCEMENT 10: fix provenance to point to incoming yang rather than outgoing owl
-
-Author: YANG-to-OWL Converter v4.7.1
-
-Date: 2026-02-03
-
+Author: YANG-to-OWL Converter v4.7.18
+Date: 2026-03-02
 """
 
 from os import name
 import sys
-
 import argparse
-
 from pathlib import Path
-
 from typing import Dict, List, Optional, Any, Set, Tuple
-
 import logging
-
 import re
 
 try:
-
     from pyang import context, repository, statements
-
 except ImportError:
-
     print("ERROR: pyang not found. Install with: pip install pyang")
-
     sys.exit(1)
 
-from rdflib import Graph, Namespace, URIRef, Literal, RDF, RDFS, XSD
-
+from rdflib import Graph, Namespace, URIRef, Literal, RDF, RDFS, XSD, BNode
 from rdflib.namespace import OWL, PROV
+from rdflib.collection import Collection
 
 SH = Namespace("http://www.w3.org/ns/shacl#")
 
 logging.basicConfig(
-
     level=logging.INFO,
-
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-
 )
-
 log = logging.getLogger(__name__)
 
+
+def extract_module_name(filename: str) -> str:
+    """Safely normalizes a module name from a filename or argument."""
+    name = filename.replace('.yang', '')
+    if '@' in name: name = name.split('@')[0]
+    name = re.sub(r'-\d{4}-\d{2}-\d{2}$', '', name)
+    return name
+
+
 class YANGConstraintExtractor:
-
-    """Extracts YANG constraints (range, pattern, length) from type statements"""
-
     def __init__(self):
-
         self.constraints_found = 0
-
         self.typedef_usage = {}
 
     def extract_constraints(self, type_stmt: Any) -> Dict[str, Any]:
-
-        """Extract all constraints from a YANG type statement"""
-
         constraints = {}
-
         if not hasattr(type_stmt, 'substmts'):
-
             return constraints
-
         for sub in type_stmt.substmts:
-
             if not hasattr(sub, 'keyword'):
-
                 continue
-
             keyword = sub.keyword
-
             if keyword == 'range':
-
                 constraints['range'] = self._parse_range(sub.arg if hasattr(sub, 'arg') else '')
-
                 self.constraints_found += 1
-
             elif keyword == 'pattern':
-
                 if 'patterns' not in constraints:
-
                     constraints['patterns'] = []
-
                 constraints['patterns'].append(sub.arg if hasattr(sub, 'arg') else '')
-
                 self.constraints_found += 1
-
             elif keyword == 'length':
-
                 constraints['length'] = self._parse_length(sub.arg if hasattr(sub, 'arg') else '')
-
                 self.constraints_found += 1
-
             elif keyword == 'type':
-
                 base_constraints = self.extract_constraints(sub)
-
                 if base_constraints:
-
                     constraints.update(base_constraints)
-
         return constraints
 
     def _parse_range(self, range_str: str) -> Dict[str, Any]:
-
-        """Parse YANG range statement"""
-
         result = {}
-
-        if not range_str:
-
-            return result
-
+        if not range_str: return result
         ranges = range_str.split('|')
-
         for r in ranges:
-
             r = r.strip()
-
             if '..' in r:
-
                 parts = r.split('..')
-
                 if len(parts) == 2:
-
                     try:
-
                         min_val = int(parts[0].strip())
-
                         max_val = int(parts[1].strip())
-
-                        if 'min' not in result or min_val < result['min']:
-
-                            result['min'] = min_val
-
-                        if 'max' not in result or max_val > result['max']:
-
-                            result['max'] = max_val
-
+                        if 'min' not in result or min_val < result['min']: result['min'] = min_val
+                        if 'max' not in result or max_val > result['max']: result['max'] = max_val
                     except ValueError:
-
                         pass
-
         return result
 
     def _parse_length(self, length_str: str) -> Dict[str, Any]:
-
-        """Parse YANG length statement"""
-
         result = {}
-
-        if not length_str:
-
-            return result
-
+        if not length_str: return result
         ranges = length_str.split('|')
-
         for r in ranges:
-
             r = r.strip()
-
             if '..' in r:
-
                 parts = r.split('..')
-
                 if len(parts) == 2:
-
                     try:
-
                         min_len = int(parts[0].strip())
-
                         max_len = int(parts[1].strip())
-
-                        if 'minLength' not in result or min_len < result['minLength']:
-
-                            result['minLength'] = min_len
-
-                        if 'maxLength' not in result or max_len > result['maxLength']:
-
-                            result['maxLength'] = max_len
-
+                        if 'minLength' not in result or min_len < result['minLength']: result['minLength'] = min_len
+                        if 'maxLength' not in result or max_len > result['maxLength']: result['maxLength'] = max_len
                     except ValueError:
-
                         pass
-
         return result
 
 class YANGTypeResolver:
-
-    """Resolves YANG typedef chains and built-in types"""
-
     BUILTIN_TYPES = {
-
-        'binary': XSD.hexBinary,
-
-        'bits': RDFS.Literal,
-
-        'boolean': XSD.boolean,
-
-        'decimal64': XSD.decimal,
-
-        'empty': XSD.boolean,
-
-        'enumeration': RDFS.Literal,
-
-        'int8': XSD.byte,
-
-        'int16': XSD.short,
-
-        'int32': XSD.int,
-
-        'int64': XSD.long,
-
-        'string': XSD.string,
-
-        'uint8': XSD.unsignedByte,
-
-        'uint16': XSD.unsignedShort,
-
-        'uint32': XSD.unsignedInt,
-
-        'uint64': XSD.unsignedLong,
-
-        'inet:ip-address': XSD.string,
-
-        'yang:date-and-time': XSD.dateTime,
-
-        'yang:counter32': XSD.unsignedInt,
-
-        'yang:counter64': XSD.unsignedLong,
-
+        'binary': XSD.hexBinary, 'bits': RDFS.Literal, 'boolean': XSD.boolean,
+        'decimal64': XSD.decimal, 'empty': XSD.boolean, 'enumeration': RDFS.Literal,
+        'int8': XSD.byte, 'int16': XSD.short, 'int32': XSD.int, 'int64': XSD.long,
+        'string': XSD.string, 'uint8': XSD.unsignedByte, 'uint16': XSD.unsignedShort,
+        'uint32': XSD.unsignedInt, 'uint64': XSD.unsignedLong,
+        'inet:ip-address': XSD.string, 'yang:date-and-time': XSD.dateTime,
+        'yang:counter32': XSD.unsignedInt, 'yang:counter64': XSD.unsignedLong,
         'inet:uri': XSD.anyURI,
-
     }
 
     def __init__(self):
-
         self.typedefs: Dict[str, Any] = {}
-
         self.constraint_extractor = YANGConstraintExtractor()
 
-    def register_typedef(self, name: str, typedef: Any) -> None:
+    def register_typedef(self, module_name: str, name: str, typedef: Any) -> None:
+        self.typedefs[f"{module_name}:{name}"] = typedef
 
-        self.typedefs[name] = typedef
-
-    def resolve_type(self, type_stmt: Any) -> URIRef:
-        """⭐ FIXED: Use .arg and correct typedef traversal"""
+    def resolve_type(self, type_stmt: Any, current_module: str, prefix_resolver) -> URIRef:
         type_name = getattr(type_stmt, 'arg', None)
-        if not type_name:
-            return XSD.string
-
-        if type_name in self.BUILTIN_TYPES:
-            return self.BUILTIN_TYPES[type_name]
-
-        if type_name in self.typedefs:
-            typedef_stmt = self.typedefs[type_name]
+        if not type_name: return XSD.string
+        
+        if type_name in self.BUILTIN_TYPES: return self.BUILTIN_TYPES[type_name]
+        
+        clean_name = type_name.split(':')[-1]
+        if clean_name in self.BUILTIN_TYPES: return self.BUILTIN_TYPES[clean_name]
+        
+        target_mod = current_module
+        if ':' in type_name:
+            prefix = type_name.split(':')[0]
+            target_mod = prefix_resolver(type_stmt, prefix)
+            
+        typedef_key = f"{target_mod}:{clean_name}"
+        if typedef_key in self.typedefs:
+            typedef_stmt = self.typedefs[typedef_key]
             if hasattr(typedef_stmt, 'substmts'):
                 for sub in typedef_stmt.substmts:
                     if sub.keyword == 'type':
-                        return self.resolve_type(sub)
+                        return self.resolve_type(sub, target_mod, prefix_resolver)
         return XSD.string
 
 class YANGDependencyResolver:
-
-    """Loads YANG modules using pyang Context"""
-
     def __init__(self, yang_dir: Path):
-
         self.yang_dir = Path(yang_dir)
-
         self.repo = repository.FileRepository(str(self.yang_dir))
-
         self.ctx = context.Context(self.repo)
-
         self.modules: Dict[str, Any] = {}
 
     def load_all_modules(self, yang_files: List[str]) -> None:
-
-        """Load all YANG files"""
-
         for yang_file in yang_files:
-
             self.load_module(yang_file)
-
         for yang_file in sorted(self.yang_dir.glob("*.yang")):
-
             if yang_file.name not in self.modules:
-
                 self.load_module(yang_file.name)
 
     def load_module(self, filename: str) -> Optional[Any]:
-
-        """Load a YANG module"""
-
-        if filename in self.modules:
-
-            return self.modules[filename]
-
+        if filename in self.modules: return self.modules[filename]
         filepath = self.yang_dir / filename
-
-        if not filepath.exists():
-
-            return None
-
+        if not filepath.exists(): return None
         try:
-
             with open(filepath, 'r', encoding='utf-8') as f:
-
                 text = f.read()
-
             module = self.ctx.add_module(filename, text)
-
             if not module:
-
                 log.error(f"Failed to parse: {filename}")
-
                 return None
-
             self.modules[filename] = module
-
             log.info(f"✓ Loaded {filename}")
-
             return module
-
         except Exception as e:
-
             log.error(f"Error loading {filename}: {e}")
-
             return None
 
 class IdentityResolver:
-
-    """FIX 1: Resolves YANG identity hierarchies to OWL class hierarchies"""
-
     def __init__(self, modules: Dict[str, Any]):
-
         self.modules = modules
-
         self.identity_map: Dict[str, Any] = {}
-
-        self.identity_bases: Dict[str, Optional[str]] = {}
-
-        self.identity_modules: Dict[str, str] = {}
-
+        self.identity_bases: Dict[str, List[str]] = {}
         self._collect_all_identities()
 
     def _collect_all_identities(self) -> None:
-            """⭐ FIXED: Correctly traverse substmts to collect identities"""
-            for module_name, module in self.modules.items():
-                if not hasattr(module, 'substmts'):
-                    continue
-                # pyang ModuleStatement stores identities in substmts, not an attribute
-                for stmt in module.substmts:
-                    if hasattr(stmt, 'keyword') and stmt.keyword == 'identity':
-                        identity_name = stmt.arg
-                        self.identity_map[identity_name] = stmt
-                        self.identity_modules[identity_name] = module_name
-                        base_name = self._extract_base_identity(stmt)
-                        self.identity_bases[identity_name] = base_name
-                        log.debug(f" Identity Found: {identity_name} -> base: {base_name}")
+        for module_name, module in self.modules.items():
+            mod_clean = extract_module_name(module_name)
+            if not hasattr(module, 'substmts'): continue
+            for stmt in module.substmts:
+                if hasattr(stmt, 'keyword') and stmt.keyword == 'identity':
+                    identity_name = stmt.arg
+                    key = f"{mod_clean}:{identity_name}"
+                    self.identity_map[key] = stmt
+                    base_names = self._extract_base_identity(stmt)
+                    self.identity_bases[key] = base_names
 
-    def _extract_base_identity(self, identity_stmt: Any) -> Optional[str]:
-
-        """Extract base identity from identity statement"""
-
-        if not hasattr(identity_stmt, 'substmts'):
-
-            return None
-
+    def _extract_base_identity(self, identity_stmt: Any) -> List[str]:
+        bases = []
+        if not hasattr(identity_stmt, 'substmts'): return bases
         for sub in identity_stmt.substmts:
-
-            if not hasattr(sub, 'keyword') or sub.keyword != 'base':
-
-                continue
-
+            if not hasattr(sub, 'keyword') or sub.keyword != 'base': continue
             base_ref = sub.arg if hasattr(sub, 'arg') else None
-
             if base_ref:
-
-                if ':' in base_ref:
-
-                    base_ref = base_ref.split(':')[1]
-
-                return base_ref
-
-        return None
-
-    def get_identity_base(self, identity_name: str) -> Optional[str]:
-
-        """Get immediate base identity"""
-
-        return self.identity_bases.get(identity_name)
-
-    def get_identity_description(self, identity_name: str) -> Optional[str]:
-
-        """Extract description from identity statement"""
-
-        if identity_name not in self.identity_map:
-
-            return None
-
-        identity_stmt = self.identity_map[identity_name]
-
-        if not hasattr(identity_stmt, 'substmts'):
-
-            return None
-
-        for sub in identity_stmt.substmts:
-
-            if hasattr(sub, 'keyword') and sub.keyword == 'description':
-
-                return sub.arg if hasattr(sub, 'arg') else None
-
-        return None
+                bases.append(base_ref)
+        return bases
 
 class EnhancedLeafrefResolver:
-
-    """
-
-    Enhanced resolver for YANG leafref types with full XPath resolution
-
-    and OWL semantic linking - UPDATED FOR NORMALIZED PATHS IN v4.5
-
-    """
-
     def __init__(self, modules: Dict[str, Any], class_paths: Dict[str, URIRef], ex: Namespace):
-
         self.modules = modules
-
         self.class_paths = class_paths
-
         self.ex = ex
-
-        self.xpath_cache: Dict[str, Optional[Tuple[str, URIRef]]] = {}
+        self.xpath_cache: Dict[str, Optional[Tuple[str, URIRef, str]]] = {}
 
     def is_leafref(self, type_stmt: Any) -> bool:
-        # Use .arg to correctly identify the leafref keyword in pyang
         return getattr(type_stmt, 'arg', None) == 'leafref'
 
     def extract_xpath_path(self, leafref_type: Any) -> Optional[str]:
-
-        """Extract XPath path from leafref type statement"""
-
-        if not hasattr(leafref_type, 'substmts'):
-
-            return None
-
+        if not hasattr(leafref_type, 'substmts'): return None
         for sub in leafref_type.substmts:
-
             if hasattr(sub, 'keyword') and sub.keyword == 'path':
-
                 return sub.arg if hasattr(sub, 'arg') else None
-
         return None
 
     def resolve_leafref_target(self, leafref_type: Any, context_path: str) -> Optional[Tuple[str, URIRef, str]]:
-
-        """
-
-        Resolve leafref target path and URI
-
-        Returns:
-
-        Tuple of (target_path, target_uri, xpath_path) or None
-
-        """
-
         xpath_path = self.extract_xpath_path(leafref_type)
-
-        if not xpath_path:
-
-            return None
-
-        # Check cache
-
+        if not xpath_path: return None
         cache_key = f"{context_path}::{xpath_path}"
-
         if cache_key in self.xpath_cache:
-
             cached = self.xpath_cache[cache_key]
-
-            if cached:
-
-                return (*cached, xpath_path)
-
+            if cached: return cached
             return None
-
-        # Try pyang's built-in resolution first
 
         if hasattr(leafref_type, 'i_leafref_ptr') and leafref_type.i_leafref_ptr:
-
-            target_node = leafref_type.i_leafref_ptr
-
-            target_path = self._build_path_from_node(target_node)
-
-            if target_path in self.class_paths:
-
-                result = (target_path, self.class_paths[target_path])
-
-                self.xpath_cache[cache_key] = result
-
-                return (*result, xpath_path)
-
-        # Fallback: manual XPath resolution
+            target_class_node = getattr(leafref_type.i_leafref_ptr, 'parent', None)
+            if target_class_node:
+                target_path = self._build_path_from_node(target_class_node)
+                if target_path in self.class_paths:
+                    result = (target_path, self.class_paths[target_path], xpath_path)
+                    self.xpath_cache[cache_key] = result
+                    return result
 
         resolved = self._resolve_xpath_manually(xpath_path, context_path)
-
-        self.xpath_cache[cache_key] = resolved
-
-        if resolved:
-
-            return (*resolved, xpath_path)
-
+        if resolved: 
+            result = (*resolved, xpath_path)
+            self.xpath_cache[cache_key] = result
+            return result
+        
+        self.xpath_cache[cache_key] = None
         return None
 
     def _build_path_from_node(self, node: Any) -> str:
-
-        """Build absolute normalized path by traversing parent chain"""
-
         path_parts = []
-
         current = node
-
         module_name = None
-
-        # Traverse up to find module context
-
         while current:
-
-            if hasattr(current, 'arg'):
-
-                path_parts.insert(0, current.arg)
-
-            if hasattr(current, 'keyword') and current.keyword == 'module':
-
+            if hasattr(current, 'keyword') and current.keyword in ('module', 'submodule'):
                 module_name = current.arg if hasattr(current, 'arg') else None
-
                 break
-
+            if hasattr(current, 'arg') and current.arg: 
+                if hasattr(current, 'keyword') and current.keyword == 'choice':
+                    pass
+                elif hasattr(current, 'keyword') and current.keyword == 'case':
+                    path_parts.insert(0, f"case-{current.arg}")
+                else:
+                    parent_kw = getattr(getattr(current, 'parent', None), 'keyword', None)
+                    if parent_kw == 'choice':
+                        path_parts.insert(0, current.arg)
+                        path_parts.insert(0, f"case-{current.arg}")
+                    else:
+                        path_parts.insert(0, current.arg)
             current = getattr(current, 'parent', None)
-
-        # Build fully qualified path
-
-        if module_name and path_parts:
-
+            
+        if module_name and path_parts: 
             return '/' + module_name + '/' + '/'.join(path_parts)
-
-        elif path_parts:
-
+        elif path_parts: 
             return '/' + '/'.join(path_parts)
-
         return '/'
 
     def _resolve_xpath_manually(self, xpath: str, context_path: str) -> Optional[Tuple[str, URIRef]]:
-
-        """
-
-        Manually resolve XPath expression to normalized target path
-
-        Handles patterns like:
-
-        - ../../../nw:node/nw:node-id
-
-        - /nw:networks/nw:network/nw:network-id
-
-        - current()/../network-ref
-
-        """
-
-        # Remove namespace prefixes and clean XPath
-
         clean_xpath = self._clean_xpath(xpath)
-
-        # Absolute path (starts with /)
-
-        if clean_xpath.startswith('/'):
-
-            return self._resolve_absolute_path(clean_xpath)
-
-        # Relative path with ../
-
-        if '../' in clean_xpath:
-
-            return self._resolve_relative_path(clean_xpath, context_path)
-
-        # Current() based path
-
-        if 'current()' in clean_xpath:
-
-            return self._resolve_current_path(clean_xpath, context_path)
-
-        log.debug(f"Could not resolve XPath: {xpath}")
-
+        if clean_xpath.startswith('/'): return self._resolve_absolute_path(clean_xpath)
+        if '../' in clean_xpath: return self._resolve_relative_path(clean_xpath, context_path)
+        if 'current()' in clean_xpath: return self._resolve_current_path(clean_xpath, context_path)
         return None
 
     def _clean_xpath(self, xpath: str) -> str:
-
-        """Remove namespace prefixes and predicates from XPath"""
-
-        # Remove namespace prefixes (nw:, nt:, etc.)
-
-        cleaned = re.sub(r'\w+:', '', xpath)
-
-        # Remove predicates [...]
-
+        cleaned = re.sub(r'[a-zA-Z0-9_-]+:', '', xpath)
         cleaned = re.sub(r'\[.*?\]', '', cleaned)
-
-        # Remove current() function calls
-
         cleaned = cleaned.replace('current()', '')
-
-        # Clean up double slashes
-
         cleaned = re.sub(r'/+', '/', cleaned)
-
-        return cleaned.strip('/')
+        return cleaned.strip()
 
     def _resolve_absolute_path(self, xpath: str) -> Optional[Tuple[str, URIRef]]:
-
-        """Resolve absolute XPath path"""
-
-        # XPath like: /networks/network/network-id or /module-name/networks/network
-
-        # Should map to container class, not the leaf itself
-
         parts = [p for p in xpath.split('/') if p]
-
-        # Try progressively longer paths (matching normalized paths)
-
+        
         for i in range(len(parts), 0, -1):
-
             candidate_path = '/' + '/'.join(parts[:i])
-
-            if candidate_path in self.class_paths:
-
+            if candidate_path in self.class_paths: 
                 return (candidate_path, self.class_paths[candidate_path])
-
-        # Also try without leading slash for normalized comparison
-
-        for i in range(len(parts), 0, -1):
-
-            candidate_path = '/' + '/'.join(parts[:i])
-
-            # Check if any normalized path matches the suffix
-
+                
             for registered_path in self.class_paths.keys():
-
                 if registered_path.endswith(candidate_path):
-
                     return (registered_path, self.class_paths[registered_path])
-
+                    
         return None
 
     def _resolve_relative_path(self, xpath: str, context_path: str) -> Optional[Tuple[str, URIRef]]:
-
-        """Resolve relative XPath with ../ navigation"""
-
-        # Count ../
-
         up_count = xpath.count('../')
-
-        # Get context parts (normalize: remove leading /)
-
         context_parts = [p for p in context_path.split('/') if p]
-
-        # Navigate up
-
-        if up_count >= len(context_parts):
-
-            # Too many ../ - go to root
-
-            base_parts = []
-
-        else:
-
-            base_parts = context_parts[:-up_count] if up_count > 0 else context_parts
-
-        # Remove ../ from xpath and get remaining path
-
+        
+        base_parts = context_parts[:-up_count] if up_count > 0 and up_count <= len(context_parts) else []
         remaining = xpath.replace('../', '')
-
         remaining_parts = [p for p in remaining.split('/') if p]
-
-        # Combine base and remaining
-
         full_parts = base_parts + remaining_parts
-
-        # Try progressively longer paths from the end
-
+        
         for i in range(len(full_parts), 0, -1):
-
             candidate_path = '/' + '/'.join(full_parts[:i])
-
             if candidate_path in self.class_paths:
-
                 return (candidate_path, self.class_paths[candidate_path])
-
+                
+            suffix_parts = full_parts[1:i] if len(full_parts) > 1 else full_parts[:i]
+            if not suffix_parts: 
+                continue
+            
+            candidate_suffix = '/' + '/'.join(suffix_parts)
+            
+            for registered_path, uri in self.class_paths.items():
+                if registered_path.endswith(candidate_suffix):
+                    return (registered_path, uri)
+                    
         return None
 
     def _resolve_current_path(self, xpath: str, context_path: str) -> Optional[Tuple[str, URIRef]]:
-
-        """Resolve XPath with current() function"""
-
-        # current()/../network-ref means "sibling of current node"
-
-        # Remove current() and clean
-
         cleaned = xpath.replace('current()', '').strip('/')
-
-        # If it's just ../, resolve as relative
-
-        if cleaned.startswith('../'):
-
-            return self._resolve_relative_path(cleaned, context_path)
-
-        # Otherwise treat as relative to context
-
+        if cleaned.startswith('../'): return self._resolve_relative_path(cleaned, context_path)
         context_parts = [p for p in context_path.split('/') if p]
-
         remaining_parts = [p for p in cleaned.split('/') if p]
-
         full_parts = context_parts + remaining_parts
-
         for i in range(len(full_parts), 0, -1):
-
             candidate_path = '/' + '/'.join(full_parts[:i])
-
             if candidate_path in self.class_paths:
-
                 return (candidate_path, self.class_paths[candidate_path])
-
-        return None
-
-    def get_target_class_from_path(self, target_path: str) -> Optional[URIRef]:
-
-        """
-
-        Get the class URI that a leafref should reference
-
-        For paths ending in leaf nodes, return the parent container/list class
-
-        """
-
-        if target_path in self.class_paths:
-
-            return self.class_paths[target_path]
-
-        # Try parent path
-
-        parts = [p for p in target_path.split('/') if p]
-
-        if len(parts) > 1:
-
-            parent_path = '/' + '/'.join(parts[:-1])
-
-            if parent_path in self.class_paths:
-
-                return self.class_paths[parent_path]
-
         return None
 
 class RefineResolver:
-
-    """⭐ NEW in v4.3: Resolves refine statements within uses"""
-
     def __init__(self):
-
         self.refines: Dict[str, Dict[str, Any]] = {}
 
     def extract_refines(self, uses_stmt: Any) -> Dict[str, Dict[str, Any]]:
-
-        """Extract all refine statements from a uses statement"""
-
         refines = {}
-
-        if not hasattr(uses_stmt, 'substmts'):
-
-            return refines
-
+        if not hasattr(uses_stmt, 'substmts'): return refines
         for sub in uses_stmt.substmts:
-
-            if not hasattr(sub, 'keyword'):
-
-                continue
-
+            if not hasattr(sub, 'keyword'): continue
             if sub.keyword == 'refine':
-
                 node_path = sub.arg if hasattr(sub, 'arg') else ''
-
                 refine_props = self._extract_refine_properties(sub)
-
                 refines[node_path] = refine_props
-
-                log.debug(f" Refine: {node_path} with properties {list(refine_props.keys())}")
-
         return refines
 
     def _extract_refine_properties(self, refine_stmt: Any) -> Dict[str, Any]:
-
-        """Extract properties from a refine statement"""
-
         props = {}
-
-        if not hasattr(refine_stmt, 'substmts'):
-
-            return props
-
+        if not hasattr(refine_stmt, 'substmts'): return props
         for sub in refine_stmt.substmts:
-
-            if not hasattr(sub, 'keyword'):
-
-                continue
-
-            keyword = sub.keyword
-
-            if keyword in ('mandatory', 'min-elements', 'max-elements', 'presence', 'description'):
-
-                props[keyword] = sub.arg if hasattr(sub, 'arg') else None
-
+            if not hasattr(sub, 'keyword'): continue
+            if sub.keyword in ('mandatory', 'min-elements', 'max-elements', 'presence', 'description'):
+                props[sub.keyword] = sub.arg if hasattr(sub, 'arg') else None
         return props
 
 class GroupingResolver:
-
-    """⭐ ENHANCED in v4.3: Resolves YANG grouping references (uses statements) with full support"""
-
     def __init__(self, modules: Dict[str, Any]):
-
         self.modules = modules
-
         self.groupings: Dict[str, Any] = {}
-
-        self.grouping_modules: Dict[str, str] = {}
-
         self.refine_resolver = RefineResolver()
-
         self._collect_all_groupings()
 
     def _collect_all_groupings(self) -> None:
-        """
-        Collect all grouping definitions from all modules.
-        ⭐ PATCH: Scans substmts directly to ensure groupings are found 
-        even if pyang validation hasn't populated the .groupings shortcut.
-        """
-        log.info("--- Collecting Groupings (Robust Scan) ---")
-        
         for module_name, module in self.modules.items():
-            # Method 1: Check standard pyang substmts (The most reliable way for raw parsing)
+            mod_clean = extract_module_name(module_name)
             if hasattr(module, 'substmts'):
                 for stmt in module.substmts:
                     if hasattr(stmt, 'keyword') and stmt.keyword == 'grouping':
                         group_name = stmt.arg
-                        self.groupings[group_name] = stmt
-                        self.grouping_modules[group_name] = module_name
-                        log.debug(f" Grouping found: {group_name} in {module_name}")
-
-            # Method 2: Check pyang's internal index (i_groupings) if it exists
+                        self.groupings[f"{mod_clean}:{group_name}"] = stmt
             if hasattr(module, 'i_groupings') and module.i_groupings:
                 for group_name, group_stmt in module.i_groupings.items():
-                    if group_name not in self.groupings:
-                        self.groupings[group_name] = group_stmt
-                        self.grouping_modules[group_name] = module_name
+                    self.groupings[f"{mod_clean}:{group_name}"] = group_stmt
 
-        log.info(f"--- Collection Complete: Found {len(self.groupings)} groupings ---")
+    def get_grouping(self, grouping_name: str, target_module: str) -> Optional[Any]:
+        clean_name = grouping_name.split(':')[-1]
+        key = f"{target_module}:{clean_name}"
+        return self.groupings.get(key)
 
-    def get_grouping(self, grouping_name: str) -> Optional[Any]:
-
-        """Get grouping definition"""
-        # 1. Exact match (fast path)
-        if grouping_name in self.groupings:
-            return self.groupings[grouping_name]
+    def get_grouping_children(self, grouping_name: str, target_module: str) -> List[Tuple[str, Any, str]]:
+        clean_name = grouping_name.split(':')[-1]
+        key = f"{target_module}:{clean_name}"
+        grouping = self.groupings.get(key)
         
-        # 2. Namespace Strip (resolution path)
-        # e.g., converts "geo:geo-location" -> "geo-location" to match storage
-        if ':' in grouping_name:
-            local_name = grouping_name.split(':')[-1]
-            if local_name in self.groupings:
-                return self.groupings[local_name]
-                
-        return None
-
-    def get_grouping_children(self, grouping_name: str) -> List[Tuple[str, Any]]:
-
-        """Get all direct children (leaves, containers, lists, nested uses) of a grouping"""
-
-        grouping = self.get_grouping(grouping_name)
-
-        if not grouping or not hasattr(grouping, 'substmts'):
-
-            return []
-
+        if not grouping or not hasattr(grouping, 'substmts'): return []
         children = []
-
         for sub in grouping.substmts:
-
             if hasattr(sub, 'keyword') and hasattr(sub, 'arg'):
-
-                keyword = sub.keyword
-
-                if keyword in ('leaf', 'leaf-list', 'container', 'list', 'choice', 'rpc', 'notification', 'uses', 'anydata'):
-
-                    children.append((sub.arg, sub, keyword))
-
+                if sub.keyword in ('leaf', 'leaf-list', 'container', 'list', 'choice', 'rpc', 'notification', 'uses', 'anydata'):
+                    children.append((sub.arg, sub, sub.keyword))
         return children
 
-    def expand_grouping_recursively(self, grouping_name: str, context_path: str = "") -> List[Tuple[str, Any, str, Dict[str, Any]]]:
-
-        """Recursively expand a grouping, including nested uses and refines"""
-
-        expanded = []
-
-        grouping = self.get_grouping(grouping_name)
-
-        if not grouping:
-
-            return expanded
-
-        if not hasattr(grouping, 'substmts'):
-
-            return expanded
-
+    def get_grouping_description(self, grouping_name: str, target_module: str) -> Optional[str]:
+        clean_name = grouping_name.split(':')[-1]
+        key = f"{target_module}:{clean_name}"
+        grouping = self.groupings.get(key)
+        
+        if not grouping or not hasattr(grouping, 'substmts'): return None
         for sub in grouping.substmts:
-
-            if not hasattr(sub, 'keyword'):
-
-                continue
-
-            keyword = sub.keyword
-
-            arg = sub.arg if hasattr(sub, 'arg') else ''
-
-            if keyword == 'uses':
-
-                # Recursively expand nested grouping
-
-                nested_expanded = self.expand_grouping_recursively(arg, f"{context_path}/{arg}")
-
-                expanded.extend(nested_expanded)
-
-            elif keyword in ('leaf', 'leaf-list', 'container', 'list', 'choice'):
-
-                # Direct child node
-
-                refines = {}
-
-                expanded.append((arg, sub, keyword, refines))
-
-        return expanded
-
-    def get_grouping_module(self, grouping_name: str) -> Optional[str]:
-
-        """Get the module that defines a grouping"""
-
-        return self.grouping_modules.get(grouping_name)
-
-    def get_grouping_description(self, grouping_name: str) -> Optional[str]:
-
-        """Extract description from grouping statement"""
-
-        grouping = self.get_grouping(grouping_name)
-
-        if not grouping or not hasattr(grouping, 'substmts'):
-
-            return None
-
-        for sub in grouping.substmts:
-
             if hasattr(sub, 'keyword') and sub.keyword == 'description':
-
                 return sub.arg if hasattr(sub, 'arg') else None
-
         return None
 
 class GroupingContextTracker:
-
-    """⭐ NEW in v4.3: Tracks grouping expansion context and scope"""
-
     def __init__(self):
-
-        self.uses_stack: List[Tuple[str, str]] = [] # (grouping_name, context_path)
-
+        self.uses_stack: List[Tuple[str, str]] = []
         self.expanded_uses: Set[str] = set()
 
     def push_grouping_context(self, grouping_name: str, context_path: str) -> None:
-
-        """Push a grouping context onto the stack"""
-
         context_id = f"{grouping_name}@{context_path}"
-
         if context_id not in self.expanded_uses:
-
             self.uses_stack.append((grouping_name, context_path))
-
             self.expanded_uses.add(context_id)
 
-            log.debug(f" Grouping context: {grouping_name} at {context_path}")
-
     def pop_grouping_context(self) -> Optional[Tuple[str, str]]:
-
-        """Pop a grouping context from the stack"""
-
-        if self.uses_stack:
-
-            return self.uses_stack.pop()
-
+        if self.uses_stack: return self.uses_stack.pop()
         return None
 
     def is_circular_reference(self, grouping_name: str) -> bool:
-
-        """Check for circular grouping references"""
-
         return any(name == grouping_name for name, _ in self.uses_stack)
 
 class YANGToOWL:
-
-    """Converts YANG to OWL - VERSION 4.5 with PATH NORMALIZATION"""
-
     def __init__(self, yang_dir: str, base_uri: str = "http://example.org/ontology/"):
-
         self.yang_dir = Path(yang_dir)
-
         self.base_uri = base_uri.rstrip('/')
-
         self.ex = Namespace(self.base_uri + '/')
-
         self.resolver = YANGDependencyResolver(self.yang_dir)
-
         self.type_resolver = YANGTypeResolver()
-
-        self.graph = Graph()
-
-        self.graph.bind('ex', self.ex)
-
-        self.graph.bind('owl', OWL)
-
-        self.graph.bind('rdf', RDF)
-
-        self.graph.bind('rdfs', RDFS)
-
-        self.graph.bind('xsd', XSD)
-
-        self.graph.bind('prov', PROV)
-
-        self.graph.bind('sh', SH)
-
-        self.processed: Set[str] = set()
-
-        self.class_paths: Dict[str, URIRef] = {}
-
-        self.module_prefixes: Dict[str, str] = {}
-
-        self.augment_targets: Dict[str, Dict] = {}
-
-        self.module_namespaces: Dict[str, str] = {}
-
-        self.current_module_name: Optional[str] = None  # ⭐ NEW in v4.5: Track current module
-
-        self.identity_resolver: Optional[IdentityResolver] = None
-
-        self.identity_class_uris: Dict[str, URIRef] = {}
-
-        self.leafref_resolver: Optional[EnhancedLeafrefResolver] = None
-
-        self.grouping_resolver: Optional[GroupingResolver] = None
-
-        self.grouping_context_tracker: Optional[GroupingContextTracker] = None
-
-        self.grouping_class_uris: Dict[str, URIRef] = {}
-
-        self.rpc_classes: Dict[str, URIRef] = {}
-
-        self.feature_classes: Dict[str, URIRef] = {}
-
-        self.triple_count = 0
-
-        self.constraint_count = 0
-
-        self.typedef_restrictions: Dict[str, URIRef] = {}
-
-        self.leaf_type_map: Dict[str, str] = {}
-
-        self.enumeration_count = 0
-
-        self.grouping_count = 0
-
-        self.uses_count = 0
-
-        self.leafref_resolved_count = 0
-
-        self.leafref_unresolved_count = 0
-
-        self.identityref_resolved_count = 0
-
-        # ADD THIS: Registry for schema paths to support PROV
-        self.prov_paths: Dict[str, str] = {}
         
+        # Dual Graph Architecture: Separate standard OWL and SHACL rules
+        self.graph = Graph()
+        self.shacl_graph = Graph()
+        
+        for g in (self.graph, self.shacl_graph):
+            g.bind('ex', self.ex)
+            g.bind('owl', OWL)
+            g.bind('rdf', RDF)
+            g.bind('rdfs', RDFS)
+            g.bind('xsd', XSD)
+            g.bind('prov', PROV)
+            g.bind('sh', SH)
+            
+        self.processed: Set[str] = set()
+        self.class_paths: Dict[str, URIRef] = {}
+        self.module_prefixes: Dict[str, str] = {}
+        self.augment_targets: Dict[str, Dict] = {}
+        self.module_namespaces: Dict[str, str] = {}
+        self.current_module_name: Optional[str] = None
+        self.identity_resolver: Optional[IdentityResolver] = None
+        self.identity_class_uris: Dict[str, URIRef] = {}
+        self.leafref_resolver: Optional[EnhancedLeafrefResolver] = None
+        self.grouping_resolver: Optional[GroupingResolver] = None
+        self.grouping_context_tracker: Optional[GroupingContextTracker] = None
+        self.grouping_class_uris: Dict[str, URIRef] = {}
+        self.rpc_classes: Dict[str, URIRef] = {}
+        self.feature_classes: Dict[str, URIRef] = {}
+        
+        self.constraint_count = 0
+        self.typedef_restrictions: Dict[str, URIRef] = {}
+        self.leaf_type_map: Dict[str, str] = {}
+        self.enumeration_count = 0
+        self.grouping_count = 0
+        self.uses_count = 0
+        self.leafref_resolved_count = 0
+        self.leafref_unresolved_count = 0
+        self.identityref_resolved_count = 0
+        self.prov_paths: Dict[str, str] = {}
+        self.pending_leafrefs: List[Tuple[URIRef, Any, str, Optional[URIRef], str]] = []
+        self.deferred_augments: List[Tuple[str, Any]] = [] 
+
+    def _get_target_module_from_prefix(self, stmt: Any, prefix: str) -> str:
+        if self.current_module_name in self.module_prefixes and self.module_prefixes[self.current_module_name] == prefix:
+            return self.current_module_name
+        
+        root_module = getattr(stmt, 'i_module', None)
+        if not root_module and hasattr(stmt, 'top'):
+            root_module = stmt.top
+            
+        if root_module and hasattr(root_module, 'substmts'):
+            for sub in root_module.substmts:
+                if sub.keyword == 'import':
+                    if hasattr(sub, 'substmts'):
+                        for s in sub.substmts:
+                            if s.keyword == 'prefix' and hasattr(s, 'arg') and s.arg == prefix:
+                                return extract_module_name(sub.arg)
+                                
+        return self.current_module_name
+
     def _is_enumeration_type(self, type_stmt: Any) -> bool:
         return getattr(type_stmt, 'arg', None) == 'enumeration'
-    
+
+    def _add_constraint_triples(self, uri: URIRef, constraints: Dict[str, Any]) -> None:
+        self.shacl_graph.add((uri, RDF.type, SH.PropertyShape))
+        
+        if 'range' in constraints and isinstance(constraints['range'], dict):
+            range_info = constraints['range']
+            if 'min' in range_info:
+                self.shacl_graph.add((uri, SH.minInclusive, Literal(range_info['min'])))
+                self.constraint_count += 1
+            if 'max' in range_info:
+                self.shacl_graph.add((uri, SH.maxInclusive, Literal(range_info['max'])))
+                self.constraint_count += 1
+        if 'length' in constraints and isinstance(constraints['length'], dict):
+            length_info = constraints['length']
+            if 'minLength' in length_info:
+                self.shacl_graph.add((uri, SH.minLength, Literal(length_info['minLength'])))
+                self.constraint_count += 1
+            if 'maxLength' in length_info:
+                self.shacl_graph.add((uri, SH.maxLength, Literal(length_info['maxLength'])))
+                self.constraint_count += 1
+        if 'patterns' in constraints and isinstance(constraints['patterns'], list):
+            for pattern in constraints['patterns']:
+                if pattern:
+                    self.shacl_graph.add((uri, SH.pattern, Literal(pattern)))
+                    self.constraint_count += 1
+
     def _process_xpath_constraints(self, stmt: Any, uri: URIRef) -> None:
-        """
-        ⭐ NEW: Maps YANG must/when constraints to SHACL metadata.
-        Ensures complex validation logic is preserved for commercial SHACL engines.
-        """
-        if not hasattr(stmt, 'substmts'):
-            return
-
+        if not hasattr(stmt, 'substmts'): return
         for sub in stmt.substmts:
-            if not hasattr(sub, 'keyword'):
-                continue
-
-            # Handle 'must' constraints
+            if not hasattr(sub, 'keyword'): continue
             if sub.keyword == 'must':
                 xpath_expr = sub.arg if hasattr(sub, 'arg') else ""
-                self.graph.add((uri, SH.condition, Literal(xpath_expr)))
-                # Extract error-message if present
+                self.shacl_graph.add((uri, SH.condition, Literal(xpath_expr)))
                 for detail in sub.substmts:
                     if detail.keyword == 'error-message':
-                        self.graph.add((uri, SH.message, Literal(detail.arg)))
-                self.triple_count += 2
-
-            # Handle 'when' conditional existence
+                        self.shacl_graph.add((uri, SH.message, Literal(detail.arg)))
             elif sub.keyword == 'when':
                 xpath_expr = sub.arg if hasattr(sub, 'arg') else ""
-                self.graph.add((uri, SH.deactivated, Literal(xpath_expr))) # Tagging for conditional logic
-                self.graph.add((uri, RDFS.comment, Literal(f"Conditional: exists when {xpath_expr}")))
-                self.triple_count += 2
+                self.shacl_graph.add((uri, SH.deactivated, Literal(xpath_expr)))
+                self.shacl_graph.add((uri, RDFS.comment, Literal(f"Conditional: exists when {xpath_expr}")))
 
     def _get_stmt_prefix(self, stmt: Any) -> str:
-        """Helper to get the module prefix for a statement"""
-        # 1. Try to get from the statement's i_module (pyang injected)
         if hasattr(stmt, 'i_module') and stmt.i_module:
-            if hasattr(stmt.i_module, 'i_prefix'):
-                return stmt.i_module.i_prefix
-            if hasattr(stmt.i_module, 'prefix'):
-                return stmt.i_module.prefix
-
-        # 2. Fallback to the top-level module wrapper
+            if hasattr(stmt.i_module, 'i_prefix'): return stmt.i_module.i_prefix
+            if hasattr(stmt.i_module, 'prefix'): return stmt.i_module.prefix
         if hasattr(stmt, 'top') and stmt.top:
-            if hasattr(stmt.top, 'i_prefix'):
-                return stmt.top.i_prefix
-            # Manually search for prefix if not in i_prefix
-            prefix = stmt.top.search_one('prefix')
-            if prefix: return prefix.arg
-
-        # 3. Fallback to current processing context
-        if self.current_module_name in self.module_prefixes:
-            return self.module_prefixes[self.current_module_name]
-        return "ex"
-
-    def _get_prov_segment(self, stmt: Any) -> str:
-        """Builds a single segment like 'st:link-type?identity'"""
-        if not hasattr(stmt, 'arg') or not hasattr(stmt, 'keyword'):
-            return ""
-        prefix = self._get_stmt_prefix(stmt)
-        return f"{prefix}:{stmt.arg}?{stmt.keyword}"
-    
-    def _get_stmt_prefix(self, stmt: Any) -> str:
-        """Helper to get the module prefix for a statement"""
-        # 1. Try to get from the statement's i_module (pyang injected)
-        if hasattr(stmt, 'i_module') and stmt.i_module:
-            if hasattr(stmt.i_module, 'i_prefix'):
-                return stmt.i_module.i_prefix
-            if hasattr(stmt.i_module, 'prefix'):
-                return stmt.i_module.prefix
-
-        # 2. Fallback to the top-level module wrapper (top)
-        if hasattr(stmt, 'top') and stmt.top:
-            # Check i_prefix first (standard pyang attribute after validation)
-            if hasattr(stmt.top, 'i_prefix'):
-                return stmt.top.i_prefix
-            
-            # Fallback: manually search for the 'prefix' substatement
-            # This is necessary if validation hasn't fully populated i_prefix
+            if hasattr(stmt.top, 'i_prefix'): return stmt.top.i_prefix
             prefix_stmt = stmt.top.search_one('prefix')
-            if prefix_stmt:
-                return prefix_stmt.arg
-
-        # 3. Fallback to current processing context map
+            if prefix_stmt: return prefix_stmt.arg
         if self.current_module_name in self.module_prefixes:
             return self.module_prefixes[self.current_module_name]
-            
         return "ex"
 
     def _get_prov_segment(self, stmt: Any) -> str:
-        """Builds a single segment like 'nw:networks?container'"""
-        if not hasattr(stmt, 'arg') or not hasattr(stmt, 'keyword'):
-            return ""
+        if not hasattr(stmt, 'arg') or not hasattr(stmt, 'keyword'): return ""
         prefix = self._get_stmt_prefix(stmt)
         return f"{prefix}:{stmt.arg}?{stmt.keyword}"
 
     def is_leafref(self, type_stmt: Any) -> bool:
-            """⭐ FIXED: Check .arg for leafref keyword"""
-            return getattr(type_stmt, 'arg', None) == 'leafref'
+        return getattr(type_stmt, 'arg', None) == 'leafref'
 
     def _normalize_path(self, path: str) -> str:
-        """
-        v4.5.3 Fixed Path Normalization:
-        Standardizes paths to match the class_paths registry for SIMAP.
-        """
-        if not path:
-            return "/"
-
-        # 1. Clean redundant slashes and remove shorthand prefixes
-        clean_path = re.sub(r'/+', '/', path)
-        clean_path = clean_path.replace('nw:', '').replace('nt:', '').replace('st:', '')
-        
-        # 2. Ensure leading slash
+        if not path: return "/"
+        clean_path = re.sub(r'[a-zA-Z0-9_-]+:', '', path)
+        clean_path = re.sub(r'/+', '/', clean_path)
         clean_path = '/' + clean_path.lstrip('/')
-        
-        # 3. Prevent redundant module prepending
         parts = [p for p in clean_path.split('/') if p]
-        if self.current_module_name and parts:
-            # List of modules to never prepend to themselves
-            standard_modules = ['ietf-network', 'ietf-network-topology', 'ietf-simap-topology']
-            if parts[0] == self.current_module_name or parts[0] in standard_modules:
-                return clean_path
-            
-            return '/' + self.current_module_name + clean_path
         
+        known_modules = {extract_module_name(m) for m in self.resolver.modules.keys()}
+        
+        if self.current_module_name and parts:
+            if parts[0] in known_modules:
+                return clean_path
+            return '/' + self.current_module_name + clean_path
         return clean_path
 
+    def _get_identity_uri(self, stmt: Any, identity_name: str) -> URIRef:
+        clean_name = identity_name.split(':')[-1]
+        target_mod = self.current_module_name
+        if ':' in identity_name:
+            prefix = identity_name.split(':')[0]
+            target_mod = self._get_target_module_from_prefix(stmt, prefix)
+        return self.ex[f"identity/{target_mod}/{clean_name}"]
+
+    def _get_grouping_uri(self, stmt: Any, grouping_name: str) -> URIRef:
+        clean_name = grouping_name.split(':')[-1]
+        target_mod = self.current_module_name
+        if ':' in grouping_name:
+            prefix = grouping_name.split(':')[0]
+            target_mod = self._get_target_module_from_prefix(stmt, prefix)
+        return self.ex[f"grouping/{target_mod}/{clean_name}"]
+
+    def _get_typedef_module(self, typedef_stmt: Any) -> str:
+        if hasattr(typedef_stmt, 'i_module') and typedef_stmt.i_module:
+            return extract_module_name(typedef_stmt.i_module.arg)
+            
+        current = getattr(typedef_stmt, 'parent', None)
+        while current:
+            if hasattr(current, 'keyword') and current.keyword in ('module', 'submodule'):
+                return extract_module_name(current.arg)
+            current = getattr(current, 'parent', None)
+            
+        return self.current_module_name or 'unknown'
+    
     def convert(self, main_module: str, output_file: str) -> None:
-
-        """Main conversion process with path normalization"""
-
         log.info("=" * 70)
-
-        log.info("YANG to OWL Converter v4.7.1 - WITH Grouping fixed")
-
+        log.info("YANG to OWL Converter v4.7.18 (Separate SHACL Output)")
         log.info("=" * 70)
-
-        # Step 1: Load all modules
 
         log.info("\n[Step 1] Loading YANG modules...")
-
         self.resolver.load_all_modules([main_module])
 
-        # Step 2: Initialize resolvers
-
         log.info("[Step 2] Initializing resolvers...")
-
         self.identity_resolver = IdentityResolver(self.resolver.modules)
-
         self.leafref_resolver = EnhancedLeafrefResolver(self.resolver.modules, self.class_paths, self.ex)
-
         self.grouping_resolver = GroupingResolver(self.resolver.modules)
-
         self.grouping_context_tracker = GroupingContextTracker()
 
-        # Step 3: Register module namespaces
-
         log.info("[Step 3] Registering module namespaces...")
-
         self._register_module_namespaces()
 
-        # Step 4: Process grouping definitions as abstract classes
-
         log.info("[Step 4] ⭐ Processing grouping definitions as OWL abstract classes...")
-
         self._process_grouping_definitions()
 
-        # Step 5: Process all modules
-
         log.info("[Step 5] Processing YANG data model...")
-
-        # Sort by module name to process 'ietf-*' before 'simap-*'
         sorted_modules = sorted(self.resolver.modules.items(), key=lambda x: x[0])
-
-        #for module_name, module in self.resolver.modules.items():
         for module_name, module in sorted_modules:
-
             log.info(f" Processing: {module_name}")
-
-            self.current_module_name = self._extract_module_name(module_name)  # ⭐ NEW in v4.5
-
+            self.current_module_name = extract_module_name(module_name)
             self._process_module(module, module_name)
 
-        # Step 6: Process identities
-
         log.info("[Step 6] Processing identity hierarchies...")
-
         self._process_identities()
 
-        # Step 7: Process augmentations with uses expansion
-
         log.info("[Step 7] Processing augmentations with uses expansion...")
-
-        self._process_complete_augmentations()
-
-        # Step 8: Generate container properties
+        self._process_deferred_augmentations()
 
         log.info("[Step 8] Generating container object properties...")
-
         self._process_containers_for_properties()
 
-        # Step 9: Expand groupings in augments and modules
-
-        log.info("[Step 9] ⭐ Expanding grouping usage (uses statements)...")
-
-        self._expand_uses_statements()
-
-        # Step 10: Generate cardinality
-
-        log.info("[Step 10] Generating cardinality constraints...")
-
-        self._generate_cardinality_constraints()
-
-        # Step 11: Process imported modules
-
-        log.info("[Step 11] Processing imported module bases...")
-
+        log.info("[Step 9] Processing imported module bases...")
         self._process_imported_module_bases()
 
-        # Step 12: Add PROV metadata
-
-        log.info("[Step 12] Adding PROV metadata...")
-
-        #self._add_prov_metadata()
-
-        # Step 13: Extract XSD constraints
-
-        log.info("[Step 13] Extracting and mapping XSD constraints...")
-
-        self._process_xsd_constraints()
-
-        # Step 14: Create OWL Datatype Restrictions
-
-        #log.info("[Step 14] Creating OWL Datatype Restrictions...")
-
-        #self._create_owl_datatype_restrictions()
-        
-        # Step 14: Create SHACL Shapes for Typedefs
-        log.info("[Step 14] Creating SHACL Shapes for Typedefs...")
-        # REPLACE: self._create_owl_datatype_restrictions()
+        log.info("[Step 10] Creating SHACL Shapes for Typedefs...")
         self._create_shacl_typedef_shapes()
 
-        # Step 15: Process Enumerations
-
-        log.info("[Step 15] Processing Enumeration Types...")
-
+        log.info("[Step 11] Processing Enumeration Types...")
         self._process_enumerations()
 
-        # Save output
+        log.info("[Step 12] Resolving Pending Leafrefs (Pass 2)...")
+        self._resolve_pending_leafrefs()
 
-        log.info(f"\n[Output] Saving to {output_file}...")
-
+        shacl_file = str(Path(output_file).with_suffix('.shacl'))
+        
+        log.info(f"\n[Output] Saving Core OWL Ontology to {output_file}...")
         self.graph.serialize(destination=output_file, format='turtle')
 
-        log.info(f"\n✓ Conversion complete!")
-
-        log.info(f"✓ Total triples generated: {len(self.graph)}")
-
-        log.info(f"✓ Constraint triples added: {self.constraint_count}")
-
-        log.info(f"✓ OWL Datatype Restrictions created: {len(self.typedef_restrictions)}")
-
-        log.info(f"✓ Enumeration individuals created: {self.enumeration_count}")
-
-        log.info(f"✓ Grouping abstract classes created: {self.grouping_count}")
-
-        log.info(f"✓ Uses statements expanded: {self.uses_count}")
-
-        log.info(f"✓ Leafref resolved: {self.leafref_resolved_count}")
+        log.info(f"[Output] Saving Validation SHACL Shapes to {shacl_file}...")
+        self.shacl_graph.serialize(destination=shacl_file, format='turtle')
         
+        log.info(f"\n" + "=" * 20 + " CONVERSION REPORT " + "=" * 20)
+        log.info(f"✓ Ontology triples generated: {len(self.graph)}")
+        log.info(f"✓ SHACL triples generated: {len(self.shacl_graph)}")
+        log.info(f"✓ SHACL Shapes created: {len(self.typedef_restrictions)}")
+        log.info(f"✓ Enumeration individuals created: {self.enumeration_count}")
+        log.info(f"✓ Grouping abstract classes created: {self.grouping_count}")
+        log.info(f"✓ Uses statements expanded: {self.uses_count}")
+        log.info(f"✓ Leafref resolved: {self.leafref_resolved_count}")
+        log.info(f"✓ Leafref unresolved: {self.leafref_unresolved_count}")
         log.info(f"✓ Identityref resolved as ObjectProperties: {self.identityref_resolved_count}")
-
-        log.info(f"✓ Ontology saved to: {output_file}")
-
-    def _extract_module_name(self, module_filename: str) -> str:
-
-        """⭐ NEW in v4.5: Extract module name from filename (e.g., 'ietf-network' from 'ietf-network-2018-02-26.yang')"""
-
-        # Remove .yang extension
-
-        name = module_filename.replace('.yang', '')
-
-        # Remove date suffix if present (e.g., '@2018-02-26')
-
-        if '@' in name:
-
-            name = name.split('@')[0]
-
-        # Try to extract the base module name by removing common date patterns
-
-        name = re.sub(r'-\d{4}-\d{2}-\d{2}$', '', name)
-
-        return name
+        log.info("=" * 59 + "\n")
 
     def _register_module_namespaces(self) -> None:
-
-        """Register module namespaces"""
-
         for module_name, module in self.resolver.modules.items():
-
             if hasattr(module, 'namespace'):
-
                 ns = module.namespace
-
                 self.module_namespaces[module_name] = ns
-
                 prefix = module.prefix if hasattr(module, 'prefix') else module_name
-
                 self.module_prefixes[module_name] = prefix
 
-                log.debug(f" Module: {module_name} -> {ns}")
-
     def _process_grouping_definitions(self) -> None:
-
-        """⭐ NEW in v4.3: Create OWL abstract classes for grouping definitions"""
-
-        if not self.grouping_resolver:
-
-            return
-
-        for grouping_name, grouping_stmt in self.grouping_resolver.groupings.items():
-
-            grouping_uri = self.ex[f"grouping/{grouping_name}"]
-
-            # Create abstract class for grouping
-
+        if not self.grouping_resolver: return
+        for key, grouping_stmt in self.grouping_resolver.groupings.items():
+            mod_name, grouping_name = key.split(':', 1)
+            grouping_uri = self.ex[f"grouping/{mod_name}/{grouping_name}"]
             self.graph.add((grouping_uri, RDF.type, OWL.Class))
-
             self.graph.add((grouping_uri, RDFS.label, Literal(grouping_name)))
-
             self.graph.add((grouping_uri, RDFS.comment, Literal(f"Grouping definition: {grouping_name}")))
-
-            self.grouping_class_uris[grouping_name] = grouping_uri
-
-            self.triple_count += 3
-
+            self.grouping_class_uris[key] = grouping_uri
             self.grouping_count += 1
-
-            # Extract description if available
-
-            desc = self.grouping_resolver.get_grouping_description(grouping_name)
-
+            desc = self.grouping_resolver.get_grouping_description(grouping_name, mod_name)
             if desc:
-
                 self.graph.add((grouping_uri, RDFS.comment, Literal(desc)))
 
-                self.triple_count += 1
+    def _shape_uri_for_class(self, class_uri: URIRef) -> URIRef:
+        return URIRef(str(class_uri) + "/shape")
 
-            log.debug(f" Created abstract class for grouping: {grouping_name}")
+    def _ensure_node_shape(self, class_uri: URIRef) -> URIRef:
+        shape_uri = self._shape_uri_for_class(class_uri)
+        if (shape_uri, RDF.type, SH.NodeShape) not in self.shacl_graph:
+            self.shacl_graph.add((shape_uri, RDF.type, SH.NodeShape))
+            self.shacl_graph.add((shape_uri, SH.targetClass, class_uri))
+            self.shacl_graph.add((shape_uri, RDFS.label, Literal(f"Shape for {class_uri.split('/')[-1]}")))
+        return shape_uri
+    
+    def _add_property_shape(
+        self,
+        class_uri: URIRef,
+        prop_uri: URIRef,
+        *,
+        datatype: Optional[URIRef] = None,
+        value_class: Optional[URIRef] = None,
+        min_count: Optional[int] = None,
+        max_count: Optional[int] = None,
+        pattern: Optional[str] = None,
+        min_inclusive: Optional[Any] = None,
+        max_inclusive: Optional[Any] = None,
+        node_shape: Optional[URIRef] = None,
+        message: Optional[str] = None,
+    ) -> None:
+        shape_uri = self._ensure_node_shape(class_uri)
+        ps = BNode()
+        self.shacl_graph.add((shape_uri, SH.property, ps))
+        self.shacl_graph.add((ps, RDF.type, SH.PropertyShape))
+        self.shacl_graph.add((ps, SH.path, prop_uri))
+
+        if datatype is not None:
+            self.shacl_graph.add((ps, SH.datatype, datatype))
+        if value_class is not None:
+            self.shacl_graph.add((ps, SH["class"], value_class))
+            self.shacl_graph.add((ps, SH.nodeKind, SH.IRI))
+        if node_shape is not None:
+            self.shacl_graph.add((ps, SH.node, node_shape))
+
+        if min_count is not None:
+            self.shacl_graph.add((ps, SH.minCount, Literal(int(min_count), datatype=XSD.integer)))
+        if max_count is not None:
+            self.shacl_graph.add((ps, SH.maxCount, Literal(int(max_count), datatype=XSD.integer)))
+
+        if pattern is not None:
+            self.shacl_graph.add((ps, SH.pattern, Literal(pattern)))
+        if min_inclusive is not None:
+            self.shacl_graph.add((ps, SH.minInclusive, Literal(min_inclusive)))
+        if max_inclusive is not None:
+            self.shacl_graph.add((ps, SH.maxInclusive, Literal(max_inclusive)))
+        if message is not None:
+            self.shacl_graph.add((ps, SH.message, Literal(message)))
+            
+    def _add_key_uniqueness_sparql(self, list_class_uri: URIRef, key_prop_uris: List[URIRef], message: str) -> None:
+        shape_uri = self._ensure_node_shape(list_class_uri)
+        sparql_bn = BNode()
+        self.shacl_graph.add((shape_uri, SH.sparql, sparql_bn))
+
+        where_self = "\n".join([f"  $this <{kp}> ?k{i} ." for i, kp in enumerate(key_prop_uris, start=1)])
+        where_other = "\n".join([f"  ?other <{kp}> ?k{i} ." for i, kp in enumerate(key_prop_uris, start=1)])
+
+        query = f"""
+SELECT $this WHERE {{
+  $this a <{list_class_uri}> .
+{where_self}
+  ?other a <{list_class_uri}> .
+{where_other}
+  FILTER(?other != $this)
+}}
+""".strip()
+
+        self.shacl_graph.add((sparql_bn, RDF.type, SH.SPARQLConstraint))
+        self.shacl_graph.add((sparql_bn, SH.message, Literal(message)))
+        self.shacl_graph.add((sparql_bn, SH.select, Literal(query)))
+
 
     def _process_module(self, module: Any, module_name: str) -> None:
-        """Step 5: Process module nodes including augments."""
-        if not hasattr(module, 'substmts'):
-            return
-
+        if not hasattr(module, 'substmts'): return
         for stmt in module.substmts:
-            if not hasattr(stmt, 'keyword'):
-                continue
-
+            if not hasattr(stmt, 'keyword'): continue
             keyword = stmt.keyword
-            if keyword == 'typedef':
-                self._process_typedef(stmt)
-            elif keyword == 'identity':
-                self._process_identity(stmt)
-            elif keyword == 'rpc':
-                self._process_rpc(stmt)
-            elif keyword == 'notification':
-                self._process_notification(stmt)
-            # Process local data nodes
+            if keyword == 'typedef': self._process_typedef(stmt)
+            elif keyword == 'identity': self._process_identity(stmt)
+            elif keyword == 'rpc': self._process_rpc(stmt)
+            elif keyword == 'notification': self._process_notification(stmt)
             elif keyword in ('container', 'list', 'leaf'):
                 normalized_path = self._normalize_path(f"/{stmt.arg}")
-                if keyword == 'container':
-                    self._process_container(stmt, normalized_path)
-                elif keyword == 'list':
-                    self._process_list(stmt, normalized_path)
-                elif keyword == 'leaf':
-                    self._process_leaf(stmt, normalized_path)
-            # CRITICAL FIX: Handle augment statements
+                if keyword == 'container': self._process_container(stmt, normalized_path)
+                elif keyword == 'list': self._process_list(stmt, normalized_path)
+                elif keyword == 'leaf': self._process_leaf(stmt, normalized_path)
             elif keyword == 'augment':
-                self._process_augment(stmt)
+                self.deferred_augments.append((self.current_module_name, stmt))
 
     def _process_typedef(self, stmt: Any) -> None:
+        if hasattr(stmt, 'arg'): self.type_resolver.register_typedef(self.current_module_name, stmt.arg, stmt)
 
-        """Register typedefs and track for later restriction creation"""
-
-        if hasattr(stmt, 'arg'):
-
-            self.type_resolver.register_typedef(stmt.arg, stmt)
-
-    #def _process_container(self, stmt: Any, path: str, parent_uri: Optional[URIRef] = None) -> URIRef:
-    def _process_container(self, stmt: Any, path: str, parent_uri: Optional[URIRef] = None, parent_prov: str = "") -> URIRef:
-        """⭐ UPDATED in v4.5: Process container statement with normalized paths"""
-
-        if not hasattr(stmt, 'arg'):
-
-            return URIRef("")
-
+    def _process_identity(self, stmt: Any) -> None:
+        if not hasattr(stmt, 'arg'): return
         name = stmt.arg
-
-        full_path = path
-
-        uri = self.ex[full_path.lstrip('/')]
-
-        # 1. Generate PROV path (Schema-based, independent of base_uri)
-        current_segment = self._get_prov_segment(stmt)
-        
-        full_prov = f"{parent_prov}/{current_segment}" if parent_prov else current_segment
-        
-        # 2. Store for lookups and Add Triple
-        self.prov_paths[full_path] = full_prov
-
-        self.graph.add((uri, PROV.wasDerivedFrom, Literal(full_prov)))
-
+        uri = self.ex[f"identity/{self.current_module_name}/{name}"]
+        prov_path = self._get_prov_segment(stmt)
+        self.graph.add((uri, PROV.wasDerivedFrom, Literal(prov_path)))
         self.graph.add((uri, RDF.type, OWL.Class))
-
         self.graph.add((uri, RDFS.label, Literal(name)))
+        self.graph.add((uri, RDF.type, OWL.NamedIndividual))
 
         if hasattr(stmt, 'substmts'):
-
             for sub in stmt.substmts:
-
                 if hasattr(sub, 'keyword') and sub.keyword == 'description':
-
                     if hasattr(sub, 'arg'):
-
                         self.graph.add((uri, RDFS.comment, Literal(sub.arg)))
 
-                    break
+    def _process_identities(self) -> None:
+        if not self.identity_resolver: return
+        for key, stmt in self.identity_resolver.identity_map.items():
+            mod_name, identity_name = key.split(':', 1)
+            uri = self.ex[f"identity/{mod_name}/{identity_name}"]
+            base_names = self.identity_resolver.identity_bases.get(key, [])
+            if base_names:
+                for base_name in base_names:
+                    base_uri = self._get_identity_uri(stmt, base_name)
+                    self.graph.add((uri, RDFS.subClassOf, base_uri))
+
+    def _process_choice(self, choice_stmt: Any, parent_path: str, parent_uri: URIRef, parent_prov: str = "") -> None:
+        case_classes = []
+        if not hasattr(choice_stmt, 'substmts'): return
+
+        choice_name = choice_stmt.arg if hasattr(choice_stmt, 'arg') else 'unknown_choice'
+        
+        for sub in choice_stmt.substmts:
+            if not hasattr(sub, 'keyword'): continue
+            
+            if sub.keyword not in ('case', 'container', 'leaf', 'list', 'leaf-list', 'anydata', 'uses', 'choice'):
+                continue
+            
+            is_case = sub.keyword == 'case'
+            
+            if is_case:
+                case_name = sub.arg if hasattr(sub, 'arg') else 'unknown_case'
+            else:
+                case_name = sub.arg if hasattr(sub, 'arg') else 'unknown_case'
+                
+            safe_case_name = f"case-{case_name}"
+            case_path = self._normalize_path(f"{parent_path}/{safe_case_name}")
+                
+            case_uri = self.ex[case_path.lstrip('/')]
+            
+            if case_path not in self.class_paths:
+                self.graph.add((case_uri, RDF.type, OWL.Class))
+                self.graph.add((case_uri, RDFS.label, Literal(safe_case_name)))
+                self.graph.add((case_uri, RDFS.subClassOf, parent_uri))
+                self.graph.add((case_uri, RDFS.comment, Literal(f"Choice case: {choice_name} -> {case_name}")))
+                
+                if is_case and hasattr(sub, 'substmts'):
+                    for case_sub in sub.substmts:
+                        if getattr(case_sub, 'keyword', '') == 'description' and hasattr(case_sub, 'arg'):
+                            self.graph.add((case_uri, RDFS.comment, Literal(case_sub.arg)))
+                            
+                self.class_paths[case_path] = case_uri
+                
+                case_prov = f"{parent_prov}/{sub.keyword}:{case_name}" if parent_prov else f"{sub.keyword}:{case_name}"
+                self.graph.add((case_uri, PROV.wasDerivedFrom, Literal(case_prov)))
+                self.prov_paths[case_path] = case_prov
+
+            case_classes.append(case_uri)
+
+            children_to_process = sub.substmts if (is_case and hasattr(sub, 'substmts')) else [sub]
+
+            for child in children_to_process:
+                if not hasattr(child, 'keyword'): continue
+                keyword = child.keyword
+                child_path = self._normalize_path(f"{case_path}/{child.arg}") if hasattr(child, 'arg') else case_path
+                
+                if keyword == 'container':
+                    self._process_container(child, child_path, case_uri, self.prov_paths.get(case_path, ""))
+                elif keyword == 'list':
+                    self._process_list(child, child_path, case_uri, self.prov_paths.get(case_path, ""))
+                elif keyword == 'leaf':
+                    self._process_leaf(child, child_path, case_uri, self.prov_paths.get(case_path, ""))
+                elif keyword == 'leaf-list':
+                    self._process_leaf_list(child, child_path, case_uri, self.prov_paths.get(case_path, ""))
+                elif keyword == 'uses':
+                    self._process_uses_in_container(child, case_path, case_uri)
+                elif keyword == 'choice':
+                    self._process_choice(child, case_path, case_uri, self.prov_paths.get(case_path, ""))
+
+        for i, class_a in enumerate(case_classes):
+            for class_b in case_classes[i+1:]:
+                self.graph.add((class_a, OWL.disjointWith, class_b))
+
+    def _process_container(self, stmt: Any, path: str, parent_uri: Optional[URIRef] = None, parent_prov: str = "") -> URIRef:
+        if not hasattr(stmt, 'arg'): return URIRef("")
+        name = stmt.arg
+        full_path = path
+        uri = self.ex[full_path.lstrip('/')]
+
+        current_segment = self._get_prov_segment(stmt)
+        full_prov = f"{parent_prov}/{current_segment}" if parent_prov else current_segment
+        
+        self.prov_paths[full_path] = full_prov
+        self.graph.add((uri, PROV.wasDerivedFrom, Literal(full_prov)))
+        self.graph.add((uri, RDF.type, OWL.Class))
+        self.graph.add((uri, RDFS.label, Literal(name)))
+
+        is_config = True
+        status_val = None
+        if hasattr(stmt, 'substmts'):
+            for sub in stmt.substmts:
+                if hasattr(sub, 'keyword'):
+                    if sub.keyword == 'description' and hasattr(sub, 'arg'): 
+                        self.graph.add((uri, RDFS.comment, Literal(sub.arg)))
+                    elif sub.keyword == 'config' and getattr(sub, 'arg', '') == 'false':
+                        is_config = False
+                    elif sub.keyword == 'status' and hasattr(sub, 'arg'):
+                        status_val = sub.arg
+
+        if not is_config:
+            self.graph.add((uri, self.ex.isStateData, Literal(True, datatype=XSD.boolean)))
+            
+        if status_val in ('deprecated', 'obsolete'):
+            self.graph.add((uri, OWL.deprecated, Literal(True, datatype=XSD.boolean)))
 
         self.class_paths[full_path] = uri
-
         self.processed.add(full_path)
 
-        self.triple_count += 4
-
         if hasattr(stmt, 'substmts'):
-
             for sub in stmt.substmts:
-
-                if not hasattr(sub, 'keyword'):
-
-                    continue
-
+                if not hasattr(sub, 'keyword'): continue
                 keyword = sub.keyword
-
+                normalized_child_path = self._normalize_path(f"{full_path}/{sub.arg}") if hasattr(sub, 'arg') else full_path
+                
                 if keyword == 'container':
-
-                    # ⭐ NEW in v4.5: Use normalized path
-
-                    normalized_child_path = self._normalize_path(f"{full_path}/{sub.arg}")
-
-                    #self._process_container(sub, normalized_child_path, uri)
-                    self._process_container(sub, normalized_child_path, uri, full_prov) # Pass full_prov
-
+                    self._process_container(sub, normalized_child_path, uri, full_prov)
                 elif keyword == 'list':
-
-                    normalized_child_path = self._normalize_path(f"{full_path}/{sub.arg}")
-
-                    self._process_list(sub, normalized_child_path, uri, full_prov)      # Pass full_prov
-
-                    #self._process_list(sub, normalized_child_path, uri)
-
+                    self._process_list(sub, normalized_child_path, uri, full_prov)
                 elif keyword == 'leaf':
-
-                    normalized_child_path = self._normalize_path(f"{full_path}/{sub.arg}")
-
-                    #self._process_leaf(sub, normalized_child_path, uri)
-
-                    self._process_leaf(sub, normalized_child_path, uri, full_prov)      # Pass full_prov
-
+                    self._process_leaf(sub, normalized_child_path, uri, full_prov)
                 elif keyword == 'leaf-list':
-
-                    normalized_child_path = self._normalize_path(f"{full_path}/{sub.arg}")
-
                     self._process_leaf_list(sub, normalized_child_path, uri, full_prov)
-
                 elif keyword == 'uses':
-
                     self._process_uses_in_container(sub, full_path, uri)
- 
                 elif keyword == 'choice':
-                    # full_path is the path of the container/list we are currently in
-                    self._process_choice_disjointness(sub, full_path)
+                    self._process_choice(sub, full_path, uri, full_prov)
+                    
         self._process_xpath_constraints(stmt, uri)
         return uri
 
-    #def _process_list(self, stmt: Any, path: str, parent_uri: Optional[URIRef] = None) -> URIRef:
-    def _process_list(self, stmt: Any, path: str, parent_uri: Optional[URIRef] = None, parent_prov: str = "") -> URIRef:
-        """⭐ UPDATED in v4.5: Process list statement with normalized paths"""
-
-        if not hasattr(stmt, 'arg'):
-
-            return URIRef("")
-
+    def _process_list(self, stmt: Any, path: str, parent_uri: Optional[URIRef] = None, parent_prov: str = "") -> None:
+        if not hasattr(stmt, 'arg'): return
         name = stmt.arg
-
         full_path = path
-
         uri = self.ex[full_path.lstrip('/')]
 
-        # 1. Generate PROV path (Schema-based, independent of base_uri)
         current_segment = self._get_prov_segment(stmt)
-        
         full_prov = f"{parent_prov}/{current_segment}" if parent_prov else current_segment
         
-        # 2. Store for lookups and Add Triple
-        self.prov_paths[full_path] = full_prov
-
+        self.graph.add((uri, RDF.type, OWL.Class))
+        self.graph.add((uri, RDFS.label, Literal(name)))
         self.graph.add((uri, PROV.wasDerivedFrom, Literal(full_prov)))
 
-        self.graph.add((uri, RDF.type, OWL.Class))
-
-        self.graph.add((uri, RDFS.label, Literal(name)))
-
-        if hasattr(stmt, 'substmts'):
-
-            for sub in stmt.substmts:
-
-                if hasattr(sub, 'keyword') and sub.keyword == 'description':
-
-                    if hasattr(sub, 'arg'):
-
-                        self.graph.add((uri, RDFS.comment, Literal(sub.arg)))
-
-                    break
-
         self.class_paths[full_path] = uri
-
-        self.processed.add(full_path)
-
-        self.triple_count += 4
+        key_names = []
+        is_config = True
 
         if hasattr(stmt, 'substmts'):
-
             for sub in stmt.substmts:
+                if sub.keyword == 'description' and hasattr(sub, 'arg'):
+                    self.graph.add((uri, RDFS.comment, Literal(sub.arg)))
+                elif sub.keyword == 'config' and getattr(sub, 'arg', '') == 'false':
+                    is_config = False
+                elif sub.keyword == 'key' and hasattr(sub, 'arg'):
+                    key_names = sub.arg.split()
 
-                if not hasattr(sub, 'keyword'):
+        if not is_config:
+            self.graph.add((uri, self.ex.isStateData, Literal(True, datatype=XSD.boolean)))
 
-                    continue
+        if parent_uri:
+            prop_uri = self.ex[f"has_{name}"]
+            self.graph.add((prop_uri, RDF.type, OWL.ObjectProperty))
+            self.graph.add((prop_uri, RDFS.label, Literal(f"has {name}")))
+            self.graph.add((prop_uri, RDFS.domain, parent_uri))
+            self.graph.add((prop_uri, RDFS.range, uri))
 
-                keyword = sub.keyword
-
-                if keyword == 'container':
-
-                    normalized_child_path = self._normalize_path(f"{full_path}/{sub.arg}")
-
-                    #self._process_container(sub, normalized_child_path, uri)
-
-                    self._process_container(sub, normalized_child_path, uri, full_prov) # Pass full_prov
-
-                elif keyword == 'list':
-
-                    normalized_child_path = self._normalize_path(f"{full_path}/{sub.arg}")
-
-                    #self._process_list(sub, normalized_child_path, uri)
-
-                    self._process_list(sub, normalized_child_path, uri, full_prov)      # Pass full_prov
-
-                elif keyword == 'leaf':
-
-                    normalized_child_path = self._normalize_path(f"{full_path}/{sub.arg}")
-
-                    #self._process_leaf(sub, normalized_child_path, uri)
-
-                    self._process_leaf(sub, normalized_child_path, uri, full_prov)      # Pass full_prov
-
-                elif keyword == 'leaf-list':
-
-                    normalized_child_path = self._normalize_path(f"{full_path}/{sub.arg}")
-
-                    #self._process_leaf_list(sub, normalized_child_path, uri)
-                    self._process_leaf_list(sub, normalized_child_path, uri, full_prov)
-
-                elif keyword == 'uses':
-
-                    self._process_uses_in_container(sub, full_path, uri)
-        self._process_xpath_constraints(stmt, uri)        
-        return uri
-    
-    def _process_choice_disjointness(self, choice_stmt: Any, parent_path: str) -> None:
-        """
-        ⭐ NEW: Implements mutual exclusivity between YANG choice cases.
-        Ensures commercial reasoners can flag invalid data co-existence.
-        """
-        case_classes = set() # Use a set to ensure unique URIs
-        
-        # 1. Collect URIs for all case-holding classes within this choice
-        if hasattr(choice_stmt, 'substmts'):
-            for sub in choice_stmt.substmts:
+        if hasattr(stmt, 'substmts'):
+            for sub in stmt.substmts:
                 if not hasattr(sub, 'keyword'): continue
+                normalized_child_path = f"{full_path}/{sub.arg}" if hasattr(sub, 'arg') and sub.arg else full_path
                 
-                # Identify the path for Explicit or Implicit cases
-                if sub.keyword in ('case', 'container', 'list'):
-                    case_path = self._normalize_path(f"{parent_path}/{sub.arg}")
-                    
-                    # Check registry, but fall back to manual URI generation
-                    if case_path in self.class_paths:
-                        case_classes.add(self.class_paths[case_path])
-                    else:
-                        # Generate URI manually to solve the registry latency issue
-                        generated_uri = self.ex[case_path.lstrip('/')]
-                        case_classes.add(generated_uri)
-                            
-        # 2. Assert disjointness between all unique pairs (Combination logic)
-        case_list = list(case_classes)
-        for i, class_a in enumerate(case_list):
-            for class_b in case_list[i+1:]:
-                self.graph.add((class_a, OWL.disjointWith, class_b))
-                self.triple_count += 1
-                log.debug(f" Asserted Disjoint: {class_a.split('/')[-1]} ⟷ {class_b.split('/')[-1]}")
-    #def _process_leaf(self, stmt: Any, path: str, parent_uri: Optional[URIRef] = None, is_leaf_list: bool = False) -> None:
+                if sub.keyword == 'leaf':
+                    self._process_leaf(sub, normalized_child_path, uri, full_prov)
+                elif sub.keyword == 'leaf-list':
+                    self._process_leaf(sub, normalized_child_path, uri, full_prov, is_leaf_list=True)
+                elif sub.keyword == 'container':
+                    self._process_container(sub, normalized_child_path, uri, full_prov)
+                elif sub.keyword == 'list':
+                    self._process_list(sub, normalized_child_path, uri, full_prov)
+                elif sub.keyword == 'choice':
+                    self._process_choice(sub, full_path, uri, full_prov)
+                elif sub.keyword == 'uses':
+                    self._process_uses_in_container(sub, full_path, uri)
+
+        if key_names:
+            key_uris = [self.ex[f"{full_path.lstrip('/')}/{k}"] for k in key_names]
+            
+            # 1. Maintain standard OWL logic 
+            current_node = BNode()
+            self.graph.add((uri, OWL.hasKey, current_node))
+            for i, key_uri in enumerate(key_uris):
+                self.graph.add((current_node, RDF.first, key_uri))
+                if i < len(key_uris) - 1:
+                    next_node = BNode()
+                    self.graph.add((current_node, RDF.rest, next_node))
+                    current_node = next_node
+                else:
+                    self.graph.add((current_node, RDF.rest, RDF.nil))
+            
+            # 2. Add SHACL property shapes for keys (presence)
+            for k, key_uri in zip(key_names, key_uris):
+                self._add_property_shape(
+                    uri,
+                    key_uri,
+                    min_count=1,
+                    max_count=1,
+                    message=f"List key '{k}' is required"
+                )
+            
+            # 3. Add SHACL uniqueness constraint
+            self._add_key_uniqueness_sparql(
+                uri,
+                key_uris,
+                message=f"Duplicate key combination in list {name}"
+            )
+
+
     def _process_leaf(self, stmt: Any, path: str, parent_uri: Optional[URIRef] = None, parent_prov: str = "", is_leaf_list: bool = False) -> None:
-            """
-            Enhanced leaf processing with identityref, leafref, and deep union resolution.
-            """
-            if not hasattr(stmt, 'arg'):
-                return
+        if not hasattr(stmt, 'arg'): return
+        name = stmt.arg
+        full_path = path
+        uri = self.ex[full_path.lstrip('/')]
 
-            name = stmt.arg
-            full_path = path
-            uri = self.ex[full_path.lstrip('/')]
+        current_segment = self._get_prov_segment(stmt)
+        full_prov = f"{parent_prov}/{current_segment}" if parent_prov else current_segment
+        self.graph.add((uri, PROV.wasDerivedFrom, Literal(full_prov)))
+    
+        type_stmt = None
+        if hasattr(stmt, 'substmts'):
+            for sub in stmt.substmts:
+                if hasattr(sub, 'keyword') and sub.keyword == 'type':
+                    type_stmt = sub
+                    break
+        if not type_stmt: return
 
-            # 1. Generate PROV path
-            current_segment = self._get_prov_segment(stmt)
-            full_prov = f"{parent_prov}/{current_segment}" if parent_prov else current_segment
-            
-            # 2. Add Triple
-            self.graph.add((uri, PROV.wasDerivedFrom, Literal(full_prov)))
-        
-            type_stmt = None
-            if hasattr(stmt, 'substmts'):
-                for sub in stmt.substmts:
-                    if hasattr(sub, 'keyword') and sub.keyword == 'type':
-                        type_stmt = sub
+        is_union = False
+        is_enum_typedef = False
+        resolved_type_stmt = type_stmt
+        type_name_raw = type_stmt.arg if hasattr(type_stmt, 'arg') else None
+        type_name_clean = type_name_raw.split(':')[-1] if type_name_raw else None
+
+        target_mod = self.current_module_name
+        if type_name_raw and ':' in type_name_raw:
+            prefix = type_name_raw.split(':')[0]
+            target_mod = self._get_target_module_from_prefix(stmt, prefix)
+
+        typedef_key = f"{target_mod}:{type_name_clean}"
+        typedef_stmt = None 
+
+        if typedef_key in self.type_resolver.typedefs:
+            typedef_stmt = self.type_resolver.typedefs[typedef_key]
+            if hasattr(typedef_stmt, 'substmts'):
+                for sub in typedef_stmt.substmts:
+                    if sub.keyword == 'type':
+                        resolved_type_stmt = sub
+                        if getattr(sub, 'arg', '') == 'enumeration':
+                            is_enum_typedef = True
                         break
-            if not type_stmt:
-                return
 
-            # --- FIX: RESOLVE TYPEDEF TO BASE TYPE (With Prefix Handling) ---
-            is_union = False
-            resolved_type_stmt = type_stmt
-            
-            # Strip prefix for lookup (e.g., tu:protocol-or-port -> protocol-or-port)
-            type_name_raw = type_stmt.arg if hasattr(type_stmt, 'arg') else None
-            type_name_clean = type_name_raw.split(':')[-1] if type_name_raw else None
+        if hasattr(resolved_type_stmt, 'arg') and resolved_type_stmt.arg == 'union':
+            is_union = True
 
-            if type_name_clean in self.type_resolver.typedefs:
-                typedef_stmt = self.type_resolver.typedefs[type_name_clean]
-                # ⭐ Correctly search substmts for the 'type' statement
-                if hasattr(typedef_stmt, 'substmts'):
-                    for sub in typedef_stmt.substmts:
-                        if sub.keyword == 'type':
-                            resolved_type_stmt = sub
-                            break
-
-            # Check the base type for the 'union' keyword
-            if hasattr(resolved_type_stmt, 'arg') and resolved_type_stmt.arg == 'union':
-                is_union = True
-            # ----------------------------------------------------------------
-
-            # 1. Handle identityref (Direct)
-            if hasattr(type_stmt, 'arg') and type_stmt.arg == 'identityref':
-                base_identity = None
-                for sub in type_stmt.substmts:
+        # 1. Determine Range/Datatype URI
+        range_uri = None
+        if hasattr(resolved_type_stmt, 'arg') and resolved_type_stmt.arg == 'identityref':
+            base_identity = None
+            if hasattr(resolved_type_stmt, 'substmts'):
+                for sub in resolved_type_stmt.substmts:
                     if hasattr(sub, 'keyword') and sub.keyword == 'base':
                         base_identity = sub.arg.split(':')[-1]
                         break
-                self.identityref_resolved_count += 1
-                self.graph.add((uri, RDF.type, OWL.ObjectProperty))
-                self.graph.add((uri, RDFS.label, Literal(name)))
-                if base_identity:
-                    target_identity_uri = self.ex[f"identity/{base_identity}"]
-                    self.graph.add((uri, RDFS.range, target_identity_uri))
-                if parent_uri:
-                    self.graph.add((uri, RDFS.domain, parent_uri))
-                self.triple_count += 4
-
-            # 2. Handle leafref
-            elif self.leafref_resolver.is_leafref(type_stmt):
-                resolution_result = self.leafref_resolver.resolve_leafref_target(type_stmt, full_path)
-                if resolution_result:
-                    _, _, xpath_path = resolution_result
-                    target_class_uri = self.leafref_resolver.get_target_class_from_path(resolution_result[0])
-                    self.graph.add((uri, RDF.type, OWL.ObjectProperty))
-                    self.graph.add((uri, self.ex.xpathPath, Literal(xpath_path)))
-                    if target_class_uri: self.graph.add((uri, RDFS.range, target_class_uri))
-                    if parent_uri: self.graph.add((uri, RDFS.domain, parent_uri))
-                    self.leafref_resolved_count += 1
-                else:
-                    self.graph.add((uri, RDF.type, OWL.ObjectProperty))
-                    self.leafref_unresolved_count += 1
-
-            # ⭐ UPGRADED: Handle union correctly (typedef-aware)
-            elif is_union:
-                union_parent_name = f"Union_{name}"
-                union_parent_uri = self.ex[f"types/{union_parent_name}"]
-                
-                self.graph.add((union_parent_uri, RDF.type, OWL.Class))
-                self.graph.add((union_parent_uri, RDFS.label, Literal(f"Union Parent: {name}")))
-                
-                if hasattr(resolved_type_stmt, 'substmts'):
-                    for union_sub in resolved_type_stmt.substmts:
-                        if hasattr(union_sub, 'keyword') and union_sub.keyword == 'type':
-                            # FIX: Handle identityref specifically inside unions
-                            if union_sub.arg == 'identityref':
-                                base_id = None
-                                for sub in union_sub.substmts:
-                                    if sub.keyword == 'base':
-                                        base_id = sub.arg.split(':')[-1]
-                                        break
-                                if base_id:
-                                    member_uri = self.ex[f"identity/{base_id}"]
-                                    self.graph.add((member_uri, RDFS.subClassOf, union_parent_uri))
-                            else:
-                                member_uri = self.type_resolver.resolve_type(union_sub)
-                                # Link only non-W3C URIs (Identities/Enums) as subclasses
-                                if isinstance(member_uri, URIRef) and "www.w3.org" not in str(member_uri):
-                                    self.graph.add((member_uri, RDFS.subClassOf, union_parent_uri))
-                            self.triple_count += 1
-
-                self.graph.add((uri, RDF.type, OWL.ObjectProperty))
-                self.graph.add((uri, RDFS.range, union_parent_uri))
-                if parent_uri:
-                    self.graph.add((uri, RDFS.domain, parent_uri))
-                self.triple_count += 5
-                log.debug(f"✓ Processed union via typedef resolution: {name}")
-            # 4. Handle instance-identifier (New Logic)
-            elif hasattr(type_stmt, 'arg') and type_stmt.arg == 'instance-identifier':
-                self.graph.add((uri, RDF.type, OWL.ObjectProperty))
-                self.graph.add((uri, RDFS.label, Literal(name)))
-                # Tag for downstream URI resolution
-                self.graph.add((uri, self.ex.isInstanceIdentifier, Literal(True, datatype=XSD.boolean)))
-                self.graph.add((uri, RDFS.comment, Literal("A semantic pointer to a specific data node instance.")))
-                
-                if parent_uri:
-                    self.graph.add((uri, RDFS.domain, parent_uri))
-                
-                self.triple_count += 4
-                log.debug(f"✓ Processed instance-identifier: {name}")
-
-            # 3. Handle regular leaves
-            else:
-                range_uri = self.type_resolver.resolve_type(type_stmt)
-                self.graph.add((uri, RDF.type, OWL.DatatypeProperty))
-                self.graph.add((uri, RDFS.label, Literal(name)))
+            self.identityref_resolved_count += 1
+            self.graph.add((uri, RDF.type, OWL.ObjectProperty))
+            if base_identity:
+                range_uri = self._get_identity_uri(resolved_type_stmt, base_identity)
                 self.graph.add((uri, RDFS.range, range_uri))
-                if parent_uri:
-                    self.graph.add((uri, RDFS.domain, parent_uri))
-                self.triple_count += 4
 
-            # ⭐ ADD BACK: Common metadata and descriptions
-            if hasattr(stmt, 'substmts'):
-                for sub in stmt.substmts:
-                    if hasattr(sub, 'keyword') and sub.keyword == 'description':
-                        if hasattr(sub, 'arg'):
-                            self.graph.add((uri, RDFS.comment, Literal(sub.arg)))
-                            self.triple_count += 1
-                        break
+        elif self.leafref_resolver.is_leafref(resolved_type_stmt):
+            # Defer to Pass 2 for leafrefs
+            self.pending_leafrefs.append((uri, resolved_type_stmt, full_path, parent_uri, name))
+            range_uri = None 
 
-            # ⭐ NEW: Process XPath constraints for this leaf
-            self._process_xpath_constraints(stmt, uri)
+        elif is_union:
+            # Stardog lacks support for union axioms. We bypass OWL ranges 
+            # and rely entirely on SHACL sh:or lists for validation.
+            self.graph.add((uri, RDF.type, OWL.DatatypeProperty))
+            
+            union_members = []
+            if hasattr(resolved_type_stmt, 'substmts'):
+                for union_sub in resolved_type_stmt.substmts:
+                    if hasattr(union_sub, 'keyword') and union_sub.keyword == 'type':
+                        if union_sub.arg == 'identityref':
+                            base_id = None
+                            for sub in union_sub.substmts:
+                                if sub.keyword == 'base':
+                                    base_id = sub.arg.split(':')[-1]
+                                    break
+                            if base_id:
+                                union_members.append(('class', self._get_identity_uri(union_sub, base_id)))
+                        else:
+                            member_uri = self.type_resolver.resolve_type(union_sub, self.current_module_name, self._get_target_module_from_prefix)
+                            if "www.w3.org/2001/XMLSchema#" in str(member_uri):
+                                union_members.append(('datatype', member_uri))
+                            elif member_uri == RDFS.Literal:
+                                union_members.append(('literal', member_uri))
+                            else:
+                                union_members.append(('class', member_uri))
+            range_uri = ('union', union_members)
 
-    #def _process_leaf_list(self, stmt: Any, path: str, parent_uri: Optional[URIRef] = None) -> None:
+        elif hasattr(resolved_type_stmt, 'arg') and resolved_type_stmt.arg == 'instance-identifier':
+            self.graph.add((uri, RDF.type, OWL.ObjectProperty))
+            self.graph.add((uri, self.ex.isInstanceIdentifier, Literal(True, datatype=XSD.boolean)))
+            range_uri = XSD.anyURI
+
+        elif is_enum_typedef:
+            typedef_mod = self._get_typedef_module(typedef_stmt) if typedef_stmt else target_mod
+            range_uri = self.ex[f"types/{typedef_mod}/{type_name_clean}"]
+            self.graph.add((uri, RDF.type, OWL.ObjectProperty))
+            self.graph.add((uri, RDFS.range, range_uri))
+        else:
+            range_uri = self.type_resolver.resolve_type(type_stmt, self.current_module_name, self._get_target_module_from_prefix)
+            self.graph.add((uri, RDF.type, OWL.DatatypeProperty))
+            self.graph.add((uri, RDFS.range, range_uri))
+
+        self.graph.add((uri, RDFS.label, Literal(name)))
+        if parent_uri: self.graph.add((uri, RDFS.domain, parent_uri))
+
+        # 2. Metadata Extraction
+        is_mandatory = False
+        is_config = True
+        status_val = None
+        min_elements = 0
+        max_elements = 0
+        
+        if hasattr(stmt, 'substmts'):
+            for sub in stmt.substmts:
+                if hasattr(sub, 'keyword'):
+                    if sub.keyword == 'description' and hasattr(sub, 'arg'):
+                        self.graph.add((uri, RDFS.comment, Literal(sub.arg)))
+                    elif sub.keyword == 'units' and hasattr(sub, 'arg'):
+                        self.graph.add((uri, self.ex.unit, Literal(sub.arg)))
+                    elif sub.keyword == 'mandatory' and getattr(sub, 'arg', '') == 'true':
+                        is_mandatory = True
+                    elif sub.keyword == 'config' and getattr(sub, 'arg', '') == 'false':
+                        is_config = False
+                    elif sub.keyword == 'status' and hasattr(sub, 'arg'):
+                        status_val = sub.arg
+                    elif sub.keyword == 'min-elements':
+                        try: min_elements = int(sub.arg)
+                        except: pass
+                    elif sub.keyword == 'max-elements':
+                        try: 
+                            if sub.arg != 'unbounded': max_elements = int(sub.arg)
+                        except: pass
+
+        if not is_config:
+            self.graph.add((uri, self.ex.isStateData, Literal(True, datatype=XSD.boolean)))
+            
+        if status_val in ('deprecated', 'obsolete'):
+            self.graph.add((uri, OWL.deprecated, Literal(True, datatype=XSD.boolean)))
+
+        # 3. Pure SHACL Property Shape
+        if parent_uri and not self.leafref_resolver.is_leafref(resolved_type_stmt):
+            shape_uri = self.ex[f"shapes/{full_path.lstrip('/')}"]
+            self.shacl_graph.add((shape_uri, RDF.type, SH.PropertyShape))
+            self.shacl_graph.add((shape_uri, SH.path, uri))
+            
+            # SAFE Datatype, Class Range, or UNION mapped to SHACL
+            if isinstance(range_uri, tuple) and range_uri[0] == 'union':
+                union_members = range_uri[1]
+                if union_members:
+                    or_list_node = BNode()
+                    self.shacl_graph.add((shape_uri, SH['or'], or_list_node))
+                    
+                    # Convert to SHACL RDF List
+                    current_node = or_list_node
+                    for i, (m_type, m_uri) in enumerate(union_members):
+                        member_shape = BNode()
+                        if m_type == 'datatype':
+                            self.shacl_graph.add((member_shape, SH.datatype, m_uri))
+                        elif m_type == 'literal':
+                            self.shacl_graph.add((member_shape, SH.nodeKind, SH.Literal))
+                        else:
+                            self.shacl_graph.add((member_shape, SH['class'], m_uri))
+                            self.shacl_graph.add((member_shape, SH.nodeKind, SH.IRI))
+                        
+                        self.shacl_graph.add((current_node, RDF.first, member_shape))
+                        if i < len(union_members) - 1:
+                            next_node = BNode()
+                            self.shacl_graph.add((current_node, RDF.rest, next_node))
+                            current_node = next_node
+                        else:
+                            self.shacl_graph.add((current_node, RDF.rest, RDF.nil))
+
+            elif range_uri:
+                if "http://www.w3.org/2001/XMLSchema#" in str(range_uri):
+                    self.shacl_graph.add((shape_uri, SH.datatype, range_uri))
+                elif range_uri == RDFS.Literal:
+                    self.shacl_graph.add((shape_uri, SH.nodeKind, SH.Literal))
+                else:
+                    self.shacl_graph.add((shape_uri, SH['class'], range_uri))
+                    self.shacl_graph.add((shape_uri, SH.nodeKind, SH.IRI))
+            
+            # Apply Cardinality
+            if is_mandatory or min_elements > 0:
+                self.shacl_graph.add((shape_uri, SH.minCount, Literal(max(1, min_elements))))
+            if not is_leaf_list:
+                self.shacl_graph.add((shape_uri, SH.maxCount, Literal(1)))
+            elif max_elements > 0:
+                self.shacl_graph.add((shape_uri, SH.maxCount, Literal(max_elements)))
+
+            # Apply String/Numeric Constraints
+            if resolved_type_stmt:
+                extractor = YANGConstraintExtractor()
+                constraints = extractor.extract_constraints(resolved_type_stmt)
+                if 'range' in constraints and isinstance(constraints['range'], dict):
+                    if 'min' in constraints['range']: self.shacl_graph.add((shape_uri, SH.minInclusive, Literal(constraints['range']['min'])))
+                    if 'max' in constraints['range']: self.shacl_graph.add((shape_uri, SH.maxInclusive, Literal(constraints['range']['max'])))
+                if 'length' in constraints and isinstance(constraints['length'], dict):
+                    if 'minLength' in constraints['length']: self.shacl_graph.add((shape_uri, SH.minLength, Literal(constraints['length']['minLength'])))
+                    if 'maxLength' in constraints['length']: self.shacl_graph.add((shape_uri, SH.maxLength, Literal(constraints['length']['maxLength'])))
+                if 'patterns' in constraints and isinstance(constraints['patterns'], list):
+                    for pattern in constraints['patterns']:
+                        self.shacl_graph.add((shape_uri, SH.pattern, Literal(pattern)))
+            
+            parent_node_shape = self._ensure_node_shape(parent_uri)
+            self.shacl_graph.add((parent_node_shape, SH.property, shape_uri))
+
+        self._process_xpath_constraints(stmt, uri)
+
+
     def _process_leaf_list(self, stmt: Any, path: str, parent_uri: Optional[URIRef] = None, parent_prov: str = "") -> None:
-        """Process leaf-list statement"""
-
-        #self._process_leaf(stmt, path, parent_uri, is_leaf_list=True)
         self._process_leaf(stmt, path, parent_uri, parent_prov, is_leaf_list=True)
 
     def _process_augment(self, stmt: Any) -> None:
-        """Step 7: Correctly resolves SIMAP augments into the IETF registry."""
         if not hasattr(stmt, 'arg'):
             return
 
-        # 1. Clean prefixes to get the raw path structure
-        # e.g., "/nw:networks/nw:network" -> "/networks/network"
-        clean_path = stmt.arg.replace('nw:', '').replace('nt:', '').replace('st:', '')
+        raw_path = stmt.arg
+        parts = [p for p in raw_path.split('/') if p]
+        target_module_name = self.current_module_name
         
-        # 2. Re-anchor to the correct base module
-        # Most topology elements belong to ietf-network or ietf-network-topology
-        # based on the registry created in Step 5.
-        if clean_path.startswith('/networks'):
-            target_path = '/ietf-network' + clean_path
-        else:
-            target_path = '/' + clean_path.lstrip('/')
-            
+        if parts:
+            first_part = parts[0]
+            if ':' in first_part:
+                prefix = first_part.split(':')[0]
+                target_module_name = self._get_target_module_from_prefix(stmt, prefix)
+
+        clean_path = re.sub(r'[a-zA-Z0-9_-]+:', '', raw_path)
+        clean_path = re.sub(r'/+', '/', clean_path)
+        
+        target_path = clean_path
+        if target_module_name:
+            if not clean_path.startswith('/' + target_module_name + '/'):
+                target_path = '/' + target_module_name + clean_path
+                
         target_path = re.sub(r'/+', '/', target_path)
+
+        matched_path = None
+        if target_path not in self.class_paths:
+            for registered_path in self.class_paths:
+                if registered_path == clean_path or registered_path.endswith(clean_path):
+                    matched_path = registered_path
+                    break
+                    
+        if matched_path:
+            target_path = matched_path
+
         target_uri = self.ex[target_path.lstrip('/')]
 
-        # 3. Stub the target class if it doesn't exist (handling load order)
         if target_path not in self.class_paths:
             self.graph.add((target_uri, RDF.type, OWL.Class))
             self.class_paths[target_path] = target_uri
         
-        # 1. Lookup Parent PROV from registry
-        # This works because we process base modules first (see Step 6 below)
         parent_prov = self.prov_paths.get(target_path, "")
 
-        # 4. Process children
         if hasattr(stmt, 'substmts'):
             for sub in stmt.substmts:
-                if not hasattr(sub, 'keyword'):
-                    continue
+                if not hasattr(sub, 'keyword'): continue
                 
                 keyword = sub.keyword
                 child_name = sub.arg if hasattr(sub, 'arg') else "unknown"
                 child_path = f"{target_path}/{child_name}"
                 
                 if keyword == 'leaf':
-                    #self._process_leaf(sub, child_path, target_uri)
-                    self._process_leaf(sub, child_path, target_uri, parent_prov) # Pass parent_prov
+                    self._process_leaf(sub, child_path, target_uri, parent_prov)
                 elif keyword == 'uses':
                     self._process_uses_in_container(sub, target_path, target_uri)
                 elif keyword in ('container', 'list'):
-                    #self._process_container(sub, child_path, target_uri)
-                    self._process_container(sub, child_path, target_uri, parent_prov) # Pass parent_prov
-
-    def _process_identity(self, stmt: Any) -> None:
-
-        """Process identity statement"""
-        """Enhanced Identity processing with OWL Punning."""
-
-        if not hasattr(stmt, 'arg'):
-
-            return
-
-        name = stmt.arg
-
-        uri = self.ex[f"identity/{name}"]
-
-        # NEW: Add PROV metadata
-        prov_path = self._get_prov_segment(stmt)
-        self.graph.add((uri, PROV.wasDerivedFrom, Literal(prov_path)))
-
-        self.graph.add((uri, RDF.type, OWL.Class))
-
-        self.graph.add((uri, RDFS.label, Literal(name)))
-
-        # Punning: Also declare as NamedIndividual    
-        self.graph.add((uri, RDF.type, OWL.NamedIndividual))
-
-        self.identity_class_uris[name] = uri
-
-        self.triple_count += 4
-
-        if hasattr(stmt, 'substmts'):
-
-            for sub in stmt.substmts:
-
-                if hasattr(sub, 'keyword') and sub.keyword == 'description':
-
-                    if hasattr(sub, 'arg'):
-
-                        self.graph.add((uri, RDFS.comment, Literal(sub.arg)))
-
-                        self.triple_count += 1
+                    self._process_container(sub, child_path, target_uri, parent_prov)
+                elif keyword == 'choice':
+                    self._process_choice(sub, target_path, target_uri, parent_prov)
 
     def _process_rpc(self, stmt: Any) -> None:
-
-        """Process RPC statement"""
-
-        if not hasattr(stmt, 'arg'):
-
-            return
-
+        if not hasattr(stmt, 'arg'): return
         name = stmt.arg
-
-        uri = self.ex[f"rpc/{name}"]
-
+        uri = self.ex[f"rpc/{self.current_module_name}/{name}"]
         self.graph.add((uri, RDF.type, OWL.Class))
-
         self.graph.add((uri, RDFS.label, Literal(name)))
-
         self.rpc_classes[name] = uri
 
-        self.triple_count += 2
-
     def _process_notification(self, stmt: Any) -> None:
-
-        """Process notification statement"""
-
-        if not hasattr(stmt, 'arg'):
-
-            return
-
+        if not hasattr(stmt, 'arg'): return
         name = stmt.arg
-
-        uri = self.ex[f"notification/{name}"]
-
+        uri = self.ex[f"notification/{self.current_module_name}/{name}"]
         self.graph.add((uri, RDF.type, OWL.Class))
-
         self.graph.add((uri, RDFS.label, Literal(name)))
 
-        self.triple_count += 2
-
     def _process_uses_in_container(self, uses_stmt: Any, target_path: str, target_uri: URIRef) -> None:
-
-        """⭐ NEW in v4.3: Process uses statement within a container"""
-
-        if not hasattr(uses_stmt, 'arg'):
-
-            return
-
+        """
+        Processes 'uses' statements by creating subClassOf links to groupings 
+        and mapping 'refine' constraints to SHACL shapes on the target class.
+        """
+        if not hasattr(uses_stmt, 'arg'): return
         grouping_name = uses_stmt.arg
-
-        if not self.grouping_resolver:
-
-            return
-
-        # Get refines from this uses statement
-
+        
+        # 1. Maintain semantic link to the grouping class
+        grouping_uri = self._get_grouping_uri(uses_stmt, grouping_name)
+        self.graph.add((target_uri, RDFS.subClassOf, grouping_uri))
+        
+        if not self.grouping_resolver: return
         refine_resolver = RefineResolver()
-
         refines = refine_resolver.extract_refines(uses_stmt)
-
-        # Expand grouping children
-
-        grouping_children = self.grouping_resolver.get_grouping_children(grouping_name)
+        
+        target_mod = self.current_module_name
+        if ':' in grouping_name:
+            prefix = grouping_name.split(':')[0]
+            target_mod = self._get_target_module_from_prefix(uses_stmt, prefix)
+            
+        grouping_children = self.grouping_resolver.get_grouping_children(grouping_name, target_mod)
 
         if not grouping_children:
-            # This log will help identify if a specific import is missing
-            log.warning(f" Could not resolve grouping: {grouping_name} (imported module loaded?)")
+            log.warning(f" Could not resolve grouping: {grouping_name}")
             return
 
+        # Ensure the target class has a NodeShape to hold refinements
+        self._ensure_node_shape(target_uri)
+
         for child_name, child_stmt, keyword in grouping_children:
-
-            # Skip nested uses for now (could handle recursively)
-
             if keyword == 'uses':
-
                 self._process_uses_in_container(child_stmt, target_path, target_uri)
-
                 continue
 
             child_path = f"{target_path}/{child_name}"
-
             child_uri = self.ex[child_path.lstrip('/')]
-
-            # Apply refines if applicable
-
             refine_props = refines.get(child_name, {})
+            parent_prov = self.prov_paths.get(target_path, "")
 
-            if keyword == 'leaf' or keyword == 'leaf-list' or keyword == 'anydata':
+            # Determine the correct valid SHACL property URI for the constraint
+            if keyword in ('container', 'list'):
+                clean_child_name = child_name[5:] if child_name.startswith('case-') else child_name
+                prop_name = 'has' + ''.join(word.capitalize() for word in clean_child_name.split('-'))
+                property_uri = self.ex[f"{target_path.lstrip('/')}/{prop_name}"]
+            else:
+                property_uri = child_uri
 
-                self.graph.add((child_uri, RDF.type, OWL.DatatypeProperty))
-
-                self.graph.add((child_uri, RDFS.label, Literal(child_name)))
-
-                self.graph.add((child_uri, RDFS.domain, target_uri))
-
-                self.graph.add((child_uri, RDFS.range, XSD.string))
-                
-                # Special handling for anydata description if needed
-                if keyword == 'anydata':
-                    self.graph.add((child_uri, RDFS.comment, Literal("Anydata: Arbitrary structure extension point")))
-                # Check for mandatory refinement
-                if refine_props.get('mandatory') == 'true':
-                    self.graph.add((child_uri, OWL.minCardinality, Literal(1)))
-                    self.triple_count += 1
-                #Add Metadata
-                if hasattr(child_stmt, 'substmts'):
-
-                    for sub in child_stmt.substmts:
-
-                        #if hasattr(sub, 'keyword') and sub.keyword == 'description':
-
-                        #   if hasattr(sub, 'arg'):
-
-                        #        self.graph.add((child_uri, RDFS.comment, Literal(sub.arg)))
-
-                        #        self.triple_count += 1
-
-                        #    break
-
-                        if sub.keyword == 'description' and hasattr(sub, 'arg'):
-                            self.graph.add((child_uri, RDFS.comment, Literal(sub.arg)))
-                            break
-
-                self.triple_count += 4
-
-                # Apply refine constraints
-
-
-            elif keyword == 'container' or keyword == 'list':
-
-                self.graph.add((child_uri, RDF.type, OWL.Class))
-
-                self.graph.add((child_uri, RDFS.label, Literal(child_name)))
-
-                self.triple_count += 2
-
-                parent_prov = self.prov_paths.get(target_path, "")
-                
+            # A. Process the child node normally to ensure its URI and type exist
+            if keyword in ('leaf', 'leaf-list'):
+                self._process_leaf(child_stmt, child_path, target_uri, parent_prov, is_leaf_list=(keyword == 'leaf-list'))
+            elif keyword in ('container', 'list'):
                 if keyword == 'container':
                     self._process_container(child_stmt, child_path, target_uri, parent_prov)
-                elif keyword == 'list':
+                else:
                     self._process_list(child_stmt, child_path, target_uri, parent_prov)
-
-                if hasattr(child_stmt, 'substmts'):
-
-                    for sub in child_stmt.substmts:
-
-                        if hasattr(sub, 'keyword') and sub.keyword == 'description':
-
-                            if hasattr(sub, 'arg'):
-
-                                self.graph.add((child_uri, RDFS.comment, Literal(sub.arg)))
-
-                                self.triple_count += 1
-
-                            break
             elif keyword == 'choice':
-                # Process choice within grouping
-                self._process_choice_disjointness(child_stmt, target_path)
+                self._process_choice(child_stmt, target_path, target_uri, parent_prov)
 
-        log.debug(f" Uses expanded: {grouping_name} into {target_path}")
+            # B. Apply SHACL Refinements to the correct Property Path
+            min_c = None
+            max_c = None
 
+            if refine_props.get('mandatory') == 'true':
+                min_c = 1
+            elif refine_props.get('min-elements'):
+                try:
+                    min_c = int(refine_props.get('min-elements'))
+                except ValueError: pass
+                
+            if refine_props.get('max-elements'):
+                try:
+                    val = refine_props.get('max-elements')
+                    if val != 'unbounded':
+                        max_c = int(val)
+                except ValueError: pass
+
+            # If any refinements exist, add a specific PropertyShape to the target NodeShape
+            if min_c is not None or max_c is not None:
+                self._add_property_shape(
+                    target_uri,
+                    property_uri,
+                    min_count=min_c,
+                    max_count=max_c,
+                    message=f"Refined constraint for {child_name} in {target_uri.split('/')[-1]}"
+                )
+                
         self.uses_count += 1
 
-    def _expand_uses_statements(self) -> None:
-
-        """⭐ NEW in v4.3: Expand all uses statements throughout the model"""
-
-        for module_name, module in self.resolver.modules.items():
-
-            if not hasattr(module, 'substmts'):
-
-                continue
-
-            for stmt in module.substmts:
-
-                if not hasattr(stmt, 'keyword'):
-
-                    continue
-
-                if stmt.keyword == 'container':
-
-                    normalized_path = self._normalize_path(f"/{stmt.arg}")
-
-                    self._expand_uses_in_tree(stmt, normalized_path)
-
-                elif stmt.keyword == 'list':
-
-                    normalized_path = self._normalize_path(f"/{stmt.arg}")
-
-                    self._expand_uses_in_tree(stmt, normalized_path)
-
-    def _expand_uses_in_tree(self, stmt: Any, path: str) -> None:
-
-        """Recursively expand uses statements in the data tree"""
-
-        if not hasattr(stmt, 'substmts'):
-
-            return
-
-        target_uri = self.ex[path.lstrip('/')]
-
-        for sub in stmt.substmts:
-
-            if not hasattr(sub, 'keyword'):
-
-                continue
-
-            if sub.keyword == 'uses':
-
-                self._process_uses_in_container(sub, path, target_uri)
-
-            elif sub.keyword in ('container', 'list'):
-
-                normalized_child_path = self._normalize_path(f"{path}/{sub.arg}")
-
-                self._expand_uses_in_tree(sub, normalized_child_path)
-
-    def _process_complete_augmentations(self) -> None:
-
-        """Process augmentations with uses expansion"""
-
-        for target_path, augment_info in self.augment_targets.items():
-
-            target_uri = self.ex[target_path.lstrip('/')]
-
-            if target_path not in self.class_paths:
-
-                self.graph.add((target_uri, RDF.type, OWL.Class))
-
-                self.class_paths[target_path] = target_uri
-
-                self.triple_count += 1
-
-            for keyword, child_name, sub in augment_info['children']:
-
-                child_path = f"{target_path}/{child_name}"
-
-                if keyword == 'container':
-
-                    self._process_container(sub, child_path, target_uri)
-
-                elif keyword == 'list':
-
-                    self._process_list(sub, child_path, target_uri)
-
-                elif keyword == 'leaf':
-
-                    self._process_leaf(sub, child_path, target_uri)
-
-                elif keyword == 'leaf-list':
-
-                    self._process_leaf_list(sub, child_path, target_uri)
-
-                elif keyword == 'uses':
-
-                    self._process_uses_in_container(sub, target_path, target_uri)
+    def _process_deferred_augmentations(self) -> None:
+        for module_name, stmt in self.deferred_augments:
+            self.current_module_name = module_name
+            self._process_augment(stmt)
 
     def _process_containers_for_properties(self) -> None:
-
-        """Generate parent-->child containment properties"""
-
+        """
+        Pass 8: Generates OWL ObjectProperties for all container and list relationships 
+        and attaches strict SHACL validation to enforce correct child targeting.
+        """
         for path, uri in list(self.class_paths.items()):
-
             child_paths = [p for p in self.class_paths.keys() if p.startswith(path + '/') and p.count('/') == path.count('/') + 1]
-
             for child_path in child_paths:
-
                 child_name = child_path.split('/')[-1]
-
+                
+                if child_name.startswith('case-'):
+                    continue
+                    
                 prop_name = 'has' + ''.join(word.capitalize() for word in child_name.split('-'))
-
                 prop_uri = self.ex[path.lstrip('/') + '/' + prop_name]
-
                 child_uri = self.class_paths[child_path]
 
-                # NEW: Add PROV based on parent schema path + property name
                 parent_prov = self.prov_paths.get(path, "")
                 if parent_prov:
-                    # yang2rdf format: schema_path/generatedPropertyName
                     prov_string = f"{parent_prov}/{prop_name}"
                     self.graph.add((prop_uri, PROV.wasDerivedFrom, Literal(prov_string)))
 
                 self.graph.add((prop_uri, RDF.type, OWL.ObjectProperty))
-
                 self.graph.add((prop_uri, RDFS.label, Literal(prop_name)))
-
                 self.graph.add((prop_uri, RDFS.domain, uri))
-
                 self.graph.add((prop_uri, RDFS.range, child_uri))
-
-                self.graph.add((prop_uri, RDFS.comment, Literal("Containment relation (parent --> child).")))
-
-                self.triple_count += 5
-
-                log.debug(f" Property: {prop_name} ({path} -> {child_path})")
-
-    def _generate_cardinality_constraints(self) -> None:
-
-        """Generate cardinality constraints"""
-
-        for prop_uri in self.graph.subjects(RDF.type, OWL.ObjectProperty):
-
-            self.graph.add((prop_uri, OWL.minCardinality, Literal(0)))
-
-            self.triple_count += 1
+                self.graph.add((prop_uri, RDFS.comment, Literal("Containment relation")))
+                
+                # Add Strict SHACL Containment Property Shape
+                parent_shape = self._ensure_node_shape(uri)
+                ps = BNode()
+                self.shacl_graph.add((parent_shape, SH.property, ps))
+                self.shacl_graph.add((ps, RDF.type, SH.PropertyShape))
+                self.shacl_graph.add((ps, SH.path, prop_uri))
+                self.shacl_graph.add((ps, SH['class'], child_uri))
+                self.shacl_graph.add((ps, SH.nodeKind, SH.IRI))
 
     def _process_imported_module_bases(self) -> None:
-
-        """Process imported modules"""
-
         for module_name, module in self.resolver.modules.items():
-
-            if not hasattr(module, 'substmts'):
-
-                continue
-
+            self.current_module_name = extract_module_name(module_name)
+            if not hasattr(module, 'substmts'): continue
             for stmt in module.substmts:
-
-                if not hasattr(stmt, 'keyword'):
-
-                    continue
-
+                if not hasattr(stmt, 'keyword'): continue
                 keyword = stmt.keyword
-
                 if keyword == 'container':
-
                     normalized_path = self._normalize_path(f"/{stmt.arg}")
-
                     if normalized_path not in self.class_paths:
-
                         uri = self.ex[normalized_path.lstrip('/')]
-
-                        # NEW: Add PROV
                         prov_path = self._get_prov_segment(stmt)
                         self.graph.add((uri, PROV.wasDerivedFrom, Literal(prov_path)))
-
                         self.graph.add((uri, RDF.type, OWL.Class))
-
                         self.class_paths[normalized_path] = uri
-
-                        self.triple_count += 2
-                        
-                        # NEW: Add Description
-                        if hasattr(stmt, 'substmts'):
-                            for sub in stmt.substmts:
-                                if hasattr(sub, 'keyword') and sub.keyword == 'description':
-                                    if hasattr(sub, 'arg'):
-                                        self.graph.add((uri, RDFS.comment, Literal(sub.arg)))
-                                        self.triple_count += 1
-                                    break
-
-                        log.debug(f" Imported class: {normalized_path}")
-
                 elif keyword == 'list':
-
                     normalized_path = self._normalize_path(f"/{stmt.arg}")
-
                     if normalized_path not in self.class_paths:
-
                         uri = self.ex[normalized_path.lstrip('/')]
-
                         self.graph.add((uri, RDF.type, OWL.Class))
-
                         self.class_paths[normalized_path] = uri
-
-                        self.triple_count += 1
-
-    def _add_prov_metadata(self) -> None:
-
-        """Add PROV metadata"""
-
-        for subj in self.graph.subjects(RDF.type, OWL.DatatypeProperty):
-
-            path = str(subj).replace(self.base_uri + '/', '').replace(self.base_uri, '')
-
-            derived_from = f"{path}?leaf"
-
-            self.graph.add((subj, PROV.wasDerivedFrom, Literal(derived_from)))
-
-            self.triple_count += 1
-
-        for subj in self.graph.subjects(RDF.type, OWL.ObjectProperty):
-
-            path = str(subj).replace(self.base_uri + '/', '').replace(self.base_uri, '')
-
-            derived_from = f"{path}?property"
-
-            self.graph.add((subj, PROV.wasDerivedFrom, Literal(derived_from)))
-
-            self.triple_count += 1
-
-        for subj in self.graph.subjects(RDF.type, OWL.Class):
-
-            path = str(subj).replace(self.base_uri + '/', '').replace(self.base_uri, '')
-
-            derived_from = f"/{path}?container"
-
-            self.graph.add((subj, PROV.wasDerivedFrom, Literal(derived_from)))
-
-            self.triple_count += 1
-
-    def _process_xsd_constraints(self) -> None:
-
-        """Extract XSD constraints from YANG"""
-
-        log.info(" Scanning all YANG types for constraints...")
-
-        constraint_extractor = YANGConstraintExtractor()
-
-        for module_name, module in self.resolver.modules.items():
-
-            if not hasattr(module, 'substmts'):
-
-                continue
-
-            for stmt in module.substmts:
-
-                if not hasattr(stmt, 'keyword'):
-
-                    continue
-
-                #if stmt.keyword == 'typedef':
-
-                #    if not hasattr(stmt, 'arg'):
-
-                #        continue
-
-                #    typedef_name = stmt.arg
-
-                #    constraints = constraint_extractor.extract_constraints(stmt)
-
-                #    if constraints:
-
-                #        self._add_constraint_triples(typedef_name, constraints)
-
-                #elif stmt.keyword in ('container', 'list'):
-
-                #    self._extract_leaf_constraints(stmt, constraint_extractor)
-
-        log.info(f" Found {constraint_extractor.constraints_found} YANG constraints")
-
-        log.info(f" Added {self.constraint_count} constraint triples to OWL")
-
-    def _extract_leaf_constraints(self, stmt: Any, constraint_extractor: YANGConstraintExtractor, path: str = "") -> None:
-
-        """Recursively extract constraints from leaves"""
-
-        if not hasattr(stmt, 'substmts'):
-
-            return
-
-        for sub in stmt.substmts:
-
-            if not hasattr(sub, 'keyword'):
-
-                continue
-
-            if sub.keyword == 'leaf' or sub.keyword == 'leaf-list':
-
-                if not hasattr(sub, 'arg'):
-
-                    continue
-
-                leaf_name = sub.arg
-
-                leaf_path = f"{path}/{leaf_name}" if path else f"/{leaf_name}"
-
-                for leaf_sub in sub.substmts if hasattr(sub, 'substmts') else []:
-
-                    if hasattr(leaf_sub, 'keyword') and leaf_sub.keyword == 'type':
-
-                        constraints = constraint_extractor.extract_constraints(leaf_sub)
-
-                        if constraints:
-
-                            self._add_constraint_triples(leaf_path, constraints)
-
-            elif sub.keyword in ('container', 'list'):
-
-                if hasattr(sub, 'arg'):
-
-                    new_path = f"{path}/{sub.arg}" if path else f"/{sub.arg}"
-
-                    self._extract_leaf_constraints(sub, constraint_extractor, new_path)
-
-    def _add_constraint_triples(self, element_name: str, constraints: Dict[str, Any]) -> None:
-
-        """Add XSD constraint triples"""
-
-        uri = self.ex[element_name.lstrip('/').replace('/', '_')]
-
-        if 'range' in constraints and isinstance(constraints['range'], dict):
-
-            range_info = constraints['range']
-
-            if 'min' in range_info:
-
-                min_val = range_info['min']
-
-                self.graph.add((uri, XSD.minInclusive, Literal(min_val)))
-
-                self.constraint_count += 1
-
-                log.debug(f" Constraint: {element_name} xsd:minInclusive {min_val}")
-
-            if 'max' in range_info:
-
-                max_val = range_info['max']
-
-                self.graph.add((uri, XSD.maxInclusive, Literal(max_val)))
-
-                self.constraint_count += 1
-
-                log.debug(f" Constraint: {element_name} xsd:maxInclusive {max_val}")
-
-        if 'length' in constraints and isinstance(constraints['length'], dict):
-
-            length_info = constraints['length']
-
-            if 'minLength' in length_info:
-
-                min_len = length_info['minLength']
-
-                self.graph.add((uri, XSD.minLength, Literal(min_len)))
-
-                self.constraint_count += 1
-
-                log.debug(f" Constraint: {element_name} xsd:minLength {min_len}")
-
-            if 'maxLength' in length_info:
-
-                max_len = length_info['maxLength']
-
-                self.graph.add((uri, XSD.maxLength, Literal(max_len)))
-
-                self.constraint_count += 1
-
-                log.debug(f" Constraint: {element_name} xsd:maxLength {max_len}")
-
-        if 'patterns' in constraints and isinstance(constraints['patterns'], list):
-
-            for pattern in constraints['patterns']:
-
-                if pattern:
-
-                    self.graph.add((uri, XSD.pattern, Literal(pattern)))
-
-                    self.constraint_count += 1
-
-                    log.debug(f" Constraint: {element_name} xsd:pattern {pattern}")
-
-    def _process_identities(self) -> None:
-        """
-        ⭐ MASTER LEVEL: Process identity hierarchies for commercial reasoners.
-        Ensures transitive subclassing and maintains the punning logic.
-        """
-        if not self.identity_resolver:
-            return
-
-        for identity_name in self.identity_resolver.identity_map.keys():
-            # Use the class registry to ensure URI consistency
-            uri = self.ex[f"identity/{identity_name}"]
-            
-            # 1. Establish the Class Hierarchy
-            base_name = self.identity_resolver.get_identity_base(identity_name)
-            if base_name:
-                # Clean prefixes if they exist (e.g., 'tv:base-protocol' -> 'base-protocol')
-                clean_base = base_name.split(':')[-1]
-                base_uri = self.ex[f"identity/{clean_base}"]
-                
-                # Assert that the specific identity is a subclass of its base
-                self.graph.add((uri, RDFS.subClassOf, base_uri))
-                self.triple_count += 1
-                log.debug(f" Identity Hierarchy: {identity_name} ⊑ {clean_base}")
-
-            # 2. Add Metadata
-            desc = self.identity_resolver.get_identity_description(identity_name)
-            if desc:
-                self.graph.add((uri, RDFS.comment, Literal(desc)))
-                self.triple_count += 1
-
-    #def _create_owl_datatype_restrictions(self) -> None:
-
-    #    """Create OWL Datatype Restrictions for YANG typedefs"""
-
-    #    log.info(" Creating OWL Datatype Restrictions for typedefs...")
-
-    #    constraint_extractor = YANGConstraintExtractor()
-
-    #    for module_name, module in self.resolver.modules.items():
-
-    #        if not hasattr(module, 'substmts'):
-
-    #            continue
-
-    #        for stmt in module.substmts:
-
-    #            if not hasattr(stmt, 'keyword'):
-
-    #                continue
-
-    #            if stmt.keyword == 'typedef' and hasattr(stmt, 'arg'):
-
-    #                typedef_name = stmt.arg
-
-    #                constraints = constraint_extractor.extract_constraints(stmt)
-
-    #                if constraints:
-
-    #                    self._create_datatype_restriction(typedef_name, constraints, stmt)
-
-    #    log.info(f" Created {len(self.typedef_restrictions)} OWL Datatype Restrictions")
 
     def _create_shacl_typedef_shapes(self) -> None:
-            """
-            ⭐ UPDATED: Create SHACL Shapes for YANG typedefs.
-            Skips unions and enums to prevent semantic clashing with OWL hierarchies.
-            """
-            log.info(" Creating SHACL Shapes for typedefs...")
-            constraint_extractor = YANGConstraintExtractor()
-
-            for module_name, module in self.resolver.modules.items():
-                if not hasattr(module, 'substmts'):
-                    continue
-                for stmt in module.substmts:
-                    if not hasattr(stmt, 'keyword'):
-                        continue
-
-                    # Process typedefs
-                    if stmt.keyword == 'typedef' and hasattr(stmt, 'arg'):
-                        typedef_name = stmt.arg
-                        
-                        # 1. Skip enumerations (Handled separately as OWL Classes/Individuals)
-                        is_enum = False
-                        if hasattr(stmt, 'substmts'):
-                            for sub in stmt.substmts:
-                                if sub.keyword == 'type' and self._is_enumeration_type(sub):
-                                    is_enum = True
-                        if is_enum: continue
-
-                        # 2. ⭐ NEW: Skip Unions
-                        # This prevents SHACL from overriding the OWL subclass hierarchy with xsd:string
-                        is_union_typedef = False
-                        if hasattr(stmt, 'substmts'):
-                            for sub in stmt.substmts:
-                                if sub.keyword == 'type' and hasattr(sub, 'arg') and sub.arg == 'union':
-                                    is_union_typedef = True
-                                    break
-                        if is_union_typedef: 
-                            log.debug(f" Skipping SHACL shape for union-based typedef: {typedef_name}")
-                            continue
-
-                        # Extract constraints
-                        constraints = constraint_extractor.extract_constraints(stmt)
-                        
-                        # Create Shape URI (e.g., ex:hex-string)
-                        shape_uri = self.ex[typedef_name]
-                        
-                        # Define as NodeShape
-                        self.graph.add((shape_uri, RDF.type, SH.NodeShape))
-                        self.graph.add((shape_uri, RDFS.label, Literal(typedef_name)))
-                        
-                        # Resolve base type for sh:datatype
-                        base_type = XSD.string
-                        if hasattr(stmt, 'substmts'):
-                            for sub in stmt.substmts:
-                                if sub.keyword == 'type':
-                                    base_type = self.type_resolver.resolve_type(sub)
-                        
-                        self.graph.add((shape_uri, SH.datatype, base_type))
-
-                        # Map Constraints to SHACL
-                        if constraints:
-                            # Pattern
-                            if 'patterns' in constraints:
-                                for pattern in constraints['patterns']:
-                                    self.graph.add((shape_uri, SH.pattern, Literal(pattern)))
-                            
-                            # Length
-                            if 'length' in constraints:
-                                l = constraints['length']
-                                if 'minLength' in l: 
-                                    self.graph.add((shape_uri, SH.minLength, Literal(l['minLength'])))
-                                if 'maxLength' in l: 
-                                    self.graph.add((shape_uri, SH.maxLength, Literal(l['maxLength'])))
-                            
-                            # Range
-                            if 'range' in constraints:
-                                r = constraints['range']
-                                if 'min' in r: 
-                                    self.graph.add((shape_uri, SH.minInclusive, Literal(r['min'])))
-                                if 'max' in r: 
-                                    self.graph.add((shape_uri, SH.maxInclusive, Literal(r['max'])))
-
-                        self.typedef_restrictions[typedef_name] = shape_uri
-                        self.constraint_count += 1
-
-            log.info(f" Created SHACL shapes for {len(self.typedef_restrictions)} typedefs")
-
-    def _create_datatype_restriction(self, typedef_name: str, constraints: Dict[str, Any], stmt: Any) -> None:
-
-        """Create OWL Datatype Restriction for a typedef"""
-
-        base_type = XSD.string
-
-        if hasattr(stmt, 'substmts'):
-
-            for sub in stmt.substmts:
-
-                if hasattr(sub, 'keyword'):
-
-                    if sub.keyword == 'type':
-
-                        if self._is_enumeration_type(sub):
-
-                            log.debug(f" Skipping typedef '{typedef_name}' - is enumeration (handled separately)")
-
-                            return
-
-                        else:
-
-                            base_type = self.type_resolver.resolve_type(sub)
-
-        # Create restriction URI
-
-        restriction_uri = self.ex[f"typedef/{typedef_name}/restriction"]
-
-        # Create the restriction class
-
-        self.graph.add((restriction_uri, RDF.type, RDFS.Datatype))
-
-        self.graph.add((restriction_uri, OWL.onDatatype, base_type))
-
-        self.graph.add((restriction_uri, RDFS.label, Literal(f"{typedef_name} Restriction")))
-
-        # Get description if available
-
-        description = None
-
-        if hasattr(stmt, 'substmts'):
-
-            for sub in stmt.substmts:
-
-                if hasattr(sub, 'keyword') and sub.keyword == 'description':
-
-                    description = sub.arg if hasattr(sub, 'arg') else None
-
-                    break
-
-        if description:
-
-            self.graph.add((restriction_uri, RDFS.comment, Literal(description)))
-
-        # Add range constraints
-
-        if 'range' in constraints and isinstance(constraints['range'], dict):
-
-            range_info = constraints['range']
-
-            if 'min' in range_info:
-
-                min_restriction_uri = self.ex[f"typedef/{typedef_name}/minInclusive"]
-
-                self.graph.add((min_restriction_uri, XSD.minInclusive, Literal(range_info['min'])))
-
-                self.constraint_count += 1
-
-            if 'max' in range_info:
-
-                max_restriction_uri = self.ex[f"typedef/{typedef_name}/maxInclusive"]
-
-                self.graph.add((max_restriction_uri, XSD.maxInclusive, Literal(range_info['max'])))
-
-                self.constraint_count += 1
-
-        # Add length constraints
-
-        if 'length' in constraints and isinstance(constraints['length'], dict):
-
-            length_info = constraints['length']
-
-            if 'minLength' in length_info:
-
-                min_len_uri = self.ex[f"typedef/{typedef_name}/minLength"]
-
-                self.graph.add((min_len_uri, XSD.minLength, Literal(length_info['minLength'])))
-
-                self.constraint_count += 1
-
-            if 'maxLength' in length_info:
-
-                max_len_uri = self.ex[f"typedef/{typedef_name}/maxLength"]
-
-                self.graph.add((max_len_uri, XSD.maxLength, Literal(length_info['maxLength'])))
-
-                self.constraint_count += 1
-
-        # Add pattern constraints
-
-        if 'patterns' in constraints and isinstance(constraints['patterns'], list):
-
-            for idx, pattern in enumerate(constraints['patterns']):
-
-                if pattern:
-
-                    pattern_uri = self.ex[f"typedef/{typedef_name}/pattern_{idx}"]
-
-                    self.graph.add((pattern_uri, XSD.pattern, Literal(pattern)))
-
-                    self.constraint_count += 1
-
-        # Link typedef to restriction
-
-        typedef_uri = self.ex[f"typedef/{typedef_name}"]
-
-        self.graph.add((typedef_uri, RDF.type, OWL.Class))
-
-        self.graph.add((typedef_uri, RDFS.label, Literal(typedef_name)))
-
-        self.graph.add((typedef_uri, RDFS.subClassOf, restriction_uri))
-
-        self.typedef_restrictions[typedef_name] = restriction_uri
-
-        self.triple_count += 4
-
-        log.debug(f" Created OWL Restriction for typedef: {typedef_name}")
+        constraint_extractor = YANGConstraintExtractor()
+        for module_name, module in self.resolver.modules.items():
+            self.current_module_name = extract_module_name(module_name)
+            if not hasattr(module, 'substmts'): continue
+            for stmt in module.substmts:
+                if not hasattr(stmt, 'keyword'): continue
+                if stmt.keyword == 'typedef' and hasattr(stmt, 'arg'):
+                    typedef_name = stmt.arg
+                    is_enum = False
+                    if hasattr(stmt, 'substmts'):
+                        for sub in stmt.substmts:
+                            if sub.keyword == 'type' and self._is_enumeration_type(sub):
+                                is_enum = True
+                    if is_enum: continue
+                    
+                    is_union_typedef = False
+                    if hasattr(stmt, 'substmts'):
+                        for sub in stmt.substmts:
+                            if sub.keyword == 'type' and hasattr(sub, 'arg') and sub.arg == 'union':
+                                is_union_typedef = True
+                    if is_union_typedef: continue
+
+                    constraints = constraint_extractor.extract_constraints(stmt)
+                    shape_uri = self.ex[f"typedef/{self.current_module_name}/{typedef_name}"]
+                    self.shacl_graph.add((shape_uri, RDF.type, SH.NodeShape))
+                    self.shacl_graph.add((shape_uri, RDFS.label, Literal(typedef_name)))
+                    
+                    base_type = XSD.string
+                    if hasattr(stmt, 'substmts'):
+                        for sub in stmt.substmts:
+                            if sub.keyword == 'type':
+                                base_type = self.type_resolver.resolve_type(sub, self.current_module_name, self._get_target_module_from_prefix)
+                    
+                    # SAFE SHACL DATATYPE BINDING
+                    if "http://www.w3.org/2001/XMLSchema#" in str(base_type):
+                        self.shacl_graph.add((shape_uri, SH.datatype, base_type))
+                    elif base_type == RDFS.Literal:
+                        self.shacl_graph.add((shape_uri, SH.nodeKind, SH.Literal))
+                    else:
+                        self.shacl_graph.add((shape_uri, SH['class'], base_type))
+                        self.shacl_graph.add((shape_uri, SH.nodeKind, SH.IRI))
+
+                    if constraints:
+                        if 'patterns' in constraints:
+                            for pattern in constraints['patterns']:
+                                self.shacl_graph.add((shape_uri, SH.pattern, Literal(pattern)))
+                        if 'length' in constraints:
+                            l = constraints['length']
+                            if 'minLength' in l: self.shacl_graph.add((shape_uri, SH.minLength, Literal(l['minLength'])))
+                            if 'maxLength' in l: self.shacl_graph.add((shape_uri, SH.maxLength, Literal(l['maxLength'])))
+                        if 'range' in constraints:
+                            r = constraints['range']
+                            if 'min' in r: self.shacl_graph.add((shape_uri, SH.minInclusive, Literal(r['min'])))
+                            if 'max' in r: self.shacl_graph.add((shape_uri, SH.maxInclusive, Literal(r['max'])))
+                    self.typedef_restrictions[typedef_name] = shape_uri
 
     def _process_enumerations(self) -> None:
-
-        """Process enumeration types and create OWL individuals"""
-
-        log.info(" Processing enumeration types as OWL individuals...")
-
-        enum_types_found = 0
-
         for module_name, module in self.resolver.modules.items():
-
-            if not hasattr(module, 'substmts'):
-
-                continue
-
+            self.current_module_name = extract_module_name(module_name)
+            if not hasattr(module, 'substmts'): continue
             for stmt in module.substmts:
-
-                if not hasattr(stmt, 'keyword'):
-
-                    continue
-
+                if not hasattr(stmt, 'keyword'): continue
                 if stmt.keyword == 'typedef' and hasattr(stmt, 'arg'):
-
                     typedef_name = stmt.arg
-
                     if hasattr(stmt, 'substmts'):
-
                         for sub in stmt.substmts:
-
                             if hasattr(sub, 'keyword') and sub.keyword == 'type':
-
                                 if self._is_enumeration_type(sub):
-
-                                    enum_count = self._create_enumeration_class(typedef_name, sub)
-
-                                    enum_types_found += 1
-
-                                    log.debug(f" Created enum type '{typedef_name}' with {enum_count} values")
-
+                                    self._create_enumeration_class(typedef_name, sub, self.current_module_name)
                                 break
 
-        log.info(f" Total enumeration types processed: {enum_types_found}")
-
-        log.info(f" Created {self.enumeration_count} enumeration individuals")
-
-    def _create_enumeration_class(self, enum_type_name: str, type_stmt: Any) -> int:
-
-        """Create OWL class for enumeration type and individuals for each enum value"""
-
+    def _create_enumeration_class(self, enum_type_name: str, type_stmt: Any, module_name: str) -> int:
         enum_count = 0
-
-        # Create the enumeration type class
-
-        enum_type_uri = self.ex[f"types/{enum_type_name}"]
-
+        enum_type_uri = self.ex[f"types/{module_name}/{enum_type_name}"]
         self.graph.add((enum_type_uri, RDF.type, OWL.Class))
-
         self.graph.add((enum_type_uri, RDFS.label, Literal(enum_type_name)))
 
-        self.triple_count += 2
-
-        log.debug(f" Created enum class: {enum_type_name}")
-
-        # Extract and create individuals for each enum value
-
         if hasattr(type_stmt, 'substmts'):
-
             for enum_sub in type_stmt.substmts:
-
                 if hasattr(enum_sub, 'keyword') and enum_sub.keyword == 'enum':
-
                     enum_val = enum_sub.arg if hasattr(enum_sub, 'arg') else ''
-
                     if enum_val:
-
-                        # Create individual URI
-
-                        individual_uri = self.ex[f"types/{enum_type_name}/{enum_val}"]
-
-                        # Add individual triples
-
+                        individual_uri = self.ex[f"types/{module_name}/{enum_type_name}/{enum_val}"]
                         self.graph.add((individual_uri, RDF.type, OWL.NamedIndividual))
-
                         self.graph.add((individual_uri, RDF.type, enum_type_uri))
-
                         self.graph.add((individual_uri, RDFS.label, Literal(enum_val)))
-
-                        self.triple_count += 3
-
                         enum_count += 1
-
-                        log.debug(f" Created individual: {enum_val}")
-
-                        # Extract description if available
-
                         if hasattr(enum_sub, 'substmts'):
-
                             for enum_detail in enum_sub.substmts:
-
                                 if hasattr(enum_detail, 'keyword') and enum_detail.keyword == 'description':
-
                                     if hasattr(enum_detail, 'arg'):
-
                                         self.graph.add((individual_uri, RDFS.comment, Literal(enum_detail.arg)))
-
-                                        self.triple_count += 1
-
-                                    break
-
-        log.debug(f" Enumeration: {enum_type_name} created with {enum_count} values")
-
         self.enumeration_count += enum_count
-
         return enum_count
+
+    def _resolve_pending_leafrefs(self) -> None:
+        for item in self.pending_leafrefs:
+            if len(item) == 5:
+                uri, leafref_type, context_path, parent_uri, name = item
+                desc, full_prov, is_mand, mine, maxe, is_leaf_list = None, None, False, 0, 0, False
+            else:
+                uri, leafref_type, context_path, parent_uri, name, desc, full_prov, is_mand, mine, maxe, is_leaf_list = item
+            
+            self.graph.add((uri, RDF.type, OWL.ObjectProperty))
+            self.graph.add((uri, RDFS.label, Literal(name)))
+            
+            if desc: self.graph.add((uri, RDFS.comment, Literal(desc)))
+            if full_prov: self.graph.add((uri, PROV.wasDerivedFrom, Literal(full_prov)))
+            if parent_uri: self.graph.add((uri, RDFS.domain, parent_uri))
+            
+            resolution_result = self.leafref_resolver.resolve_leafref_target(leafref_type, context_path)
+            if resolution_result:
+                matched_path, target_class_uri, xpath_path = resolution_result
+                
+                self.graph.add((uri, self.ex.xpathPath, Literal(xpath_path)))
+                
+                if target_class_uri: 
+                    self.graph.add((uri, RDFS.range, target_class_uri))
+                    
+                    if parent_uri:
+                        min_c = max(1, mine) if (is_mand or mine > 0) else None
+                        max_c = 1 if not is_leaf_list else (maxe if maxe > 0 else None)
+                        
+                        self._add_property_shape(
+                            parent_uri,
+                            uri,
+                            value_class=target_class_uri,
+                            min_count=min_c,
+                            max_count=max_c,
+                            message=f"Leafref {name} must target an instance of {target_class_uri.split('/')[-1]}"
+                        )
+                    
+                self.leafref_resolved_count += 1
+            else:
+                self.leafref_unresolved_count += 1
 
 class YANGToHTML:
     """Generates an HTML Tree view of the parsed YANG modules."""
-    
     def __init__(self, modules: Dict[str, Any]):
         self.modules = modules
         self.css = """
@@ -2996,8 +1658,6 @@ class YANGToHTML:
             .arg { font-weight: 600; color: #2980b9; }
             .type { color: #7f8c8d; font-style: italic; font-size: 0.85em; margin-left: 10px; }
             .desc { color: #555; font-size: 0.85em; display: block; margin-left: 20px; border-left: 2px solid #eee; padding-left: 5px; margin-top: 2px; }
-            
-            /* Specific Node Colors */
             .container > .keyword { color: #16a085; }
             .list > .keyword { color: #f39c12; }
             .leaf > .keyword { color: #27ae60; }
@@ -3007,184 +1667,95 @@ class YANGToHTML:
         """
 
     def generate(self, output_filename: str):
-        """Generates the HTML file."""
         html = ["<!DOCTYPE html><html><head><title>YANG Parse Tree</title>"]
         html.append(self.css)
         html.append("</head><body><h1>YANG Parse Tree</h1>")
-
-        # Sort modules to keep output consistent
         for name in sorted(self.modules.keys()):
             module = self.modules[name]
             html.append(f"<div class='module-box'><h2>Module: {name}</h2><ul>")
             html.append(self._render_stmts(module.substmts))
             html.append("</ul></div>")
-
         html.append("</body></html>")
-        
         with open(output_filename, 'w', encoding='utf-8') as f:
             f.write("".join(html))
         log.info(f"✓ HTML Tree saved to: {output_filename}")
 
     def _render_stmts(self, substmts):
-        """Recursively renders statements into HTML."""
         output = []
         if not substmts: return ""
-
         for stmt in substmts:
             keyword = stmt.keyword
             arg = stmt.arg if hasattr(stmt, 'arg') else ""
-            
-            # Filter: Skip boring statements to keep tree clean
             if keyword in ['description', 'reference', 'organization', 'contact', 'revision']:
                 continue
-
-            # Determine CSS class based on keyword
             css_class = keyword if keyword in ['container', 'list', 'leaf', 'augment', 'grouping'] else 'other'
-            
-            # Extract Type info if present
             type_str = ""
             type_stmt = stmt.search_one('type')
             if type_stmt and hasattr(type_stmt, 'arg'):
                 type_str = f'<span class="type">({type_stmt.arg})</span>'
-
-            # Extract Description (brief)
             desc_str = ""
             desc_stmt = stmt.search_one('description')
             if desc_stmt and hasattr(desc_stmt, 'arg'):
-                # Take first line only for brevity
                 brief = desc_stmt.arg.split('\n')[0][:60]
                 desc_str = f'<span class="desc">"{brief}..."</span>'
-
-            # Build List Item
             output.append(f"<li class='{css_class}'>")
             output.append(f"<span class='keyword'>{keyword}</span>")
             output.append(f"<span class='arg'>{arg}</span>")
             output.append(type_str)
             output.append(desc_str)
-
-            # Recurse for children
             if hasattr(stmt, 'substmts') and stmt.substmts:
-                # Don't recurse for leaf nodes (they only have type/desc usually)
                 if keyword not in ['leaf', 'leaf-list', 'typedef']:
                     children_html = self._render_stmts(stmt.substmts)
                     if children_html:
                         output.append(f"<ul>{children_html}</ul>")
-            
             output.append("</li>")
-        
         return "".join(output)
-    
+
+
 def main():
-
-    """Main entry point"""
-
     parser = argparse.ArgumentParser(
-
-        description='Convert YANG modules to OWL RDF ontology with PATH NORMALIZATION',
-
+        description='Convert YANG modules to OWL RDF ontology with separated SHACL validation',
         formatter_class=argparse.RawDescriptionHelpFormatter,
-
-        epilog='''
-
-EXAMPLES:
-
-Basic usage:
-
-python3 yang2owl_v45.py simap-yang simap-ontology.ttl
-
-With options:
-
-python3 yang4owl.py --yang-dir simap-yang --output simap-ontology.ttl --verbose --html <doc name.html>
-
-Features in v4.7.2:
-
-- html docuement generation
-
-'''
-
     )
-
-    parser.add_argument('yang_dir', nargs='?', default=None,
-
-        help='Directory containing YANG files')
-
-    parser.add_argument('output_file', nargs='?', default=None,
-
-        help='Output RDF/Turtle file')
-
-    parser.add_argument('--yang-dir', dest='yang_dir_opt', default=None,
-
-        help='Directory containing YANG files (overrides positional)')
-
-    parser.add_argument('--output', dest='output_file_opt', default=None,
-
-        help='Output RDF/Turtle file (overrides positional)')
-
-    parser.add_argument('--modules', default='simap-yang.yang',
-
-        help='Main module to process (default: simap-yang.yang)')
-
-    parser.add_argument('--base-uri', default='http://example.org/ontology/',
-
-        help='Base URI for ontology')
-
-    parser.add_argument('--verbose', action='store_true',
-
-        help='Enable verbose debug logging')
-    
-    parser.add_argument('--html', dest='html_output', default=None, 
-                        help='Optional: Output path for HTML Tree visualization')
+    parser.add_argument('yang_dir', nargs='?', default=None, help='Directory containing YANG files')
+    parser.add_argument('output_file', nargs='?', default=None, help='Output RDF/Turtle file')
+    parser.add_argument('--yang-dir', dest='yang_dir_opt', default=None, help='Directory containing YANG files')
+    parser.add_argument('--output', dest='output_file_opt', default=None, help='Output RDF/Turtle file')
+    parser.add_argument('--modules', default='simap-yang.yang', help='Main module to process')
+    parser.add_argument('--base-uri', default='http://example.org/ontology/', help='Base URI for ontology')
+    parser.add_argument('--verbose', action='store_true', help='Enable verbose debug logging')
+    parser.add_argument('--html', dest='html_output', default=None, help='Optional: Output path for HTML Tree visualization')
 
     args = parser.parse_args()
-
     yang_dir = args.yang_dir_opt or args.yang_dir or 'simap-yang'
-
     output_file = args.output_file_opt or args.output_file or 'simap-ontology.ttl'
-
     output_path = Path(output_file)
 
     if output_path.is_dir():
-
         log.warning(f"Output path is a directory, creating file inside it")
-
         output_file = str(output_path / 'simap-ontology.ttl')
-
     elif str(output_path).endswith('/'):
-
         output_path.mkdir(parents=True, exist_ok=True)
-
         output_file = str(output_path / 'simap-ontology.ttl')
-
     else:
-
         output_path.parent.mkdir(parents=True, exist_ok=True)
 
     if args.verbose:
-
         logging.getLogger().setLevel(logging.DEBUG)
 
     log.info("Configuration:")
-
     log.info(f" YANG directory: {yang_dir}")
-
     log.info(f" Output file: {output_file}")
-
     log.info(f" Main module: {args.modules}")
-
     log.info(f" Base URI: {args.base_uri}")
-
     log.info("")
 
     converter = YANGToOWL(yang_dir, args.base_uri)
-
     converter.convert(args.modules, output_file)
 
     if args.html_output:
-        log.info("-" * 30)
-        log.info("Generating HTML documentation...")
         html_gen = YANGToHTML(converter.resolver.modules)
         html_gen.generate(args.html_output)
 
 if __name__ == "__main__":
-
     main()
