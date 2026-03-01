@@ -1609,7 +1609,7 @@ name can be specified by a network operator.""" ;
     rdfs:domain <http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/location> ;
     rdfs:range xsd:string .
 
-<http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/location/geo-location/ellipsoid> owl:disjointWith <http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/location/geo-location/cartesian> .
+<http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/location/geo-location/cartesian> owl:disjointWith <http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/location/geo-location/ellipsoid> .
 
 <http://www.huawei.com/ontology/ietf-ni-location/nwi:network-inventory/locations/location/geo-location/hasReferenceFrame> a owl:ObjectProperty ;
     rdfs:label "hasReferenceFrame" ;
@@ -2042,7 +2042,7 @@ expiration time.""" ;
 
 <http://www.huawei.com/ontology/ietf-nwi-passive-inventory/nwi:network-inventory/cable/a-end/passive> owl:disjointWith <http://www.huawei.com/ontology/ietf-nwi-passive-inventory/nwi:network-inventory/cable/a-end/active> .
 
-<http://www.huawei.com/ontology/ietf-nwi-passive-inventory/nwi:network-inventory/cable/child-cable/a-end/active> owl:disjointWith <http://www.huawei.com/ontology/ietf-nwi-passive-inventory/nwi:network-inventory/cable/child-cable/a-end/passive> .
+<http://www.huawei.com/ontology/ietf-nwi-passive-inventory/nwi:network-inventory/cable/child-cable/a-end/passive> owl:disjointWith <http://www.huawei.com/ontology/ietf-nwi-passive-inventory/nwi:network-inventory/cable/child-cable/a-end/active> .
 
 <http://www.huawei.com/ontology/ietf-nwi-passive-inventory/nwi:network-inventory/cable/child-cable/index> a owl:DatatypeProperty ;
     rdfs:label "index" ;
@@ -2052,7 +2052,7 @@ order of the child cables.""" ;
     rdfs:range xsd:unsignedByte ;
     prov:wasDerivedFrom "nwi-passive:cable?list/nwi-passive:child-cable?list/nwi-passive:index?leaf" .
 
-<http://www.huawei.com/ontology/ietf-nwi-passive-inventory/nwi:network-inventory/cable/child-cable/z-end/passive> owl:disjointWith <http://www.huawei.com/ontology/ietf-nwi-passive-inventory/nwi:network-inventory/cable/child-cable/z-end/active> .
+<http://www.huawei.com/ontology/ietf-nwi-passive-inventory/nwi:network-inventory/cable/child-cable/z-end/active> owl:disjointWith <http://www.huawei.com/ontology/ietf-nwi-passive-inventory/nwi:network-inventory/cable/child-cable/z-end/passive> .
 
 <http://www.huawei.com/ontology/ietf-nwi-passive-inventory/nwi:network-inventory/cable/optical-cable/attenuation> a owl:DatatypeProperty ;
     rdfs:label "attenuation" ;
