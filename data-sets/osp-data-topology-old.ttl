@@ -10,7 +10,6 @@
 @prefix fiber: <http://www.huawei.com/ontology/identity/ietf-nwi-passive-inventory/fiber-type/> .
 @prefix pass-id: <http://www.huawei.com/ontology/identity/ietf-nwi-passive-inventory/> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 inv-loc:location_1 rdf:type loc: .
@@ -23978,7 +23977,6 @@ inv-dev:ATB_23 pdev:location-ref inv-loc:location_2644 .
 inv-dev:enclosure_1 rdf:type pdev: .
 inv-dev:enclosure_1 pdev:device-type pass-id:FAT .
 inv-dev:enclosure_1 pdev:id "enclosure_1" .
-inv-dev:enclosure_1 rdfs:comment "SMP_8PORT" .
 inv-dev:ATB_24 rdf:type pdev: .
 inv-dev:ATB_24 pdev:device-type pass-id:ATB .
 inv-dev:ATB_24 pdev:id "ATB_24" .
@@ -24066,7 +24064,6 @@ inv-dev:ATB_44 pdev:location-ref inv-loc:location_2994 .
 inv-dev:enclosure_2 rdf:type pdev: .
 inv-dev:enclosure_2 pdev:device-type pass-id:FAT .
 inv-dev:enclosure_2 pdev:id "enclosure_2" .
-inv-dev:enclosure_2 rdfs:comment "SMP_8PORT" .
 inv-dev:ATB_45 rdf:type pdev: .
 inv-dev:ATB_45 pdev:device-type pass-id:ATB .
 inv-dev:ATB_45 pdev:id "ATB_45" .
@@ -24263,7 +24260,6 @@ inv-dev:ATB_90 pdev:location-ref inv-loc:location_3800 .
 inv-dev:enclosure_5 rdf:type pdev: .
 inv-dev:enclosure_5 pdev:device-type pass-id:FDT .
 inv-dev:enclosure_5 pdev:id "enclosure_5" .
-inv-dev:enclosure_5 rdfs:comment "TYCO_OFDC_A4" .
 inv-dev:ATB_91 rdf:type pdev: .
 inv-dev:ATB_91 pdev:device-type pass-id:ATB .
 inv-dev:ATB_91 pdev:id "ATB_91" .
@@ -24347,7 +24343,6 @@ inv-dev:ATB_110 pdev:location-ref inv-loc:location_1421 .
 inv-dev:enclosure_6 rdf:type pdev: .
 inv-dev:enclosure_6 pdev:device-type pass-id:FAT .
 inv-dev:enclosure_6 pdev:id "enclosure_6" .
-inv-dev:enclosure_6 rdfs:comment "TYCO_SMP_8PORT" .
 inv-dev:ATB_111 rdf:type pdev: .
 inv-dev:ATB_111 pdev:device-type pass-id:ATB .
 inv-dev:ATB_111 pdev:id "ATB_111" .
@@ -24439,7 +24434,6 @@ inv-dev:ATB_132 pdev:location-ref inv-loc:location_2559 .
 inv-dev:enclosure_7 rdf:type pdev: .
 inv-dev:enclosure_7 pdev:device-type pass-id:FAT .
 inv-dev:enclosure_7 pdev:id "enclosure_7" .
-inv-dev:enclosure_7 rdfs:comment "SMP_8PORT" .
 inv-dev:ATB_133 rdf:type pdev: .
 inv-dev:ATB_133 pdev:device-type pass-id:ATB .
 inv-dev:ATB_133 pdev:id "ATB_133" .
@@ -24574,7 +24568,6 @@ inv-dev:ATB_164 pdev:location-ref inv-loc:location_2783 .
 inv-dev:enclosure_9 rdf:type pdev: .
 inv-dev:enclosure_9 pdev:device-type pass-id:FDT .
 inv-dev:enclosure_9 pdev:id "enclosure_9" .
-inv-dev:enclosure_9 rdfs:comment "TYCO_OFDC_A4" .
 inv-dev:ATB_165 rdf:type pdev: .
 inv-dev:ATB_165 pdev:device-type pass-id:ATB .
 inv-dev:ATB_165 pdev:id "ATB_165" .
@@ -24757,7 +24750,6 @@ inv-dev:ATB_208 pdev:location-ref inv-loc:location_86 .
 inv-dev:enclosure_11 rdf:type pdev: .
 inv-dev:enclosure_11 pdev:device-type pass-id:FAT .
 inv-dev:enclosure_11 pdev:id "enclosure_11" .
-inv-dev:enclosure_11 rdfs:comment "SMP_8PORT" .
 inv-dev:ATB_209 rdf:type pdev: .
 inv-dev:ATB_209 pdev:device-type pass-id:ATB .
 inv-dev:ATB_209 pdev:id "ATB_209" .
@@ -24836,7 +24828,6 @@ inv-dev:ATB_226 pdev:location-ref inv-loc:location_1099 .
 inv-dev:enclosure_13 rdf:type pdev: .
 inv-dev:enclosure_13 pdev:device-type pass-id:FAT .
 inv-dev:enclosure_13 pdev:id "enclosure_13" .
-inv-dev:enclosure_13 rdfs:comment "SMP_8PORT" .
 inv-dev:ATB_227 rdf:type pdev: .
 inv-dev:ATB_227 pdev:device-type pass-id:ATB .
 inv-dev:ATB_227 pdev:id "ATB_227" .
@@ -24979,7 +24970,6 @@ inv-dev:enclosure_14 pdev:id "enclosure_14" .
 inv-dev:enclosure_15 rdf:type pdev: .
 inv-dev:enclosure_15 pdev:device-type pass-id:FDT .
 inv-dev:enclosure_15 pdev:id "enclosure_15" .
-inv-dev:enclosure_15 rdfs:comment "TYCO_SMP_8PORT" .
 inv-dev:ATB_261 rdf:type pdev: .
 inv-dev:ATB_261 pdev:device-type pass-id:ATB .
 inv-dev:ATB_261 pdev:id "ATB_261" .
@@ -25023,7 +25013,6 @@ inv-dev:ATB_270 pdev:location-ref inv-loc:location_3187 .
 inv-dev:enclosure_16 rdf:type pdev: .
 inv-dev:enclosure_16 pdev:device-type pass-id:FDT .
 inv-dev:enclosure_16 pdev:id "enclosure_16" .
-inv-dev:enclosure_16 rdfs:comment "TYCO_SMP_8PORT" .
 inv-dev:ATB_271 rdf:type pdev: .
 inv-dev:ATB_271 pdev:device-type pass-id:ATB .
 inv-dev:ATB_271 pdev:id "ATB_271" .
@@ -25312,7 +25301,6 @@ inv-dev:ATB_340 pdev:location-ref inv-loc:location_3743 .
 inv-dev:enclosure_18 rdf:type pdev: .
 inv-dev:enclosure_18 pdev:device-type pass-id:FAT .
 inv-dev:enclosure_18 pdev:id "enclosure_18" .
-inv-dev:enclosure_18 rdfs:comment "SMP_8PORT" .
 inv-dev:ATB_341 rdf:type pdev: .
 inv-dev:ATB_341 pdev:device-type pass-id:ATB .
 inv-dev:ATB_341 pdev:id "ATB_341" .
@@ -25851,7 +25839,6 @@ inv-dev:enclosure_23 pdev:id "enclosure_23" .
 inv-dev:enclosure_24 rdf:type pdev: .
 inv-dev:enclosure_24 pdev:device-type pass-id:FAT .
 inv-dev:enclosure_24 pdev:id "enclosure_24" .
-inv-dev:enclosure_24 rdfs:comment "SMP_8PORT" .
 inv-dev:ATB_470 rdf:type pdev: .
 inv-dev:ATB_470 pdev:device-type pass-id:ATB .
 inv-dev:ATB_470 pdev:id "ATB_470" .
@@ -26240,7 +26227,6 @@ inv-dev:ATB_562 pdev:location-ref inv-loc:location_3119 .
 inv-dev:enclosure_28 rdf:type pdev: .
 inv-dev:enclosure_28 pdev:device-type pass-id:FAT .
 inv-dev:enclosure_28 pdev:id "enclosure_28" .
-inv-dev:enclosure_28 rdfs:comment "SMP_8PORT" .
 inv-dev:ATB_563 rdf:type pdev: .
 inv-dev:ATB_563 pdev:device-type pass-id:ATB .
 inv-dev:ATB_563 pdev:id "ATB_563" .
@@ -26562,7 +26548,6 @@ inv-dev:ATB_641 pdev:location-ref inv-loc:location_3967 .
 inv-dev:enclosure_29 rdf:type pdev: .
 inv-dev:enclosure_29 pdev:device-type pass-id:FAT .
 inv-dev:enclosure_29 pdev:id "enclosure_29" .
-inv-dev:enclosure_29 rdfs:comment "SMP_8PORT" .
 inv-dev:ATB_642 rdf:type pdev: .
 inv-dev:ATB_642 pdev:device-type pass-id:ATB .
 inv-dev:ATB_642 pdev:id "ATB_642" .
@@ -26670,7 +26655,6 @@ inv-dev:ATB_667 pdev:location-ref inv-loc:location_3636 .
 inv-dev:enclosure_30 rdf:type pdev: .
 inv-dev:enclosure_30 pdev:device-type pass-id:FDT .
 inv-dev:enclosure_30 pdev:id "enclosure_30" .
-inv-dev:enclosure_30 rdfs:comment "TYCO_OFDC_A4" .
 inv-dev:ATB_668 rdf:type pdev: .
 inv-dev:ATB_668 pdev:device-type pass-id:ATB .
 inv-dev:ATB_668 pdev:id "ATB_668" .
@@ -27318,7 +27302,6 @@ inv-dev:ATB_822 pdev:location-ref inv-loc:location_2083 .
 inv-dev:enclosure_37 rdf:type pdev: .
 inv-dev:enclosure_37 pdev:device-type pass-id:FAT .
 inv-dev:enclosure_37 pdev:id "enclosure_37" .
-inv-dev:enclosure_37 rdfs:comment "SMP_8PORT" .
 inv-dev:ATB_823 rdf:type pdev: .
 inv-dev:ATB_823 pdev:device-type pass-id:ATB .
 inv-dev:ATB_823 pdev:id "ATB_823" .
@@ -28075,7 +28058,6 @@ inv-dev:ATB_1005 pdev:location-ref inv-loc:location_2318 .
 inv-dev:enclosure_45 rdf:type pdev: .
 inv-dev:enclosure_45 pdev:device-type pass-id:FAT .
 inv-dev:enclosure_45 pdev:id "enclosure_45" .
-inv-dev:enclosure_45 rdfs:comment "SMP_8PORT" .
 inv-dev:ATB_1006 rdf:type pdev: .
 inv-dev:ATB_1006 pdev:device-type pass-id:ATB .
 inv-dev:ATB_1006 pdev:id "ATB_1006" .
@@ -28755,7 +28737,6 @@ inv-dev:ATB_1172 pdev:location-ref inv-loc:location_3819 .
 inv-dev:enclosure_48 rdf:type pdev: .
 inv-dev:enclosure_48 pdev:device-type pass-id:FDT .
 inv-dev:enclosure_48 pdev:id "enclosure_48" .
-inv-dev:enclosure_48 rdfs:comment "TYCO_OFDC_A4" .
 inv-dev:ATB_1173 rdf:type pdev: .
 inv-dev:ATB_1173 pdev:device-type pass-id:ATB .
 inv-dev:ATB_1173 pdev:id "ATB_1173" .
@@ -28887,7 +28868,6 @@ inv-dev:ATB_1204 pdev:location-ref inv-loc:location_2379 .
 inv-dev:enclosure_49 rdf:type pdev: .
 inv-dev:enclosure_49 pdev:device-type pass-id:FDT .
 inv-dev:enclosure_49 pdev:id "enclosure_49" .
-inv-dev:enclosure_49 rdfs:comment "TYCO_SMP_8PORT" .
 inv-dev:ATB_1205 rdf:type pdev: .
 inv-dev:ATB_1205 pdev:device-type pass-id:ATB .
 inv-dev:ATB_1205 pdev:id "ATB_1205" .
@@ -28955,7 +28935,6 @@ inv-dev:ATB_1220 pdev:location-ref inv-loc:location_732 .
 inv-dev:enclosure_50 rdf:type pdev: .
 inv-dev:enclosure_50 pdev:device-type pass-id:FAT .
 inv-dev:enclosure_50 pdev:id "enclosure_50" .
-inv-dev:enclosure_50 rdfs:comment "SMP_8PORT" .
 inv-dev:ATB_1221 rdf:type pdev: .
 inv-dev:ATB_1221 pdev:device-type pass-id:ATB .
 inv-dev:ATB_1221 pdev:id "ATB_1221" .
@@ -29467,7 +29446,6 @@ inv-dev:ATB_1345 pdev:location-ref inv-loc:location_981 .
 inv-dev:enclosure_53 rdf:type pdev: .
 inv-dev:enclosure_53 pdev:device-type pass-id:FAT .
 inv-dev:enclosure_53 pdev:id "enclosure_53" .
-inv-dev:enclosure_53 rdfs:comment "SMP_8PORT" .
 inv-dev:ATB_1346 rdf:type pdev: .
 inv-dev:ATB_1346 pdev:device-type pass-id:ATB .
 inv-dev:ATB_1346 pdev:id "ATB_1346" .
@@ -29507,7 +29485,6 @@ inv-dev:ATB_1354 pdev:location-ref inv-loc:location_1446 .
 inv-dev:enclosure_54 rdf:type pdev: .
 inv-dev:enclosure_54 pdev:device-type pass-id:FDT .
 inv-dev:enclosure_54 pdev:id "enclosure_54" .
-inv-dev:enclosure_54 rdfs:comment "TYCO_OFDC_A4" .
 inv-dev:enclosure_55 rdf:type pdev: .
 inv-dev:enclosure_55 pdev:device-type pass-id:FDT .
 inv-dev:enclosure_55 pdev:id "enclosure_55" .
@@ -29588,7 +29565,6 @@ inv-dev:ATB_1372 pdev:location-ref inv-loc:location_2003 .
 inv-dev:enclosure_56 rdf:type pdev: .
 inv-dev:enclosure_56 pdev:device-type pass-id:FAT .
 inv-dev:enclosure_56 pdev:id "enclosure_56" .
-inv-dev:enclosure_56 rdfs:comment "SMP_8PORT" .
 inv-dev:ATB_1373 rdf:type pdev: .
 inv-dev:ATB_1373 pdev:device-type pass-id:ATB .
 inv-dev:ATB_1373 pdev:id "ATB_1373" .
@@ -29620,7 +29596,6 @@ inv-dev:ATB_1379 pdev:location-ref inv-loc:location_3695 .
 inv-dev:enclosure_57 rdf:type pdev: .
 inv-dev:enclosure_57 pdev:device-type pass-id:FAT .
 inv-dev:enclosure_57 pdev:id "enclosure_57" .
-inv-dev:enclosure_57 rdfs:comment "SMP_8PORT" .
 inv-dev:ATB_1380 rdf:type pdev: .
 inv-dev:ATB_1380 pdev:device-type pass-id:ATB .
 inv-dev:ATB_1380 pdev:id "ATB_1380" .
@@ -30018,7 +29993,6 @@ inv-dev:ATB_1476 pdev:location-ref inv-loc:location_2088 .
 inv-dev:enclosure_60 rdf:type pdev: .
 inv-dev:enclosure_60 pdev:device-type pass-id:FAT .
 inv-dev:enclosure_60 pdev:id "enclosure_60" .
-inv-dev:enclosure_60 rdfs:comment "SMP_8PORT" .
 inv-dev:ATB_1477 rdf:type pdev: .
 inv-dev:ATB_1477 pdev:device-type pass-id:ATB .
 inv-dev:ATB_1477 pdev:id "ATB_1477" .
@@ -30113,7 +30087,6 @@ inv-dev:ATB_1497 pdev:location-ref inv-loc:location_641 .
 inv-dev:enclosure_62 rdf:type pdev: .
 inv-dev:enclosure_62 pdev:device-type pass-id:FDT .
 inv-dev:enclosure_62 pdev:id "enclosure_62" .
-inv-dev:enclosure_62 rdfs:comment "TYCO_OFDC_A4" .
 inv-dev:ATB_1498 rdf:type pdev: .
 inv-dev:ATB_1498 pdev:device-type pass-id:ATB .
 inv-dev:ATB_1498 pdev:id "ATB_1498" .
@@ -30327,7 +30300,6 @@ inv-dev:ATB_1548 pdev:location-ref inv-loc:location_1415 .
 inv-dev:enclosure_64 rdf:type pdev: .
 inv-dev:enclosure_64 pdev:device-type pass-id:FAT .
 inv-dev:enclosure_64 pdev:id "enclosure_64" .
-inv-dev:enclosure_64 rdfs:comment "SMP_8PORT" .
 inv-dev:ATB_1549 rdf:type pdev: .
 inv-dev:ATB_1549 pdev:device-type pass-id:ATB .
 inv-dev:ATB_1549 pdev:id "ATB_1549" .
@@ -30426,7 +30398,6 @@ inv-dev:ATB_1571 pdev:location-ref inv-loc:location_3317 .
 inv-dev:enclosure_66 rdf:type pdev: .
 inv-dev:enclosure_66 pdev:device-type pass-id:FAT .
 inv-dev:enclosure_66 pdev:id "enclosure_66" .
-inv-dev:enclosure_66 rdfs:comment "SMP_8PORT" .
 inv-dev:ATB_1572 rdf:type pdev: .
 inv-dev:ATB_1572 pdev:device-type pass-id:ATB .
 inv-dev:ATB_1572 pdev:id "ATB_1572" .
@@ -30625,7 +30596,6 @@ inv-dev:ATB_1619 pdev:location-ref inv-loc:location_1008 .
 inv-dev:enclosure_68 rdf:type pdev: .
 inv-dev:enclosure_68 pdev:device-type pass-id:FDT .
 inv-dev:enclosure_68 pdev:id "enclosure_68" .
-inv-dev:enclosure_68 rdfs:comment "TYCO_TENIO_B6" .
 inv-dev:ATB_1620 rdf:type pdev: .
 inv-dev:ATB_1620 pdev:device-type pass-id:ATB .
 inv-dev:ATB_1620 pdev:id "ATB_1620" .
@@ -31042,7 +31012,6 @@ inv-dev:ATB_1719 pdev:location-ref inv-loc:location_2728 .
 inv-dev:enclosure_72 rdf:type pdev: .
 inv-dev:enclosure_72 pdev:device-type pass-id:FAT .
 inv-dev:enclosure_72 pdev:id "enclosure_72" .
-inv-dev:enclosure_72 rdfs:comment "SMP_8PORT" .
 inv-dev:ATB_1720 rdf:type pdev: .
 inv-dev:ATB_1720 pdev:device-type pass-id:ATB .
 inv-dev:ATB_1720 pdev:id "ATB_1720" .
@@ -31122,7 +31091,6 @@ inv-dev:ATB_1738 pdev:location-ref inv-loc:location_1620 .
 inv-dev:enclosure_73 rdf:type pdev: .
 inv-dev:enclosure_73 pdev:device-type pass-id:FAT .
 inv-dev:enclosure_73 pdev:id "enclosure_73" .
-inv-dev:enclosure_73 rdfs:comment "SMP_8PORT" .
 inv-dev:ATB_1739 rdf:type pdev: .
 inv-dev:ATB_1739 pdev:device-type pass-id:ATB .
 inv-dev:ATB_1739 pdev:id "ATB_1739" .
@@ -31200,7 +31168,6 @@ inv-dev:ATB_1756 pdev:location-ref inv-loc:location_2467 .
 inv-dev:enclosure_74 rdf:type pdev: .
 inv-dev:enclosure_74 pdev:device-type pass-id:FAT .
 inv-dev:enclosure_74 pdev:id "enclosure_74" .
-inv-dev:enclosure_74 rdfs:comment "TYCO_SMP_8PORT" .
 inv-dev:ATB_1757 rdf:type pdev: .
 inv-dev:ATB_1757 pdev:device-type pass-id:ATB .
 inv-dev:ATB_1757 pdev:id "ATB_1757" .
@@ -31377,7 +31344,6 @@ inv-dev:ATB_1798 pdev:location-ref inv-loc:location_2245 .
 inv-dev:enclosure_76 rdf:type pdev: .
 inv-dev:enclosure_76 pdev:device-type pass-id:FDT .
 inv-dev:enclosure_76 pdev:id "enclosure_76" .
-inv-dev:enclosure_76 rdfs:comment "TYCO_OFDC_A4" .
 inv-dev:ATB_1799 rdf:type pdev: .
 inv-dev:ATB_1799 pdev:device-type pass-id:ATB .
 inv-dev:ATB_1799 pdev:id "ATB_1799" .
@@ -31556,7 +31522,6 @@ inv-dev:ATB_1841 pdev:location-ref inv-loc:location_3189 .
 inv-dev:enclosure_78 rdf:type pdev: .
 inv-dev:enclosure_78 pdev:device-type pass-id:FAT .
 inv-dev:enclosure_78 pdev:id "enclosure_78" .
-inv-dev:enclosure_78 rdfs:comment "SMP_8PORT" .
 inv-dev:ATB_1842 rdf:type pdev: .
 inv-dev:ATB_1842 pdev:device-type pass-id:ATB .
 inv-dev:ATB_1842 pdev:id "ATB_1842" .
@@ -31602,7 +31567,6 @@ inv-dev:ATB_1851 pdev:location-ref inv-loc:location_101 .
 inv-dev:enclosure_79 rdf:type pdev: .
 inv-dev:enclosure_79 pdev:device-type pass-id:FAT .
 inv-dev:enclosure_79 pdev:id "enclosure_79" .
-inv-dev:enclosure_79 rdfs:comment "SMP_8PORT" .
 inv-dev:ATB_1852 rdf:type pdev: .
 inv-dev:ATB_1852 pdev:device-type pass-id:ATB .
 inv-dev:ATB_1852 pdev:id "ATB_1852" .
@@ -31818,7 +31782,6 @@ inv-dev:ATB_1904 pdev:location-ref inv-loc:location_3424 .
 inv-dev:enclosure_80 rdf:type pdev: .
 inv-dev:enclosure_80 pdev:device-type pass-id:FAT .
 inv-dev:enclosure_80 pdev:id "enclosure_80" .
-inv-dev:enclosure_80 rdfs:comment "SMP_8PORT" .
 inv-dev:ATB_1905 rdf:type pdev: .
 inv-dev:ATB_1905 pdev:device-type pass-id:ATB .
 inv-dev:ATB_1905 pdev:id "ATB_1905" .
@@ -31874,7 +31837,6 @@ inv-dev:ATB_1917 pdev:location-ref inv-loc:location_523 .
 inv-dev:enclosure_81 rdf:type pdev: .
 inv-dev:enclosure_81 pdev:device-type pass-id:FAT .
 inv-dev:enclosure_81 pdev:id "enclosure_81" .
-inv-dev:enclosure_81 rdfs:comment "SMP_8PORT" .
 inv-dev:ATB_1918 rdf:type pdev: .
 inv-dev:ATB_1918 pdev:device-type pass-id:ATB .
 inv-dev:ATB_1918 pdev:id "ATB_1918" .
@@ -32062,7 +32024,6 @@ inv-dev:ATB_1961 pdev:location-ref inv-loc:location_2315 .
 inv-dev:enclosure_84 rdf:type pdev: .
 inv-dev:enclosure_84 pdev:device-type pass-id:FDT .
 inv-dev:enclosure_84 pdev:id "enclosure_84" .
-inv-dev:enclosure_84 rdfs:comment "TYCO_OFDC_A4" .
 inv-dev:ATB_1962 rdf:type pdev: .
 inv-dev:ATB_1962 pdev:device-type pass-id:ATB .
 inv-dev:ATB_1962 pdev:id "ATB_1962" .
@@ -32235,7 +32196,6 @@ inv-dev:ATB_2002 pdev:location-ref inv-loc:location_2127 .
 inv-dev:enclosure_86 rdf:type pdev: .
 inv-dev:enclosure_86 pdev:device-type pass-id:FDT .
 inv-dev:enclosure_86 pdev:id "enclosure_86" .
-inv-dev:enclosure_86 rdfs:comment "TYCO_OFDC_A4" .
 inv-dev:ATB_2003 rdf:type pdev: .
 inv-dev:ATB_2003 pdev:device-type pass-id:ATB .
 inv-dev:ATB_2003 pdev:id "ATB_2003" .
@@ -32778,11 +32738,9 @@ inv-dev:ATB_2135 pdev:location-ref inv-loc:location_1653 .
 inv-dev:enclosure_88 rdf:type pdev: .
 inv-dev:enclosure_88 pdev:device-type pass-id:FAT .
 inv-dev:enclosure_88 pdev:id "enclosure_88" .
-inv-dev:enclosure_88 rdfs:comment "SMP_8PORT" .
 inv-dev:enclosure_89 rdf:type pdev: .
 inv-dev:enclosure_89 pdev:device-type pass-id:FDT .
 inv-dev:enclosure_89 pdev:id "enclosure_89" .
-inv-dev:enclosure_89 rdfs:comment "TYCO_OFDC_A4" .
 inv-dev:ATB_2136 rdf:type pdev: .
 inv-dev:ATB_2136 pdev:device-type pass-id:ATB .
 inv-dev:ATB_2136 pdev:id "ATB_2136" .
@@ -32988,7 +32946,6 @@ inv-dev:ATB_2184 pdev:location-ref inv-loc:location_2232 .
 inv-dev:enclosure_92 rdf:type pdev: .
 inv-dev:enclosure_92 pdev:device-type pass-id:FAT .
 inv-dev:enclosure_92 pdev:id "enclosure_92" .
-inv-dev:enclosure_92 rdfs:comment "SMP_8PORT" .
 inv-dev:ATB_2185 rdf:type pdev: .
 inv-dev:ATB_2185 pdev:device-type pass-id:ATB .
 inv-dev:ATB_2185 pdev:id "ATB_2185" .
@@ -33080,7 +33037,6 @@ inv-dev:ATB_2206 pdev:location-ref inv-loc:location_998 .
 inv-dev:enclosure_93 rdf:type pdev: .
 inv-dev:enclosure_93 pdev:device-type pass-id:FAT .
 inv-dev:enclosure_93 pdev:id "enclosure_93" .
-inv-dev:enclosure_93 rdfs:comment "TYCO_SMP_4PORT" .
 inv-dev:ATB_2207 rdf:type pdev: .
 inv-dev:ATB_2207 pdev:device-type pass-id:ATB .
 inv-dev:ATB_2207 pdev:id "ATB_2207" .
@@ -33266,7 +33222,6 @@ inv-dev:ATB_2250 pdev:location-ref inv-loc:location_2082 .
 inv-dev:enclosure_96 rdf:type pdev: .
 inv-dev:enclosure_96 pdev:device-type pass-id:FAT .
 inv-dev:enclosure_96 pdev:id "enclosure_96" .
-inv-dev:enclosure_96 rdfs:comment "SMP_8PORT" .
 inv-dev:ATB_2251 rdf:type pdev: .
 inv-dev:ATB_2251 pdev:device-type pass-id:ATB .
 inv-dev:ATB_2251 pdev:id "ATB_2251" .
@@ -33702,7 +33657,6 @@ inv-dev:ATB_2354 pdev:location-ref inv-loc:location_312 .
 inv-dev:enclosure_101 rdf:type pdev: .
 inv-dev:enclosure_101 pdev:device-type pass-id:FAT .
 inv-dev:enclosure_101 pdev:id "enclosure_101" .
-inv-dev:enclosure_101 rdfs:comment "SMP_8PORT" .
 inv-dev:ATB_2355 rdf:type pdev: .
 inv-dev:ATB_2355 pdev:device-type pass-id:ATB .
 inv-dev:ATB_2355 pdev:id "ATB_2355" .
@@ -34566,7 +34520,6 @@ inv-dev:ATB_2566 pdev:location-ref inv-loc:location_1927 .
 inv-dev:enclosure_106 rdf:type pdev: .
 inv-dev:enclosure_106 pdev:device-type pass-id:FDT .
 inv-dev:enclosure_106 pdev:id "enclosure_106" .
-inv-dev:enclosure_106 rdfs:comment "TYCO_OFDC_A4" .
 inv-dev:ATB_2567 rdf:type pdev: .
 inv-dev:ATB_2567 pdev:device-type pass-id:ATB .
 inv-dev:ATB_2567 pdev:id "ATB_2567" .
@@ -34590,7 +34543,6 @@ inv-dev:ATB_2571 pdev:location-ref inv-loc:location_3663 .
 inv-dev:enclosure_107 rdf:type pdev: .
 inv-dev:enclosure_107 pdev:device-type pass-id:FDT .
 inv-dev:enclosure_107 pdev:id "enclosure_107" .
-inv-dev:enclosure_107 rdfs:comment "TYCO_TENIO_B6" .
 inv-dev:ATB_2572 rdf:type pdev: .
 inv-dev:ATB_2572 pdev:device-type pass-id:ATB .
 inv-dev:ATB_2572 pdev:id "ATB_2572" .
@@ -34844,7 +34796,6 @@ inv-dev:ATB_2633 pdev:location-ref inv-loc:location_56 .
 inv-dev:enclosure_108 rdf:type pdev: .
 inv-dev:enclosure_108 pdev:device-type pass-id:FDT .
 inv-dev:enclosure_108 pdev:id "enclosure_108" .
-inv-dev:enclosure_108 rdfs:comment "TYCO_SMP_8PORT" .
 inv-dev:ATB_2634 rdf:type pdev: .
 inv-dev:ATB_2634 pdev:device-type pass-id:ATB .
 inv-dev:ATB_2634 pdev:id "ATB_2634" .
@@ -35632,7 +35583,6 @@ inv-dev:ATB_2827 pdev:location-ref inv-loc:location_3665 .
 inv-dev:enclosure_111 rdf:type pdev: .
 inv-dev:enclosure_111 pdev:device-type pass-id:FAT .
 inv-dev:enclosure_111 pdev:id "enclosure_111" .
-inv-dev:enclosure_111 rdfs:comment "TYCO_SMP_8PORT" .
 inv-dev:ATB_2828 rdf:type pdev: .
 inv-dev:ATB_2828 pdev:device-type pass-id:ATB .
 inv-dev:ATB_2828 pdev:id "ATB_2828" .
@@ -35971,7 +35921,6 @@ inv-dev:ATB_2907 pdev:location-ref inv-loc:location_3480 .
 inv-dev:enclosure_115 rdf:type pdev: .
 inv-dev:enclosure_115 pdev:device-type pass-id:FAT .
 inv-dev:enclosure_115 pdev:id "enclosure_115" .
-inv-dev:enclosure_115 rdfs:comment "SMP_8PORT" .
 inv-dev:ATB_2908 rdf:type pdev: .
 inv-dev:ATB_2908 pdev:device-type pass-id:ATB .
 inv-dev:ATB_2908 pdev:id "ATB_2908" .
@@ -36229,7 +36178,6 @@ inv-dev:enclosure_117 pdev:id "enclosure_117" .
 inv-dev:enclosure_118 rdf:type pdev: .
 inv-dev:enclosure_118 pdev:device-type pass-id:FAT .
 inv-dev:enclosure_118 pdev:id "enclosure_118" .
-inv-dev:enclosure_118 rdfs:comment "SMP_8PORT" .
 inv-dev:ATB_2970 rdf:type pdev: .
 inv-dev:ATB_2970 pdev:device-type pass-id:ATB .
 inv-dev:ATB_2970 pdev:id "ATB_2970" .
@@ -36261,7 +36209,6 @@ inv-dev:ATB_2976 pdev:location-ref inv-loc:location_1976 .
 inv-dev:enclosure_119 rdf:type pdev: .
 inv-dev:enclosure_119 pdev:device-type pass-id:FDT .
 inv-dev:enclosure_119 pdev:id "enclosure_119" .
-inv-dev:enclosure_119 rdfs:comment "TYCO_TENIO_B6" .
 inv-dev:ATB_2977 rdf:type pdev: .
 inv-dev:ATB_2977 pdev:device-type pass-id:ATB .
 inv-dev:ATB_2977 pdev:id "ATB_2977" .
@@ -36357,7 +36304,6 @@ inv-dev:ATB_2998 pdev:location-ref inv-loc:location_2065 .
 inv-dev:enclosure_120 rdf:type pdev: .
 inv-dev:enclosure_120 pdev:device-type pass-id:FAT .
 inv-dev:enclosure_120 pdev:id "enclosure_120" .
-inv-dev:enclosure_120 rdfs:comment "SMP_8PORT" .
 inv-dev:ATB_2999 rdf:type pdev: .
 inv-dev:ATB_2999 pdev:device-type pass-id:ATB .
 inv-dev:ATB_2999 pdev:id "ATB_2999" .
@@ -36655,7 +36601,6 @@ inv-dev:ATB_3068 pdev:location-ref inv-loc:location_2282 .
 inv-dev:enclosure_125 rdf:type pdev: .
 inv-dev:enclosure_125 pdev:device-type pass-id:FAT .
 inv-dev:enclosure_125 pdev:id "enclosure_125" .
-inv-dev:enclosure_125 rdfs:comment "SMP_8PORT" .
 inv-dev:enclosure_126 rdf:type pdev: .
 inv-dev:enclosure_126 pdev:device-type pass-id:FDT .
 inv-dev:enclosure_126 pdev:id "enclosure_126" .
@@ -36897,7 +36842,6 @@ inv-dev:ATB_3126 pdev:location-ref inv-loc:location_1667 .
 inv-dev:enclosure_128 rdf:type pdev: .
 inv-dev:enclosure_128 pdev:device-type pass-id:FAT .
 inv-dev:enclosure_128 pdev:id "enclosure_128" .
-inv-dev:enclosure_128 rdfs:comment "SMP_8PORT" .
 inv-dev:ATB_3127 rdf:type pdev: .
 inv-dev:ATB_3127 pdev:device-type pass-id:ATB .
 inv-dev:ATB_3127 pdev:id "ATB_3127" .
@@ -36941,7 +36885,6 @@ inv-dev:ATB_3136 pdev:location-ref inv-loc:location_706 .
 inv-dev:enclosure_129 rdf:type pdev: .
 inv-dev:enclosure_129 pdev:device-type pass-id:FDT .
 inv-dev:enclosure_129 pdev:id "enclosure_129" .
-inv-dev:enclosure_129 rdfs:comment "TYCO_OFDC_A4" .
 inv-dev:ATB_3137 rdf:type pdev: .
 inv-dev:ATB_3137 pdev:device-type pass-id:ATB .
 inv-dev:ATB_3137 pdev:id "ATB_3137" .
@@ -37041,7 +36984,6 @@ inv-dev:ATB_3158 pdev:location-ref inv-loc:location_2488 .
 inv-dev:enclosure_132 rdf:type pdev: .
 inv-dev:enclosure_132 pdev:device-type pass-id:FDT .
 inv-dev:enclosure_132 pdev:id "enclosure_132" .
-inv-dev:enclosure_132 rdfs:comment "TYCO_OFDC_A4" .
 inv-dev:ATB_3159 rdf:type pdev: .
 inv-dev:ATB_3159 pdev:device-type pass-id:ATB .
 inv-dev:ATB_3159 pdev:id "ATB_3159" .
@@ -37092,7 +37034,6 @@ inv-dev:ATB_3169 pdev:location-ref inv-loc:location_1188 .
 inv-dev:enclosure_134 rdf:type pdev: .
 inv-dev:enclosure_134 pdev:device-type pass-id:FAT .
 inv-dev:enclosure_134 pdev:id "enclosure_134" .
-inv-dev:enclosure_134 rdfs:comment "SMP_8PORT" .
 inv-dev:ATB_3170 rdf:type pdev: .
 inv-dev:ATB_3170 pdev:device-type pass-id:ATB .
 inv-dev:ATB_3170 pdev:id "ATB_3170" .
@@ -37178,7 +37119,6 @@ inv-dev:ATB_3189 pdev:location-ref inv-loc:location_1911 .
 inv-dev:enclosure_135 rdf:type pdev: .
 inv-dev:enclosure_135 pdev:device-type pass-id:FDT .
 inv-dev:enclosure_135 pdev:id "enclosure_135" .
-inv-dev:enclosure_135 rdfs:comment "TYCO_TENIO_B6" .
 inv-dev:ATB_3190 rdf:type pdev: .
 inv-dev:ATB_3190 pdev:device-type pass-id:ATB .
 inv-dev:ATB_3190 pdev:id "ATB_3190" .
@@ -37224,7 +37164,6 @@ inv-dev:ATB_3199 pdev:location-ref inv-loc:location_55 .
 inv-dev:enclosure_136 rdf:type pdev: .
 inv-dev:enclosure_136 pdev:device-type pass-id:FAT .
 inv-dev:enclosure_136 pdev:id "enclosure_136" .
-inv-dev:enclosure_136 rdfs:comment "SMP_8PORT" .
 inv-dev:ATB_3200 rdf:type pdev: .
 inv-dev:ATB_3200 pdev:device-type pass-id:ATB .
 inv-dev:ATB_3200 pdev:id "ATB_3200" .
@@ -37828,7 +37767,6 @@ inv-dev:ATB_3345 pdev:location-ref inv-loc:location_945 .
 inv-dev:enclosure_142 rdf:type pdev: .
 inv-dev:enclosure_142 pdev:device-type pass-id:FAT .
 inv-dev:enclosure_142 pdev:id "enclosure_142" .
-inv-dev:enclosure_142 rdfs:comment "SMP_8PORT" .
 inv-dev:ATB_3346 rdf:type pdev: .
 inv-dev:ATB_3346 pdev:device-type pass-id:ATB .
 inv-dev:ATB_3346 pdev:id "ATB_3346" .
@@ -37938,7 +37876,6 @@ inv-dev:ATB_3371 pdev:location-ref inv-loc:location_3029 .
 inv-dev:enclosure_143 rdf:type pdev: .
 inv-dev:enclosure_143 pdev:device-type pass-id:FAT .
 inv-dev:enclosure_143 pdev:id "enclosure_143" .
-inv-dev:enclosure_143 rdfs:comment "SMP_8PORT" .
 inv-dev:ATB_3372 rdf:type pdev: .
 inv-dev:ATB_3372 pdev:device-type pass-id:ATB .
 inv-dev:ATB_3372 pdev:id "ATB_3372" .
@@ -38563,7 +38500,6 @@ inv-dev:ATB_3522 pdev:location-ref inv-loc:location_795 .
 inv-dev:enclosure_149 rdf:type pdev: .
 inv-dev:enclosure_149 pdev:device-type pass-id:FDT .
 inv-dev:enclosure_149 pdev:id "enclosure_149" .
-inv-dev:enclosure_149 rdfs:comment "TYCO_OFDC_A4" .
 inv-dev:ATB_3523 rdf:type pdev: .
 inv-dev:ATB_3523 pdev:device-type pass-id:ATB .
 inv-dev:ATB_3523 pdev:id "ATB_3523" .
@@ -39094,7 +39030,6 @@ inv-dev:ATB_3651 pdev:location-ref inv-loc:location_3165 .
 inv-dev:enclosure_151 rdf:type pdev: .
 inv-dev:enclosure_151 pdev:device-type pass-id:FDT .
 inv-dev:enclosure_151 pdev:id "enclosure_151" .
-inv-dev:enclosure_151 rdfs:comment "TYCO_TENIO_B6" .
 inv-dev:ATB_3652 rdf:type pdev: .
 inv-dev:ATB_3652 pdev:device-type pass-id:ATB .
 inv-dev:ATB_3652 pdev:id "ATB_3652" .
@@ -39545,7 +39480,6 @@ inv-dev:ATB_3760 pdev:location-ref inv-loc:location_2214 .
 inv-dev:enclosure_155 rdf:type pdev: .
 inv-dev:enclosure_155 pdev:device-type pass-id:FDT .
 inv-dev:enclosure_155 pdev:id "enclosure_155" .
-inv-dev:enclosure_155 rdfs:comment "TYCO_TENIO_B6" .
 inv-dev:ATB_3761 rdf:type pdev: .
 inv-dev:ATB_3761 pdev:device-type pass-id:ATB .
 inv-dev:ATB_3761 pdev:id "ATB_3761" .
@@ -39677,7 +39611,6 @@ inv-dev:ATB_3792 pdev:location-ref inv-loc:location_2859 .
 inv-dev:enclosure_156 rdf:type pdev: .
 inv-dev:enclosure_156 pdev:device-type pass-id:FDT .
 inv-dev:enclosure_156 pdev:id "enclosure_156" .
-inv-dev:enclosure_156 rdfs:comment "TYCO_OFDC_A4" .
 inv-dev:ATB_3793 rdf:type pdev: .
 inv-dev:ATB_3793 pdev:device-type pass-id:ATB .
 inv-dev:ATB_3793 pdev:id "ATB_3793" .
@@ -39987,7 +39920,6 @@ inv-dev:ATB_3864 pdev:location-ref inv-loc:location_3180 .
 inv-dev:enclosure_162 rdf:type pdev: .
 inv-dev:enclosure_162 pdev:device-type pass-id:FAT .
 inv-dev:enclosure_162 pdev:id "enclosure_162" .
-inv-dev:enclosure_162 rdfs:comment "SMP_8PORT" .
 inv-dev:ATB_3865 rdf:type pdev: .
 inv-dev:ATB_3865 pdev:device-type pass-id:ATB .
 inv-dev:ATB_3865 pdev:id "ATB_3865" .
@@ -40186,7 +40118,6 @@ inv-dev:ATB_3911 pdev:location-ref inv-loc:location_2842 .
 inv-dev:enclosure_164 rdf:type pdev: .
 inv-dev:enclosure_164 pdev:device-type pass-id:FAT .
 inv-dev:enclosure_164 pdev:id "enclosure_164" .
-inv-dev:enclosure_164 rdfs:comment "SMP_8PORT" .
 inv-dev:ATB_3912 rdf:type pdev: .
 inv-dev:ATB_3912 pdev:device-type pass-id:ATB .
 inv-dev:ATB_3912 pdev:id "ATB_3912" .
@@ -40372,7 +40303,6 @@ inv-dev:ATB_3955 pdev:location-ref inv-loc:location_96 .
 inv-dev:enclosure_166 rdf:type pdev: .
 inv-dev:enclosure_166 pdev:device-type pass-id:FAT .
 inv-dev:enclosure_166 pdev:id "enclosure_166" .
-inv-dev:enclosure_166 rdfs:comment "SMP_8PORT" .
 inv-dev:ATB_3956 rdf:type pdev: .
 inv-dev:ATB_3956 pdev:device-type pass-id:ATB .
 inv-dev:ATB_3956 pdev:id "ATB_3956" .
