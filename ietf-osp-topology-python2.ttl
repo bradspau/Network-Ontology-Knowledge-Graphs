@@ -5,12 +5,6 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<http://www.huawei.com/ontology/grouping/ietf-network-inventory/port-ref> a owl:Class ;
-    rdfs:label "port-ref" ;
-    rdfs:comment "Grouping definition: port-ref",
-        """This grouping is intended to be used by data models that need
-to reference a port component within a Network Element.""" .
-
 <http://www.huawei.com/ontology/grouping/ietf-network-topology/link-ref> a owl:Class ;
     rdfs:label "link-ref" ;
     rdfs:comment "Grouping definition: link-ref",
@@ -36,6 +30,11 @@ for example, an underlay network.""",
     rdfs:label "node-ref" ;
     rdfs:comment "Contains the information necessary to reference a node.",
         "Grouping definition: node-ref" .
+
+ex:has_breakout-channel a owl:ObjectProperty ;
+    rdfs:label "has breakout-channel" ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/inventory-mapping-attributes/port-breakout> ;
+    rdfs:range <http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/inventory-mapping-attributes/port-breakout/breakout-channel> .
 
 ex:has_cable a owl:ObjectProperty ;
     rdfs:label "has cable" ;
@@ -2373,6 +2372,13 @@ destination node and terminates the link.""" ;
     rdfs:range <http://www.huawei.com/ontology/ietf-network/networks/network/link/destination> ;
     prov:wasDerivedFrom "nt:link?list/hasDestination" .
 
+<http://www.huawei.com/ontology/ietf-network/networks/network/link/hasInventoryMappingAttributes> a owl:ObjectProperty ;
+    rdfs:label "hasInventoryMappingAttributes" ;
+    rdfs:comment "Containment relation" ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-network/networks/network/link> ;
+    rdfs:range <http://www.huawei.com/ontology/ietf-network/networks/network/link/inventory-mapping-attributes> ;
+    prov:wasDerivedFrom "nt:link?list/hasInventoryMappingAttributes" .
+
 <http://www.huawei.com/ontology/ietf-network/networks/network/link/hasSource> a owl:ObjectProperty ;
     rdfs:label "hasSource" ;
     rdfs:comment "Containment relation" ;
@@ -2386,6 +2392,15 @@ destination node and terminates the link.""" ;
     rdfs:domain <http://www.huawei.com/ontology/ietf-network/networks/network/link> ;
     rdfs:range <http://www.huawei.com/ontology/ietf-network/networks/network/link/supporting-link> ;
     prov:wasDerivedFrom "nt:link?list/hasSupportingLink" .
+
+<http://www.huawei.com/ontology/ietf-network/networks/network/link/inventory-mapping-attributes/link-type> a owl:DatatypeProperty ;
+    rdfs:label "link-type" ;
+    rdfs:comment """Classification of the link media type at the topology
+layer. Example values include 'copper', 'fiber',
+'microwave', or 'wifi'.""" ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-network/networks/network/link/inventory-mapping-attributes> ;
+    rdfs:range xsd:string ;
+    prov:wasDerivedFrom "nwit:inventory-mapping-attributes?container/nwit:link-type?leaf" .
 
 <http://www.huawei.com/ontology/ietf-network/networks/network/link/link-id> a owl:DatatypeProperty ;
     rdfs:label "link-id" ;
@@ -2412,6 +2427,12 @@ and terminates the link.""" ;
     rdfs:range <http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point> ;
     prov:wasDerivedFrom "nt:link?list/nt:source?container/nt:source-tp?leaf" .
 
+<http://www.huawei.com/ontology/ietf-network/networks/network/node/hasInventoryMappingAttributes> a owl:ObjectProperty ;
+    rdfs:label "hasInventoryMappingAttributes" ;
+    rdfs:comment "Containment relation" ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-network/networks/network/node> ;
+    rdfs:range <http://www.huawei.com/ontology/ietf-network/networks/network/node/inventory-mapping-attributes> .
+
 <http://www.huawei.com/ontology/ietf-network/networks/network/node/hasSupportingNode> a owl:ObjectProperty ;
     rdfs:label "hasSupportingNode" ;
     rdfs:comment "Containment relation" ;
@@ -2424,12 +2445,61 @@ and terminates the link.""" ;
     rdfs:domain <http://www.huawei.com/ontology/ietf-network/networks/network/node> ;
     rdfs:range <http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point> .
 
+<http://www.huawei.com/ontology/ietf-network/networks/network/node/inventory-mapping-attributes/ne-ref> a owl:ObjectProperty ;
+    rdfs:label "ne-ref" ;
+    ex:xpathPath "/nwi:network-inventory/nwi:network-elements/nwi:network-element/nwi:ne-id" ;
+    rdfs:comment """Reference to the NE in the inventory that corresponds to
+this topology node.
+
+This reference establishes a 1:1 mapping between the
+logical node and its physical NE.""" ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-network/networks/network/node/inventory-mapping-attributes> ;
+    rdfs:range <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element> ;
+    prov:wasDerivedFrom "nwit:inventory-mapping-attributes?container/nwit:ne-ref?leaf" .
+
+<http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/hasInventoryMappingAttributes> a owl:ObjectProperty ;
+    rdfs:label "hasInventoryMappingAttributes" ;
+    rdfs:comment "Containment relation" ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point> ;
+    rdfs:range <http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/inventory-mapping-attributes> ;
+    prov:wasDerivedFrom "nt:termination-point?list/hasInventoryMappingAttributes" .
+
 <http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/hasSupportingTerminationPoint> a owl:ObjectProperty ;
     rdfs:label "hasSupportingTerminationPoint" ;
     rdfs:comment "Containment relation" ;
     rdfs:domain <http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point> ;
     rdfs:range <http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/supporting-termination-point> ;
     prov:wasDerivedFrom "nt:termination-point?list/hasSupportingTerminationPoint" .
+
+<http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/inventory-mapping-attributes/hasPortBreakout> a owl:ObjectProperty ;
+    rdfs:label "hasPortBreakout" ;
+    rdfs:comment "Containment relation" ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/inventory-mapping-attributes> ;
+    rdfs:range <http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/inventory-mapping-attributes/port-breakout> ;
+    prov:wasDerivedFrom "nwit:inventory-mapping-attributes?container/hasPortBreakout" .
+
+<http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/inventory-mapping-attributes/ne-ref> a owl:DatatypeProperty ;
+    rdfs:label "ne-ref" ;
+    rdfs:comment """The reference to the Network Element which contains the
+port to be referenced.""" ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/inventory-mapping-attributes> ;
+    rdfs:range xsd:string ;
+    prov:wasDerivedFrom "nwit:inventory-mapping-attributes?container/nwi:ne-ref?leaf" .
+
+<http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/inventory-mapping-attributes/port-breakout/hasBreakoutChannel> a owl:ObjectProperty ;
+    rdfs:label "hasBreakoutChannel" ;
+    rdfs:comment "Containment relation" ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/inventory-mapping-attributes/port-breakout> ;
+    rdfs:range <http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/inventory-mapping-attributes/port-breakout/breakout-channel> ;
+    prov:wasDerivedFrom "nwit:inventory-mapping-attributes?container/nwit:port-breakout?container/hasBreakoutChannel" .
+
+<http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/inventory-mapping-attributes/port-ref> a owl:ObjectProperty ;
+    rdfs:label "port-ref" ;
+    ex:xpathPath "/nwi:network-inventory/nwi:network-elements/nwi:network-element[nwi:ne-id=current()/../ne-ref]/nwi:components/nwi:component/nwi:component-id" ;
+    rdfs:comment "The reference to the port component." ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/inventory-mapping-attributes> ;
+    rdfs:range <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component> ;
+    prov:wasDerivedFrom "nwit:inventory-mapping-attributes?container/nwi:port-ref?leaf" .
 
 <http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/tp-id> a owl:DatatypeProperty ;
     rdfs:label "tp-id" ;
@@ -2817,6 +2887,27 @@ protocol.""" .
     rdfs:comment "Grouping definition: geo-location",
         "Grouping to identify a location on an astronomical object." .
 
+<http://www.huawei.com/ontology/grouping/ietf-network-inventory-topology/link-inventory-mapping-attributes> a owl:Class ;
+    rdfs:label "link-inventory-mapping-attributes" ;
+    rdfs:comment """Attributes for classifying link media type.
+Detailed inventory reference is intentionally omitted from
+this model; implementations should use the appropriate
+specialized inventory modules based on the indicated
+link-type.""",
+        "Grouping definition: link-inventory-mapping-attributes" .
+
+<http://www.huawei.com/ontology/grouping/ietf-network-inventory-topology/node-inventory-mapping-attributes> a owl:Class ;
+    rdfs:label "node-inventory-mapping-attributes" ;
+    rdfs:comment """Attributes for mapping a topology node to a Network Element
+(NE) in the physical inventory.""",
+        "Grouping definition: node-inventory-mapping-attributes" .
+
+<http://www.huawei.com/ontology/grouping/ietf-network-inventory-topology/tp-inventory-mapping-attributes> a owl:Class ;
+    rdfs:label "tp-inventory-mapping-attributes" ;
+    rdfs:comment """Attributes for mapping a topology termination point (TP)
+to a physical port in the network inventory.""",
+        "Grouping definition: tp-inventory-mapping-attributes" .
+
 <http://www.huawei.com/ontology/grouping/ietf-network-inventory/component-attributes> a owl:Class ;
     rdfs:label "component-attributes" ;
     rdfs:comment "Grouping definition: component-attributes",
@@ -2824,6 +2915,12 @@ protocol.""" .
 
 This grouping is intended also to be re-used by data models
 that need to report the common attributes of a component.""" .
+
+<http://www.huawei.com/ontology/grouping/ietf-network-inventory/port-ref> a owl:Class ;
+    rdfs:label "port-ref" ;
+    rdfs:comment "Grouping definition: port-ref",
+        """This grouping is intended to be used by data models that need
+to reference a port component within a Network Element.""" .
 
 <http://www.huawei.com/ontology/grouping/ietf-ni-location/locations> a owl:Class ;
     rdfs:label "locations" ;
@@ -3146,6 +3243,14 @@ underlay node is a part.""" ;
     rdfs:range <http://www.huawei.com/ontology/ietf-network/networks/network/node> ;
     prov:wasDerivedFrom "nw:networks?container/nw:network?list/nw:node?list/nw:supporting-node?list/nw:node-ref?leaf" .
 
+<http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/inventory-mapping-attributes/port-breakout/breakout-channel/channel-id> a owl:DatatypeProperty ;
+    rdfs:label "channel-id" ;
+    rdfs:comment """Unique identifier for the breakout channel within the
+scope of the parent port.""" ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/inventory-mapping-attributes/port-breakout/breakout-channel> ;
+    rdfs:range xsd:unsignedShort ;
+    prov:wasDerivedFrom "nwit:inventory-mapping-attributes?container/nwit:port-breakout?container/nwit:breakout-channel?list/nwit:channel-id?leaf" .
+
 <http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/supporting-termination-point/network-ref> a owl:ObjectProperty ;
     rdfs:label "network-ref" ;
     ex:xpathPath "../../../nw:supporting-node/nw:network-ref" ;
@@ -3210,6 +3315,27 @@ and its child cables.""",
     rdfs:label "networks" ;
     rdfs:comment "Serves as a top-level container for a list of networks." ;
     prov:wasDerivedFrom "nw:networks?container" .
+
+<http://www.huawei.com/ontology/ietf-network/networks/network/link/inventory-mapping-attributes> a owl:Class ;
+    rdfs:label "inventory-mapping-attributes" ;
+    rdfs:comment """Container for inventory-related attributes of a link.
+
+This container provides lightweight media classification.
+The link-type indicates which specialized inventory model
+contains detailed resource information:
+
+- Wired media (fiber, copper): passive network inventory
+- Wireless media (microwave, Wi-Fi): wireless-specific
+  inventory
+
+  Detailed inventory references may be added in future
+  modules.""" ;
+    prov:wasDerivedFrom "nwit:inventory-mapping-attributes?container" .
+
+<http://www.huawei.com/ontology/ietf-network/networks/network/node/inventory-mapping-attributes> a owl:Class ;
+    rdfs:label "inventory-mapping-attributes" ;
+    rdfs:comment "Container for inventory mapping attributes of a node." ;
+    prov:wasDerivedFrom "nwit:inventory-mapping-attributes?container" .
 
 <http://www.huawei.com/ontology/ietf-power-and-energy/energy-objects> a owl:Class ;
     rdfs:label "energy-objects" ;
@@ -3306,6 +3432,24 @@ particular link.""" ;
 link.""" ;
     prov:wasDerivedFrom "nt:link?list/nt:source?container" .
 
+<http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/inventory-mapping-attributes/port-breakout> a owl:Class ;
+    rdfs:label "port-breakout" ;
+    ex:isStateData true ;
+    rdfs:comment """Breakout capability of the physical port represented by
+this TP. One TP maps to one physical port; channels are
+listed here. This container is present only when the
+underlying hardware supports partitioning the port into
+multiple independent channels (e.g., 400G to 4x100G).""" ;
+    prov:wasDerivedFrom "nwit:inventory-mapping-attributes?container/nwit:port-breakout?container" .
+
+<http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/inventory-mapping-attributes/port-breakout/breakout-channel> a owl:Class ;
+    rdfs:label "breakout-channel" ;
+    rdfs:comment """List of breakout channels available on this port.
+Each entry represents an independent lane or sub-port
+that can be used for channelized interfaces.""" ;
+    owl:hasKey ( <http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/inventory-mapping-attributes/port-breakout/breakout-channel/channel-id> ) ;
+    prov:wasDerivedFrom "nwit:inventory-mapping-attributes?container/nwit:port-breakout?container/nwit:breakout-channel?list" .
+
 <http://www.huawei.com/ontology/types/ietf-inet-types/ip-version> a owl:Class ;
     rdfs:label "ip-version" .
 
@@ -3392,6 +3536,12 @@ column number.""" ;
     rdfs:comment "Identifies the link or links on which this link depends." ;
     owl:hasKey ( <http://www.huawei.com/ontology/ietf-network/networks/network/link/supporting-link/network-ref> <http://www.huawei.com/ontology/ietf-network/networks/network/link/supporting-link/link-ref> ) ;
     prov:wasDerivedFrom "nt:link?list/nt:supporting-link?list" .
+
+<http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/inventory-mapping-attributes> a owl:Class ;
+    rdfs:label "inventory-mapping-attributes" ;
+    rdfs:comment "Container for inventory mapping attributes of a TP." ;
+    rdfs:subClassOf <http://www.huawei.com/ontology/grouping/ietf-network-inventory/port-ref> ;
+    prov:wasDerivedFrom "nwit:inventory-mapping-attributes?container" .
 
 <http://www.huawei.com/ontology/types/ietf-hardware/sensor-status> a owl:Class ;
     rdfs:label "sensor-status" .
@@ -3509,6 +3659,7 @@ termination points.  Therefore, in order to ensure that we
 would always know to distinguish between links, every link
 is identified by a dedicated link identifier.  Note that a
 link models a point-to-point link, not a multipoint link.""" ;
+    rdfs:subClassOf <http://www.huawei.com/ontology/grouping/ietf-network-inventory-topology/link-inventory-mapping-attributes> ;
     prov:wasDerivedFrom "nt:link?list" .
 
 <http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point> a owl:Class ;
@@ -3516,6 +3667,7 @@ link models a point-to-point link, not a multipoint link.""" ;
     rdfs:comment """A termination point can terminate a link.
 Depending on the type of topology, a termination point
 could, for example, refer to a port or an interface.""" ;
+    rdfs:subClassOf <http://www.huawei.com/ontology/grouping/ietf-network-inventory-topology/tp-inventory-mapping-attributes> ;
     prov:wasDerivedFrom "nt:termination-point?list" .
 
 <http://www.huawei.com/ontology/ietf-hardware/hardware/component/sensor-data> a owl:Class ;
@@ -3531,12 +3683,6 @@ could, for example, refer to a port or an interface.""" ;
     owl:hasKey ( <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/passive-device/passive-port/id> ) ;
     prov:wasDerivedFrom "nwi-passive:passive-port?list" .
 
-<http://www.huawei.com/ontology/ietf-network/networks/network/node> a owl:Class ;
-    rdfs:label "node" ;
-    rdfs:comment "The inventory of nodes of this network." ;
-    owl:hasKey ( <http://www.huawei.com/ontology/ietf-network/networks/network/node/node-id> ) ;
-    prov:wasDerivedFrom "nw:networks?container/nw:network?list/nw:node?list" .
-
 <http://www.huawei.com/ontology/ietf-network/networks/network> a owl:Class ;
     rdfs:label "network" ;
     rdfs:comment """Describes a network.
@@ -3545,6 +3691,13 @@ topological information (augmented through the
 network-topology data model), and layering information.""" ;
     owl:hasKey ( <http://www.huawei.com/ontology/ietf-network/networks/network/network-id> ) ;
     prov:wasDerivedFrom "nw:networks?container/nw:network?list" .
+
+<http://www.huawei.com/ontology/ietf-network/networks/network/node> a owl:Class ;
+    rdfs:label "node" ;
+    rdfs:comment "The inventory of nodes of this network." ;
+    rdfs:subClassOf <http://www.huawei.com/ontology/grouping/ietf-network-inventory-topology/node-inventory-mapping-attributes> ;
+    owl:hasKey ( <http://www.huawei.com/ontology/ietf-network/networks/network/node/node-id> ) ;
+    prov:wasDerivedFrom "nw:networks?container/nw:network?list/nw:node?list" .
 
 <http://www.huawei.com/ontology/ietf-power-and-energy/energy-objects/power-entry> a owl:Class ;
     rdfs:label "power-entry" ;

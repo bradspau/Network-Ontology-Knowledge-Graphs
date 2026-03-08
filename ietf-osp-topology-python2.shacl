@@ -20,28 +20,28 @@
     sh:property [ a sh:PropertyShape ;
             sh:class <http://www.huawei.com/ontology/ietf-hardware/hardware/component> ;
             sh:maxCount 1 ;
-            sh:message "Leafref contains-child must target an instance of component" ;
-            sh:nodeKind sh:IRI ;
-            sh:path <http://www.huawei.com/ontology/ietf-hardware/hardware/component/contains-child> ],
-        [ a sh:PropertyShape ;
-            sh:class <http://www.huawei.com/ontology/ietf-hardware/hardware/component> ;
-            sh:maxCount 1 ;
             sh:message "Leafref parent must target an instance of component" ;
             sh:nodeKind sh:IRI ;
             sh:path <http://www.huawei.com/ontology/ietf-hardware/hardware/component/parent> ],
-        [ a sh:PropertyShape ;
-            sh:class <http://www.huawei.com/ontology/ietf-hardware/hardware/component/state> ;
-            sh:nodeKind sh:IRI ;
-            sh:path <http://www.huawei.com/ontology/ietf-hardware/hardware/component/hasState> ],
-        [ a sh:PropertyShape ;
-            sh:class <http://www.huawei.com/ontology/ietf-hardware/hardware/component/sensor-data> ;
-            sh:nodeKind sh:IRI ;
-            sh:path <http://www.huawei.com/ontology/ietf-hardware/hardware/component/hasSensorData> ],
         [ a sh:PropertyShape ;
             sh:maxCount 1 ;
             sh:message "List key 'name' is required" ;
             sh:minCount 1 ;
             sh:path <http://www.huawei.com/ontology/ietf-hardware/hardware/component/name> ],
+        [ a sh:PropertyShape ;
+            sh:class <http://www.huawei.com/ontology/ietf-hardware/hardware/component/sensor-data> ;
+            sh:nodeKind sh:IRI ;
+            sh:path <http://www.huawei.com/ontology/ietf-hardware/hardware/component/hasSensorData> ],
+        [ a sh:PropertyShape ;
+            sh:class <http://www.huawei.com/ontology/ietf-hardware/hardware/component> ;
+            sh:maxCount 1 ;
+            sh:message "Leafref contains-child must target an instance of component" ;
+            sh:nodeKind sh:IRI ;
+            sh:path <http://www.huawei.com/ontology/ietf-hardware/hardware/component/contains-child> ],
+        [ a sh:PropertyShape ;
+            sh:class <http://www.huawei.com/ontology/ietf-hardware/hardware/component/state> ;
+            sh:nodeKind sh:IRI ;
+            sh:path <http://www.huawei.com/ontology/ietf-hardware/hardware/component/hasState> ],
         <http://www.huawei.com/ontology/shapes/ietf-hardware/hardware/component/alias>,
         <http://www.huawei.com/ontology/shapes/ietf-hardware/hardware/component/asset-id>,
         <http://www.huawei.com/ontology/shapes/ietf-hardware/hardware/component/class>,
@@ -144,18 +144,18 @@
 <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/cable/child-cable/shape> a sh:NodeShape ;
     rdfs:label "Shape for child-cable" ;
     sh:property [ a sh:PropertyShape ;
-            sh:class <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/cable/child-cable/a-end> ;
+            sh:class <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/cable/child-cable/z-end> ;
             sh:nodeKind sh:IRI ;
-            sh:path <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/cable/child-cable/hasAEnd> ],
+            sh:path <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/cable/child-cable/hasZEnd> ],
         [ a sh:PropertyShape ;
             sh:maxCount 1 ;
             sh:message "List key 'index' is required" ;
             sh:minCount 1 ;
             sh:path <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/cable/child-cable/index> ],
         [ a sh:PropertyShape ;
-            sh:class <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/cable/child-cable/z-end> ;
+            sh:class <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/cable/child-cable/a-end> ;
             sh:nodeKind sh:IRI ;
-            sh:path <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/cable/child-cable/hasZEnd> ],
+            sh:path <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/cable/child-cable/hasAEnd> ],
         <http://www.huawei.com/ontology/shapes/ietf-network-inventory/network-inventory/cable/child-cable/id>,
         <http://www.huawei.com/ontology/shapes/ietf-network-inventory/network-inventory/cable/child-cable/index>,
         <http://www.huawei.com/ontology/shapes/ietf-network-inventory/network-inventory/cable/child-cable/length> ;
@@ -173,17 +173,17 @@
 <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/cable/child-cable/z-end/case-active/shape> a sh:NodeShape ;
     rdfs:label "Shape for case-active" ;
     sh:property [ a sh:PropertyShape ;
-            sh:class <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component> ;
-            sh:maxCount 1 ;
-            sh:message "Leafref component-ref must target an instance of component" ;
-            sh:nodeKind sh:IRI ;
-            sh:path <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/cable/child-cable/z-end/case-active/component-ref> ],
-        [ a sh:PropertyShape ;
             sh:class <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element> ;
             sh:maxCount 1 ;
             sh:message "Leafref ne-ref must target an instance of network-element" ;
             sh:nodeKind sh:IRI ;
-            sh:path <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/cable/child-cable/z-end/case-active/ne-ref> ] ;
+            sh:path <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/cable/child-cable/z-end/case-active/ne-ref> ],
+        [ a sh:PropertyShape ;
+            sh:class <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component> ;
+            sh:maxCount 1 ;
+            sh:message "Leafref component-ref must target an instance of component" ;
+            sh:nodeKind sh:IRI ;
+            sh:path <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/cable/child-cable/z-end/case-active/component-ref> ] ;
     sh:targetClass <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/cable/child-cable/z-end/case-active> .
 
 <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/cable/child-cable/z-end/case-passive/shape> a sh:NodeShape ;
@@ -206,13 +206,17 @@
 <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/cable/shape> a sh:NodeShape ;
     rdfs:label "Shape for cable" ;
     sh:property [ a sh:PropertyShape ;
+            sh:class <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/cable/optical-cable> ;
+            sh:nodeKind sh:IRI ;
+            sh:path <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/cable/hasOpticalCable> ],
+        [ a sh:PropertyShape ;
             sh:class <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/cable/z-end> ;
             sh:nodeKind sh:IRI ;
             sh:path <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/cable/hasZEnd> ],
         [ a sh:PropertyShape ;
-            sh:class <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/cable/optical-cable> ;
+            sh:class <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/cable/a-end> ;
             sh:nodeKind sh:IRI ;
-            sh:path <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/cable/hasOpticalCable> ],
+            sh:path <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/cable/hasAEnd> ],
         [ a sh:PropertyShape ;
             sh:class <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/cable/child-cable> ;
             sh:nodeKind sh:IRI ;
@@ -222,10 +226,6 @@
             sh:message "List key 'id' is required" ;
             sh:minCount 1 ;
             sh:path <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/cable/id> ],
-        [ a sh:PropertyShape ;
-            sh:class <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/cable/a-end> ;
-            sh:nodeKind sh:IRI ;
-            sh:path <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/cable/hasAEnd> ],
         <http://www.huawei.com/ontology/shapes/ietf-network-inventory/network-inventory/cable/alias>,
         <http://www.huawei.com/ontology/shapes/ietf-network-inventory/network-inventory/cable/cable-role>,
         <http://www.huawei.com/ontology/shapes/ietf-network-inventory/network-inventory/cable/cable-type>,
@@ -305,13 +305,13 @@
 <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/locations/location/geo-location/shape> a sh:NodeShape ;
     rdfs:label "Shape for geo-location" ;
     sh:property [ a sh:PropertyShape ;
-            sh:class <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/locations/location/geo-location/velocity> ;
-            sh:nodeKind sh:IRI ;
-            sh:path <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/locations/location/geo-location/hasVelocity> ],
-        [ a sh:PropertyShape ;
             sh:class <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/locations/location/geo-location/reference-frame> ;
             sh:nodeKind sh:IRI ;
             sh:path <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/locations/location/geo-location/hasReferenceFrame> ],
+        [ a sh:PropertyShape ;
+            sh:class <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/locations/location/geo-location/velocity> ;
+            sh:nodeKind sh:IRI ;
+            sh:path <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/locations/location/geo-location/hasVelocity> ],
         <http://www.huawei.com/ontology/shapes/ietf-network-inventory/network-inventory/locations/location/geo-location/timestamp>,
         <http://www.huawei.com/ontology/shapes/ietf-network-inventory/network-inventory/locations/location/geo-location/valid-until> ;
     sh:targetClass <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/locations/location/geo-location> .
@@ -335,6 +335,20 @@
 <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/locations/location/shape> a sh:NodeShape ;
     rdfs:label "Shape for location" ;
     sh:property [ a sh:PropertyShape ;
+            sh:class <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/locations/location> ;
+            sh:maxCount 1 ;
+            sh:message "Leafref parent must target an instance of location" ;
+            sh:nodeKind sh:IRI ;
+            sh:path <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/locations/location/parent> ],
+        [ a sh:PropertyShape ;
+            sh:class <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/locations/location/physical-address> ;
+            sh:nodeKind sh:IRI ;
+            sh:path <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/locations/location/hasPhysicalAddress> ],
+        [ a sh:PropertyShape ;
+            sh:class <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/locations/location/geo-location> ;
+            sh:nodeKind sh:IRI ;
+            sh:path <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/locations/location/hasGeoLocation> ],
+        [ a sh:PropertyShape ;
             sh:maxCount 1 ;
             sh:message "List key 'id' is required" ;
             sh:minCount 1 ;
@@ -345,20 +359,6 @@
             sh:message "Leafref child must target an instance of location" ;
             sh:nodeKind sh:IRI ;
             sh:path <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/locations/location/child> ],
-        [ a sh:PropertyShape ;
-            sh:class <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/locations/location/geo-location> ;
-            sh:nodeKind sh:IRI ;
-            sh:path <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/locations/location/hasGeoLocation> ],
-        [ a sh:PropertyShape ;
-            sh:class <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/locations/location> ;
-            sh:maxCount 1 ;
-            sh:message "Leafref parent must target an instance of location" ;
-            sh:nodeKind sh:IRI ;
-            sh:path <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/locations/location/parent> ],
-        [ a sh:PropertyShape ;
-            sh:class <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/locations/location/physical-address> ;
-            sh:nodeKind sh:IRI ;
-            sh:path <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/locations/location/hasPhysicalAddress> ],
         <http://www.huawei.com/ontology/shapes/ietf-network-inventory/network-inventory/locations/location/alias>,
         <http://www.huawei.com/ontology/shapes/ietf-network-inventory/network-inventory/locations/location/description>,
         <http://www.huawei.com/ontology/shapes/ietf-network-inventory/network-inventory/locations/location/id>,
@@ -387,16 +387,16 @@
             sh:nodeKind sh:IRI ;
             sh:path <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/locations/racks/rack/contained-chassis/ne-ref> ],
         [ a sh:PropertyShape ;
-            sh:maxCount 1 ;
-            sh:message "List key 'relative-position' is required" ;
-            sh:minCount 1 ;
-            sh:path <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/locations/racks/rack/contained-chassis/relative-position> ],
-        [ a sh:PropertyShape ;
             sh:class <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component> ;
             sh:maxCount 1 ;
             sh:message "Leafref component-ref must target an instance of component" ;
             sh:nodeKind sh:IRI ;
             sh:path <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/locations/racks/rack/contained-chassis/component-ref> ],
+        [ a sh:PropertyShape ;
+            sh:maxCount 1 ;
+            sh:message "List key 'relative-position' is required" ;
+            sh:minCount 1 ;
+            sh:path <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/locations/racks/rack/contained-chassis/relative-position> ],
         <http://www.huawei.com/ontology/shapes/ietf-network-inventory/network-inventory/locations/racks/rack/contained-chassis/relative-position> ;
     sh:sparql [ a sh:SPARQLConstraint ;
             sh:message "Duplicate key combination in list contained-chassis" ;
@@ -424,10 +424,6 @@
 <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/locations/racks/rack/shape> a sh:NodeShape ;
     rdfs:label "Shape for rack" ;
     sh:property [ a sh:PropertyShape ;
-            sh:class <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/locations/racks/rack/contained-chassis> ;
-            sh:nodeKind sh:IRI ;
-            sh:path <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/locations/racks/rack/hasContainedChassis> ],
-        [ a sh:PropertyShape ;
             sh:class <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/locations/racks/rack/rack-location> ;
             sh:nodeKind sh:IRI ;
             sh:path <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/locations/racks/rack/hasRackLocation> ],
@@ -436,6 +432,10 @@
             sh:message "List key 'id' is required" ;
             sh:minCount 1 ;
             sh:path <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/locations/racks/rack/id> ],
+        [ a sh:PropertyShape ;
+            sh:class <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/locations/racks/rack/contained-chassis> ;
+            sh:nodeKind sh:IRI ;
+            sh:path <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/locations/racks/rack/hasContainedChassis> ],
         <http://www.huawei.com/ontology/shapes/ietf-network-inventory/network-inventory/locations/racks/rack/alias>,
         <http://www.huawei.com/ontology/shapes/ietf-network-inventory/network-inventory/locations/racks/rack/depth>,
         <http://www.huawei.com/ontology/shapes/ietf-network-inventory/network-inventory/locations/racks/rack/description>,
@@ -470,13 +470,13 @@
 <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/locations/shape> a sh:NodeShape ;
     rdfs:label "Shape for locations" ;
     sh:property [ a sh:PropertyShape ;
-            sh:class <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/locations/racks> ;
-            sh:nodeKind sh:IRI ;
-            sh:path <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/locations/hasRacks> ],
-        [ a sh:PropertyShape ;
             sh:class <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/locations/location> ;
             sh:nodeKind sh:IRI ;
-            sh:path <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/locations/hasLocation> ] ;
+            sh:path <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/locations/hasLocation> ],
+        [ a sh:PropertyShape ;
+            sh:class <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/locations/racks> ;
+            sh:nodeKind sh:IRI ;
+            sh:path <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/locations/hasRacks> ] ;
     sh:targetClass <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/locations> .
 
 <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component/shape> a sh:NodeShape ;
@@ -487,15 +487,15 @@
             sh:minCount 1 ;
             sh:path <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component/component-id> ],
         [ a sh:PropertyShape ;
+            sh:class <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component/software-rev> ;
+            sh:nodeKind sh:IRI ;
+            sh:path <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component/hasSoftwareRev> ],
+        [ a sh:PropertyShape ;
             sh:class <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component> ;
             sh:maxCount 1 ;
             sh:message "Leafref parent must target an instance of component" ;
             sh:nodeKind sh:IRI ;
             sh:path <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component/parent> ],
-        [ a sh:PropertyShape ;
-            sh:class <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component/software-rev> ;
-            sh:nodeKind sh:IRI ;
-            sh:path <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component/hasSoftwareRev> ],
         <http://www.huawei.com/ontology/shapes/ietf-network-inventory/network-inventory/network-elements/network-element/components/component/alias>,
         <http://www.huawei.com/ontology/shapes/ietf-network-inventory/network-inventory/network-elements/network-element/components/component/asset-id>,
         <http://www.huawei.com/ontology/shapes/ietf-network-inventory/network-inventory/network-elements/network-element/components/component/class>,
@@ -594,22 +594,22 @@
 <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/shape> a sh:NodeShape ;
     rdfs:label "Shape for network-element" ;
     sh:property [ a sh:PropertyShape ;
-            sh:class <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/locations> ;
-            sh:nodeKind sh:IRI ;
-            sh:path <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/hasLocations> ],
+            sh:maxCount 1 ;
+            sh:message "List key 'ne-id' is required" ;
+            sh:minCount 1 ;
+            sh:path <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/ne-id> ],
         [ a sh:PropertyShape ;
             sh:class <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/software-rev> ;
             sh:nodeKind sh:IRI ;
             sh:path <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/hasSoftwareRev> ],
         [ a sh:PropertyShape ;
+            sh:class <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/locations> ;
+            sh:nodeKind sh:IRI ;
+            sh:path <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/hasLocations> ],
+        [ a sh:PropertyShape ;
             sh:class <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components> ;
             sh:nodeKind sh:IRI ;
             sh:path <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/hasComponents> ],
-        [ a sh:PropertyShape ;
-            sh:maxCount 1 ;
-            sh:message "List key 'ne-id' is required" ;
-            sh:minCount 1 ;
-            sh:path <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/ne-id> ],
         <http://www.huawei.com/ontology/shapes/ietf-network-inventory/network-inventory/network-elements/network-element/alias>,
         <http://www.huawei.com/ontology/shapes/ietf-network-inventory/network-inventory/network-elements/network-element/description>,
         <http://www.huawei.com/ontology/shapes/ietf-network-inventory/network-inventory/network-elements/network-element/mfg-name>,
@@ -652,14 +652,14 @@
 <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/software-rev/shape> a sh:NodeShape ;
     rdfs:label "Shape for software-rev" ;
     sh:property [ a sh:PropertyShape ;
+            sh:class <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/software-rev/patch> ;
+            sh:nodeKind sh:IRI ;
+            sh:path <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/software-rev/hasPatch> ],
+        [ a sh:PropertyShape ;
             sh:maxCount 1 ;
             sh:message "List key 'name' is required" ;
             sh:minCount 1 ;
             sh:path <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/software-rev/name> ],
-        [ a sh:PropertyShape ;
-            sh:class <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/software-rev/patch> ;
-            sh:nodeKind sh:IRI ;
-            sh:path <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/software-rev/hasPatch> ],
         <http://www.huawei.com/ontology/shapes/ietf-network-inventory/network-inventory/network-elements/network-element/software-rev/name>,
         <http://www.huawei.com/ontology/shapes/ietf-network-inventory/network-inventory/network-elements/network-element/software-rev/revision> ;
     sh:sparql [ a sh:SPARQLConstraint ;
@@ -709,15 +709,15 @@
 <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/passive-device/shape> a sh:NodeShape ;
     rdfs:label "Shape for passive-device" ;
     sh:property [ a sh:PropertyShape ;
+            sh:class <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/passive-device/passive-port> ;
+            sh:nodeKind sh:IRI ;
+            sh:path <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/passive-device/hasPassivePort> ],
+        [ a sh:PropertyShape ;
             sh:class <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/locations/location> ;
             sh:maxCount 1 ;
             sh:message "Leafref location-ref must target an instance of location" ;
             sh:nodeKind sh:IRI ;
             sh:path <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/passive-device/location-ref> ],
-        [ a sh:PropertyShape ;
-            sh:class <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/passive-device/passive-port> ;
-            sh:nodeKind sh:IRI ;
-            sh:path <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/passive-device/hasPassivePort> ],
         [ a sh:PropertyShape ;
             sh:maxCount 1 ;
             sh:message "List key 'id' is required" ;
@@ -748,38 +748,47 @@
             sh:nodeKind sh:IRI ;
             sh:path <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/hasCable> ],
         [ a sh:PropertyShape ;
-            sh:class <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/locations> ;
-            sh:nodeKind sh:IRI ;
-            sh:path <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/hasLocations> ],
-        [ a sh:PropertyShape ;
             sh:class <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/passive-device> ;
             sh:nodeKind sh:IRI ;
             sh:path <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/hasPassiveDevice> ],
         [ a sh:PropertyShape ;
             sh:class <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements> ;
             sh:nodeKind sh:IRI ;
-            sh:path <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/hasNetworkElements> ] ;
+            sh:path <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/hasNetworkElements> ],
+        [ a sh:PropertyShape ;
+            sh:class <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/locations> ;
+            sh:nodeKind sh:IRI ;
+            sh:path <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/hasLocations> ] ;
     sh:targetClass <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory> .
 
 <http://www.huawei.com/ontology/ietf-network/networks/network/link/destination/shape> a sh:NodeShape ;
     rdfs:label "Shape for destination" ;
     sh:property [ a sh:PropertyShape ;
-            sh:class <http://www.huawei.com/ontology/ietf-network/networks/network/node> ;
-            sh:maxCount 1 ;
-            sh:message "Leafref dest-node must target an instance of node" ;
-            sh:nodeKind sh:IRI ;
-            sh:path <http://www.huawei.com/ontology/ietf-network/networks/network/link/destination/dest-node> ],
-        [ a sh:PropertyShape ;
             sh:class <http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point> ;
             sh:maxCount 1 ;
             sh:message "Leafref dest-tp must target an instance of termination-point" ;
             sh:nodeKind sh:IRI ;
-            sh:path <http://www.huawei.com/ontology/ietf-network/networks/network/link/destination/dest-tp> ] ;
+            sh:path <http://www.huawei.com/ontology/ietf-network/networks/network/link/destination/dest-tp> ],
+        [ a sh:PropertyShape ;
+            sh:class <http://www.huawei.com/ontology/ietf-network/networks/network/node> ;
+            sh:maxCount 1 ;
+            sh:message "Leafref dest-node must target an instance of node" ;
+            sh:nodeKind sh:IRI ;
+            sh:path <http://www.huawei.com/ontology/ietf-network/networks/network/link/destination/dest-node> ] ;
     sh:targetClass <http://www.huawei.com/ontology/ietf-network/networks/network/link/destination> .
+
+<http://www.huawei.com/ontology/ietf-network/networks/network/link/inventory-mapping-attributes/shape> a sh:NodeShape ;
+    rdfs:label "Shape for inventory-mapping-attributes" ;
+    sh:property <http://www.huawei.com/ontology/shapes/ietf-network/networks/network/link/inventory-mapping-attributes/link-type> ;
+    sh:targetClass <http://www.huawei.com/ontology/ietf-network/networks/network/link/inventory-mapping-attributes> .
 
 <http://www.huawei.com/ontology/ietf-network/networks/network/link/shape> a sh:NodeShape ;
     rdfs:label "Shape for link" ;
     sh:property [ a sh:PropertyShape ;
+            sh:class <http://www.huawei.com/ontology/ietf-network/networks/network/link/destination> ;
+            sh:nodeKind sh:IRI ;
+            sh:path <http://www.huawei.com/ontology/ietf-network/networks/network/link/hasDestination> ],
+        [ a sh:PropertyShape ;
             sh:class <http://www.huawei.com/ontology/ietf-network/networks/network/link/supporting-link> ;
             sh:nodeKind sh:IRI ;
             sh:path <http://www.huawei.com/ontology/ietf-network/networks/network/link/hasSupportingLink> ],
@@ -788,40 +797,40 @@
             sh:nodeKind sh:IRI ;
             sh:path <http://www.huawei.com/ontology/ietf-network/networks/network/link/hasSource> ],
         [ a sh:PropertyShape ;
-            sh:class <http://www.huawei.com/ontology/ietf-network/networks/network/link/destination> ;
+            sh:class <http://www.huawei.com/ontology/ietf-network/networks/network/link/inventory-mapping-attributes> ;
             sh:nodeKind sh:IRI ;
-            sh:path <http://www.huawei.com/ontology/ietf-network/networks/network/link/hasDestination> ],
+            sh:path <http://www.huawei.com/ontology/ietf-network/networks/network/link/hasInventoryMappingAttributes> ],
         <http://www.huawei.com/ontology/shapes/ietf-network/networks/network/link/link-id> ;
     sh:targetClass <http://www.huawei.com/ontology/ietf-network/networks/network/link> .
 
 <http://www.huawei.com/ontology/ietf-network/networks/network/link/source/shape> a sh:NodeShape ;
     rdfs:label "Shape for source" ;
     sh:property [ a sh:PropertyShape ;
-            sh:class <http://www.huawei.com/ontology/ietf-network/networks/network/node> ;
-            sh:maxCount 1 ;
-            sh:message "Leafref source-node must target an instance of node" ;
-            sh:nodeKind sh:IRI ;
-            sh:path <http://www.huawei.com/ontology/ietf-network/networks/network/link/source/source-node> ],
-        [ a sh:PropertyShape ;
             sh:class <http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point> ;
             sh:maxCount 1 ;
             sh:message "Leafref source-tp must target an instance of termination-point" ;
             sh:nodeKind sh:IRI ;
-            sh:path <http://www.huawei.com/ontology/ietf-network/networks/network/link/source/source-tp> ] ;
+            sh:path <http://www.huawei.com/ontology/ietf-network/networks/network/link/source/source-tp> ],
+        [ a sh:PropertyShape ;
+            sh:class <http://www.huawei.com/ontology/ietf-network/networks/network/node> ;
+            sh:maxCount 1 ;
+            sh:message "Leafref source-node must target an instance of node" ;
+            sh:nodeKind sh:IRI ;
+            sh:path <http://www.huawei.com/ontology/ietf-network/networks/network/link/source/source-node> ] ;
     sh:targetClass <http://www.huawei.com/ontology/ietf-network/networks/network/link/source> .
 
 <http://www.huawei.com/ontology/ietf-network/networks/network/link/supporting-link/shape> a sh:NodeShape ;
     rdfs:label "Shape for supporting-link" ;
     sh:property [ a sh:PropertyShape ;
-            sh:class <http://www.huawei.com/ontology/ietf-network/networks/network/link> ;
-            sh:maxCount 1 ;
-            sh:message "Leafref link-ref must target an instance of link" ;
-            sh:nodeKind sh:IRI ;
-            sh:path <http://www.huawei.com/ontology/ietf-network/networks/network/link/supporting-link/link-ref> ],
-        [ a sh:PropertyShape ;
             sh:maxCount 1 ;
             sh:message "List key 'network-ref' is required" ;
             sh:minCount 1 ;
+            sh:path <http://www.huawei.com/ontology/ietf-network/networks/network/link/supporting-link/network-ref> ],
+        [ a sh:PropertyShape ;
+            sh:class <http://www.huawei.com/ontology/ietf-network/networks/network/supporting-network> ;
+            sh:maxCount 1 ;
+            sh:message "Leafref network-ref must target an instance of supporting-network" ;
+            sh:nodeKind sh:IRI ;
             sh:path <http://www.huawei.com/ontology/ietf-network/networks/network/link/supporting-link/network-ref> ],
         [ a sh:PropertyShape ;
             sh:maxCount 1 ;
@@ -829,11 +838,11 @@
             sh:minCount 1 ;
             sh:path <http://www.huawei.com/ontology/ietf-network/networks/network/link/supporting-link/link-ref> ],
         [ a sh:PropertyShape ;
-            sh:class <http://www.huawei.com/ontology/ietf-network/networks/network/supporting-network> ;
+            sh:class <http://www.huawei.com/ontology/ietf-network/networks/network/link> ;
             sh:maxCount 1 ;
-            sh:message "Leafref network-ref must target an instance of supporting-network" ;
+            sh:message "Leafref link-ref must target an instance of link" ;
             sh:nodeKind sh:IRI ;
-            sh:path <http://www.huawei.com/ontology/ietf-network/networks/network/link/supporting-link/network-ref> ] ;
+            sh:path <http://www.huawei.com/ontology/ietf-network/networks/network/link/supporting-link/link-ref> ] ;
     sh:sparql [ a sh:SPARQLConstraint ;
             sh:message "Duplicate key combination in list supporting-link" ;
             sh:select """SELECT $this WHERE {
@@ -847,12 +856,22 @@
 }""" ] ;
     sh:targetClass <http://www.huawei.com/ontology/ietf-network/networks/network/link/supporting-link> .
 
+<http://www.huawei.com/ontology/ietf-network/networks/network/node/inventory-mapping-attributes/shape> a sh:NodeShape ;
+    rdfs:label "Shape for inventory-mapping-attributes" ;
+    sh:property [ a sh:PropertyShape ;
+            sh:class <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element> ;
+            sh:maxCount 1 ;
+            sh:message "Leafref ne-ref must target an instance of network-element" ;
+            sh:nodeKind sh:IRI ;
+            sh:path <http://www.huawei.com/ontology/ietf-network/networks/network/node/inventory-mapping-attributes/ne-ref> ] ;
+    sh:targetClass <http://www.huawei.com/ontology/ietf-network/networks/network/node/inventory-mapping-attributes> .
+
 <http://www.huawei.com/ontology/ietf-network/networks/network/node/shape> a sh:NodeShape ;
     rdfs:label "Shape for node" ;
     sh:property [ a sh:PropertyShape ;
-            sh:class <http://www.huawei.com/ontology/ietf-network/networks/network/node/supporting-node> ;
+            sh:class <http://www.huawei.com/ontology/ietf-network/networks/network/node/inventory-mapping-attributes> ;
             sh:nodeKind sh:IRI ;
-            sh:path <http://www.huawei.com/ontology/ietf-network/networks/network/node/hasSupportingNode> ],
+            sh:path <http://www.huawei.com/ontology/ietf-network/networks/network/node/hasInventoryMappingAttributes> ],
         [ a sh:PropertyShape ;
             sh:class <http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point> ;
             sh:nodeKind sh:IRI ;
@@ -862,6 +881,10 @@
             sh:message "List key 'node-id' is required" ;
             sh:minCount 1 ;
             sh:path <http://www.huawei.com/ontology/ietf-network/networks/network/node/node-id> ],
+        [ a sh:PropertyShape ;
+            sh:class <http://www.huawei.com/ontology/ietf-network/networks/network/node/supporting-node> ;
+            sh:nodeKind sh:IRI ;
+            sh:path <http://www.huawei.com/ontology/ietf-network/networks/network/node/hasSupportingNode> ],
         <http://www.huawei.com/ontology/shapes/ietf-network/networks/network/node/node-id> ;
     sh:sparql [ a sh:SPARQLConstraint ;
             sh:message "Duplicate key combination in list node" ;
@@ -884,6 +907,11 @@
             sh:path <http://www.huawei.com/ontology/ietf-network/networks/network/node/supporting-node/node-ref> ],
         [ a sh:PropertyShape ;
             sh:maxCount 1 ;
+            sh:message "List key 'node-ref' is required" ;
+            sh:minCount 1 ;
+            sh:path <http://www.huawei.com/ontology/ietf-network/networks/network/node/supporting-node/node-ref> ],
+        [ a sh:PropertyShape ;
+            sh:maxCount 1 ;
             sh:message "List key 'network-ref' is required" ;
             sh:minCount 1 ;
             sh:path <http://www.huawei.com/ontology/ietf-network/networks/network/node/supporting-node/network-ref> ],
@@ -892,12 +920,7 @@
             sh:maxCount 1 ;
             sh:message "Leafref network-ref must target an instance of supporting-network" ;
             sh:nodeKind sh:IRI ;
-            sh:path <http://www.huawei.com/ontology/ietf-network/networks/network/node/supporting-node/network-ref> ],
-        [ a sh:PropertyShape ;
-            sh:maxCount 1 ;
-            sh:message "List key 'node-ref' is required" ;
-            sh:minCount 1 ;
-            sh:path <http://www.huawei.com/ontology/ietf-network/networks/network/node/supporting-node/node-ref> ] ;
+            sh:path <http://www.huawei.com/ontology/ietf-network/networks/network/node/supporting-node/network-ref> ] ;
     sh:sparql [ a sh:SPARQLConstraint ;
             sh:message "Duplicate key combination in list supporting-node" ;
             sh:select """SELECT $this WHERE {
@@ -911,9 +934,55 @@
 }""" ] ;
     sh:targetClass <http://www.huawei.com/ontology/ietf-network/networks/network/node/supporting-node> .
 
+<http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/inventory-mapping-attributes/port-breakout/breakout-channel/shape> a sh:NodeShape ;
+    rdfs:label "Shape for breakout-channel" ;
+    sh:property [ a sh:PropertyShape ;
+            sh:maxCount 1 ;
+            sh:message "List key 'channel-id' is required" ;
+            sh:minCount 1 ;
+            sh:path <http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/inventory-mapping-attributes/port-breakout/breakout-channel/channel-id> ],
+        <http://www.huawei.com/ontology/shapes/ietf-network/networks/network/node/termination-point/inventory-mapping-attributes/port-breakout/breakout-channel/channel-id> ;
+    sh:sparql [ a sh:SPARQLConstraint ;
+            sh:message "Duplicate key combination in list breakout-channel" ;
+            sh:select """SELECT $this WHERE {
+  $this a <http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/inventory-mapping-attributes/port-breakout/breakout-channel> .
+  $this <http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/inventory-mapping-attributes/port-breakout/breakout-channel/channel-id> ?k1 .
+  ?other a <http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/inventory-mapping-attributes/port-breakout/breakout-channel> .
+  ?other <http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/inventory-mapping-attributes/port-breakout/breakout-channel/channel-id> ?k1 .
+  FILTER(?other != $this)
+}""" ] ;
+    sh:targetClass <http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/inventory-mapping-attributes/port-breakout/breakout-channel> .
+
+<http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/inventory-mapping-attributes/port-breakout/shape> a sh:NodeShape ;
+    rdfs:label "Shape for port-breakout" ;
+    sh:property [ a sh:PropertyShape ;
+            sh:class <http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/inventory-mapping-attributes/port-breakout/breakout-channel> ;
+            sh:nodeKind sh:IRI ;
+            sh:path <http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/inventory-mapping-attributes/port-breakout/hasBreakoutChannel> ] ;
+    sh:targetClass <http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/inventory-mapping-attributes/port-breakout> .
+
+<http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/inventory-mapping-attributes/shape> a sh:NodeShape ;
+    rdfs:label "Shape for inventory-mapping-attributes" ;
+    sh:property [ a sh:PropertyShape ;
+            sh:class <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component> ;
+            sh:maxCount 1 ;
+            sh:message "Leafref port-ref must target an instance of component" ;
+            sh:nodeKind sh:IRI ;
+            sh:path <http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/inventory-mapping-attributes/port-ref> ],
+        [ a sh:PropertyShape ;
+            sh:class <http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/inventory-mapping-attributes/port-breakout> ;
+            sh:nodeKind sh:IRI ;
+            sh:path <http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/inventory-mapping-attributes/hasPortBreakout> ],
+        <http://www.huawei.com/ontology/shapes/ietf-network/networks/network/node/termination-point/inventory-mapping-attributes/ne-ref> ;
+    sh:targetClass <http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/inventory-mapping-attributes> .
+
 <http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/shape> a sh:NodeShape ;
     rdfs:label "Shape for termination-point" ;
     sh:property [ a sh:PropertyShape ;
+            sh:class <http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/inventory-mapping-attributes> ;
+            sh:nodeKind sh:IRI ;
+            sh:path <http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/hasInventoryMappingAttributes> ],
+        [ a sh:PropertyShape ;
             sh:class <http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/supporting-termination-point> ;
             sh:nodeKind sh:IRI ;
             sh:path <http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/hasSupportingTerminationPoint> ],
@@ -923,20 +992,16 @@
 <http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/supporting-termination-point/shape> a sh:NodeShape ;
     rdfs:label "Shape for supporting-termination-point" ;
     sh:property [ a sh:PropertyShape ;
-            sh:maxCount 1 ;
-            sh:message "List key 'tp-ref' is required" ;
-            sh:minCount 1 ;
-            sh:path <http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/supporting-termination-point/tp-ref> ],
-        [ a sh:PropertyShape ;
             sh:class <http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point> ;
             sh:maxCount 1 ;
             sh:message "Leafref tp-ref must target an instance of termination-point" ;
             sh:nodeKind sh:IRI ;
             sh:path <http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/supporting-termination-point/tp-ref> ],
         [ a sh:PropertyShape ;
+            sh:class <http://www.huawei.com/ontology/ietf-network/networks/network/node/supporting-node> ;
             sh:maxCount 1 ;
-            sh:message "List key 'network-ref' is required" ;
-            sh:minCount 1 ;
+            sh:message "Leafref network-ref must target an instance of supporting-node" ;
+            sh:nodeKind sh:IRI ;
             sh:path <http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/supporting-termination-point/network-ref> ],
         [ a sh:PropertyShape ;
             sh:maxCount 1 ;
@@ -950,10 +1015,14 @@
             sh:nodeKind sh:IRI ;
             sh:path <http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/supporting-termination-point/node-ref> ],
         [ a sh:PropertyShape ;
-            sh:class <http://www.huawei.com/ontology/ietf-network/networks/network/node/supporting-node> ;
             sh:maxCount 1 ;
-            sh:message "Leafref network-ref must target an instance of supporting-node" ;
-            sh:nodeKind sh:IRI ;
+            sh:message "List key 'tp-ref' is required" ;
+            sh:minCount 1 ;
+            sh:path <http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/supporting-termination-point/tp-ref> ],
+        [ a sh:PropertyShape ;
+            sh:maxCount 1 ;
+            sh:message "List key 'network-ref' is required" ;
+            sh:minCount 1 ;
             sh:path <http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/supporting-termination-point/network-ref> ] ;
     sh:sparql [ a sh:SPARQLConstraint ;
             sh:message "Duplicate key combination in list supporting-termination-point" ;
@@ -973,22 +1042,22 @@
 <http://www.huawei.com/ontology/ietf-network/networks/network/shape> a sh:NodeShape ;
     rdfs:label "Shape for network" ;
     sh:property [ a sh:PropertyShape ;
-            sh:class <http://www.huawei.com/ontology/ietf-network/networks/network/link> ;
-            sh:nodeKind sh:IRI ;
-            sh:path <http://www.huawei.com/ontology/ietf-network/networks/network/hasLink> ],
-        [ a sh:PropertyShape ;
             sh:class <http://www.huawei.com/ontology/ietf-network/networks/network/network-types> ;
             sh:nodeKind sh:IRI ;
             sh:path <http://www.huawei.com/ontology/ietf-network/networks/network/hasNetworkTypes> ],
         [ a sh:PropertyShape ;
-            sh:class <http://www.huawei.com/ontology/ietf-network/networks/network/supporting-network> ;
+            sh:class <http://www.huawei.com/ontology/ietf-network/networks/network/link> ;
             sh:nodeKind sh:IRI ;
-            sh:path <http://www.huawei.com/ontology/ietf-network/networks/network/hasSupportingNetwork> ],
+            sh:path <http://www.huawei.com/ontology/ietf-network/networks/network/hasLink> ],
         [ a sh:PropertyShape ;
             sh:maxCount 1 ;
             sh:message "List key 'network-id' is required" ;
             sh:minCount 1 ;
             sh:path <http://www.huawei.com/ontology/ietf-network/networks/network/network-id> ],
+        [ a sh:PropertyShape ;
+            sh:class <http://www.huawei.com/ontology/ietf-network/networks/network/supporting-network> ;
+            sh:nodeKind sh:IRI ;
+            sh:path <http://www.huawei.com/ontology/ietf-network/networks/network/hasSupportingNetwork> ],
         [ a sh:PropertyShape ;
             sh:class <http://www.huawei.com/ontology/ietf-network/networks/network/node> ;
             sh:nodeKind sh:IRI ;
@@ -1040,16 +1109,16 @@
 <http://www.huawei.com/ontology/ietf-power-and-energy/energy-objects/power-entry/shape> a sh:NodeShape ;
     rdfs:label "Shape for power-entry" ;
     sh:property [ a sh:PropertyShape ;
-            sh:maxCount 1 ;
-            sh:message "List key 'object-id' is required" ;
-            sh:minCount 1 ;
-            sh:path <http://www.huawei.com/ontology/ietf-power-and-energy/energy-objects/power-entry/object-id> ],
-        [ a sh:PropertyShape ;
             sh:class <http://www.huawei.com/ontology/ietf-hardware/hardware/component> ;
             sh:maxCount 1 ;
             sh:message "Leafref source-component-id must target an instance of component" ;
             sh:nodeKind sh:IRI ;
             sh:path <http://www.huawei.com/ontology/ietf-power-and-energy/energy-objects/power-entry/source-component-id> ],
+        [ a sh:PropertyShape ;
+            sh:maxCount 1 ;
+            sh:message "List key 'object-id' is required" ;
+            sh:minCount 1 ;
+            sh:path <http://www.huawei.com/ontology/ietf-power-and-energy/energy-objects/power-entry/object-id> ],
         <http://www.huawei.com/ontology/shapes/ietf-power-and-energy/energy-objects/power-entry/eo-power>,
         <http://www.huawei.com/ontology/shapes/ietf-power-and-energy/energy-objects/power-entry/eo-power-data-source-accuracy>,
         <http://www.huawei.com/ontology/shapes/ietf-power-and-energy/energy-objects/power-entry/eo-power-measurement-local>,
@@ -1310,6 +1379,11 @@
 
 <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component/parent-rel-pos> rdfs:comment "Conditional: exists when count(../parent) < 2" ;
     sh:deactivated "count(../parent) < 2" .
+
+<http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/inventory-mapping-attributes/port-ref> sh:condition """derived-from-or-self (/nwi:network-inventory/
+nwi:network-elements/nwi:network-element
+[nwi:ne-id=../ne-ref]/nwi:components/nwi:component
+[nwi:component-id=current()]/nwi:class, 'ianahw:port')""" .
 
 <http://www.huawei.com/ontology/shapes/ietf-hardware/hardware/component/alias> a sh:PropertyShape ;
     sh:datatype xsd:string ;
@@ -2074,6 +2148,11 @@
     sh:path <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/passive-device/uuid> ;
     sh:pattern "[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}" .
 
+<http://www.huawei.com/ontology/shapes/ietf-network/networks/network/link/inventory-mapping-attributes/link-type> a sh:PropertyShape ;
+    sh:datatype xsd:string ;
+    sh:maxCount 1 ;
+    sh:path <http://www.huawei.com/ontology/ietf-network/networks/network/link/inventory-mapping-attributes/link-type> .
+
 <http://www.huawei.com/ontology/shapes/ietf-network/networks/network/link/link-id> a sh:PropertyShape ;
     sh:datatype xsd:anyURI ;
     sh:maxCount 1 ;
@@ -2088,6 +2167,16 @@
     sh:datatype xsd:anyURI ;
     sh:maxCount 1 ;
     sh:path <http://www.huawei.com/ontology/ietf-network/networks/network/node/node-id> .
+
+<http://www.huawei.com/ontology/shapes/ietf-network/networks/network/node/termination-point/inventory-mapping-attributes/ne-ref> a sh:PropertyShape ;
+    sh:datatype xsd:string ;
+    sh:maxCount 1 ;
+    sh:path <http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/inventory-mapping-attributes/ne-ref> .
+
+<http://www.huawei.com/ontology/shapes/ietf-network/networks/network/node/termination-point/inventory-mapping-attributes/port-breakout/breakout-channel/channel-id> a sh:PropertyShape ;
+    sh:datatype xsd:unsignedShort ;
+    sh:maxCount 1 ;
+    sh:path <http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/inventory-mapping-attributes/port-breakout/breakout-channel/channel-id> .
 
 <http://www.huawei.com/ontology/shapes/ietf-network/networks/network/node/termination-point/tp-id> a sh:PropertyShape ;
     sh:datatype xsd:anyURI ;
