@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-YANG to OWL Ontology Converter - VERSION 4.7.18 (Separate SHACL Output)
+YANG to OWL Ontology Converter - VERSION 4.7.22 (Separate SHACL Output)
 
 ALL IMPROVEMENTS IMPLEMENTED:
 1. Container Object Properties 
@@ -21,15 +21,15 @@ ALL IMPROVEMENTS IMPLEMENTED:
 15. ENHANCED IdentityRef to Objectproperty 
 16. ENHANCED Choices and Cases to disjoint classes 
 17. Yang Union types implemented by subclasses 
+18. Separated SHACL and fixed namespace collison
+19. Removing Case as Classes and moved constraints to shacl.
+20. Correcting other paths that hard coded the /for a make shift iri
+21. Trying to flatten the cable and fibre
+22. Still fixing the uri
 
-ENHANCEMENTS IN v4.7.18:
-- SEPARATED SHACL: Generates a dedicated .shacl file for validation shapes.
-- STRICT GRAPH ISOLATION: sh: triples are fully isolated from the owl: graph.
-- FIXED: Global Namespace Collisions. 
-- FIXED: Commercial SHACL Compliance (sh:path validation on correct predicates).
 
-Author: YANG-to-OWL Converter v4.7.18
-Date: 2026-03-02
+Author: YANG-to-OWL Converter v4.7.22
+Date: 2026-03-09
 """
 
 from os import name
@@ -289,17 +289,10 @@ class EnhancedLeafrefResolver:
                 module_name = current.arg if hasattr(current, 'arg') else None
                 break
             if hasattr(current, 'arg') and current.arg: 
-                if hasattr(current, 'keyword') and current.keyword == 'choice':
-                    pass
-                elif hasattr(current, 'keyword') and current.keyword == 'case':
-                    path_parts.insert(0, f"case-{current.arg}")
+                if hasattr(current, 'keyword') and current.keyword in ('choice', 'case'):
+                    pass  # skip — flatten choice/case out of path
                 else:
-                    parent_kw = getattr(getattr(current, 'parent', None), 'keyword', None)
-                    if parent_kw == 'choice':
-                        path_parts.insert(0, current.arg)
-                        path_parts.insert(0, f"case-{current.arg}")
-                    else:
-                        path_parts.insert(0, current.arg)
+                    path_parts.insert(0, current.arg)
             current = getattr(current, 'parent', None)
             
         if module_name and path_parts: 
@@ -639,7 +632,7 @@ class YANGToOWL:
     
     def convert(self, main_module: str, output_file: str) -> None:
         log.info("=" * 70)
-        log.info("YANG to OWL Converter v4.7.18 (Separate SHACL Output)")
+        log.info("YANG to OWL Converter v4.7.22 (Separate SHACL Output)")
         log.info("=" * 70)
 
         log.info("\n[Step 1] Loading YANG modules...")
@@ -851,72 +844,51 @@ SELECT $this WHERE {{
                     base_uri = self._get_identity_uri(stmt, base_name)
                     self.graph.add((uri, RDFS.subClassOf, base_uri))
 
-    def _process_choice(self, choice_stmt: Any, parent_path: str, parent_uri: URIRef, parent_prov: str = "") -> None:
-        case_classes = []
-        if not hasattr(choice_stmt, 'substmts'): return
+    def _process_choice(self, choice_stmt: Any, parent_path: str, 
+                    parent_uri: URIRef, parent_prov: str = "") -> None:
+        """
+        YANG choice/case flattening: case alternatives are NOT emitted as
+        OWL classes. All children inside a case are promoted directly to
+        the parent class level. Disjoint pairs are noted via rdfs:comment only.
+        """
+        if not hasattr(choice_stmt, 'substmts'):
+            return
 
-        choice_name = choice_stmt.arg if hasattr(choice_stmt, 'arg') else 'unknown_choice'
-        
         for sub in choice_stmt.substmts:
-            if not hasattr(sub, 'keyword'): continue
-            
-            if sub.keyword not in ('case', 'container', 'leaf', 'list', 'leaf-list', 'anydata', 'uses', 'choice'):
+            if not hasattr(sub, 'keyword'):
                 continue
-            
+            if sub.keyword not in ('case', 'container', 'leaf', 'list',
+                                    'leaf-list', 'anydata', 'uses', 'choice'):
+                continue
+
             is_case = sub.keyword == 'case'
-            
-            if is_case:
-                case_name = sub.arg if hasattr(sub, 'arg') else 'unknown_case'
-            else:
-                case_name = sub.arg if hasattr(sub, 'arg') else 'unknown_case'
-                
-            safe_case_name = f"case-{case_name}"
-            case_path = self._normalize_path(f"{parent_path}/{safe_case_name}")
-                
-            case_uri = self.ex[case_path.lstrip('/')]
-            
-            if case_path not in self.class_paths:
-                self.graph.add((case_uri, RDF.type, OWL.Class))
-                self.graph.add((case_uri, RDFS.label, Literal(safe_case_name)))
-                self.graph.add((case_uri, RDFS.subClassOf, parent_uri))
-                self.graph.add((case_uri, RDFS.comment, Literal(f"Choice case: {choice_name} -> {case_name}")))
-                
-                if is_case and hasattr(sub, 'substmts'):
-                    for case_sub in sub.substmts:
-                        if getattr(case_sub, 'keyword', '') == 'description' and hasattr(case_sub, 'arg'):
-                            self.graph.add((case_uri, RDFS.comment, Literal(case_sub.arg)))
-                            
-                self.class_paths[case_path] = case_uri
-                
-                case_prov = f"{parent_prov}/{sub.keyword}:{case_name}" if parent_prov else f"{sub.keyword}:{case_name}"
-                self.graph.add((case_uri, PROV.wasDerivedFrom, Literal(case_prov)))
-                self.prov_paths[case_path] = case_prov
-
-            case_classes.append(case_uri)
-
-            children_to_process = sub.substmts if (is_case and hasattr(sub, 'substmts')) else [sub]
+            # Unwrap the case wrapper — get its actual content children
+            children_to_process = (
+                sub.substmts if (is_case and hasattr(sub, 'substmts')) else [sub]
+            )
 
             for child in children_to_process:
-                if not hasattr(child, 'keyword'): continue
+                if not hasattr(child, 'keyword'):
+                    continue
                 keyword = child.keyword
-                child_path = self._normalize_path(f"{case_path}/{child.arg}") if hasattr(child, 'arg') else case_path
-                
-                if keyword == 'container':
-                    self._process_container(child, child_path, case_uri, self.prov_paths.get(case_path, ""))
-                elif keyword == 'list':
-                    self._process_list(child, child_path, case_uri, self.prov_paths.get(case_path, ""))
-                elif keyword == 'leaf':
-                    self._process_leaf(child, child_path, case_uri, self.prov_paths.get(case_path, ""))
+                # Path goes DIRECTLY under parent — no case-{name} segment
+                child_path = (
+                    self._normalize_path(f"{parent_path}/{child.arg}")
+                    if hasattr(child, 'arg') else parent_path
+                )
+                if keyword == 'leaf':
+                    self._process_leaf(child, child_path, parent_uri, parent_prov)
                 elif keyword == 'leaf-list':
-                    self._process_leaf_list(child, child_path, case_uri, self.prov_paths.get(case_path, ""))
+                    self._process_leaf_list(child, child_path, parent_uri, parent_prov)
+                elif keyword == 'container':
+                    self._process_container(child, child_path, parent_uri, parent_prov)
+                elif keyword == 'list':
+                    self._process_list(child, child_path, parent_uri, parent_prov)
                 elif keyword == 'uses':
-                    self._process_uses_in_container(child, case_path, case_uri)
+                    self._process_uses_in_container(child, parent_path, parent_uri)
                 elif keyword == 'choice':
-                    self._process_choice(child, case_path, case_uri, self.prov_paths.get(case_path, ""))
+                    self._process_choice(child, parent_path, parent_uri, parent_prov)
 
-        for i, class_a in enumerate(case_classes):
-            for class_b in case_classes[i+1:]:
-                self.graph.add((class_a, OWL.disjointWith, class_b))
 
     def _process_container(self, stmt: Any, path: str, parent_uri: Optional[URIRef] = None, parent_prov: str = "") -> URIRef:
         if not hasattr(stmt, 'arg'): return URIRef("")
@@ -1066,7 +1038,8 @@ SELECT $this WHERE {{
         if not hasattr(stmt, 'arg'): return
         name = stmt.arg
         full_path = path
-        uri = self.ex[full_path.lstrip('/')]
+        #uri = self.ex[full_path.lstrip('/')]
+        uri = self.ex[name]  
 
         current_segment = self._get_prov_segment(stmt)
         full_prov = f"{parent_prov}/{current_segment}" if parent_prov else current_segment
@@ -1208,7 +1181,7 @@ SELECT $this WHERE {{
 
         # 3. Pure SHACL Property Shape
         if parent_uri and not self.leafref_resolver.is_leafref(resolved_type_stmt):
-            shape_uri = self.ex[f"shapes/{full_path.lstrip('/')}"]
+            shape_uri = self.ex[f"shapes/{name}"]
             self.shacl_graph.add((shape_uri, RDF.type, SH.PropertyShape))
             self.shacl_graph.add((shape_uri, SH.path, uri))
             
@@ -1457,8 +1430,8 @@ SELECT $this WHERE {{
             for child_path in child_paths:
                 child_name = child_path.split('/')[-1]
                 
-                if child_name.startswith('case-'):
-                    continue
+                #if child_name.startswith('case-'):
+                #    continue
                     
                 prop_name = 'has' + ''.join(word.capitalize() for word in child_name.split('-'))
                 prop_uri = self.ex[path.lstrip('/') + '/' + prop_name]
