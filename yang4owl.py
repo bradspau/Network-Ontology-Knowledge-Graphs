@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-YANG to OWL Ontology Converter - VERSION 4.7.22 (Separate SHACL Output)
+YANG to OWL Ontology Converter - VERSION 4.7.23 (Separate SHACL Output)
 
 ALL IMPROVEMENTS IMPLEMENTED:
 1. Container Object Properties 
@@ -26,9 +26,12 @@ ALL IMPROVEMENTS IMPLEMENTED:
 20. Correcting other paths that hard coded the /for a make shift iri
 21. Trying to flatten the cable and fibre
 22. Still fixing the uri
+23. Add auto generate prefixes to the ontology
+24. Make prefixes static
+25. add more static prefixes
 
 
-Author: YANG-to-OWL Converter v4.7.22
+Author: YANG-to-OWL Converter v4.7.25
 Date: 2026-03-09
 """
 
@@ -632,7 +635,7 @@ class YANGToOWL:
     
     def convert(self, main_module: str, output_file: str) -> None:
         log.info("=" * 70)
-        log.info("YANG to OWL Converter v4.7.22 (Separate SHACL Output)")
+        log.info("YANG to OWL Converter v4.7.23 (Separate SHACL Output)")
         log.info("=" * 70)
 
         log.info("\n[Step 1] Loading YANG modules...")
@@ -680,9 +683,11 @@ class YANGToOWL:
 
         shacl_file = str(Path(output_file).with_suffix('.shacl'))
         
+        self._bind_ontology_prefixes()
         log.info(f"\n[Output] Saving Core OWL Ontology to {output_file}...")
         self.graph.serialize(destination=output_file, format='turtle')
 
+        self._bind_ontology_prefixes()
         log.info(f"[Output] Saving Validation SHACL Shapes to {shacl_file}...")
         self.shacl_graph.serialize(destination=shacl_file, format='turtle')
         
@@ -1615,6 +1620,128 @@ SELECT $this WHERE {{
                 self.leafref_resolved_count += 1
             else:
                 self.leafref_unresolved_count += 1
+    
+    def _bind_ontology_prefixes(self) -> None:
+        """Bind a curated, human-readable set of prefixes derived from the
+        logical structure of the ontology URI space. Groups related sub-paths
+        under a single short prefix rather than auto-deriving one per unique
+        namespace path."""
+        base = self.base_uri.rstrip('/')
+
+        # Curated prefix map: prefix -> namespace URI
+        # Ordered from most-specific to least-specific so rdflib picks the
+        # longest matching namespace when serialising.
+        curated = [
+            # ── Cable sub-containers ──────────────────────────────────────
+            ("cabOptical",  f"{base}/ietf-network-inventory/network-inventory/cable/optical-cable/"),
+            ("cabAEnd",     f"{base}/ietf-network-inventory/network-inventory/cable/a-end/"),
+            ("cabZEnd",     f"{base}/ietf-network-inventory/network-inventory/cable/z-end/"),
+            ("cabChAEnd",   f"{base}/ietf-network-inventory/network-inventory/cable/child-cable/a-end/"),
+            ("cabChZEnd",   f"{base}/ietf-network-inventory/network-inventory/cable/child-cable/z-end/"),
+            # ── NWI sub-containers ────────────────────────────────────────
+            ("nwiNEs",      f"{base}/ietf-network-inventory/network-inventory/network-elements/"),
+            ("nwiCompSwRev",f"{base}/ietf-network-inventory/network-inventory/network-elements/network-element/components/component/software-rev/"),
+            ("nwiCompPatch",f"{base}/ietf-network-inventory/network-inventory/network-elements/network-element/components/component/software-rev/patch/"),
+            ("nwiSwRevPatch",f"{base}/ietf-network-inventory/network-inventory/network-elements/network-element/software-rev/patch/"),
+            ("nwiLocs",     f"{base}/ietf-network-inventory/network-inventory/locations/"),
+            ("nwiRacks",    f"{base}/ietf-network-inventory/network-inventory/locations/racks/"),
+            ("nwiChassis",  f"{base}/ietf-network-inventory/network-inventory/locations/racks/rack/contained-chassis/"),
+            ("nwiRefFrame", f"{base}/ietf-network-inventory/network-inventory/locations/location/geo-location/reference-frame/"),
+            # ── Network sub-containers ────────────────────────────────────
+            ("netNetworks", f"{base}/ietf-network/networks/"),
+            ("netSuppNet",  f"{base}/ietf-network/networks/network/supporting-network/"),
+            ("netSuppNode", f"{base}/ietf-network/networks/network/node/supporting-node/"),
+            ("netSuppLink", f"{base}/ietf-network/networks/network/link/supporting-link/"),
+            ("netSuppTP",   f"{base}/ietf-network/networks/network/node/termination-point/supporting-termination-point/"),
+            ("netBrkChan",  f"{base}/ietf-network/networks/network/node/termination-point/inventory-mapping-attributes/port-breakout/breakout-channel/"),
+            ("netPortBrk",  f"{base}/ietf-network/networks/network/node/termination-point/inventory-mapping-attributes/port-breakout/"),
+            # ── Hardware sub-containers ───────────────────────────────────
+            ("hwSensorData",f"{base}/ietf-hardware/hardware/component/sensor-data/"),
+            ("hwState",     f"{base}/ietf-hardware/hardware/component/state/"),
+            # ── Power sub-containers ──────────────────────────────────────
+            ("paePwrEntry", f"{base}/ietf-power-and-energy/energy-objects/power-entry/"),
+            # ── Typedef/enumeration sub-namespaces ───────────────────────
+            ("hwAdminSt",   f"{base}/types/ietf-hardware/admin-state/"),
+            ("hwOperSt",    f"{base}/types/ietf-hardware/oper-state/"),
+            ("hwUsageSt",   f"{base}/types/ietf-hardware/standby-state/"),
+            ("hwSensorSt",  f"{base}/types/ietf-hardware/sensor-status/"),
+            ("hwSensorVSc", f"{base}/types/ietf-hardware/sensor-value-scale/"),
+            ("hwSensorVTy", f"{base}/types/ietf-hardware/sensor-value-type/"),
+            ("inetIpVer",   f"{base}/types/ietf-inet-types/ip-version/"),
+            # ── SHACL shapes namespace ────────────────────────────────────
+            ("shapes",      f"{base}/shapes/"),
+            # ── Typedef shapes ────────────────────────────────────────────
+            ("typedef",     f"{base}/typedef/"),
+
+            # ── Top-level module roots (catch-all for module-level URIs) ──
+            ("hwRoot",      f"{base}/ietf-hardware/"),
+            ("nwiRoot",     f"{base}/ietf-network-inventory/"),
+            ("netRoot",     f"{base}/ietf-network/"),
+            ("paeRoot",     f"{base}/ietf-power-and-energy/"),
+            ("ianaHwRoot",  f"{base}/iana-hardware/"),
+            ("nwiPassRoot", f"{base}/ietf-nwi-passive-inventory/"),
+            ("niLocRoot",   f"{base}/ietf-ni-location/"),
+            # ── Identity top-level (already have sub-paths above) ─────────
+            ("idRoot",      f"{base}/identity/"),
+            # ── Notifications ─────────────────────────────────────────────
+            ("hwNotif",     f"{base}/notification/ietf-hardware/"),
+            # ── Identity hierarchies ──────────────────────────────────────
+            ("ianaHw",      f"{base}/identity/iana-hardware/"),
+            ("nwiPassId",   f"{base}/identity/ietf-nwi-passive-inventory/"),
+            ("nwiInvId",    f"{base}/identity/ietf-network-inventory/"),
+            ("hwId",        f"{base}/identity/ietf-hardware/"),
+            ("paeId",       f"{base}/identity/ietf-power-and-energy/"),
+            ("yangId",      f"{base}/identity/ietf-yang-types/"),
+            # ── Typedef / enumeration types ───────────────────────────────
+            ("hwTypes",     f"{base}/types/ietf-hardware/"),
+            ("inetTypes",   f"{base}/types/ietf-inet-types/"),
+            # ── Grouping abstract classes ─────────────────────────────────
+            ("grpGeo",      f"{base}/grouping/ietf-geo-location/"),
+            ("grpNwi",      f"{base}/grouping/ietf-network-inventory/"),
+            ("grpNwiTop",   f"{base}/grouping/ietf-network-inventory-topology/"),
+            ("grpNwiPass",  f"{base}/grouping/ietf-nwi-passive-inventory/"),
+            ("grpNet",      f"{base}/grouping/ietf-network/"),
+            ("grpNetTop",   f"{base}/grouping/ietf-network-topology/"),
+            ("grpNiLoc",    f"{base}/grouping/ietf-ni-location/"),
+            # ── Hardware ──────────────────────────────────────────────────
+            ("hw",          f"{base}/ietf-hardware/hardware/"),
+            ("hwComp",      f"{base}/ietf-hardware/hardware/component/"),
+            # ── Network Inventory ─────────────────────────────────────────
+            ("nwi",         f"{base}/ietf-network-inventory/network-inventory/"),
+            ("nwiNE",       f"{base}/ietf-network-inventory/network-inventory/network-elements/network-element/"),
+            ("nwiComp",     f"{base}/ietf-network-inventory/network-inventory/network-elements/network-element/components/component/"),
+            ("nwiSwRev",    f"{base}/ietf-network-inventory/network-inventory/network-elements/network-element/software-rev/"),
+            ("nwiLoc",      f"{base}/ietf-network-inventory/network-inventory/locations/location/"),
+            ("nwiGeo",      f"{base}/ietf-network-inventory/network-inventory/locations/location/geo-location/"),
+            ("nwiRack",     f"{base}/ietf-network-inventory/network-inventory/locations/racks/rack/"),
+            ("cab",         f"{base}/ietf-network-inventory/network-inventory/cable/"),
+            ("cabChild",    f"{base}/ietf-network-inventory/network-inventory/cable/child-cable/"),
+            ("cabOptical",  f"{base}/ietf-network-inventory/network-inventory/cable/optical-cable/"),
+            ("pdev",        f"{base}/ietf-network-inventory/network-inventory/passive-device/"),
+            ("pdevPort",    f"{base}/ietf-network-inventory/network-inventory/passive-device/passive-port/"),
+            # ── Network topology ──────────────────────────────────────────
+            ("net",         f"{base}/ietf-network/networks/network/"),
+            ("netNode",     f"{base}/ietf-network/networks/network/node/"),
+            ("netLink",     f"{base}/ietf-network/networks/network/link/"),
+            ("netTP",       f"{base}/ietf-network/networks/network/node/termination-point/"),
+            ("netInvMap",   f"{base}/ietf-network/networks/network/node/termination-point/inventory-mapping-attributes/"),
+            # ── Power and Energy ──────────────────────────────────────────
+            ("pae",         f"{base}/ietf-power-and-energy/energy-objects/"),
+        ]
+
+        bound = 0
+        for prefix, ns_uri in curated:
+            ns = Namespace(ns_uri)
+            for g in (self.graph, self.shacl_graph):
+                try:
+                    g.bind(prefix, ns, override=False)
+                    bound += 1
+                except Exception:
+                    pass
+
+        log.info(f"  Bound {bound // 2} curated ontology namespace prefixes")
+
+
 
 class YANGToHTML:
     """Generates an HTML Tree view of the parsed YANG modules."""
