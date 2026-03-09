@@ -93,134 +93,7 @@ Python yang4owl
         _add_prov_metadata() annotates every class, datatype property, and object property with PROV wasDerivedFrom URIs that encode the originating YANG path and element type.
     ​
 
-  Updated v4.6 to v4.7
-  Design decisions made on the conversion to align the semantics with performance and use with commercial reasoners and w3c RL profile. In short, avoiding the full description logic.
-
-    1. Yang union allows a leaf to be one of several types. OWL only supports one type as data property. Challenge is that owl unionof is typically not supported in commercial reasoners due to it being out of polynomial time reasoning. Inclusion of owl unionof probably would imply a user would refactor the turtle. 
-
-    2. Mapping of yag choices and cases. In yang this makes data nodes mutually excusive. Challenge map these to owl class disjointness.
-
-    3. Identityref to ObjectProperty Trasition. Script currently recognises identityref and tags the leaf as ObjectProperty and points it to a specific URI. Treting the identity as a flat value rater than navigable class. _process_identitie processes identites as rdfs:subClassOf but when processing the leaf links to the base identity inhibiting a reasoner to understand sub-identity is a valid value. The rdfs:range of the ObjectProperty should point to individuals that are members of the identity class (or subclass).
-
-    4. Yang instance-identifier is a path that points to specific instance in the data tree.  ie. foreign key. Challenge convert instance-identifier to Functional Object Properties.
-
-    5. Yang must and when statement contain complex xpath logic that owl would struggle to express. Challenge to update the SHACL generation.
-
-    
-    IETF-ni-location.ttl
-
-    Running the script upon the ietf-ni-location.yang file subsumes all the associated yang files referenced by that module before producing the output. If running the script on ietf-ni-location.yang there for produces the ontology ietf-ni-location-python.ttl which includes the iana-hardware, ietf-hardware, ietf-network-topology and ietf-nwi-passive-topology. 
-
-    I probably could have, should have, made these separate ontologies but is what it is. 
-
-
-(Still testing these as I am having dificulty creating variants)
-What is at a location? (works)
-PREFIX ex: <http://www.huawei.com/ontology/>
-PREFIX hw: <http://www.huawei.com/ontology/ietf-hardware/hardware/component/>
-PREFIX nwi: <http://www.huawei.com/ontology/ietf-network-inventory-txt/network-inventory/network-elements/network-element/>
-PREFIX nil: <http://www.huawei.com/ontology/ietf-ni-location/locations/>
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-
-
-SELECT ?location ?id ?name ?type
-WHERE {
-  ?location a nil:location .
-  ?location ex:id ?id .
-  ?location ex:name ?name .
-  ?location ex:type ?type .
-}
-
-Chassis Query (works)
-    Query to retrieve the unique identifier of every component classified as a chassis, its name, the specific network element and its physical location. 
-
-PREFIX ex: <http://www.huawei.com/ontology/>
-PREFIX hw: <http://www.huawei.com/ontology/ietf-hardware/hardware/component/>
-PREFIX nwi: <http://www.huawei.com/ontology/ietf-network-inventory-txt/network-inventory/network-elements/network-element/>
-PREFIX nil: <http://www.huawei.com/ontology/ietf-ni-location/locations/location/>
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-PREFIX components: <http://www.huawei.com/ontology/ietf-network-inventory-txt/network-inventory/network-elements/network-element/components/>
-PREFIX identity: <http://www.huawei.com/ontology/identity/>
-PREFIX loc: <http://www.huawei.com/ontology/ietf-ni-location/locations/>
-
-SELECT ?componentID ?componentName ?networkElementID ?locationID
-WHERE {
-# 1. Find components classified specifically as a 'chassis'
-?component a components:component ;
-            ex:class identity:chassis ;
-            ex:component-id ?componentID .
-# 2. Get the optional human-readable name
-    OPTIONAL { ?component ex:name ?componentName . }
-# 3. Trace which Network Element (NE) this component belongs to
-    ?ne components:hasComponent ?component ;
-        ex:ne-id ?networkElementID ;   
-        loc:location ?locationID .}
-ORDER BY ?locationID ?networkElementID
-
-Locate Chassis in location (works)
-
-PREFIX ex: <http://www.huawei.com/ontology/>
-PREFIX hw: <http://www.huawei.com/ontology/ietf-hardware/hardware/component/>
-PREFIX nwi: <http://www.huawei.com/ontology/ietf-network-inventory-txt/network-inventory/network-elements/network-element/>
-PREFIX nil: <http://www.huawei.com/ontology/ietf-ni-location/locations/location/>
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-PREFIX components: <http://www.huawei.com/ontology/ietf-network-inventory-txt/network-inventory/network-elements/network-element/components/>
-PREFIX identity: <http://www.huawei.com/ontology/identity/>
-PREFIX loc: <http://www.huawei.com/ontology/ietf-ni-location/locations/>
-
-   SELECT ?componentID ?componentName ?networkElementID ?locationID
-    WHERE {
-    # 1. Find components classified specifically as a 'chassis'
-    ?component a components:component ;
-                ex:class identity:chassis ;
-                ex:component-id ?componentID .
-    
-    # 2. Get the optional human-readable name
-    OPTIONAL { ?component ex:name ?componentName . }
-
-    # 3. Trace which Network Element (NE) this component belongs to
-    ?ne components:hasComponent ?component ;
-        ex:ne-id ?networkElementID .
-
-    # 4. Link the Network Element to its physical Location ID
-    ?ne loc:location ?locationID .
-    }
-    ORDER BY ?locationID ?networkElementID
-
-Locate chassis in rack and row <broken - should be fixed in 4.7.1 as the container/leaf in the group was not dealt with properly. Just need to test).
-
-I've some thing missing in the schema...have to review where and why it is not present.
-
-Power Energy Query 
-    PREFIX ex: <http://www.huawei.com/ontology/>
-    PREFIX eo-p: <http://www.huawei.com/ontology/ietf-power-and-energy-txt/energy-objects/power-entry/>
-    PREFIX id: <http://www.huawei.com/ontology/identity/>
-
-    SELECT ?chassisName ?locationID ?rackID ?row ?col ?currentPower
-    WHERE {
-    # Link Chassis to Power
-    ?powerEntry a <http://www.huawei.com/ontology/ietf-power-and-energy-txt/energy-objects/power-entry> ;
-                eo-p:source-component-id ?chassis ;
-                eo-p:eo-power ?currentPower .
-    
-    ?chassis ex:name ?chassisName ;
-            ex:component-id ?chID .
-
-    # Link Chassis to Rack
-    ?rack a <http://www.huawei.com/ontology/ietf-ni-location/locations/racks/rack> ;
-            ex:id ?rackID ;
-            <http://www.huawei.com/ontology/ietf-ni-location/locations/location/ni-location-ref> ?locationID ;
-            <http://www.huawei.com/ontology/ietf-ni-location/locations/racks/rack/rack-location/row-number> ?row ;
-            <http://www.huawei.com/ontology/ietf-ni-location/locations/racks/rack/rack-location/column-number> ?col ;
-            <http://www.huawei.com/ontology/ietf-ni-location/locations/racks/rack/contained-chassis> ?container .
-            
-    ?container ex:component-ref ?chID .
-    }
-    ORDER BY DESC(?currentPower)
-
-
-
-
+  
     -----------------------------------------
     Because I forget...
 
@@ -244,3 +117,69 @@ Power Energy Query
     notification        owl:Class                       Functional Modeling         N/A                         N/A
     must/when           sh:condition/sh:deactivated     Conditional Logic           Property/Class URI          N/A (XPath Literal) 
     Child Containment   has[ChildName] (ObjectProperty) Structural Integrity    Parent Class URI            Child Class URI 
+
+-----------------------------------
+Queries on the plant data
+
+Find all cables connected to an enclosure 
+    PREFIX ex:       <http://www.huawei.com/ontology/>
+    PREFIX inv-cab:  <http://www.huawei.com/instances/cable/>
+    PREFIX inv-dev:  <http://www.huawei.com/instances/passive-device/>
+
+    SELECT ?cable ?cableId ?end ?endDeviceId ?length
+    WHERE {
+    # Match cables where either a-end or z-end device-id = "enclosure_166"
+    ?cable  a                <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/cable> ;
+            ex:id            ?cableId ;
+            ex:length        ?length .
+
+    { ?cable ex:hasAEnd ?endNode . BIND("a-end" AS ?end) }
+    UNION
+    { ?cable ex:hasZEnd ?endNode . BIND("z-end" AS ?end) }
+
+    ?endNode ex:device-id "enclosure_166" .
+    ?endNode ex:device-id ?endDeviceId .
+    }
+    ORDER BY ?cableId
+
+    Output 
+    http://www.huawei.com/instances/cable/cable_106	"cable_106"	"a-end"	"enclosure_166"	102.1
+    http://www.huawei.com/instances/cable/cable_114	"cable_114"	"z-end"	"enclosure_166"	60.0
+    http://www.huawei.com/instances/cable/cable_124	"cable_124"	"a-end"	"enclosure_166"	78.07
+    http://www.huawei.com/instances/cable/cable_126	"cable_126"	"a-end"	"enclosure_166"	97.1
+    http://www.huawei.com/instances/cable/cable_186	"cable_186"	"a-end"	"enclosure_166"	58.9
+    http://www.huawei.com/instances/cable/cable_296	"cable_296"	"a-end"	"enclosure_166"	102.1
+    http://www.huawei.com/instances/cable/cable_399	"cable_399"	"a-end"	"enclosure_166"	88.07
+    http://www.huawei.com/instances/cable/cable_406	"cable_406"	"a-end"	"enclosure_166"	78.07
+    http://www.huawei.com/instances/cable/cable_441	"cable_441"	"a-end"	"enclosure_166"	97.1
+
+FInd all cables at enclousure and provide device at the other end
+    PREFIX ex:       <http://www.huawei.com/ontology/>
+    PREFIX inv-cab:  <http://www.huawei.com/instances/cable/>
+    PREFIX inv-dev:  <http://www.huawei.com/instances/passive-device/>
+
+    SELECT ?cable ?cableId ?end ?otherDeviceId ?length
+    FROM <n2>
+    WHERE {
+    ?cable ex:id ?cableId ; ex:length ?length .
+
+    { ?cable ex:hasAEnd ?thisEnd ; ex:hasZEnd ?otherEnd . BIND("a-end" AS ?end) }
+    UNION
+    { ?cable ex:hasZEnd ?thisEnd ; ex:hasAEnd ?otherEnd . BIND("z-end" AS ?end) }
+
+    ?thisEnd  ex:device-id "enclosure_166" .
+    ?otherEnd ex:device-id ?otherDeviceId .
+    }
+    ORDER BY ?cableId
+
+
+    Output
+    http://www.huawei.com/instances/cable/cable_106	"cable_106"	"a-end"	"ATB_3469"	102.1
+    http://www.huawei.com/instances/cable/cable_114	"cable_114"	"z-end"	"enclosure_106"	60.0
+    http://www.huawei.com/instances/cable/cable_124	"cable_124"	"a-end"	"ATB_202"	78.07
+    http://www.huawei.com/instances/cable/cable_126	"cable_126"	"a-end"	"ATB_3874"	97.1
+    http://www.huawei.com/instances/cable/cable_186	"cable_186"	"a-end"	"ATB_3661"	58.9
+    http://www.huawei.com/instances/cable/cable_296	"cable_296"	"a-end"	"ATB_3854"	102.1
+    http://www.huawei.com/instances/cable/cable_399	"cable_399"	"a-end"	"ATB_2051"	88.07
+    http://www.huawei.com/instances/cable/cable_406	"cable_406"	"a-end"	"ATB_3554"	78.07
+    http://www.huawei.com/instances/cable/cable_441	"cable_441"	"a-end"	"ATB_1448"	97.1
