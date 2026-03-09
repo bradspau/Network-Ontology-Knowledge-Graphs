@@ -122,64 +122,164 @@ Python yang4owl
 Queries on the plant data
 
 Find all cables connected to an enclosure 
-    PREFIX ex:       <http://www.huawei.com/ontology/>
-    PREFIX inv-cab:  <http://www.huawei.com/instances/cable/>
-    PREFIX inv-dev:  <http://www.huawei.com/instances/passive-device/>
+    PREFIX ex:      <http://www.huawei.com/ontology/>
+    PREFIX inv-cab: <http://www.huawei.com/instances/cable/>
+    PREFIX inv-dev: <http://www.huawei.com/instances/passive-device/>
+    PREFIX nwi:     <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/>
 
-    SELECT ?cable ?cableId ?end ?endDeviceId ?length
+    SELECT ?cable ?cableId ?end ?endDevice ?endDeviceId ?length
     WHERE {
-    # Match cables where either a-end or z-end device-id = "enclosure_166"
-    ?cable  a                <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/cable> ;
-            ex:id            ?cableId ;
-            ex:length        ?length .
+        ?cable  a         nwi:cable ;
+                ex:id     ?cableId ;
+                ex:length ?length .
 
-    { ?cable ex:hasAEnd ?endNode . BIND("a-end" AS ?end) }
-    UNION
-    { ?cable ex:hasZEnd ?endNode . BIND("z-end" AS ?end) }
+        { ?cable ex:hasAEnd ?endNode . BIND("a-end" AS ?end) }
+        UNION
+        { ?cable ex:hasZEnd ?endNode . BIND("z-end" AS ?end) }
 
-    ?endNode ex:device-id "enclosure_166" .
-    ?endNode ex:device-id ?endDeviceId .
+        ?endNode ex:device-ref inv-dev:enclosure_166 .
+        BIND(inv-dev:enclosure_166 AS ?endDevice)
+
+        OPTIONAL { inv-dev:enclosure_166 ex:id ?endDeviceId }
+    }
+    ORDER BY ?cableId
+
+
+    Output 
+    inv-cab:cable_114	"cable_114"	"z-end"	inv-dev:enclosure_166	"enclosure_166"	60.0
+    inv-cab:cable_124	"cable_124"	"a-end"	inv-dev:enclosure_166	"enclosure_166"	78.07
+    inv-cab:cable_126	"cable_126"	"a-end"	inv-dev:enclosure_166	"enclosure_166"	97.1
+    inv-cab:cable_186	"cable_186"	"a-end"	inv-dev:enclosure_166	"enclosure_166"	58.9
+    inv-cab:cable_296	"cable_296"	"a-end"	inv-dev:enclosure_166	"enclosure_166"	102.1
+    inv-cab:cable_406	"cable_406"	"a-end"	inv-dev:enclosure_166	"enclosure_166"	78.07
+
+Find all cables at enclousure and provide device at the other end
+    PREFIX ex:      <http://www.huawei.com/ontology/>
+    PREFIX inv-cab: <http://www.huawei.com/instances/cable/>
+    PREFIX inv-dev: <http://www.huawei.com/instances/passive-device/>
+
+    SELECT ?cable ?cableId ?end ?otherDevice ?length
+    WHERE {
+        ?cable ex:id ?cableId ;
+            ex:length ?length .
+
+        { ?cable ex:hasAEnd ?thisEnd ; ex:hasZEnd ?otherEnd . BIND("a-end" AS ?end) }
+        UNION
+        { ?cable ex:hasZEnd ?thisEnd ; ex:hasAEnd ?otherEnd . BIND("z-end" AS ?end) }
+
+        ?thisEnd  ex:device-ref inv-dev:enclosure_166 .
+        ?otherEnd ex:device-ref ?otherDevice .
+    }
+    ORDER BY ?cableId
+
+
+
+    Output
+    inv-cab:cable_114	"cable_114"	"z-end"	inv-dev:enclosure_106	60.0
+    inv-cab:cable_124	"cable_124"	"a-end"	inv-dev:ATB_202	78.07
+    inv-cab:cable_126	"cable_126"	"a-end"	inv-dev:ATB_3874	97.1
+    inv-cab:cable_186	"cable_186"	"a-end"	inv-dev:ATB_3661	58.9
+    inv-cab:cable_296	"cable_296"	"a-end"	inv-dev:ATB_3854	102.1
+    inv-cab:cable_406	"cable_406"	"a-end"	inv-dev:ATB_3554	78.07
+
+Query all upstream cables and devices from ONT_1. Unfortaunetly cannot tell where the splitter are in the enclosures and hence what ONT are on the same feed as the OLT....bit of a shame.
+
+ONT_1 (port_Uplink_1)
+  └── cable_ONT_1_to_ATB3874 ── ATB_3874
+        └── cable_126 ── enclosure_166 (FAT)
+              ├── cable_114 ──┐
+              ├── cable_145 ──┤
+              └── cable_156 ──┤ enclosure_106 (FDT)
+              └── cable_263 ──┘
+                    ├── enclosure_81 (FAT) → drop cables → ATB_2531, ATB_2377, ATB_3457, ATB_2210, ATB_2190, ATB_2857, ATB_472
+                    ├── enclosure_28 (FAT) → drop cables → ATB_503, ATB_2534, ATB_1468, ATB_1278, ATB_1222, ATB_273
+                    └── enclosure_60 (FAT) → drop cables → ATB_2344, ATB_2777, ATB_1289, ATB_3458, ATB_1522, ATB_747
+
+    Query
+
+    PREFIX ex:        <http://www.huawei.com/ontology/>
+    PREFIX inv-cab:   <http://www.huawei.com/instances/cable/>
+    PREFIX inv-dev:   <http://www.huawei.com/instances/passive-device/>
+    PREFIX nwi:       <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/>
+    PREFIX rdf:       <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
+    SELECT DISTINCT
+        ?cable
+        ?cableId
+        ?cableRole
+        ?cableLength
+        ?aEndDevice
+        ?aEndDeviceId
+        ?aEndPort
+        ?zEndDevice
+        ?zEndPort
+    WHERE {
+        {
+            BIND(inv-cab:cable_ONT_1_to_ATB3874 AS ?cable)
+        }
+        UNION
+        {
+            inv-cab:cable_ONT_1_to_ATB3874
+                ex:hasZEnd /
+                ex:device-ref /
+                ^ex:device-ref /
+                ^( ex:hasAEnd | ex:hasZEnd ) /
+                (
+                    ( ex:hasAEnd | ex:hasZEnd ) /
+                    ex:device-ref /
+                    ^ex:device-ref /
+                    ^( ex:hasAEnd | ex:hasZEnd )
+                )*
+            ?cable .
+        }
+
+        ?cable ex:id ?cableId .
+
+        OPTIONAL { ?cable ex:length     ?cableLength }
+        OPTIONAL { ?cable ex:cable-role ?cableRole   }
+
+        OPTIONAL {
+            ?cable ex:hasAEnd ?aEnd .
+            OPTIONAL { ?aEnd ex:device-ref    ?aEndDevice   }
+            OPTIONAL { ?aEnd ex:device-id     ?aEndDeviceId }
+            OPTIONAL { ?aEnd ex:component-ref ?aEndPort     }
+        }
+
+        OPTIONAL {
+            ?cable ex:hasZEnd ?zEnd .
+            OPTIONAL { ?zEnd ex:device-ref ?zEndDevice }
+            OPTIONAL { ?zEnd ex:port-ref   ?zEndPort   }
+        }
     }
     ORDER BY ?cableId
 
     Output 
-    http://www.huawei.com/instances/cable/cable_106	"cable_106"	"a-end"	"enclosure_166"	102.1
-    http://www.huawei.com/instances/cable/cable_114	"cable_114"	"z-end"	"enclosure_166"	60.0
-    http://www.huawei.com/instances/cable/cable_124	"cable_124"	"a-end"	"enclosure_166"	78.07
-    http://www.huawei.com/instances/cable/cable_126	"cable_126"	"a-end"	"enclosure_166"	97.1
-    http://www.huawei.com/instances/cable/cable_186	"cable_186"	"a-end"	"enclosure_166"	58.9
-    http://www.huawei.com/instances/cable/cable_296	"cable_296"	"a-end"	"enclosure_166"	102.1
-    http://www.huawei.com/instances/cable/cable_399	"cable_399"	"a-end"	"enclosure_166"	88.07
-    http://www.huawei.com/instances/cable/cable_406	"cable_406"	"a-end"	"enclosure_166"	78.07
-    http://www.huawei.com/instances/cable/cable_441	"cable_441"	"a-end"	"enclosure_166"	97.1
-
-FInd all cables at enclousure and provide device at the other end
-    PREFIX ex:       <http://www.huawei.com/ontology/>
-    PREFIX inv-cab:  <http://www.huawei.com/instances/cable/>
-    PREFIX inv-dev:  <http://www.huawei.com/instances/passive-device/>
-
-    SELECT ?cable ?cableId ?end ?otherDeviceId ?length
-    FROM <n2>
-    WHERE {
-    ?cable ex:id ?cableId ; ex:length ?length .
-
-    { ?cable ex:hasAEnd ?thisEnd ; ex:hasZEnd ?otherEnd . BIND("a-end" AS ?end) }
-    UNION
-    { ?cable ex:hasZEnd ?thisEnd ; ex:hasAEnd ?otherEnd . BIND("z-end" AS ?end) }
-
-    ?thisEnd  ex:device-id "enclosure_166" .
-    ?otherEnd ex:device-id ?otherDeviceId .
-    }
-    ORDER BY ?cableId
-
-
-    Output
-    http://www.huawei.com/instances/cable/cable_106	"cable_106"	"a-end"	"ATB_3469"	102.1
-    http://www.huawei.com/instances/cable/cable_114	"cable_114"	"z-end"	"enclosure_106"	60.0
-    http://www.huawei.com/instances/cable/cable_124	"cable_124"	"a-end"	"ATB_202"	78.07
-    http://www.huawei.com/instances/cable/cable_126	"cable_126"	"a-end"	"ATB_3874"	97.1
-    http://www.huawei.com/instances/cable/cable_186	"cable_186"	"a-end"	"ATB_3661"	58.9
-    http://www.huawei.com/instances/cable/cable_296	"cable_296"	"a-end"	"ATB_3854"	102.1
-    http://www.huawei.com/instances/cable/cable_399	"cable_399"	"a-end"	"ATB_2051"	88.07
-    http://www.huawei.com/instances/cable/cable_406	"cable_406"	"a-end"	"ATB_3554"	78.07
-    http://www.huawei.com/instances/cable/cable_441	"cable_441"	"a-end"	"ATB_1448"	97.1
+    inv-cab:cable_114	"cable_114"	nwiPassId:access-cable	60.0	inv-dev:enclosure_106			inv-dev:enclosure_166	
+    inv-cab:cable_118	"cable_118"	nwiPassId:drop-cable	30.77	inv-dev:enclosure_28			inv-dev:ATB_503	
+    inv-cab:cable_124	"cable_124"	nwiPassId:drop-cable	78.07	inv-dev:enclosure_166			inv-dev:ATB_202	
+    inv-cab:cable_126	"cable_126"	nwiPassId:drop-cable	97.1	inv-dev:enclosure_166			inv-dev:ATB_3874	
+    inv-cab:cable_134	"cable_134"	nwiPassId:drop-cable	61.3	inv-dev:enclosure_81			inv-dev:ATB_2531	
+    inv-cab:cable_135	"cable_135"	nwiPassId:drop-cable	54.7	inv-dev:enclosure_81			inv-dev:ATB_2377	
+    inv-cab:cable_145	"cable_145"	nwiPassId:access-cable	45.0	inv-dev:enclosure_106			inv-dev:enclosure_81	
+    inv-cab:cable_152	"cable_152"	nwiPassId:drop-cable	33.3	inv-dev:enclosure_60			inv-dev:ATB_2344	
+    inv-cab:cable_156	"cable_156"	nwiPassId:access-cable	97.0	inv-dev:enclosure_106			inv-dev:enclosure_28	
+    inv-cab:cable_171	"cable_171"	nwiPassId:drop-cable	59.7	inv-dev:enclosure_81			inv-dev:ATB_3457	
+    inv-cab:cable_184	"cable_184"	nwiPassId:drop-cable	30.77	inv-dev:enclosure_28			inv-dev:ATB_2534	
+    inv-cab:cable_186	"cable_186"	nwiPassId:drop-cable	58.9	inv-dev:enclosure_166			inv-dev:ATB_3661	
+    inv-cab:cable_204	"cable_204"	nwiPassId:drop-cable	59.7	inv-dev:enclosure_81			inv-dev:ATB_2210	
+    inv-cab:cable_259	"cable_259"	nwiPassId:drop-cable	30.77	inv-dev:enclosure_28			inv-dev:ATB_1468	
+    inv-cab:cable_263	"cable_263"	nwiPassId:access-cable	139.0	inv-dev:enclosure_106			inv-dev:enclosure_60	
+    inv-cab:cable_265	"cable_265"	nwiPassId:drop-cable	66.3	inv-dev:enclosure_81			inv-dev:ATB_2190	
+    inv-cab:cable_283	"cable_283"	nwiPassId:drop-cable	79.61	inv-dev:enclosure_60			inv-dev:ATB_2777	
+    inv-cab:cable_296	"cable_296"	nwiPassId:drop-cable	102.1	inv-dev:enclosure_166			inv-dev:ATB_3854	
+    inv-cab:cable_404	"cable_404"	nwiPassId:drop-cable	64.32	inv-dev:enclosure_28			inv-dev:ATB_1278	
+    inv-cab:cable_406	"cable_406"	nwiPassId:drop-cable	78.07	inv-dev:enclosure_166			inv-dev:ATB_3554	
+    inv-cab:cable_409	"cable_409"	nwiPassId:drop-cable	79.61	inv-dev:enclosure_60			inv-dev:ATB_1289	
+    inv-cab:cable_418	"cable_418"	nwiPassId:drop-cable	66.3	inv-dev:enclosure_81			inv-dev:ATB_2857	
+    inv-cab:cable_46	"cable_46"	nwiPassId:drop-cable	33.3	inv-dev:enclosure_60			inv-dev:ATB_3458	
+    inv-cab:cable_54	"cable_54"	nwiPassId:drop-cable	79.61	inv-dev:enclosure_60			inv-dev:ATB_1522	
+    inv-cab:cable_67	"cable_67"	nwiPassId:drop-cable	64.32	inv-dev:enclosure_28			inv-dev:ATB_1222	
+    inv-cab:cable_81	"cable_81"	nwiPassId:drop-cable	30.77	inv-dev:enclosure_28			inv-dev:ATB_273	
+    inv-cab:cable_82	"cable_82"	nwiPassId:drop-cable	59.7	inv-dev:enclosure_81			inv-dev:ATB_472	
+    inv-cab:cable_84	"cable_84"	nwiPassId:drop-cable	79.61	inv-dev:enclosure_60			inv-dev:ATB_747	
+    inv-cab:cable_ONT_1_to_ATB3874	"cable_ONT_1_to_ATB3874"	nwiPassId:access			"ONT_1"	inv-ne:ONT_1_port_Uplink_1	inv-dev:ATB_3874	
