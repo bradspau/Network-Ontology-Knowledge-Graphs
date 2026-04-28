@@ -107,12 +107,12 @@ Python yang4owl
     Enhanced Semantic Linking: Native URI-based resolution for leafref and identityref (removing string dead-ends). 
 
     Hardware Lineage: Parent-child traversal via ex:parent and pdev:hasPassivePort. 
-    
+
     Provenance: PROV-O metadata mapping back to originating YANG paths. 
 
   
  High-Level Flow
- The main function orchestrates the translation by parsing CLI arguments and instantiates the YANGToOWL engine. The core convert() method initializes recursive schema walking, resolves cross-module dependencies, applies semantic patches (such as structural flattening), and emits a monolithic Turtle file. It simultaneously generates a secondary SHACL graph to house validation constraints.
+The main function orchestrates the translation by parsing CLI arguments and instantiates the YANGToOWL engine. The core convert() method initializes recursive schema walking, resolves cross-module dependencies, applies semantic patches (such as structural flattening), and emits a monolithic Turtle file. It simultaneously generates a secondary SHACL graph to house validation constraints.
   
  Key Helper Components
  •	YANGDependencyResolver: Utilizes pyang’s context to ingest a directory of modules, resolving import and augment paths across the entire library to ensure a complete schema.
