@@ -71,6 +71,10 @@ hwSensorData:shape a sh:NodeShape ;
 hwComp:shape a sh:NodeShape ;
     rdfs:label "Shape for component" ;
     sh:property [ a sh:PropertyShape ;
+            sh:class hwComp:sensor-data ;
+            sh:nodeKind sh:IRI ;
+            sh:path hwComp:hasSensorData ],
+        [ a sh:PropertyShape ;
             sh:class hwComp:state ;
             sh:nodeKind sh:IRI ;
             sh:path hwComp:hasState ],
@@ -81,20 +85,16 @@ hwComp:shape a sh:NodeShape ;
             sh:nodeKind sh:IRI ;
             sh:path ex:contains-child ],
         [ a sh:PropertyShape ;
+            sh:maxCount 1 ;
+            sh:message "List key 'name' is required" ;
+            sh:minCount 1 ;
+            sh:path hwComp:name ],
+        [ a sh:PropertyShape ;
             sh:class hw:component ;
             sh:maxCount 1 ;
             sh:message "Leafref parent must target an instance of component" ;
             sh:nodeKind sh:IRI ;
             sh:path ex:parent ],
-        [ a sh:PropertyShape ;
-            sh:class hwComp:sensor-data ;
-            sh:nodeKind sh:IRI ;
-            sh:path hwComp:hasSensorData ],
-        [ a sh:PropertyShape ;
-            sh:maxCount 1 ;
-            sh:message "List key 'name' is required" ;
-            sh:minCount 1 ;
-            sh:path hwComp:name ],
         shapes:alias,
         shapes:asset-id,
         shapes:class,
@@ -163,17 +163,17 @@ cabAEnd:shape a sh:NodeShape ;
 cabChAEnd:shape a sh:NodeShape ;
     rdfs:label "Shape for a-end" ;
     sh:property [ a sh:PropertyShape ;
-            sh:class <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component> ;
-            sh:maxCount 1 ;
-            sh:message "Leafref component-ref must target an instance of component" ;
-            sh:nodeKind sh:IRI ;
-            sh:path ex:component-ref ],
-        [ a sh:PropertyShape ;
             sh:class nwiNEs:network-element ;
             sh:maxCount 1 ;
             sh:message "Leafref ne-ref must target an instance of network-element" ;
             sh:nodeKind sh:IRI ;
             sh:path ex:ne-ref ],
+        [ a sh:PropertyShape ;
+            sh:class <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component> ;
+            sh:maxCount 1 ;
+            sh:message "Leafref component-ref must target an instance of component" ;
+            sh:nodeKind sh:IRI ;
+            sh:path ex:component-ref ],
         shapes:device-id,
         shapes:device-type ;
     sh:targetClass cabChild:a-end .
@@ -235,26 +235,26 @@ cabOptical:shape a sh:NodeShape ;
 cab:shape a sh:NodeShape ;
     rdfs:label "Shape for cable" ;
     sh:property [ a sh:PropertyShape ;
-            sh:class cab:optical-cable ;
-            sh:nodeKind sh:IRI ;
-            sh:path cab:hasOpticalCable ],
-        [ a sh:PropertyShape ;
             sh:class cab:z-end ;
             sh:nodeKind sh:IRI ;
             sh:path cab:hasZEnd ],
+        [ a sh:PropertyShape ;
+            sh:class cab:child-cable ;
+            sh:nodeKind sh:IRI ;
+            sh:path cab:hasChildCable ],
         [ a sh:PropertyShape ;
             sh:class cab:a-end ;
             sh:nodeKind sh:IRI ;
             sh:path cab:hasAEnd ],
         [ a sh:PropertyShape ;
+            sh:class cab:optical-cable ;
+            sh:nodeKind sh:IRI ;
+            sh:path cab:hasOpticalCable ],
+        [ a sh:PropertyShape ;
             sh:maxCount 1 ;
             sh:message "List key 'id' is required" ;
             sh:minCount 1 ;
             sh:path cab:id ],
-        [ a sh:PropertyShape ;
-            sh:class cab:child-cable ;
-            sh:nodeKind sh:IRI ;
-            sh:path cab:hasChildCable ],
         shapes:alias,
         shapes:cable-role,
         shapes:cable-type,
@@ -277,17 +277,17 @@ cab:shape a sh:NodeShape ;
 cabZEnd:shape a sh:NodeShape ;
     rdfs:label "Shape for z-end" ;
     sh:property [ a sh:PropertyShape ;
-            sh:class nwiNEs:network-element ;
-            sh:maxCount 1 ;
-            sh:message "Leafref ne-ref must target an instance of network-element" ;
-            sh:nodeKind sh:IRI ;
-            sh:path ex:ne-ref ],
-        [ a sh:PropertyShape ;
             sh:class <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component> ;
             sh:maxCount 1 ;
             sh:message "Leafref component-ref must target an instance of component" ;
             sh:nodeKind sh:IRI ;
             sh:path ex:component-ref ],
+        [ a sh:PropertyShape ;
+            sh:class nwiNEs:network-element ;
+            sh:maxCount 1 ;
+            sh:message "Leafref ne-ref must target an instance of network-element" ;
+            sh:nodeKind sh:IRI ;
+            sh:path ex:ne-ref ],
         shapes:device-id,
         shapes:device-type ;
     sh:targetClass cab:z-end .
@@ -312,13 +312,13 @@ nwiRefFrame:shape a sh:NodeShape ;
 nwiGeo:shape a sh:NodeShape ;
     rdfs:label "Shape for geo-location" ;
     sh:property [ a sh:PropertyShape ;
-            sh:class nwiGeo:reference-frame ;
-            sh:nodeKind sh:IRI ;
-            sh:path nwiGeo:hasReferenceFrame ],
-        [ a sh:PropertyShape ;
             sh:class nwiGeo:velocity ;
             sh:nodeKind sh:IRI ;
             sh:path nwiGeo:hasVelocity ],
+        [ a sh:PropertyShape ;
+            sh:class nwiGeo:reference-frame ;
+            sh:nodeKind sh:IRI ;
+            sh:path nwiGeo:hasReferenceFrame ],
         shapes:height,
         shapes:latitude,
         shapes:longitude,
@@ -348,30 +348,30 @@ nwiGeo:shape a sh:NodeShape ;
 nwiLoc:shape a sh:NodeShape ;
     rdfs:label "Shape for location" ;
     sh:property [ a sh:PropertyShape ;
-            sh:class nwiLoc:physical-address ;
-            sh:nodeKind sh:IRI ;
-            sh:path nwiLoc:hasPhysicalAddress ],
-        [ a sh:PropertyShape ;
-            sh:class nwiLocs:location ;
-            sh:maxCount 1 ;
-            sh:message "Leafref parent must target an instance of location" ;
-            sh:nodeKind sh:IRI ;
-            sh:path ex:parent ],
-        [ a sh:PropertyShape ;
-            sh:class nwiLoc:geo-location ;
-            sh:nodeKind sh:IRI ;
-            sh:path nwiLoc:hasGeoLocation ],
-        [ a sh:PropertyShape ;
             sh:class nwiLocs:location ;
             sh:maxCount 1 ;
             sh:message "Leafref child must target an instance of location" ;
             sh:nodeKind sh:IRI ;
             sh:path ex:child ],
         [ a sh:PropertyShape ;
+            sh:class nwiLoc:geo-location ;
+            sh:nodeKind sh:IRI ;
+            sh:path nwiLoc:hasGeoLocation ],
+        [ a sh:PropertyShape ;
+            sh:class nwiLoc:physical-address ;
+            sh:nodeKind sh:IRI ;
+            sh:path nwiLoc:hasPhysicalAddress ],
+        [ a sh:PropertyShape ;
             sh:maxCount 1 ;
             sh:message "List key 'id' is required" ;
             sh:minCount 1 ;
             sh:path nwiLoc:id ],
+        [ a sh:PropertyShape ;
+            sh:class nwiLocs:location ;
+            sh:maxCount 1 ;
+            sh:message "Leafref parent must target an instance of location" ;
+            sh:nodeKind sh:IRI ;
+            sh:path ex:parent ],
         shapes:alias,
         shapes:description,
         shapes:id,
@@ -437,18 +437,18 @@ nwiChassis:shape a sh:NodeShape ;
 nwiRack:shape a sh:NodeShape ;
     rdfs:label "Shape for rack" ;
     sh:property [ a sh:PropertyShape ;
-            sh:maxCount 1 ;
-            sh:message "List key 'id' is required" ;
-            sh:minCount 1 ;
-            sh:path nwiRack:id ],
+            sh:class nwiRack:contained-chassis ;
+            sh:nodeKind sh:IRI ;
+            sh:path nwiRack:hasContainedChassis ],
         [ a sh:PropertyShape ;
             sh:class nwiRack:rack-location ;
             sh:nodeKind sh:IRI ;
             sh:path nwiRack:hasRackLocation ],
         [ a sh:PropertyShape ;
-            sh:class nwiRack:contained-chassis ;
-            sh:nodeKind sh:IRI ;
-            sh:path nwiRack:hasContainedChassis ],
+            sh:maxCount 1 ;
+            sh:message "List key 'id' is required" ;
+            sh:minCount 1 ;
+            sh:path nwiRack:id ],
         shapes:alias,
         shapes:depth,
         shapes:description,
@@ -483,13 +483,13 @@ nwiRacks:shape a sh:NodeShape ;
 nwiLocs:shape a sh:NodeShape ;
     rdfs:label "Shape for locations" ;
     sh:property [ a sh:PropertyShape ;
-            sh:class nwiLocs:location ;
-            sh:nodeKind sh:IRI ;
-            sh:path nwiLocs:hasLocation ],
-        [ a sh:PropertyShape ;
             sh:class nwiLocs:racks ;
             sh:nodeKind sh:IRI ;
-            sh:path nwiLocs:hasRacks ] ;
+            sh:path nwiLocs:hasRacks ],
+        [ a sh:PropertyShape ;
+            sh:class nwiLocs:location ;
+            sh:nodeKind sh:IRI ;
+            sh:path nwiLocs:hasLocation ] ;
     sh:targetClass nwi:locations .
 
 nwiComp:shape a sh:NodeShape ;
@@ -499,16 +499,16 @@ nwiComp:shape a sh:NodeShape ;
             sh:nodeKind sh:IRI ;
             sh:path nwiComp:hasSoftwareRev ],
         [ a sh:PropertyShape ;
+            sh:maxCount 1 ;
+            sh:message "List key 'component-id' is required" ;
+            sh:minCount 1 ;
+            sh:path nwiComp:component-id ],
+        [ a sh:PropertyShape ;
             sh:class <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component> ;
             sh:maxCount 1 ;
             sh:message "Leafref parent must target an instance of component" ;
             sh:nodeKind sh:IRI ;
             sh:path ex:parent ],
-        [ a sh:PropertyShape ;
-            sh:maxCount 1 ;
-            sh:message "List key 'component-id' is required" ;
-            sh:minCount 1 ;
-            sh:path nwiComp:component-id ],
         shapes:alias,
         shapes:asset-id,
         shapes:class,
@@ -559,14 +559,14 @@ nwiCompPatch:shape a sh:NodeShape ;
 nwiCompSwRev:shape a sh:NodeShape ;
     rdfs:label "Shape for software-rev" ;
     sh:property [ a sh:PropertyShape ;
-            sh:class nwiCompSwRev:patch ;
-            sh:nodeKind sh:IRI ;
-            sh:path nwiCompSwRev:hasPatch ],
-        [ a sh:PropertyShape ;
             sh:maxCount 1 ;
             sh:message "List key 'name' is required" ;
             sh:minCount 1 ;
             sh:path nwiCompSwRev:name ],
+        [ a sh:PropertyShape ;
+            sh:class nwiCompSwRev:patch ;
+            sh:nodeKind sh:IRI ;
+            sh:path nwiCompSwRev:hasPatch ],
         shapes:name,
         shapes:revision ;
     sh:sparql [ a sh:SPARQLConstraint ;
@@ -607,6 +607,10 @@ nwiCompSwRev:shape a sh:NodeShape ;
 nwiNE:shape a sh:NodeShape ;
     rdfs:label "Shape for network-element" ;
     sh:property [ a sh:PropertyShape ;
+            sh:class nwiNE:locations ;
+            sh:nodeKind sh:IRI ;
+            sh:path nwiNE:hasLocations ],
+        [ a sh:PropertyShape ;
             sh:class nwiNE:software-rev ;
             sh:nodeKind sh:IRI ;
             sh:path nwiNE:hasSoftwareRev ],
@@ -614,10 +618,6 @@ nwiNE:shape a sh:NodeShape ;
             sh:class nwiNE:components ;
             sh:nodeKind sh:IRI ;
             sh:path nwiNE:hasComponents ],
-        [ a sh:PropertyShape ;
-            sh:class nwiNE:locations ;
-            sh:nodeKind sh:IRI ;
-            sh:path nwiNE:hasLocations ],
         [ a sh:PropertyShape ;
             sh:maxCount 1 ;
             sh:message "List key 'ne-id' is required" ;
@@ -727,15 +727,15 @@ pdev:shape a sh:NodeShape ;
             sh:minCount 1 ;
             sh:path pdev:id ],
         [ a sh:PropertyShape ;
-            sh:class pdev:passive-port ;
-            sh:nodeKind sh:IRI ;
-            sh:path pdev:hasPassivePort ],
-        [ a sh:PropertyShape ;
             sh:class nwiLocs:location ;
             sh:maxCount 1 ;
             sh:message "Leafref location-ref must target an instance of location" ;
             sh:nodeKind sh:IRI ;
             sh:path ex:location-ref ],
+        [ a sh:PropertyShape ;
+            sh:class pdev:passive-port ;
+            sh:nodeKind sh:IRI ;
+            sh:path pdev:hasPassivePort ],
         shapes:alias,
         shapes:custom-tags,
         shapes:description,
@@ -757,21 +757,21 @@ pdev:shape a sh:NodeShape ;
 nwi:shape a sh:NodeShape ;
     rdfs:label "Shape for network-inventory" ;
     sh:property [ a sh:PropertyShape ;
-            sh:class nwi:locations ;
-            sh:nodeKind sh:IRI ;
-            sh:path nwi:hasLocations ],
-        [ a sh:PropertyShape ;
-            sh:class nwi:cable ;
-            sh:nodeKind sh:IRI ;
-            sh:path nwi:hasCable ],
-        [ a sh:PropertyShape ;
             sh:class nwi:passive-device ;
             sh:nodeKind sh:IRI ;
             sh:path nwi:hasPassiveDevice ],
         [ a sh:PropertyShape ;
             sh:class nwi:network-elements ;
             sh:nodeKind sh:IRI ;
-            sh:path nwi:hasNetworkElements ] ;
+            sh:path nwi:hasNetworkElements ],
+        [ a sh:PropertyShape ;
+            sh:class nwi:locations ;
+            sh:nodeKind sh:IRI ;
+            sh:path nwi:hasLocations ],
+        [ a sh:PropertyShape ;
+            sh:class nwi:cable ;
+            sh:nodeKind sh:IRI ;
+            sh:path nwi:hasCable ] ;
     sh:targetClass nwiRoot:network-inventory .
 
 <http://www.huawei.com/ontology/ietf-network/networks/network/link/destination/shape> a sh:NodeShape ;
@@ -819,17 +819,17 @@ netLink:shape a sh:NodeShape ;
 <http://www.huawei.com/ontology/ietf-network/networks/network/link/source/shape> a sh:NodeShape ;
     rdfs:label "Shape for source" ;
     sh:property [ a sh:PropertyShape ;
-            sh:class net:node ;
-            sh:maxCount 1 ;
-            sh:message "Leafref source-node must target an instance of node" ;
-            sh:nodeKind sh:IRI ;
-            sh:path ex:source-node ],
-        [ a sh:PropertyShape ;
             sh:class netNode:termination-point ;
             sh:maxCount 1 ;
             sh:message "Leafref source-tp must target an instance of termination-point" ;
             sh:nodeKind sh:IRI ;
-            sh:path ex:source-tp ] ;
+            sh:path ex:source-tp ],
+        [ a sh:PropertyShape ;
+            sh:class net:node ;
+            sh:maxCount 1 ;
+            sh:message "Leafref source-node must target an instance of node" ;
+            sh:nodeKind sh:IRI ;
+            sh:path ex:source-node ] ;
     sh:targetClass netLink:source .
 
 netSuppLink:shape a sh:NodeShape ;
@@ -846,16 +846,16 @@ netSuppLink:shape a sh:NodeShape ;
             sh:nodeKind sh:IRI ;
             sh:path ex:network-ref ],
         [ a sh:PropertyShape ;
-            sh:maxCount 1 ;
-            sh:message "List key 'network-ref' is required" ;
-            sh:minCount 1 ;
-            sh:path netSuppLink:network-ref ],
-        [ a sh:PropertyShape ;
             sh:class net:link ;
             sh:maxCount 1 ;
             sh:message "Leafref link-ref must target an instance of link" ;
             sh:nodeKind sh:IRI ;
-            sh:path ex:link-ref ] ;
+            sh:path ex:link-ref ],
+        [ a sh:PropertyShape ;
+            sh:maxCount 1 ;
+            sh:message "List key 'network-ref' is required" ;
+            sh:minCount 1 ;
+            sh:path netSuppLink:network-ref ] ;
     sh:sparql [ a sh:SPARQLConstraint ;
             sh:message "Duplicate key combination in list supporting-link" ;
             sh:select """SELECT $this WHERE {
@@ -882,22 +882,22 @@ netSuppLink:shape a sh:NodeShape ;
 netNode:shape a sh:NodeShape ;
     rdfs:label "Shape for node" ;
     sh:property [ a sh:PropertyShape ;
+            sh:class netNode:supporting-node ;
+            sh:nodeKind sh:IRI ;
+            sh:path netNode:hasSupportingNode ],
+        [ a sh:PropertyShape ;
             sh:class netNode:inventory-mapping-attributes ;
             sh:nodeKind sh:IRI ;
             sh:path netNode:hasInventoryMappingAttributes ],
+        [ a sh:PropertyShape ;
+            sh:class netNode:termination-point ;
+            sh:nodeKind sh:IRI ;
+            sh:path netNode:hasTerminationPoint ],
         [ a sh:PropertyShape ;
             sh:maxCount 1 ;
             sh:message "List key 'node-id' is required" ;
             sh:minCount 1 ;
             sh:path netNode:node-id ],
-        [ a sh:PropertyShape ;
-            sh:class netNode:supporting-node ;
-            sh:nodeKind sh:IRI ;
-            sh:path netNode:hasSupportingNode ],
-        [ a sh:PropertyShape ;
-            sh:class netNode:termination-point ;
-            sh:nodeKind sh:IRI ;
-            sh:path netNode:hasTerminationPoint ],
         shapes:node-id ;
     sh:sparql [ a sh:SPARQLConstraint ;
             sh:message "Duplicate key combination in list node" ;
@@ -913,11 +913,15 @@ netNode:shape a sh:NodeShape ;
 netSuppNode:shape a sh:NodeShape ;
     rdfs:label "Shape for supporting-node" ;
     sh:property [ a sh:PropertyShape ;
-            sh:class net:supporting-network ;
             sh:maxCount 1 ;
-            sh:message "Leafref network-ref must target an instance of supporting-network" ;
-            sh:nodeKind sh:IRI ;
-            sh:path ex:network-ref ],
+            sh:message "List key 'network-ref' is required" ;
+            sh:minCount 1 ;
+            sh:path netSuppNode:network-ref ],
+        [ a sh:PropertyShape ;
+            sh:maxCount 1 ;
+            sh:message "List key 'node-ref' is required" ;
+            sh:minCount 1 ;
+            sh:path netSuppNode:node-ref ],
         [ a sh:PropertyShape ;
             sh:class net:node ;
             sh:maxCount 1 ;
@@ -925,15 +929,11 @@ netSuppNode:shape a sh:NodeShape ;
             sh:nodeKind sh:IRI ;
             sh:path ex:node-ref ],
         [ a sh:PropertyShape ;
+            sh:class net:supporting-network ;
             sh:maxCount 1 ;
-            sh:message "List key 'node-ref' is required" ;
-            sh:minCount 1 ;
-            sh:path netSuppNode:node-ref ],
-        [ a sh:PropertyShape ;
-            sh:maxCount 1 ;
-            sh:message "List key 'network-ref' is required" ;
-            sh:minCount 1 ;
-            sh:path netSuppNode:network-ref ] ;
+            sh:message "Leafref network-ref must target an instance of supporting-network" ;
+            sh:nodeKind sh:IRI ;
+            sh:path ex:network-ref ] ;
     sh:sparql [ a sh:SPARQLConstraint ;
             sh:message "Duplicate key combination in list supporting-node" ;
             sh:select """SELECT $this WHERE {
@@ -992,13 +992,13 @@ netInvMap:shape a sh:NodeShape ;
 netTP:shape a sh:NodeShape ;
     rdfs:label "Shape for termination-point" ;
     sh:property [ a sh:PropertyShape ;
-            sh:class netTP:supporting-termination-point ;
-            sh:nodeKind sh:IRI ;
-            sh:path netTP:hasSupportingTerminationPoint ],
-        [ a sh:PropertyShape ;
             sh:class netTP:inventory-mapping-attributes ;
             sh:nodeKind sh:IRI ;
             sh:path netTP:hasInventoryMappingAttributes ],
+        [ a sh:PropertyShape ;
+            sh:class netTP:supporting-termination-point ;
+            sh:nodeKind sh:IRI ;
+            sh:path netTP:hasSupportingTerminationPoint ],
         shapes:tp-id ;
     sh:targetClass netNode:termination-point .
 
@@ -1006,9 +1006,20 @@ netSuppTP:shape a sh:NodeShape ;
     rdfs:label "Shape for supporting-termination-point" ;
     sh:property [ a sh:PropertyShape ;
             sh:maxCount 1 ;
+            sh:message "List key 'node-ref' is required" ;
+            sh:minCount 1 ;
+            sh:path netSuppTP:node-ref ],
+        [ a sh:PropertyShape ;
+            sh:maxCount 1 ;
             sh:message "List key 'network-ref' is required" ;
             sh:minCount 1 ;
             sh:path netSuppTP:network-ref ],
+        [ a sh:PropertyShape ;
+            sh:class netNode:supporting-node ;
+            sh:maxCount 1 ;
+            sh:message "Leafref node-ref must target an instance of supporting-node" ;
+            sh:nodeKind sh:IRI ;
+            sh:path ex:node-ref ],
         [ a sh:PropertyShape ;
             sh:maxCount 1 ;
             sh:message "List key 'tp-ref' is required" ;
@@ -1025,18 +1036,7 @@ netSuppTP:shape a sh:NodeShape ;
             sh:maxCount 1 ;
             sh:message "Leafref tp-ref must target an instance of termination-point" ;
             sh:nodeKind sh:IRI ;
-            sh:path ex:tp-ref ],
-        [ a sh:PropertyShape ;
-            sh:maxCount 1 ;
-            sh:message "List key 'node-ref' is required" ;
-            sh:minCount 1 ;
-            sh:path netSuppTP:node-ref ],
-        [ a sh:PropertyShape ;
-            sh:class netNode:supporting-node ;
-            sh:maxCount 1 ;
-            sh:message "Leafref node-ref must target an instance of supporting-node" ;
-            sh:nodeKind sh:IRI ;
-            sh:path ex:node-ref ] ;
+            sh:path ex:tp-ref ] ;
     sh:sparql [ a sh:SPARQLConstraint ;
             sh:message "Duplicate key combination in list supporting-termination-point" ;
             sh:select """SELECT $this WHERE {
@@ -1055,10 +1055,6 @@ netSuppTP:shape a sh:NodeShape ;
 net:shape a sh:NodeShape ;
     rdfs:label "Shape for network" ;
     sh:property [ a sh:PropertyShape ;
-            sh:class net:node ;
-            sh:nodeKind sh:IRI ;
-            sh:path net:hasNode ],
-        [ a sh:PropertyShape ;
             sh:class net:link ;
             sh:nodeKind sh:IRI ;
             sh:path net:hasLink ],
@@ -1075,6 +1071,10 @@ net:shape a sh:NodeShape ;
             sh:class net:supporting-network ;
             sh:nodeKind sh:IRI ;
             sh:path net:hasSupportingNetwork ],
+        [ a sh:PropertyShape ;
+            sh:class net:node ;
+            sh:nodeKind sh:IRI ;
+            sh:path net:hasNode ],
         shapes:network-id ;
     sh:sparql [ a sh:SPARQLConstraint ;
             sh:message "Duplicate key combination in list network" ;
@@ -1090,16 +1090,16 @@ net:shape a sh:NodeShape ;
 netSuppNet:shape a sh:NodeShape ;
     rdfs:label "Shape for supporting-network" ;
     sh:property [ a sh:PropertyShape ;
+            sh:maxCount 1 ;
+            sh:message "List key 'network-ref' is required" ;
+            sh:minCount 1 ;
+            sh:path netSuppNet:network-ref ],
+        [ a sh:PropertyShape ;
             sh:class netNetworks:network ;
             sh:maxCount 1 ;
             sh:message "Leafref network-ref must target an instance of network" ;
             sh:nodeKind sh:IRI ;
-            sh:path ex:network-ref ],
-        [ a sh:PropertyShape ;
-            sh:maxCount 1 ;
-            sh:message "List key 'network-ref' is required" ;
-            sh:minCount 1 ;
-            sh:path netSuppNet:network-ref ] ;
+            sh:path ex:network-ref ] ;
     sh:sparql [ a sh:SPARQLConstraint ;
             sh:message "Duplicate key combination in list supporting-network" ;
             sh:select """SELECT $this WHERE {

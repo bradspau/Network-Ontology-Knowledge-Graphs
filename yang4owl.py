@@ -1,7 +1,16 @@
 #!/usr/bin/env python3
 
 """
-YANG to OWL Ontology Converter - VERSION 4.7.23 (Separate SHACL Output)
+YANG to OWL Ontology Converter - VERSION 4.7.26 (Separate SHACL Output)
+
+Release Note: Semantic Interoperability via OWL 2 Punning
+This update implements OWL 2 Punning to resolve "dead-end" string traversals common in standard YANG-to-OWL conversions.
+The Problem: IETF leafrefs are often treated as simple string literals, which isolates data silos and prevents graph engines from following links between entities.
+The Solution: Punning allows properties to function as both owl:DatatypeProperty (for legacy string IDs) and owl:ObjectProperty (for direct URI-to-URI links).
+Key Entities: This has been applied to critical "horizontal" connectors including ex:ne-ref (Topology to Network Elements), ex:class (Hardware Classification), and ex:device-ref (Cable termination points).
+The Result: Your Knowledge Graph now supports end-to-end traversal in Stardog, allowing queries to "jump" from a logical cable end directly into the physical attributes of active NTDs or passive enclosures. However your graph database needs to support punning.
+There is also a section for custom TBOX patch to take the standard yang to owl with its limitations and add explicit ObjectProperties rather than leafref dataproperties. This is currently implemented explicitly for cables to devices providing a direct link without needing to use string to traverse.
+
 
 ALL IMPROVEMENTS IMPLEMENTED:
 1. Container Object Properties 
@@ -29,9 +38,10 @@ ALL IMPROVEMENTS IMPLEMENTED:
 23. Add auto generate prefixes to the ontology
 24. Make prefixes static
 25. add more static prefixes
+26. Post yang converter to introduce objectproprties for leafrefs for cable to passive device traversal
 
 
-Author: YANG-to-OWL Converter v4.7.25
+Author: YANG-to-OWL Converter v4.7.26
 Date: 2026-03-09
 """
 
@@ -681,6 +691,56 @@ class YANGToOWL:
         log.info("[Step 12] Resolving Pending Leafrefs (Pass 2)...")
         self._resolve_pending_leafrefs()
 
+        # ==========================================
+        # --- START OF CUSTOM TBOX PATCH --- for leafref that are strings but we want to link to deicces
+        # ==========================================
+        log.info("[Step 13] Applying custom TBox extensions for direct URIs...")
+        
+        base_prefix = str(self.base_uri).rstrip("/") + "/"
+        ni_base_path = f"{base_prefix}ietf-network-inventory/network-inventory/"
+        
+        # 1. Define namespaces to match the exact Class URIs in your TBox
+        cab_ns = Namespace(f"{ni_base_path}cable/")
+        cabChild_ns = Namespace(f"{ni_base_path}cable/child-cable/")
+        nwi_ns = Namespace(ni_base_path)
+        
+        # Fix: Using parent paths for ranges to match TBox Class URIs exactly
+        nwiNEs_ns = Namespace(f"{ni_base_path}network-elements/")
+        nwiComp_ns = Namespace(f"{ni_base_path}network-elements/network-element/components/")
+        
+        # Define common domains for all cable termination points
+        cable_termination_domains = [
+            cab_ns["a-end"], 
+            cab_ns["z-end"], 
+            cabChild_ns["a-end"], 
+            cabChild_ns["z-end"]
+        ]
+
+        # 2. Define ex:device-ref for Passive Devices (ATBs/Enclosures)
+        device_ref = self.ex["device-ref"]
+        self.graph.add((device_ref, RDF.type, OWL.ObjectProperty))
+        self.graph.add((device_ref, RDFS.label, Literal("device-ref")))
+        self.graph.add((device_ref, RDFS.comment, Literal("Reference to a passive device (e.g. ATB or Enclosure).")))
+        self.graph.add((device_ref, RDFS.range, nwi_ns["passive-device"]))
+        for dom in cable_termination_domains:
+            self.graph.add((device_ref, RDFS.domain, dom))
+
+        # 3. Define Active Reference ObjectProperties (for NTDs and Exchanges)
+        # This resolves the namespace mismatch by targeting the correct range classes
+        for prop_name, range_uri in [
+            ("ne-ref", nwiNEs_ns["network-element"]),
+            ("component-ref", nwiComp_ns["component"])
+        ]:
+            prop = self.ex[prop_name]
+            self.graph.add((prop, RDF.type, OWL.ObjectProperty))
+            self.graph.add((prop, RDFS.label, Literal(prop_name)))
+            self.graph.add((prop, RDFS.range, range_uri))
+            for dom in cable_termination_domains:
+                self.graph.add((prop, RDFS.domain, dom))
+            
+        # ==========================================
+        # --- END OF CUSTOM TBOX PATCH ---
+        # ==========================================
         shacl_file = str(Path(output_file).with_suffix('.shacl'))
         
         self._bind_ontology_prefixes()

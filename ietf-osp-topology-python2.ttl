@@ -379,6 +379,15 @@ ex:device-id a owl:DatatypeProperty ;
     prov:wasDerivedFrom "nwi-passive:a-end?container/nwi-passive:device-id?leaf",
         "nwi-passive:z-end?container/nwi-passive:device-id?leaf" .
 
+ex:device-ref a owl:ObjectProperty ;
+    rdfs:label "device-ref" ;
+    rdfs:comment "Reference to a passive device (e.g. ATB or Enclosure)." ;
+    rdfs:domain cab:a-end,
+        cabChild:a-end,
+        cabChild:z-end,
+        cab:z-end ;
+    rdfs:range nwi:passive-device .
+
 ex:device-type a owl:ObjectProperty ;
     rdfs:label "device-type" ;
     rdfs:comment "Type of connected device.",
@@ -3056,30 +3065,6 @@ topologies.""" ;
 hwTypes:sensor-status a owl:Class ;
     rdfs:label "sensor-status" .
 
-cab:a-end a owl:Class ;
-    rdfs:label "a-end" ;
-    rdfs:comment "A-end device reference" ;
-    rdfs:subClassOf grpNwiPass:connected-device-end ;
-    prov:wasDerivedFrom "nwi-passive:a-end?container" .
-
-cabChild:a-end a owl:Class ;
-    rdfs:label "a-end" ;
-    rdfs:comment "A-end device reference" ;
-    rdfs:subClassOf grpNwiPass:connected-device-end ;
-    prov:wasDerivedFrom "nwi-passive:a-end?container" .
-
-cabChild:z-end a owl:Class ;
-    rdfs:label "z-end" ;
-    rdfs:comment "Z-end device reference" ;
-    rdfs:subClassOf grpNwiPass:connected-device-end ;
-    prov:wasDerivedFrom "nwi-passive:z-end?container" .
-
-cab:z-end a owl:Class ;
-    rdfs:label "z-end" ;
-    rdfs:comment "Z-end device reference" ;
-    rdfs:subClassOf grpNwiPass:connected-device-end ;
-    prov:wasDerivedFrom "nwi-passive:z-end?container" .
-
 nwiRack:contained-chassis a owl:Class ;
     rdfs:label "contained-chassis" ;
     rdfs:comment "The list of chassis within a rack." ;
@@ -3120,6 +3105,30 @@ nwiRoot:network-inventory a owl:Class ;
         grpNwiPass:cables,
         grpNwiPass:passive-devices ;
     prov:wasDerivedFrom "nwi:network-inventory?container" .
+
+cab:a-end a owl:Class ;
+    rdfs:label "a-end" ;
+    rdfs:comment "A-end device reference" ;
+    rdfs:subClassOf grpNwiPass:connected-device-end ;
+    prov:wasDerivedFrom "nwi-passive:a-end?container" .
+
+cabChild:a-end a owl:Class ;
+    rdfs:label "a-end" ;
+    rdfs:comment "A-end device reference" ;
+    rdfs:subClassOf grpNwiPass:connected-device-end ;
+    prov:wasDerivedFrom "nwi-passive:a-end?container" .
+
+cabChild:z-end a owl:Class ;
+    rdfs:label "z-end" ;
+    rdfs:comment "Z-end device reference" ;
+    rdfs:subClassOf grpNwiPass:connected-device-end ;
+    prov:wasDerivedFrom "nwi-passive:z-end?container" .
+
+cab:z-end a owl:Class ;
+    rdfs:label "z-end" ;
+    rdfs:comment "Z-end device reference" ;
+    rdfs:subClassOf grpNwiPass:connected-device-end ;
+    prov:wasDerivedFrom "nwi-passive:z-end?container" .
 
 nwiLoc:physical-address a owl:Class ;
     rdfs:label "physical-address" ;
