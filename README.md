@@ -18,82 +18,53 @@ Current Content
 - yang4owl.py - yang4owl in python
 - simap-ontology-python.ttl - current output of yang2owl for comparison against the IETF 124 simap-rdfs-schema
 
-Python yang4owl 
-- execution  yang4owl.py --yang-dir <directory of the yang files> --modules <yang model to create ttl for> --base-uri <owl base uri> --output <turtle file> --verbose 
+##################
+The following document provides a comprehensive technical explanation of the `yang4owl.py` translation engine. It details how specific YANG constructs are addressed—including a deep dive into identity mapping and augmentation handling—as well as the advanced adaptations implemented to enable a high-performance semantic layer.
 
-    Current include capabilities
-    - import
-    - augment
-    - contraints
-    - datatype restrictions
-    - individual enumeration
-    - grouping
-    - leafref
-    - identityref
-    - provenance to the yang models
+---
 
-    The script loads one or more YANG modules with pyang, walks their schema tree, and emits an OWL/RDF ontology (Turtle) describing the model, including constraints and metadata.
-    ​
+Technical Review: YANG to OWL Translation Engine
 
-    High-level flow
-        The main function parses CLI arguments (YANG directory, main module name, base URI, output path, verbosity), sets up logging, and instantiates YANGToOWL with the chosen directory and base URI, then calls convert().
-        ​
+1. YANG Construct Addressal Mapping
+The script performs a structural mapping of YANG primitives into equivalent OWL/RDF counterparts while ensuring semantic integrity.
 
-        YANGToOWL.convert() loads all YANG modules, initializes helper resolvers, processes modules into OWL classes and properties, then writes the resulting RDF graph to a Turtle file and logs counts of generated triples, constraints, enumerations, etc.
-    ​
+* `container` and `list` Statements: These are translated into `owl:Class` definitions. The script creates a hierarchical class structure reflecting the nested nature of the original YANG tree.
+* `leaf` and `leaf-list` Statements: Mapping is based on the data type. Standard types (string, boolean, decimal) become `owl:DatatypeProperty`. Boolean literals are optimized as bare `true` or `false` values for native interpretation by Stardog as `xsd:boolean`.
+* `leafref` Statements: Recognized as relational keys and converted into `owl:ObjectProperty`, enabling native graph traversal between instances.
+* `identity` and `identityref` Mapping Logic:
+    * Identities as Classes: Every YANG `identity` is primarily mapped as an `owl:Class`. If an identity has a `base` statement, the script creates an `rdfs:subClassOf` relationship.
+    * Identities as Individuals: Identities are also instantiated as `owl:NamedIndividual` of their respective classes to support value-based assignment in `identityref` leaves.
+    * `identityref` Conversion: When a leaf is of type `identityref`, the script generates an `owl:ObjectProperty` rather than a string. The `rdfs:range` is set to the `owl:Class` corresponding to the `base` identity.
+* `choice` and `case` Statements: Treated as logical branches, generating disjoint classes to adhere to the exclusive nature of a YANG choice.
+* `grouping` and `uses` Statements: Function as reusable templates. The script performs "NESTED GROUPING RESOLUTION" and "GROUPING EXPANSION WITH REFINE" to ensure the TBOX reflects the final applied configuration.
+* `augment` Statements: Handled by extending the target schema and resolving all cross-file dependencies through the following mechanisms:
+    * Target Path Resolution: Identifies the absolute target path across module boundaries and resolves dependencies to locate the specific OWL class representing the target.
+    * Logical Property Injection: Injects new nodes as properties of the target class. Sub-containers/lists become new classes linked via `owl:ObjectProperty`; leaves are added as `owl:DatatypeProperty` or `owl:ObjectProperty` with the target class as their domain.
+    * Monolithic Integration: Processes all augmented modules in a single run to correctly map URIs to the augmenting module’s namespace and expand any groupings within the augment block.
+    * SHACL Extension: Any constraints in the augmentation (e.g., `mandatory true`) are added as new SHACL shapes targeting the extended properties.
 
-    Key helper components
-        YANGDependencyResolver uses pyang’s Context and FileRepository to load the main module and any other .yang files in the directory, exposing them in self.modules.
-    ​
+---
 
-        YANGTypeResolver maps YANG built-in types and typedef chains to XSD datatypes and cooperates with YANGConstraintExtractor to collect range, length, and pattern constraints from type statements.
-    ​
+2. Semantic Linking and Optimization Adaptations
+Beyond basic mapping, the script implements post-translation optimizations to transform rigid trees into traversable knowledge graphs.
 
-        IdentityResolver scans all modules for identity statements and records their base identities and descriptions, enabling later creation of an OWL class hierarchy for identities.
-        ​
+#A. Structural Flattening (Choice/Case Removal)
+The script removes `case` statements as intermediate classes, attaching properties directly to the parent container instance. This reduces the number of "hops" required for graph traversal, significantly increasing query performance.
 
-        EnhancedLeafrefResolver resolves leafref XPaths (absolute, relative, and current()-based), normalizes paths, and maps them to class_paths so that leafrefs become OWL object properties with correct domain/range.
-        ​
+#B. Enhanced Identity Management
+Utilizes URI-based identity mapping instead of string matching. For instance, a port's type is mapped directly to an IRI (e.g., `<.../nwiPassId/active-device>`). This supports multi-level discovery via hierarchical inference; a query for "all physical network elements" will return all sub-classes defined from IANA hardware identities.
 
-        GroupingResolver plus RefineResolver and GroupingContextTracker collect grouping definitions, expand uses (including nested ones), and apply refine statements, treating groupings as abstract OWL classes and expanding their members into concrete locations.
-    ​
+#C. SHACL Isolation and Validation
+Because OWL uses an "open-world" assumption, the script isolates strict YANG "closed-world" constraints into a separate SHACL graph. This allows Stardog’s Integrity Constraint Validation (ICV) engine to enforce rules without polluting the logical consistency of the ontology.
 
-    YANG → OWL mapping
-        The central class YANGToOWL maintains an rdflib Graph, an ex namespace (from the base URI), and registries such as class_paths (normalized YANG path → OWL class URI) and various counters.
-        ​
+#D. Cable and Fiber Path Optimization
+Specialized logic flattens cable and fiber representations, mapping reified structures like `cable -> a-end -> device-type` into clear logical endpoints[cite: 1638]. This enables the use of native URI references (`ex:device-ref`) and port-level linkages (`ex:port-ref`) to ensure unbroken path traces.
 
-        _normalize_path() adds module-qualified prefixes and strips prefixes like nw:/nt:/st: to produce consistent, fully-qualified paths such as /ietf-network/networks/network, keyed by the current module name.
-        ​
+#E. Hardware Hierarchy and State Management
+Maintains deep hardware hierarchies (Chassis -> Module -> Port) using `ex:parent` references[cite: 1640]. Operational states are separated into reified state containers (`hwComp:hasState`), allowing complex reasoning, such as finding all ports affected by a specific chassis failure.
 
-        For top-level and nested container/list/leaf nodes, _process_module(), _process_container(), _process_list(), and _process_leaf() create OWL classes (for containers/lists) and datatype or object properties (for leaves), attach labels/descriptions, and register the normalized path in class_paths.
-        ​
+#######
 
-        identityref leaves become OWL object properties whose range is the identity class; leafref leaves become object properties linked to the referenced container/list class via the resolved path; other leaves become datatype properties with appropriate XSD range.
-        ​
-
-        augment statements are normalized to a target path (e.g. re-anchored under ietf-network for /networks/...), the target class is stubbed if needed, and the augment’s children are processed as if physically present under the target.
-    ​
-
-    Additional features
-        Groupings are first turned into abstract OWL classes, then all uses statements (in modules and within augments) are expanded so that grouping members are materialized and optionally constrained (e.g. mandatory → minCardinality 1).
-        ​
-
-        _process_containers_for_properties() adds synthetic containment properties (hasChildName) between parent and child classes for each one-level path extension in class_paths.
-        ​
-
-        _generate_cardinality_constraints() sets a default minCardinality 0 on every OWL object property, then refine/uses logic can add stricter constraints.
-        ​
-
-        _process_xsd_constraints() and _add_constraint_triples() traverse typedefs and leaves to emit XSD-based constraint triples (min/max inclusive, min/max length, patterns) for elements, while _create_owl_datatype_restrictions() builds OWL datatype restriction datatypes and connects typedef classes to them.
-        ​
-
-        _process_enumerations() and _create_enumeration_class() turn YANG enumeration typedefs into OWL classes plus NamedIndividuals for each enum value, including labels and optional descriptions.
-        ​
-
-        _add_prov_metadata() annotates every class, datatype property, and object property with PROV wasDerivedFrom URIs that encode the originating YANG path and element type.
-    ​
-
-  
     -----------------------------------------
     Because I forget...
 
@@ -101,7 +72,7 @@ Python yang4owl
     YANG Construct      OWL/RDF Treatment               Reasoning Category          Domain (rdfs:domain)        Range (rdfs:range)
     container           owl:Class                       Class Logic                 N/A                         N/A
     list                owl:Class                       Class Logic                 N/A                         N/A
-    leaf (Standard)     owl:DatatypeProperty            Data Assertions             Parent Class URI            XSD Type (e.g., xsd:string)
+    leaf (Standard)     owl:DatatypeProperty            Data Assertions             Parent Class URI            XSD Type (e.g., xsd:boolean)
     leaf (identityref)  owl:ObjectProperty              Semantic Relationship       Parent Class URI            Base Identity Class URI 
     leaf (leafref)      owl:ObjectProperty              Semantic Relationship       Parent Class URI            Target Class URI
     leaf (union)        owl:ObjectProperty              Logic Profile Compatibility Parent Class URI            Created Union Parent Class 
@@ -109,14 +80,59 @@ Python yang4owl
     identity            owl:Class & NamedIndividual     Individual Punning          N/A                         N/A
     identity (base)     rdfs:subClassOf                 Transitive Hierarchy        Specific Identity URI       Base Identity URI 
     grouping            Abstract owl:Class              Template Modeling           N/A                         N/A
-    uses                Local Property Generation       Schema Flattening           Target Class URI            Resolved Property Range 
-    choice/case         owl:disjointWith                Mutual Exclusivity          Case-holding Class          Opposing Case Class 
+    uses                Nested Grouping Resolution      Schema Flattening           Target Class URI            Resolved Property Range 
+    choice/case         Structural Flattening           Query Optimisation          Parent Container URI        Resolved Property Range 
     typedef             sh:NodeShape                    Constraint Validation       N/A                         N/A
     enum (Definition)   owl:Class & NamedIndividual     Categorical Hierarchy       N/A                         N/A
     rpc                 owl:Class                       Functional Modeling         N/A                         N/A 
     notification        owl:Class                       Functional Modeling         N/A                         N/A
-    must/when           sh:condition/sh:deactivated     Conditional Logic           Property/Class URI          N/A (XPath Literal) 
-    Child Containment   has[ChildName] (ObjectProperty) Structural Integrity    Parent Class URI            Child Class URI 
+    must/when           sh:condition/sh:deactivated     Conditional Logic           Property/Class URI          N/A (SHACL Filter) 
+    augment             logical Property Injection      Monolithic integration      Augmented Target Class      Injected Node Class Type       
+    Child Containment   has[ChildName] (ObjectProperty) Structural Integrity        Parent Class URI            Child Class URI 
+
+Python yang4owl 
+- execution  yang4owl.py --yang-dir <directory of the yang files> --modules <yang model to create ttl for> --base-uri <owl base uri> --output <turtle file> --verbose 
+
+ YANG to OWL/RDF Processing Map (Updated)
+ 
+ Current include capabilities
+ •	Monolithic Augmentation: Cross-module target path resolution and dependency expansion.
+ •	Structural Flattening: Elimination of choice/case intermediate nodes to optimize SPARQL query depth.
+ •	Dual Identity Mapping: OWL Class + NamedIndividual (Punning) for hierarchical reasoning.
+ •	SHACL Isolation: Decoupling of "Closed-World" constraints (must/when/mandatory) from the "Open-World" OWL TBOX.
+ •	Enhanced Semantic Linking: Native URI-based resolution for leafref and identityref (removing string dead-ends).
+ •	Hardware Lineage: Parent-child traversal via ex:parent and pdev:hasPassivePort.
+ •	Provenance: PROV-O metadata mapping back to originating YANG paths.
+  
+ High-Level Flow
+ The main function orchestrates the translation by parsing CLI arguments and instantiates the YANGToOWL engine. The core convert() method initializes recursive schema walking, resolves cross-module dependencies, applies semantic patches (such as structural flattening), and emits a monolithic Turtle file. It simultaneously generates a secondary SHACL graph to house validation constraints.
+  
+ Key Helper Components
+ •	YANGDependencyResolver: Utilizes pyang’s context to ingest a directory of modules, resolving import and augment paths across the entire library to ensure a complete schema.
+ •	IdentityResolver: Maps YANG identities to a dual-layer OWL structure. Every identity is a Class (for taxonomy) and a NamedIndividual (for assignment), enabling reasoning over hardware classes (e.g., iana-hardware).
+ •	EnhancedLeafrefResolver: Normalizes relative and current()-based XPaths into absolute class paths, converting them into URI-native owl:ObjectProperties with correct domain/range.
+ •	Grouping & Refine Resolver: Handles "Grouping Expansion with Refine," injecting and modifying members during the expansion phase to ensure concrete path resolution in the TBOX.
+  
+ YANG → OWL Mapping & Semantic Optimization
+ •	Normalized Path Registry: The engine maintains class_paths, a registry of module-qualified YANG paths to OWL Class URIs. It strips legacy prefixes (nw:, nt:) to ensure consistent global identifiers.
+ •	Flattened Class Structure: For container and list nodes, the script generates owl:Class definitions. Critically, choice and case levels are discarded; their children are attached directly to the parent container, reducing graph depth for faster SPARQL traversals.
+ •	Property Mapping: * Standard leaves become owl:DatatypeProperty with optimized bare literals for types like xsd:boolean.
+ o	identityref and leafref become owl:ObjectProperty, pointing to URIs instead of string literals.
+ •	Cross-Module Augmentation: Augments are re-anchored to the target path. The engine stubs target classes across modules and injects children as if physically present, ensuring a seamless graph even when spanning multiple IETF models.
+  
+ Hardware & Topology Logic
+ •	Active Hardware Lineage: Utilizes ex:parent (ObjectProperty) to map child components (Ports/Modules) back to their parent Chassis, allowing hierarchical failure analysis.
+ •	Passive Device Connectivity: Implements an explicit device-to-port link via pdev:hasPassivePort to close the structural gap between passive devices and their physical interfaces.
+ •	Reified Path Tracing: For topology (Cables), the script generates reified a-end and z-end instances, utilizing ex:ne-ref (Active), ex:device-ref (Passive), and ex:port-ref to create an unbroken semantic chain across domains.
+  
+ Constraint & Metadata Handling
+ •	SHACL Constraint Isolation: Instead of polluting the TBOX with restrictive logic, must, when, and mandatory statements are translated into sh:NodeShape and sh:property constraints. This allows for strict validation in Stardog while keeping the TBOX flexible for reasoning.
+ •	XSD & Datatype Restrictions: Translates YANG range, length, and pattern restrictions into owl:withRestrictions facets, connected to specific typedef classes.
+ •	PROV Metadata: Every generated entity is annotated with prov:wasDerivedFrom, providing a direct audit trail back to the specific YANG module, line number, and element type.
+ 
+  
+  
+
 
 -----------------------------------
 Queries on the plant data
