@@ -94,15 +94,16 @@ Python yang4owl
 - execution  yang4owl.py --yang-dir <directory of the yang files> --modules <yang model to create ttl for> --base-uri <owl base uri> --output <turtle file> --verbose 
 
  YANG to OWL/RDF Processing Map (Updated)
- 
+
  Current include capabilities
- •	Monolithic Augmentation: Cross-module target path resolution and dependency expansion.
- •	Structural Flattening: Elimination of choice/case intermediate nodes to optimize SPARQL query depth.
- •	Dual Identity Mapping: OWL Class + NamedIndividual (Punning) for hierarchical reasoning.
- •	SHACL Isolation: Decoupling of "Closed-World" constraints (must/when/mandatory) from the "Open-World" OWL TBOX.
- •	Enhanced Semantic Linking: Native URI-based resolution for leafref and identityref (removing string dead-ends).
- •	Hardware Lineage: Parent-child traversal via ex:parent and pdev:hasPassivePort.
- •	Provenance: PROV-O metadata mapping back to originating YANG paths.
+    Monolithic Augmentation: Cross-module target path resolution and dependency expansion.
+    Structural Flattening: Elimination of choice/case intermediate nodes to optimize SPARQL query depth.
+    Dual Identity Mapping: OWL Class + NamedIndividual (Punning) for hierarchical reasoning.
+    SHACL Isolation: Decoupling of "Closed-World" constraints (must/when/mandatory) from the "Open-World" OWL TBOX.
+    Enhanced Semantic Linking: Native URI-based resolution for leafref and identityref (removing string dead-ends).
+    Hardware Lineage: Parent-child traversal via ex:parent and pdev:hasPassivePort.
+    Provenance: PROV-O metadata mapping back to originating YANG paths.
+
   
  High-Level Flow
  The main function orchestrates the translation by parsing CLI arguments and instantiates the YANGToOWL engine. The core convert() method initializes recursive schema walking, resolves cross-module dependencies, applies semantic patches (such as structural flattening), and emits a monolithic Turtle file. It simultaneously generates a secondary SHACL graph to house validation constraints.
