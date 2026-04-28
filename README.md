@@ -95,41 +95,48 @@ Python yang4owl
 
   YANG to OWL/RDF Processing Map (Updated)
 
- Current include capabilities
-    Monolithic Augmentation: Cross-module target path resolution and dependency expansion. 
-    Structural Flattening: Elimination of choice/case intermediate nodes to optimize SPARQL query depth. 
-    Dual Identity Mapping: OWL Class + NamedIndividual (Punning) for hierarchical reasoning. 
-    SHACL Isolation: Decoupling of "Closed-World" constraints (must/when/mandatory) from the "Open-World" OWL TBOX. 
-    Enhanced Semantic Linking: Native URI-based resolution for leafref and identityref (removing string dead-ends). 
-    Hardware Lineage: Parent-child traversal via ex:parent and pdev:hasPassivePort. 
-    Provenance: PROV-O metadata mapping back to originating YANG paths. 
+ YANG to OWL/RDF Processing Map (Updated)
 
-  
- High-Level Flow   
- The main function orchestrates the translation by parsing CLI arguments and instantiates the YANGToOWL engine. The core convert() method initializes recursive schema walking, resolves cross-module dependencies, applies semantic patches (such as structural flattening), and emits a monolithic Turtle file. It simultaneously generates a secondary SHACL graph to house validation constraints.  
- 
- Key Helper Components
- 	YANGDependencyResolver: Utilizes pyang’s context to ingest a directory of modules, resolving import and augment paths across the entire library to ensure a complete schema.
- 	IdentityResolver: Maps YANG identities to a dual-layer OWL structure. Every identity is a Class (for taxonomy) and a NamedIndividual (for assignment), enabling reasoning over hardware classes (e.g., iana-hardware).
- 	EnhancedLeafrefResolver: Normalizes relative and current()-based XPaths into absolute class paths, converting them into URI-native owl:ObjectProperties with correct domain/range.
- 	Grouping & Refine Resolver: Handles "Grouping Expansion with Refine," injecting and modifying members during the expansion phase to ensure concrete path resolution in the TBOX.
-  
- YANG → OWL Mapping & Semantic Optimization
- 	Normalized Path Registry: The engine maintains class_paths, a registry of module-qualified YANG paths to OWL Class URIs. It strips legacy prefixes (nw:, nt:) to ensure consistent global identifiers.
- 	Flattened Class Structure: For container and list nodes, the script generates owl:Class definitions. Critically, choice and case levels are discarded; their children are attached directly to the parent container, reducing graph depth for faster SPARQL traversals.
- 	Property Mapping: * Standard leaves become owl:DatatypeProperty with optimized bare literals for types like xsd:boolean.
- 		identityref and leafref become owl:ObjectProperty, pointing to URIs instead of string literals.
- 	Cross-Module Augmentation: Augments are re-anchored to the target path. The engine stubs target classes across modules and injects children as if physically present, ensuring a seamless graph even when spanning multiple IETF models.
-  
- Hardware & Topology Logic
- 	Active Hardware Lineage: Utilizes ex:parent (ObjectProperty) to map child components (Ports/Modules) back to their parent Chassis, allowing hierarchical failure analysis.
- 	Passive Device Connectivity: Implements an explicit device-to-port link via pdev:hasPassivePort to close the structural gap between passive devices and their physical interfaces.
- 	Reified Path Tracing: For topology (Cables), the script generates reified a-end and z-end instances, utilizing ex:ne-ref (Active), ex:device-ref (Passive), and ex:port-ref to create an unbroken semantic chain across domains.
-  
- Constraint & Metadata Handling
- 	SHACL Constraint Isolation: Instead of polluting the TBOX with restrictive logic, must, when, and mandatory statements are translated into sh:NodeShape and sh:property constraints. This allows for strict validation in Stardog while keeping the TBOX flexible for reasoning.
- 	XSD & Datatype Restrictions: Translates YANG range, length, and pattern restrictions into owl:withRestrictions facets, connected to specific typedef classes.
- 	PROV Metadata: Every generated entity is annotated with prov:wasDerivedFrom, providing a direct audit trail back to the specific YANG module, line number, and element type.
+Current include capabilities
+
+- Monolithic Augmentation: Cross-module target path resolution and dependency expansion.
+- Structural Flattening: Elimination of choice/case intermediate nodes to optimize SPARQL query depth.
+- Dual Identity Mapping: OWL Class + NamedIndividual (Punning) for hierarchical reasoning.
+- SHACL Isolation: Decoupling of "Closed-World" constraints (must/when/mandatory) from the "Open-World" OWL TBOX.
+- Enhanced Semantic Linking: Native URI-based resolution for leafref and identityref (removing string dead-ends).
+- Hardware Lineage: Parent-child traversal via ex:parent and pdev:hasPassivePort.
+- Provenance: PROV-O metadata mapping back to originating YANG paths.
+
+High-Level Flow
+
+The main function orchestrates the translation by parsing CLI arguments and instantiates the YANGToOWL engine. The core convert() method initializes recursive schema walking, resolves cross-module dependencies, applies semantic patches (such as structural flattening), and emits a monolithic Turtle file. It simultaneously generates a secondary SHACL graph to house validation constraints.
+
+Key Helper Components
+
+- YANGDependencyResolver: Utilizes pyang's context to ingest a directory of modules, resolving import and augment paths across the entire library to ensure a complete schema.
+- IdentityResolver: Maps YANG identities to a dual-layer OWL structure. Every identity is a Class (for taxonomy) and a NamedIndividual (for assignment), enabling reasoning over hardware classes (e.g., iana-hardware).
+- EnhancedLeafrefResolver: Normalizes relative and current()-based XPaths into absolute class paths, converting them into URI-native owl:ObjectProperties with correct domain/range.
+- Grouping & Refine Resolver: Handles "Grouping Expansion with Refine," injecting and modifying members during the expansion phase to ensure concrete path resolution in the TBOX.
+
+YANG → OWL Mapping & Semantic Optimization
+
+- Normalized Path Registry: The engine maintains class_paths, a registry of module-qualified YANG paths to OWL Class URIs. It strips legacy prefixes (nw:, nt:) to ensure consistent global identifiers.
+- Flattened Class Structure: For container and list nodes, the script generates owl:Class definitions. Critically, choice and case levels are discarded; their children are attached directly to the parent container, reducing graph depth for faster SPARQL traversals.
+- Property Mapping: \* Standard leaves become owl:DatatypeProperty with optimized bare literals for types like xsd:boolean.
+  - identityref and leafref become owl:ObjectProperty, pointing to URIs instead of string literals.
+- Cross-Module Augmentation: Augments are re-anchored to the target path. The engine stubs target classes across modules and injects children as if physically present, ensuring a seamless graph even when spanning multiple IETF models.
+
+Hardware & Topology Logic
+
+- Active Hardware Lineage: Utilizes ex:parent (ObjectProperty) to map child components (Ports/Modules) back to their parent Chassis, allowing hierarchical failure analysis.
+- Passive Device Connectivity: Implements an explicit device-to-port link via pdev:hasPassivePort to close the structural gap between passive devices and their physical interfaces.
+- Reified Path Tracing: For topology (Cables), the script generates reified a-end and z-end instances, utilizing ex:ne-ref (Active), ex:device-ref (Passive), and ex:port-ref to create an unbroken semantic chain across domains.
+
+Constraint & Metadata Handling
+
+- SHACL Constraint Isolation: Instead of polluting the TBOX with restrictive logic, must, when, and mandatory statements are translated into sh:NodeShape and sh:property constraints. This allows for strict validation in Stardog while keeping the TBOX flexible for reasoning.
+- XSD & Datatype Restrictions: Translates YANG range, length, and pattern restrictions into owl:withRestrictions facets, connected to specific typedef classes.
+- PROV Metadata: Every generated entity is annotated with prov:wasDerivedFrom, providing a direct audit trail back to the specific YANG module, line number, and element type.
  
   
   
