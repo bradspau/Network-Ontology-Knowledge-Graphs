@@ -96,13 +96,19 @@ Python yang4owl
  YANG to OWL/RDF Processing Map (Updated)
 
  Current include capabilities
-    Monolithic Augmentation: Cross-module target path resolution and dependency expansion.
-    Structural Flattening: Elimination of choice/case intermediate nodes to optimize SPARQL query depth.
-    Dual Identity Mapping: OWL Class + NamedIndividual (Punning) for hierarchical reasoning.
-    SHACL Isolation: Decoupling of "Closed-World" constraints (must/when/mandatory) from the "Open-World" OWL TBOX.
-    Enhanced Semantic Linking: Native URI-based resolution for leafref and identityref (removing string dead-ends).
-    Hardware Lineage: Parent-child traversal via ex:parent and pdev:hasPassivePort.
-    Provenance: PROV-O metadata mapping back to originating YANG paths.
+    Monolithic Augmentation: Cross-module target path resolution and dependency expansion. 
+
+    Structural Flattening: Elimination of choice/case intermediate nodes to optimize SPARQL query depth. 
+
+    Dual Identity Mapping: OWL Class + NamedIndividual (Punning) for hierarchical reasoning. 
+
+    SHACL Isolation: Decoupling of "Closed-World" constraints (must/when/mandatory) from the "Open-World" OWL TBOX. 
+
+    Enhanced Semantic Linking: Native URI-based resolution for leafref and identityref (removing string dead-ends). 
+
+    Hardware Lineage: Parent-child traversal via ex:parent and pdev:hasPassivePort. 
+    
+    Provenance: PROV-O metadata mapping back to originating YANG paths. 
 
   
  High-Level Flow
