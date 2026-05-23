@@ -213,6 +213,10 @@ ex:cable-type a owl:ObjectProperty ;
     rdfs:range nwiPassId:cable-type ;
     prov:wasDerivedFrom "nwi-passive:cable-type?leaf" .
 
+ex:cableRole a owl:ObjectProperty ;
+    rdfs:label "cable role" ;
+    rdfs:comment "RDF-star annotation on ex:hasUpstreamDevice: role/tier of the cable. Priority ascending: internal=0, drop=1, access=2, branch=3, aggregation=4, distribution=5, trunk=6." .
+
 ex:channel-id a owl:DatatypeProperty ;
     rdfs:label "channel-id" ;
     rdfs:comment """Unique identifier for the breakout channel within the
@@ -566,6 +570,11 @@ present).""" ;
     rdfs:range xsd:string ;
     prov:wasDerivedFrom "hw:hardware?container/hw:component?list/hw:hardware-rev?leaf",
         "nwi:hardware-rev?leaf" .
+
+ex:hasDownstreamDevice a owl:ObjectProperty ;
+    rdfs:label "has downstream device" ;
+    rdfs:comment "Inverse of ex:hasUpstreamDevice." ;
+    owl:inverseOf ex:hasUpstreamDevice .
 
 ex:has_breakout-channel a owl:ObjectProperty ;
     rdfs:label "has breakout-channel" ;
@@ -1002,6 +1011,8 @@ nwiPassId:access a owl:Class,
     rdfs:subClassOf yangId:cable-role ;
     prov:wasDerivedFrom "nwi-passive:access?identity" .
 
+nwiPassId:access-cable ex:rolePriority 2 .
+
 nwiPassId:active-device a owl:Class,
         owl:NamedIndividual ;
     rdfs:label "active-device" ;
@@ -1015,6 +1026,8 @@ nwiPassId:aggregation a owl:Class,
     rdfs:comment "Aggregation cable." ;
     rdfs:subClassOf yangId:cable-role ;
     prov:wasDerivedFrom "nwi-passive:aggregation?identity" .
+
+nwiPassId:aggregation-cable ex:rolePriority 4 .
 
 nwiPassId:backbone a owl:Class,
         owl:NamedIndividual ;
@@ -1030,6 +1043,8 @@ nwiPassId:branch a owl:Class,
     rdfs:subClassOf yangId:cable-role ;
     prov:wasDerivedFrom "nwi-passive:branch?identity" .
 
+nwiPassId:branch-cable ex:rolePriority 3 .
+
 nwiPassId:coaxial-cable a owl:Class,
         owl:NamedIndividual ;
     rdfs:label "coaxial-cable" ;
@@ -1044,6 +1059,10 @@ nwiPassId:distribution a owl:Class,
     rdfs:subClassOf yangId:cable-role ;
     prov:wasDerivedFrom "nwi-passive:distribution?identity" .
 
+nwiPassId:distribution-cable ex:rolePriority 5 .
+
+nwiPassId:drop-cable ex:rolePriority 1 .
+
 nwiPassId:electrical-cable a owl:Class,
         owl:NamedIndividual ;
     rdfs:label "electrical-cable" ;
@@ -1057,6 +1076,8 @@ nwiPassId:input-port a owl:Class,
     rdfs:comment "Input port." ;
     rdfs:subClassOf yangId:passive-port-type ;
     prov:wasDerivedFrom "nwi-passive:input-port?identity" .
+
+nwiPassId:internal-cable ex:rolePriority 0 .
 
 nwiPassId:optical-fiber a owl:Class,
         owl:NamedIndividual ;
@@ -1106,6 +1127,8 @@ nwiPassId:trunk a owl:Class,
     rdfs:comment "Trunk cable." ;
     rdfs:subClassOf yangId:cable-role ;
     prov:wasDerivedFrom "nwi-passive:trunk?identity" .
+
+nwiPassId:trunk-cable ex:rolePriority 6 .
 
 paeId:accuracy-estimated a owl:Class,
         owl:NamedIndividual ;
@@ -2055,6 +2078,10 @@ ex:rack a owl:ObjectProperty ;
     rdfs:range nwiRacks:rack ;
     prov:wasDerivedFrom "nil:locations?container/nil:rack?leaf" .
 
+ex:rank a owl:DatatypeProperty ;
+    rdfs:label "rank" ;
+    rdfs:range xsd:integer .
+
 ex:relative-position a owl:DatatypeProperty ;
     rdfs:label "relative-position" ;
     rdfs:comment """A relative position of chassis within
@@ -2078,6 +2105,11 @@ revision of the software module.""" ;
     rdfs:range xsd:string ;
     prov:wasDerivedFrom "nwi:software-rev?list/nwi:patch?list/nwi:revision?leaf",
         "nwi:software-rev?list/nwi:revision?leaf" .
+
+ex:rolePriority a owl:DatatypeProperty ;
+    rdfs:label "role priority" ;
+    rdfs:comment "Numeric priority for cable role used in upstream-ascending traversal filter. Matches CABLE_RANK_MAP: internal=0, drop=1, access=2, branch=3, aggregation=4, distribution=5, trunk=6." ;
+    rdfs:range xsd:integer .
 
 ex:row-number a owl:DatatypeProperty ;
     rdfs:label "row-number" ;
@@ -2664,6 +2696,10 @@ milliseconds.  The value zero indicates:
     rdfs:range xsd:unsignedInt ;
     prov:wasDerivedFrom "hw:hardware?container/hw:component?list/hw:sensor-data?container/hw:value-update-rate?leaf" .
 
+ex:viaCable a owl:ObjectProperty ;
+    rdfs:label "via cable" ;
+    rdfs:comment "RDF-star annotation on ex:hasUpstreamDevice: the physical cable realising this hop." .
+
 ex:width a owl:DatatypeProperty ;
     rdfs:label "width" ;
     ex:unit "millimeter" ;
@@ -2786,6 +2822,10 @@ grpNwiPass:passive-devices a owl:Class ;
     rdfs:label "passive-devices" ;
     rdfs:comment "Attributes applicable to passive devices.",
         "Grouping definition: passive-devices" .
+
+ex:hasUpstreamDevice a owl:ObjectProperty ;
+    rdfs:label "has upstream device" ;
+    rdfs:comment "Materialised shortcut: device at Z-end of a cable -> device at A-end (upstream). Annotated via RDF-star with ex:viaCable and ex:cableRole. Enables: ?device ex:hasUpstreamDevice+ ?odf ." .
 
 nwiInvId:ne-type a owl:Class,
         owl:NamedIndividual ;

@@ -1,0 +1,43 @@
+module: ietf-network-inventory
+  +--ro network-inventory
+     +--ro network-elements
+        +--ro network-element* [ne-id]
+           +--ro ne-id           string
+           +--ro ne-type?        identityref
+           +--ro uuid?           yang:uuid
+           +--ro name?           string
+           +--ro alias?          string
+           +--ro description?    string
+           +--ro software-rev* [name]
+           |  +--ro name        string
+           |  +--ro revision?   string
+           |  +--ro patch* [revision]
+           |     +--ro revision    string
+           +--ro mfg-name?       string
+           +--ro product-name?   string
+           +--ro product-rev?    string
+           +--ro components
+              +--ro component* [component-id]
+                 +--ro component-id      string
+                 +--ro class             union
+                 +--ro uuid?             yang:uuid
+                 +--ro name?             string
+                 +--ro alias?            string
+                 +--ro description?      string
+                 +--ro software-rev* [name]
+                 |  +--ro name        string
+                 |  +--ro revision?   string
+                 |  +--ro patch* [revision]
+                 |     +--ro revision    string
+                 +--ro mfg-name?         string
+                 +--ro product-name?     string
+                 +--ro hardware-rev?     string
+                 +--ro mfg-date?         yang:date-and-time
+                 +--ro part-number?      string
+                 +--ro serial-number?    string
+                 +--ro asset-id?         string
+                 +--ro is-fru?           boolean
+                 +--ro uri*              inet:uri
+                 +--ro parent*           -> ../../component/component-id
+                 +--ro parent-rel-pos?   int32
+                 +--ro is-main?          boolean

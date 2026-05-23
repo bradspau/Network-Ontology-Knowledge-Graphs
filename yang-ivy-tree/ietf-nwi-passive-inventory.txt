@@ -1,0 +1,69 @@
+module: ietf-nwi-passive-inventory
+
+  augment /nwi:network-inventory:
+    +--ro cable* [id]
+    |  +--ro id               string
+    |  +--ro length?          uint32
+    |  +--ro a-end
+    |  |  +--ro device-type?           identityref
+    |  |  +--ro (connected-device-type)?
+    |  |     +--:(passive)
+    |  |     |  +--ro device-id?       string
+    |  |     +--:(active)
+    |  |        +--ro ne-ref?          -> /nwi:network-inventory/network-elements/network-element/ne-id
+    |  |        +--ro component-ref?   -> /nwi:network-inventory/network-elements/network-element[nwi:ne-id=current()/../ne-ref]/components/component/component-id
+    |  +--ro z-end
+    |  |  +--ro device-type?           identityref
+    |  |  +--ro (connected-device-type)?
+    |  |     +--:(passive)
+    |  |     |  +--ro device-id?       string
+    |  |     +--:(active)
+    |  |        +--ro ne-ref?          -> /nwi:network-inventory/network-elements/network-element/ne-id
+    |  |        +--ro component-ref?   -> /nwi:network-inventory/network-elements/network-element[nwi:ne-id=current()/../ne-ref]/components/component/component-id
+    |  +--ro uuid?            yang:uuid
+    |  +--ro name?            string
+    |  +--ro alias?           string
+    |  +--ro description?     string
+    |  +--ro cable-type?      identityref
+    |  +--ro cable-role?      identityref
+    |  +--ro optical-cable
+    |  |  +--ro fiber-core-num?   uint32
+    |  |  +--ro fiber-type?       identityref
+    |  |  +--ro attenuation?      decimal64
+    |  +--ro child-cable* [index]
+    |     +--ro index     uint8
+    |     +--ro id?       string
+    |     +--ro length?   uint32
+    |     +--ro a-end
+    |     |  +--ro device-type?           identityref
+    |     |  +--ro (connected-device-type)?
+    |     |     +--:(passive)
+    |     |     |  +--ro device-id?       string
+    |     |     +--:(active)
+    |     |        +--ro ne-ref?          -> /nwi:network-inventory/network-elements/network-element/ne-id
+    |     |        +--ro component-ref?   -> /nwi:network-inventory/network-elements/network-element[nwi:ne-id=current()/../ne-ref]/components/component/component-id
+    |     +--ro z-end
+    |        +--ro device-type?           identityref
+    |        +--ro (connected-device-type)?
+    |           +--:(passive)
+    |           |  +--ro device-id?       string
+    |           +--:(active)
+    |              +--ro ne-ref?          -> /nwi:network-inventory/network-elements/network-element/ne-id
+    |              +--ro component-ref?   -> /nwi:network-inventory/network-elements/network-element[nwi:ne-id=current()/../ne-ref]/components/component/component-id
+    +--ro passive-device* [id]
+       +--ro id              string
+       +--ro uuid?           yang:uuid
+       +--ro name?           string
+       +--ro alias?          string
+       +--ro description?    string
+       +--ro device-type?    identityref
+       +--ro custom-tags*    string
+       +--ro location-ref?   nil:ni-location-ref
+       +--ro passive-port* [id]
+          +--ro id                string
+          +--ro uuid?             yang:uuid
+          +--ro name?             string
+          +--ro alias?            string
+          +--ro description?      string
+          +--ro port-type?        identityref
+          +--ro fiber-core-num?   uint32

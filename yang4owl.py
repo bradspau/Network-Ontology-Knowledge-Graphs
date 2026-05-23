@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-YANG to OWL Ontology Converter - VERSION 4.7.26 (Separate SHACL Output)
+YANG to OWL Ontology Converter - VERSION 4.7.28 (RDF-star Connectivity)
 
 Release Note: Semantic Interoperability via OWL 2 Punning
 This update implements OWL 2 Punning to resolve "dead-end" string traversals common in standard YANG-to-OWL conversions.
@@ -39,10 +39,15 @@ ALL IMPROVEMENTS IMPLEMENTED:
 24. Make prefixes static
 25. add more static prefixes
 26. Post yang converter to introduce objectproprties for leafrefs for cable to passive device traversal
+27. RDF-star upstream connectivity materialisation pass (ABoxConnectivityEnricher)
+    - Adds ex:hasUpstreamDevice / ex:hasDownstreamDevice shortcut triples for every cable (Z→A)
+    - Annotates each shortcut with <<...>> ex:viaCable and ex:cableRole (Turtle* / RDF-star)
+    - Enables SPARQL property path: ?device ex:hasUpstreamDevice+ ?odf
+    - Eliminates bounded UNION / multi-hop workarounds for graph traversal
+    - Run: python yang4owl.py --abox-enrich <abox.ttl> --abox-out <enriched.ttls>
 
-
-Author: YANG-to-OWL Converter v4.7.26
-Date: 2026-03-09
+Author: YANG-to-OWL Converter v4.7.28
+Date: 2026-05-19
 """
 
 from os import name
@@ -71,6 +76,15 @@ logging.basicConfig(
 )
 log = logging.getLogger(__name__)
 
+CABLE_RANK_MAP = {
+    "internal-cable":     0,   # unclassified drop; never blocks traversal
+    "drop-cable":         1,
+    "access-cable":       2,
+    "branch-cable":       3,
+    "aggregation-cable":  4,
+    "distribution-cable": 5,
+    "trunk-cable":        6,
+}
 
 def extract_module_name(filename: str) -> str:
     """Safely normalizes a module name from a filename or argument."""
@@ -696,6 +710,11 @@ class YANGToOWL:
         # ==========================================
         log.info("[Step 13] Applying custom TBox extensions for direct URIs...")
         
+        rank_prop = self.ex["rank"]
+        self.graph.add((rank_prop, RDF.type, OWL.DatatypeProperty))
+        self.graph.add((rank_prop, RDFS.label, Literal("rank")))
+        self.graph.add((rank_prop, RDFS.range, XSD.integer))
+
         base_prefix = str(self.base_uri).rstrip("/") + "/"
         ni_base_path = f"{base_prefix}ietf-network-inventory/network-inventory/"
         
@@ -738,6 +757,60 @@ class YANGToOWL:
             for dom in cable_termination_domains:
                 self.graph.add((prop, RDFS.domain, dom))
             
+        # ==========================================
+        # --- STEP 14: RDF-star shortcut properties ---
+        # These enable: ?device ex:hasUpstreamDevice+ ?odf  (single SPARQL line)
+        # The ABoxConnectivityEnricher materialises the actual instance triples.
+        # ==========================================
+        log.info("[Step 14] Adding RDF-star upstream connectivity properties to TBox...")
+
+        has_upstream_prop = self.ex["hasUpstreamDevice"]
+        self.graph.add((has_upstream_prop, RDF.type, OWL.ObjectProperty))
+        self.graph.add((has_upstream_prop, RDFS.label, Literal("has upstream device")))
+        self.graph.add((has_upstream_prop, RDFS.comment, Literal(
+            "Materialised shortcut: device at Z-end of a cable -> device at A-end (upstream). "
+            "Annotated via RDF-star with ex:viaCable and ex:cableRole. "
+            "Enables: ?device ex:hasUpstreamDevice+ ?odf ."
+        )))
+
+        has_downstream_prop = self.ex["hasDownstreamDevice"]
+        self.graph.add((has_downstream_prop, RDF.type, OWL.ObjectProperty))
+        self.graph.add((has_downstream_prop, RDFS.label, Literal("has downstream device")))
+        self.graph.add((has_downstream_prop, RDFS.comment, Literal("Inverse of ex:hasUpstreamDevice.")))
+        self.graph.add((has_downstream_prop, OWL.inverseOf, has_upstream_prop))
+
+        via_cable_prop = self.ex["viaCable"]
+        self.graph.add((via_cable_prop, RDF.type, OWL.ObjectProperty))
+        self.graph.add((via_cable_prop, RDFS.label, Literal("via cable")))
+        self.graph.add((via_cable_prop, RDFS.comment, Literal(
+            "RDF-star annotation on ex:hasUpstreamDevice: the physical cable realising this hop."
+        )))
+
+        cable_role_anno_prop = self.ex["cableRole"]
+        self.graph.add((cable_role_anno_prop, RDF.type, OWL.ObjectProperty))
+        self.graph.add((cable_role_anno_prop, RDFS.label, Literal("cable role")))
+        self.graph.add((cable_role_anno_prop, RDFS.comment, Literal(
+            "RDF-star annotation on ex:hasUpstreamDevice: role/tier of the cable. "
+            "Priority ascending: internal=0, drop=1, access=2, branch=3, aggregation=4, distribution=5, trunk=6."
+        )))
+
+        role_priority_prop = self.ex["rolePriority"]
+        self.graph.add((role_priority_prop, RDF.type, OWL.DatatypeProperty))
+        self.graph.add((role_priority_prop, RDFS.label, Literal("role priority")))
+        self.graph.add((role_priority_prop, RDFS.range, XSD.integer))
+        self.graph.add((role_priority_prop, RDFS.comment, Literal(
+            "Numeric priority for cable role used in upstream-ascending traversal filter. "
+            "Matches CABLE_RANK_MAP: internal=0, drop=1, access=2, branch=3, aggregation=4, distribution=5, trunk=6."
+        )))
+
+        # Annotate each cable-role named individual with its numeric priority
+        _nwi_pass_id_ns = Namespace(f"{str(self.base_uri).rstrip('/')}/identity/ietf-nwi-passive-inventory/")
+        for role_name, priority in CABLE_RANK_MAP.items():
+            role_uri = _nwi_pass_id_ns[role_name]
+            self.graph.add((role_uri, role_priority_prop, Literal(priority, datatype=XSD.integer)))
+
+        log.info(f"  ✓ Added {len(CABLE_RANK_MAP)} cable-role priority annotations.")
+
         # ==========================================
         # --- END OF CUSTOM TBOX PATCH ---
         # ==========================================
@@ -891,6 +964,11 @@ SELECT $this WHERE {{
         self.graph.add((uri, RDF.type, OWL.Class))
         self.graph.add((uri, RDFS.label, Literal(name)))
         self.graph.add((uri, RDF.type, OWL.NamedIndividual))
+
+        if name in CABLE_RANK_MAP:
+            rank_value = CABLE_RANK_MAP[name]
+            self.graph.add((uri, self.ex.rank, Literal(rank_value, datatype=XSD.integer)))
+            log.info(f"  Enriched identity {name} with rank {rank_value}")
 
         if hasattr(stmt, 'substmts'):
             for sub in stmt.substmts:
@@ -1872,27 +1950,226 @@ class YANGToHTML:
         return "".join(output)
 
 
+class ABoxConnectivityEnricher:
+    """
+    Post-processing pass that reads an existing ABox TTL file and materialises
+    RDF-star upstream connectivity triples for every cable instance.
+
+    For each cable where both a Z-end device and an A-end device can be resolved:
+      1. Adds a base triple:  <z_device> ex:hasUpstreamDevice <a_device>
+      2. Adds its inverse:    <a_device> ex:hasDownstreamDevice <z_device>
+      3. Appends an RDF-star annotation block (Turtle* syntax):
+             <<<z_device> ex:hasUpstreamDevice <a_device>>>
+                 ex:viaCable  <cable> ;
+                 ex:cableRole <role> .
+
+    The output is a valid Turtle* file (.ttls) that Stardog loads natively,
+    enabling the single-line traversal query:
+        ?start ex:hasUpstreamDevice+ ?target .
+
+    Usage (standalone):
+        python yang4owl.py --abox-enrich data.ttl --abox-out data_enriched.ttls
+
+    Usage (programmatic):
+        enricher = ABoxConnectivityEnricher("data.ttl", "http://www.huawei.com/ontology")
+        enricher.enrich("data_enriched.ttls")
+    """
+
+    def __init__(self, abox_file: str, base_uri: str = "http://www.huawei.com/ontology"):
+        self.abox_file = Path(abox_file)
+        self.base_uri  = base_uri.rstrip('/')
+        self.ex        = Namespace(self.base_uri + '/')
+
+        _ni_base       = f"{self.base_uri}/ietf-network-inventory/network-inventory/"
+        self.CAB_NS    = Namespace(f"{_ni_base}cable/")
+        self.NWI_NS    = Namespace(_ni_base)
+        self.PASS_ID   = Namespace(f"{self.base_uri}/identity/ietf-nwi-passive-inventory/")
+
+    # ── Public API ────────────────────────────────────────────────────────────
+
+    def enrich(self, output_file: str) -> int:
+        """
+        Reads self.abox_file, materialises shortcut triples, and writes a
+        Turtle* file to output_file.  Returns the count of links materialised.
+        """
+        log.info(f"\n{'='*60}")
+        log.info(f" ABoxConnectivityEnricher  v4.7.28")
+        log.info(f" Input : {self.abox_file}")
+        log.info(f" Output: {output_file}")
+        log.info(f"{'='*60}")
+
+        g = Graph()
+        g.parse(str(self.abox_file), format='turtle')
+        log.info(f" Loaded {len(g):,} triples from ABox.")
+
+        links = self._materialise_links(g)
+        self._write_turtle_star(g, links, output_file)
+
+        log.info(f" ✓ Materialised {len(links):,} upstream device links.")
+        log.info(f" ✓ Turtle* written → {output_file}\n")
+        return len(links)
+
+    # ── Internal helpers ──────────────────────────────────────────────────────
+
+    def _materialise_links(self, g: Graph) -> list:
+        """
+        Iterates over every nwi:cable individual, resolves Z-end and A-end
+        devices, adds base shortcut triples to g, and returns the full list
+        of (z_device, a_device, cable, cable_role) tuples.
+        """
+        ne_ref       = self.ex["ne-ref"]
+        device_ref   = self.ex["device-ref"]
+        has_a_end    = self.CAB_NS["hasAEnd"]
+        has_z_end    = self.CAB_NS["hasZEnd"]
+        cable_type   = self.NWI_NS["cable"]
+        cable_role_p = self.ex["cable-role"]
+        has_upstream = self.ex["hasUpstreamDevice"]
+        has_down     = self.ex["hasDownstreamDevice"]
+
+        cables = list(g.subjects(RDF.type, cable_type))
+        log.info(f" Found {len(cables):,} cable instances.")
+
+        links = []
+        skipped = 0
+
+        for cable in cables:
+            z_end_node = g.value(cable, has_z_end)
+            a_end_node = g.value(cable, has_a_end)
+            if not z_end_node or not a_end_node:
+                skipped += 1
+                continue
+
+            z_device = g.value(z_end_node, ne_ref) or g.value(z_end_node, device_ref)
+            a_device = g.value(a_end_node, ne_ref) or g.value(a_end_node, device_ref)
+            if not z_device or not a_device:
+                skipped += 1
+                continue
+
+            cable_role = g.value(cable, cable_role_p)   # may be None
+
+            # Materialise base shortcut triples into the graph
+            g.add((z_device, has_upstream, a_device))
+            g.add((a_device, has_down,     z_device))
+
+            links.append((z_device, a_device, cable, cable_role))
+
+        if skipped:
+            log.warning(f" {skipped} cable(s) skipped (missing end or device reference).")
+        return links
+
+    def _write_turtle_star(self, g: Graph, links: list, output_file: str) -> None:
+        """
+        Serialises g as Turtle, then appends the RDF-star <<...>> annotation
+        blocks for every link.  The combined output is valid Turtle* (RDF-star).
+        """
+        # ── 1. Serialise base graph (includes the new shortcut triples) ───
+        base_ttl = g.serialize(format='turtle')
+
+        # ── 2. Build a compact-URI helper from the graph's bound prefixes ──
+        prefix_map: Dict[str, str] = {}
+        for pfx, ns in g.namespaces():
+            prefix_map[str(ns)] = str(pfx)
+        # Ensure ex: is always resolvable
+        prefix_map.setdefault(self.base_uri + '/', 'ex')
+
+        def _compact(uri: URIRef) -> str:
+            s = str(uri)
+            # Longest-prefix match
+            best_pfx, best_ns = None, ''
+            for ns_str, pfx in prefix_map.items():
+                if s.startswith(ns_str) and len(ns_str) > len(best_ns):
+                    best_ns, best_pfx = ns_str, pfx
+            if best_pfx is not None:
+                local = s[len(best_ns):]
+                # Only abbreviate if local part is a valid NCName (no slashes etc.)
+                if local and '/' not in local and '#' not in local:
+                    return f"{best_pfx}:{local}"
+            return f"<{s}>"
+
+        # ── 3. Build RDF-star annotation blocks ───────────────────────────
+        rdfstar_lines: List[str] = [
+            "",
+            "# " + "─" * 72,
+            "# RDF-star annotations: ex:viaCable and ex:cableRole per upstream hop",
+            "# Load this file in Stardog as Turtle* (content-type: text/turtle*)",
+            "# " + "─" * 72,
+        ]
+
+        for z_dev, a_dev, cable, role in links:
+            zc = _compact(z_dev)
+            ac = _compact(a_dev)
+            cc = _compact(cable)
+            rdfstar_lines.append("")
+            rdfstar_lines.append(f"<<{zc} ex:hasUpstreamDevice {ac}>>")
+            if role:
+                rc = _compact(role)
+                rdfstar_lines.append(f"    ex:viaCable  {cc} ;")
+                rdfstar_lines.append(f"    ex:cableRole {rc} .")
+            else:
+                rdfstar_lines.append(f"    ex:viaCable  {cc} .")
+
+        # ── 4. Write combined Turtle* output ──────────────────────────────
+        out = Path(output_file)
+        out.parent.mkdir(parents=True, exist_ok=True)
+        out.write_text(base_ttl + "\n".join(rdfstar_lines) + "\n", encoding='utf-8')
+
+
 def main():
     parser = argparse.ArgumentParser(
-        description='Convert YANG modules to OWL RDF ontology with separated SHACL validation',
+        description=(
+            'Convert YANG modules to OWL RDF ontology with separated SHACL validation.\n'
+            'Also supports ABox RDF-star enrichment (--abox-enrich) as a standalone pass.'
+        ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
-    parser.add_argument('yang_dir', nargs='?', default=None, help='Directory containing YANG files')
-    parser.add_argument('output_file', nargs='?', default=None, help='Output RDF/Turtle file')
-    parser.add_argument('--yang-dir', dest='yang_dir_opt', default=None, help='Directory containing YANG files')
-    parser.add_argument('--output', dest='output_file_opt', default=None, help='Output RDF/Turtle file')
-    parser.add_argument('--modules', default='simap-yang.yang', help='Main module to process')
-    parser.add_argument('--base-uri', default='http://example.org/ontology/', help='Base URI for ontology')
-    parser.add_argument('--verbose', action='store_true', help='Enable verbose debug logging')
-    parser.add_argument('--html', dest='html_output', default=None, help='Optional: Output path for HTML Tree visualization')
+
+    # ── TBox / ontology generation ────────────────────────────────────────────
+    parser.add_argument('yang_dir',       nargs='?', default=None, help='Directory containing YANG files')
+    parser.add_argument('output_file',    nargs='?', default=None, help='Output RDF/Turtle TBox file')
+    parser.add_argument('--yang-dir',     dest='yang_dir_opt',    default=None, help='Directory containing YANG files')
+    parser.add_argument('--output',       dest='output_file_opt', default=None, help='Output RDF/Turtle TBox file')
+    parser.add_argument('--modules',      default='simap-yang.yang', help='Main YANG module to process')
+    parser.add_argument('--base-uri',     default='http://www.huawei.com/ontology', help='Base URI for ontology')
+    parser.add_argument('--verbose',      action='store_true', help='Enable verbose debug logging')
+    parser.add_argument('--html',         dest='html_output', default=None,
+                        help='Optional: output path for HTML parse-tree visualisation')
+
+    # ── ABox RDF-star enrichment (standalone pass) ────────────────────────────
+    abox_grp = parser.add_argument_group(
+        'ABox RDF-star enrichment',
+        'Reads an existing ABox TTL, materialises ex:hasUpstreamDevice shortcuts\n'
+        'and writes RDF-star <<>> annotations (Turtle* output).  Can be run without\n'
+        'the YANG conversion step by omitting yang_dir / output_file.'
+    )
+    abox_grp.add_argument(
+        '--abox-enrich', dest='abox_enrich', default=None, metavar='ABOX.ttl',
+        help='ABox TTL file to enrich with RDF-star upstream connectivity triples'
+    )
+    abox_grp.add_argument(
+        '--abox-out', dest='abox_out', default=None, metavar='ENRICHED.ttls',
+        help='Output path for the enriched Turtle* ABox (default: <input>_enriched.ttls)'
+    )
 
     args = parser.parse_args()
-    yang_dir = args.yang_dir_opt or args.yang_dir or 'simap-yang'
+
+    if args.verbose:
+        logging.getLogger().setLevel(logging.DEBUG)
+
+    # ── Mode A: ABox-only enrichment (no YANG conversion needed) ─────────────
+    if args.abox_enrich and not (args.yang_dir or args.yang_dir_opt or args.output_file or args.output_file_opt):
+        abox_in  = args.abox_enrich
+        abox_out = args.abox_out or str(Path(abox_in).with_suffix('')) + '_enriched.ttls'
+        enricher = ABoxConnectivityEnricher(abox_in, args.base_uri)
+        enricher.enrich(abox_out)
+        return
+
+    # ── Mode B: Full YANG → TBox conversion ───────────────────────────────────
+    yang_dir    = args.yang_dir_opt    or args.yang_dir    or 'simap-yang'
     output_file = args.output_file_opt or args.output_file or 'simap-ontology.ttl'
     output_path = Path(output_file)
 
     if output_path.is_dir():
-        log.warning(f"Output path is a directory, creating file inside it")
+        log.warning("Output path is a directory; writing file inside it.")
         output_file = str(output_path / 'simap-ontology.ttl')
     elif str(output_path).endswith('/'):
         output_path.mkdir(parents=True, exist_ok=True)
@@ -1900,14 +2177,11 @@ def main():
     else:
         output_path.parent.mkdir(parents=True, exist_ok=True)
 
-    if args.verbose:
-        logging.getLogger().setLevel(logging.DEBUG)
-
     log.info("Configuration:")
-    log.info(f" YANG directory: {yang_dir}")
-    log.info(f" Output file: {output_file}")
-    log.info(f" Main module: {args.modules}")
-    log.info(f" Base URI: {args.base_uri}")
+    log.info(f" YANG directory : {yang_dir}")
+    log.info(f" Output file    : {output_file}")
+    log.info(f" Main module    : {args.modules}")
+    log.info(f" Base URI       : {args.base_uri}")
     log.info("")
 
     converter = YANGToOWL(yang_dir, args.base_uri)
@@ -1916,6 +2190,14 @@ def main():
     if args.html_output:
         html_gen = YANGToHTML(converter.resolver.modules)
         html_gen.generate(args.html_output)
+
+    # ── Mode C: TBox conversion + ABox enrichment in one run ─────────────────
+    if args.abox_enrich:
+        abox_in  = args.abox_enrich
+        abox_out = args.abox_out or str(Path(abox_in).with_suffix('')) + '_enriched.ttls'
+        enricher = ABoxConnectivityEnricher(abox_in, args.base_uri)
+        enricher.enrich(abox_out)
+
 
 if __name__ == "__main__":
     main()
