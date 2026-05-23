@@ -105,6 +105,7 @@ The converter uses [pyang](https://github.com/mbj4668/pyang) to parse and resolv
 YANG to OWL/RDF Processing Map
 
 | YANG Construct | OWL/RDF Treatment | Reasoning Category | Domain (rdfs:domain) | Range (rdfs:range) |
+| :--- | :--- | :--- | :--- | :--- |
 | container | owl:Class | Class Logic | N/A | N/A |
 | list | owl:Class | Class Logic | N/A | N/A |
 | leaf (Standard) | owl:DatatypeProperty | Data Assertions | Parent Class URI | XSD Type (e.g., xsd:boolean) |
