@@ -509,6 +509,22 @@ pip install pyang rdflib
 ```bash
 - yang4owl.py --yang-dir <directory of the yang files> --modules <yang model to create ttl for> --base-uri <owl base uri> --output <turtle file> --verbose
 ```
+
+```bash
+python3 yang4owl.py --yang-dir ../yang-ivy --modules ietf-ni-location.yang --base-uri http://www.huawei.com/ontology --output ietf-osp-topology-python2.ttl --html ietf-osp-topology-python2.html
+```
+If you want to bypass the semantc overlay and just obtain a raw TBOX repreentation from the YANG then use the --raw switch on the input line
+
+```bash
+python3 yang4owl.py --yang-dir ../yang-ivy --modules ietf-ni-location.yang --base-uri http://www.huawei.com/ontology --output ietf-osp-topology-python2.ttl --html ietf-osp-topology-python2.html --raw
+```
+
+or to generate simap 
+
+```bash
+python3 yang4owl.py --yang-dir ../simap-yang --modules ietf-simap-topology-02.yang --base-uri http://www.huawei.com/ontology --output ietf-simap-topology-02-python2.ttl --html ietf-simap-topology-02.html --raw
+```
+
 ### 2. Load TBox
 Load the TBOX into a graph referred to as ietf:tbox.
 

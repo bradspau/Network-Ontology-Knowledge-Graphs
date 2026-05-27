@@ -1,0 +1,760 @@
+@prefix cab: <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/cable/> .
+@prefix cabChild: <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/cable/child-cable/> .
+@prefix ex: <http://www.huawei.com/ontology/> .
+@prefix grpNet: <http://www.huawei.com/ontology/grouping/ietf-network/> .
+@prefix grpNetTop: <http://www.huawei.com/ontology/grouping/ietf-network-topology/> .
+@prefix inetIpVer: <http://www.huawei.com/ontology/types/ietf-inet-types/ip-version/> .
+@prefix inetTypes: <http://www.huawei.com/ontology/types/ietf-inet-types/> .
+@prefix net: <http://www.huawei.com/ontology/ietf-network/networks/network/> .
+@prefix netLink: <http://www.huawei.com/ontology/ietf-network/networks/network/link/> .
+@prefix netNetworks: <http://www.huawei.com/ontology/ietf-network/networks/> .
+@prefix netNode: <http://www.huawei.com/ontology/ietf-network/networks/network/node/> .
+@prefix netRoot: <http://www.huawei.com/ontology/ietf-network/> .
+@prefix netSuppLink: <http://www.huawei.com/ontology/ietf-network/networks/network/link/supporting-link/> .
+@prefix netSuppNet: <http://www.huawei.com/ontology/ietf-network/networks/network/supporting-network/> .
+@prefix netSuppNode: <http://www.huawei.com/ontology/ietf-network/networks/network/node/supporting-node/> .
+@prefix netSuppTP: <http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/supporting-termination-point/> .
+@prefix netTP: <http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/> .
+@prefix nwi: <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/> .
+@prefix nwiNEs: <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/> .
+@prefix nwiPassId: <http://www.huawei.com/ontology/identity/ietf-nwi-passive-inventory/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+ex:cableRole a owl:ObjectProperty ;
+    rdfs:label "cable role" ;
+    rdfs:comment "RDF-star annotation on ex:hasUpstreamDevice: role/tier of the cable. Priority ascending: internal=0, drop=1, access=2, branch=3, aggregation=4, distribution=5, trunk=6." .
+
+ex:component-ref a owl:ObjectProperty ;
+    rdfs:label "component-ref" ;
+    rdfs:domain cab:a-end,
+        cabChild:a-end,
+        cabChild:z-end,
+        cab:z-end ;
+    rdfs:range <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component> .
+
+ex:description a owl:DatatypeProperty ;
+    rdfs:label "description" ;
+    rdfs:comment "Optional description." ;
+    rdfs:domain netNetworks:network,
+        net:link,
+        net:node,
+        netNode:termination-point ;
+    rdfs:range xsd:string ;
+    prov:wasDerivedFrom "nt:link?list/st:description?leaf",
+        "nt:termination-point?list/st:description?leaf",
+        "st:description?leaf" .
+
+ex:dest-node a owl:ObjectProperty ;
+    rdfs:label "dest-node" ;
+    ex:xpathPath "../../../nw:node/nw:node-id" ;
+    rdfs:comment """Destination node identifier.  Must be in the same
+network.""" ;
+    rdfs:domain netLink:destination ;
+    rdfs:range net:node ;
+    prov:wasDerivedFrom "nt:link?list/nt:destination?container/nt:dest-node?leaf" .
+
+ex:dest-tp a owl:ObjectProperty ;
+    rdfs:label "dest-tp" ;
+    ex:xpathPath "../../../nw:node[nw:node-id=current()/../dest-node]/termination-point/tp-id" ;
+    rdfs:comment """This termination point is located within the
+destination node and terminates the link.""" ;
+    rdfs:domain netLink:destination ;
+    rdfs:range netNode:termination-point ;
+    prov:wasDerivedFrom "nt:link?list/nt:destination?container/nt:dest-tp?leaf" .
+
+ex:device-ref a owl:ObjectProperty ;
+    rdfs:label "device-ref" ;
+    rdfs:comment "Reference to a passive device (e.g. ATB or Enclosure)." ;
+    rdfs:domain cab:a-end,
+        cabChild:a-end,
+        cabChild:z-end,
+        cab:z-end ;
+    rdfs:range nwi:passive-device .
+
+ex:file-id a owl:DatatypeProperty ;
+    rdfs:label "file-id" ;
+    rdfs:domain <http://www.huawei.com/ontology/simap-yang/networks-history/network-history> ;
+    rdfs:range xsd:anyURI ;
+    prov:wasDerivedFrom "st:networks-history?container/st:network-history?list/st:file-id?leaf" .
+
+grpNetTop:link-ref a owl:Class ;
+    rdfs:label "link-ref" ;
+    rdfs:comment "Grouping definition: link-ref",
+        """This grouping can be used to reference a link in a specific
+network.  Although it is not used in this module, it is
+defined here for the convenience of augmenting modules.""" .
+
+grpNet:network-ref a owl:Class ;
+    rdfs:label "network-ref" ;
+    rdfs:comment """Contains the information necessary to reference a network --
+for example, an underlay network.""",
+        "Grouping definition: network-ref" .
+
+ex:hasDownstreamDevice a owl:ObjectProperty ;
+    rdfs:label "has downstream device" ;
+    rdfs:comment "Inverse of ex:hasUpstreamDevice." ;
+    owl:inverseOf ex:hasUpstreamDevice .
+
+ex:has_network a owl:ObjectProperty ;
+    rdfs:label "has network" ;
+    rdfs:domain netRoot:networks ;
+    rdfs:range netNetworks:network .
+
+ex:has_network-history a owl:ObjectProperty ;
+    rdfs:label "has network-history" ;
+    rdfs:domain <http://www.huawei.com/ontology/simap-yang/networks-history> ;
+    rdfs:range <http://www.huawei.com/ontology/simap-yang/networks-history/network-history> .
+
+ex:has_node a owl:ObjectProperty ;
+    rdfs:label "has node" ;
+    rdfs:domain netNetworks:network ;
+    rdfs:range net:node .
+
+ex:has_supporting-link a owl:ObjectProperty ;
+    rdfs:label "has supporting-link" ;
+    rdfs:domain net:link ;
+    rdfs:range netLink:supporting-link .
+
+ex:has_supporting-network a owl:ObjectProperty ;
+    rdfs:label "has supporting-network" ;
+    rdfs:domain netNetworks:network ;
+    rdfs:range net:supporting-network .
+
+ex:has_supporting-node a owl:ObjectProperty ;
+    rdfs:label "has supporting-node" ;
+    rdfs:domain net:node ;
+    rdfs:range netNode:supporting-node .
+
+ex:has_supporting-termination-point a owl:ObjectProperty ;
+    rdfs:label "has supporting-termination-point" ;
+    rdfs:domain netNode:termination-point ;
+    rdfs:range netTP:supporting-termination-point .
+
+nwiPassId:access-cable ex:rolePriority 2 .
+
+nwiPassId:aggregation-cable ex:rolePriority 4 .
+
+nwiPassId:branch-cable ex:rolePriority 3 .
+
+nwiPassId:distribution-cable ex:rolePriority 5 .
+
+nwiPassId:drop-cable ex:rolePriority 1 .
+
+nwiPassId:internal-cable ex:rolePriority 0 .
+
+nwiPassId:trunk-cable ex:rolePriority 6 .
+
+<http://www.huawei.com/ontology/identity/simap-yang/link-direction-bi> a owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "link-direction-bi" ;
+    rdfs:comment "Bidirectional link." ;
+    rdfs:subClassOf <http://www.huawei.com/ontology/identity/simap-yang/link-direction> ;
+    prov:wasDerivedFrom "st:link-direction-bi?identity" .
+
+<http://www.huawei.com/ontology/identity/simap-yang/link-direction-uni> a owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "link-direction-uni" ;
+    rdfs:comment "Unidirectional link." ;
+    rdfs:subClassOf <http://www.huawei.com/ontology/identity/simap-yang/link-direction> ;
+    prov:wasDerivedFrom "st:link-direction-uni?identity" .
+
+<http://www.huawei.com/ontology/identity/simap-yang/link-type-mp2mp> a owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "link-type-mp2mp" ;
+    rdfs:comment "Multi-point to multi-point link." ;
+    rdfs:subClassOf <http://www.huawei.com/ontology/identity/simap-yang/link-type> ;
+    prov:wasDerivedFrom "st:link-type-mp2mp?identity" .
+
+<http://www.huawei.com/ontology/identity/simap-yang/link-type-p2mp> a owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "link-type-p2mp" ;
+    rdfs:comment "Point to multi-point link." ;
+    rdfs:subClassOf <http://www.huawei.com/ontology/identity/simap-yang/link-type> ;
+    prov:wasDerivedFrom "st:link-type-p2mp?identity" .
+
+<http://www.huawei.com/ontology/identity/simap-yang/link-type-p2p> a owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "link-type-p2p" ;
+    rdfs:comment "Point to point link." ;
+    rdfs:subClassOf <http://www.huawei.com/ontology/identity/simap-yang/link-type> ;
+    prov:wasDerivedFrom "st:link-type-p2p?identity" .
+
+<http://www.huawei.com/ontology/identity/simap-yang/network-category-intended> a owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "network-category-intended" ;
+    rdfs:comment "Intended topology, not necessarily discovered." ;
+    rdfs:subClassOf <http://www.huawei.com/ontology/identity/simap-yang/network-category> ;
+    prov:wasDerivedFrom "st:network-category-intended?identity" .
+
+<http://www.huawei.com/ontology/identity/simap-yang/network-category-live> a owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "network-category-live" ;
+    rdfs:comment "Live topology, typically only one instance." ;
+    rdfs:subClassOf <http://www.huawei.com/ontology/identity/simap-yang/network-category> ;
+    prov:wasDerivedFrom "st:network-category-live?identity" .
+
+<http://www.huawei.com/ontology/identity/simap-yang/network-category-none> a owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "network-category-none" ;
+    rdfs:comment "Default value when endpoint selection determines category." ;
+    prov:wasDerivedFrom "st:network-category-none?identity" .
+
+<http://www.huawei.com/ontology/identity/simap-yang/network-category-potential> a owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "network-category-potential" ;
+    rdfs:comment "Potential topology for what-if scenarios." ;
+    rdfs:subClassOf <http://www.huawei.com/ontology/identity/simap-yang/network-category> ;
+    prov:wasDerivedFrom "st:network-category-potential?identity" .
+
+<http://www.huawei.com/ontology/identity/simap-yang/tp-direction-destination> a owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "tp-direction-destination" ;
+    rdfs:comment "TP is the destination in the link." ;
+    rdfs:subClassOf <http://www.huawei.com/ontology/identity/simap-yang/tp-direction> ;
+    prov:wasDerivedFrom "st:tp-direction-destination?identity" .
+
+<http://www.huawei.com/ontology/identity/simap-yang/tp-direction-source> a owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "tp-direction-source" ;
+    rdfs:comment "TP is the source in the link." ;
+    rdfs:subClassOf <http://www.huawei.com/ontology/identity/simap-yang/tp-direction> ;
+    prov:wasDerivedFrom "st:tp-direction-source?identity" .
+
+<http://www.huawei.com/ontology/identity/simap-yang/tp-direction-symmetric> a owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "tp-direction-symmetric" ;
+    rdfs:comment "TP in a bidirectional link." ;
+    rdfs:subClassOf <http://www.huawei.com/ontology/identity/simap-yang/tp-direction> ;
+    prov:wasDerivedFrom "st:tp-direction-symmetric?identity" .
+
+netNetworks:hasNetwork a owl:ObjectProperty ;
+    rdfs:label "hasNetwork" ;
+    rdfs:comment "Containment relation" ;
+    rdfs:domain netRoot:networks ;
+    rdfs:range netNetworks:network ;
+    prov:wasDerivedFrom "nw:networks?container/hasNetwork" .
+
+net:hasLink a owl:ObjectProperty ;
+    rdfs:label "hasLink" ;
+    rdfs:comment "Containment relation" ;
+    rdfs:domain netNetworks:network ;
+    rdfs:range net:link .
+
+net:hasNetworkTypes a owl:ObjectProperty ;
+    rdfs:label "hasNetworkTypes" ;
+    rdfs:comment "Containment relation" ;
+    rdfs:domain netNetworks:network ;
+    rdfs:range net:network-types .
+
+net:hasNode a owl:ObjectProperty ;
+    rdfs:label "hasNode" ;
+    rdfs:comment "Containment relation" ;
+    rdfs:domain netNetworks:network ;
+    rdfs:range net:node .
+
+net:hasSubnetwork a owl:ObjectProperty ;
+    rdfs:label "hasSubnetwork" ;
+    rdfs:comment "Containment relation" ;
+    rdfs:domain netNetworks:network ;
+    rdfs:range net:subnetwork .
+
+net:hasSupportingNetwork a owl:ObjectProperty ;
+    rdfs:label "hasSupportingNetwork" ;
+    rdfs:comment "Containment relation" ;
+    rdfs:domain netNetworks:network ;
+    rdfs:range net:supporting-network .
+
+netLink:hasDestination a owl:ObjectProperty ;
+    rdfs:label "hasDestination" ;
+    rdfs:comment "Containment relation" ;
+    rdfs:domain net:link ;
+    rdfs:range netLink:destination ;
+    prov:wasDerivedFrom "nt:link?list/hasDestination" .
+
+netLink:hasSource a owl:ObjectProperty ;
+    rdfs:label "hasSource" ;
+    rdfs:comment "Containment relation" ;
+    rdfs:domain net:link ;
+    rdfs:range netLink:source ;
+    prov:wasDerivedFrom "nt:link?list/hasSource" .
+
+netLink:hasSupportingLink a owl:ObjectProperty ;
+    rdfs:label "hasSupportingLink" ;
+    rdfs:comment "Containment relation" ;
+    rdfs:domain net:link ;
+    rdfs:range netLink:supporting-link ;
+    prov:wasDerivedFrom "nt:link?list/hasSupportingLink" .
+
+netLink:hasTp a owl:ObjectProperty ;
+    rdfs:label "hasTp" ;
+    rdfs:comment "Containment relation" ;
+    rdfs:domain net:link ;
+    rdfs:range netLink:tp ;
+    prov:wasDerivedFrom "nt:link?list/hasTp" .
+
+netNode:hasLinkedNode a owl:ObjectProperty ;
+    rdfs:label "hasLinkedNode" ;
+    rdfs:comment "Containment relation" ;
+    rdfs:domain net:node ;
+    rdfs:range netNode:linked-node .
+
+netNode:hasSupportingNode a owl:ObjectProperty ;
+    rdfs:label "hasSupportingNode" ;
+    rdfs:comment "Containment relation" ;
+    rdfs:domain net:node ;
+    rdfs:range netNode:supporting-node .
+
+netNode:hasTerminationPoint a owl:ObjectProperty ;
+    rdfs:label "hasTerminationPoint" ;
+    rdfs:comment "Containment relation" ;
+    rdfs:domain net:node ;
+    rdfs:range netNode:termination-point .
+
+netTP:hasLinkedTerminationPoint a owl:ObjectProperty ;
+    rdfs:label "hasLinkedTerminationPoint" ;
+    rdfs:comment "Containment relation" ;
+    rdfs:domain netNode:termination-point ;
+    rdfs:range netTP:linked-termination-point ;
+    prov:wasDerivedFrom "nt:termination-point?list/hasLinkedTerminationPoint" .
+
+netTP:hasSupportingTerminationPoint a owl:ObjectProperty ;
+    rdfs:label "hasSupportingTerminationPoint" ;
+    rdfs:comment "Containment relation" ;
+    rdfs:domain netNode:termination-point ;
+    rdfs:range netTP:supporting-termination-point ;
+    prov:wasDerivedFrom "nt:termination-point?list/hasSupportingTerminationPoint" .
+
+ex:label a owl:DatatypeProperty ;
+    rdfs:label "label" ;
+    rdfs:comment "Optional labels for the instance." ;
+    rdfs:domain netNetworks:network,
+        net:link,
+        net:node,
+        netNode:termination-point ;
+    rdfs:range xsd:string ;
+    prov:wasDerivedFrom "nt:link?list/st:label?leaf-list",
+        "nt:termination-point?list/st:label?leaf-list",
+        "st:label?leaf-list" .
+
+ex:link-direction a owl:ObjectProperty ;
+    rdfs:label "link-direction" ;
+    rdfs:domain net:link ;
+    rdfs:range <http://www.huawei.com/ontology/identity/simap-yang/link-direction> ;
+    prov:wasDerivedFrom "nt:link?list/st:link-direction?leaf" .
+
+ex:link-id a owl:DatatypeProperty ;
+    rdfs:label "link-id" ;
+    rdfs:comment """The identifier of a link in the topology.
+A link is specific to a topology to which it belongs.""" ;
+    rdfs:domain net:link ;
+    rdfs:range xsd:anyURI ;
+    prov:wasDerivedFrom "nt:link?list/nt:link-id?leaf" .
+
+ex:link-ref a owl:ObjectProperty ;
+    rdfs:label "link-ref" ;
+    ex:xpathPath "/nw:networks/nw:network[nw:network-id=current()/../network-ref]/link/link-id" ;
+    rdfs:comment """This leaf identifies a link that is a part
+of this link's underlay.  Reference loops in which
+a link identifies itself as its underlay, either
+directly or transitively, are not allowed.""" ;
+    rdfs:domain netLink:supporting-link ;
+    rdfs:range net:link ;
+    prov:wasDerivedFrom "nt:link?list/nt:supporting-link?list/nt:link-ref?leaf" .
+
+ex:link-type a owl:ObjectProperty ;
+    rdfs:label "link-type" ;
+    rdfs:domain net:link ;
+    rdfs:range <http://www.huawei.com/ontology/identity/simap-yang/link-type> ;
+    prov:wasDerivedFrom "nt:link?list/st:link-type?leaf" .
+
+ex:live-network-ref a owl:ObjectProperty ;
+    rdfs:label "live-network-ref" ;
+    ex:xpathPath "/nw:networks/nw:network/nw:network-id" ;
+    rdfs:domain netNetworks:network,
+        <http://www.huawei.com/ontology/simap-yang/networks-history/network-history> ;
+    rdfs:range netNetworks:network ;
+    prov:wasDerivedFrom "st:live-network-ref?leaf",
+        "st:networks-history?container/st:network-history?list/st:live-network-ref?leaf" .
+
+ex:name a owl:DatatypeProperty ;
+    rdfs:label "name" ;
+    rdfs:comment "User friendly name." ;
+    rdfs:domain netNetworks:network,
+        net:link,
+        net:node,
+        netNode:termination-point ;
+    rdfs:range xsd:string ;
+    prov:wasDerivedFrom "nt:link?list/st:name?leaf",
+        "nt:termination-point?list/st:name?leaf",
+        "st:name?leaf" .
+
+ex:ne-ref a owl:ObjectProperty ;
+    rdfs:label "ne-ref" ;
+    rdfs:domain cab:a-end,
+        cabChild:a-end,
+        cabChild:z-end,
+        cab:z-end ;
+    rdfs:range nwiNEs:network-element .
+
+ex:network-category a owl:ObjectProperty ;
+    rdfs:label "network-category" ;
+    rdfs:domain netNetworks:network ;
+    rdfs:range <http://www.huawei.com/ontology/identity/simap-yang/network-category> ;
+    prov:wasDerivedFrom "st:network-category?leaf" .
+
+ex:network-id a owl:DatatypeProperty ;
+    rdfs:label "network-id" ;
+    rdfs:comment "Identifies a network." ;
+    rdfs:domain netNetworks:network ;
+    rdfs:range xsd:anyURI ;
+    prov:wasDerivedFrom "nw:networks?container/nw:network?list/nw:network-id?leaf" .
+
+ex:network-ref a owl:ObjectProperty ;
+    rdfs:label "network-ref" ;
+    ex:xpathPath "../../../nw:supporting-network/nw:network-ref",
+        "../../../nw:supporting-node/nw:network-ref",
+        "/nw:networks/nw:network/nw:network-id" ;
+    rdfs:comment """References the underlay network of which the
+underlay node is a part.""",
+        "References the underlay network.",
+        """This leaf identifies in which topology the
+supporting termination point is present.""",
+        """This leaf identifies in which underlay topology
+the supporting link is present.""" ;
+    rdfs:domain netLink:supporting-link,
+        netNode:supporting-node,
+        netTP:supporting-termination-point,
+        net:subnetwork,
+        net:supporting-network ;
+    rdfs:range netNetworks:network,
+        netNode:supporting-node,
+        net:supporting-network ;
+    prov:wasDerivedFrom "nt:link?list/nt:supporting-link?list/nt:network-ref?leaf",
+        "nt:termination-point?list/nt:supporting-termination-point?list/nt:network-ref?leaf",
+        "nw:networks?container/nw:network?list/nw:node?list/nw:supporting-node?list/nw:network-ref?leaf",
+        "nw:networks?container/nw:network?list/nw:supporting-network?list/nw:network-ref?leaf",
+        "st:subnetwork?list/st:network-ref?leaf" .
+
+ex:node-id a owl:DatatypeProperty ;
+    rdfs:label "node-id" ;
+    rdfs:comment """Uniquely identifies a node within the containing
+network.""" ;
+    rdfs:domain net:node ;
+    rdfs:range xsd:anyURI ;
+    prov:wasDerivedFrom "nw:networks?container/nw:network?list/nw:node?list/nw:node-id?leaf" .
+
+ex:node-ref a owl:ObjectProperty ;
+    rdfs:label "node-ref" ;
+    ex:xpathPath "../../../nw:supporting-node/nw:node-ref",
+        "/nw:networks/nw:network/nw:node/nw:node-id",
+        "/nw:networks/nw:network[nw:network-id=current()/../network-ref]/nw:node/nw:node-id" ;
+    rdfs:comment "References the underlay node itself.",
+        """This leaf identifies in which node the supporting
+termination point is present.""",
+        """Used to reference a node.
+Nodes are identified relative to the network that
+contains them.""" ;
+    rdfs:domain netLink:tp,
+        netNode:linked-node,
+        netNode:supporting-node,
+        netTP:linked-termination-point,
+        netTP:supporting-termination-point ;
+    rdfs:range net:node,
+        netNode:supporting-node ;
+    prov:wasDerivedFrom "nt:link?list/st:tp?list/nw:node-ref?leaf",
+        "nt:termination-point?list/nt:supporting-termination-point?list/nt:node-ref?leaf",
+        "nt:termination-point?list/st:linked-termination-point?list/nw:node-ref?leaf",
+        "nw:networks?container/nw:network?list/nw:node?list/nw:supporting-node?list/nw:node-ref?leaf",
+        "st:linked-node?list/nw:node-ref?leaf" .
+
+ex:rank a owl:DatatypeProperty ;
+    rdfs:label "rank" ;
+    rdfs:range xsd:integer .
+
+ex:rolePriority a owl:DatatypeProperty ;
+    rdfs:label "role priority" ;
+    rdfs:comment "Numeric priority for cable role used in upstream-ascending traversal filter. Matches CABLE_RANK_MAP: internal=0, drop=1, access=2, branch=3, aggregation=4, distribution=5, trunk=6." ;
+    rdfs:range xsd:integer .
+
+<http://www.huawei.com/ontology/simap-yang/networks-history/hasNetworkHistory> a owl:ObjectProperty ;
+    rdfs:label "hasNetworkHistory" ;
+    rdfs:comment "Containment relation" ;
+    rdfs:domain <http://www.huawei.com/ontology/simap-yang/networks-history> ;
+    rdfs:range <http://www.huawei.com/ontology/simap-yang/networks-history/network-history> ;
+    prov:wasDerivedFrom "st:networks-history?container/hasNetworkHistory" .
+
+ex:source-node a owl:ObjectProperty ;
+    rdfs:label "source-node" ;
+    ex:xpathPath "../../../nw:node/nw:node-id" ;
+    rdfs:comment "Source node identifier.  Must be in the same topology." ;
+    rdfs:domain netLink:source ;
+    rdfs:range net:node ;
+    prov:wasDerivedFrom "nt:link?list/nt:source?container/nt:source-node?leaf" .
+
+ex:source-tp a owl:ObjectProperty ;
+    rdfs:label "source-tp" ;
+    ex:xpathPath "../../../nw:node[nw:node-id=current()/../source-node]/termination-point/tp-id" ;
+    rdfs:comment """This termination point is located within the source node
+and terminates the link.""" ;
+    rdfs:domain netLink:source ;
+    rdfs:range netNode:termination-point ;
+    prov:wasDerivedFrom "nt:link?list/nt:source?container/nt:source-tp?leaf" .
+
+ex:timestamp a owl:DatatypeProperty ;
+    rdfs:label "timestamp" ;
+    rdfs:domain netNetworks:network,
+        <http://www.huawei.com/ontology/simap-yang/networks-history/network-history> ;
+    rdfs:range xsd:dateTime ;
+    prov:wasDerivedFrom "st:networks-history?container/st:network-history?list/st:timestamp?leaf",
+        "st:timestamp?leaf" .
+
+ex:tp-direction a owl:ObjectProperty ;
+    rdfs:label "tp-direction" ;
+    rdfs:domain netLink:tp ;
+    rdfs:range <http://www.huawei.com/ontology/identity/simap-yang/tp-direction> ;
+    prov:wasDerivedFrom "nt:link?list/st:tp?list/st:tp-direction?leaf" .
+
+ex:tp-id a owl:DatatypeProperty ;
+    rdfs:label "tp-id" ;
+    rdfs:comment "Termination point identifier." ;
+    rdfs:domain netNode:termination-point ;
+    rdfs:range xsd:anyURI ;
+    prov:wasDerivedFrom "nt:termination-point?list/nt:tp-id?leaf" .
+
+ex:tp-ref a owl:ObjectProperty ;
+    rdfs:label "tp-ref" ;
+    ex:xpathPath "/nw:networks/nw:network[nw:network-id=current()/../network-ref]/nw:node[nw:node-id=current()/../node-ref]/nt:termination-point/nt:tp-id",
+        "/nw:networks/nw:network[nw:network-id=current()/../network-ref]/nw:node[nw:node-id=current()/../node-ref]/termination-point/tp-id" ;
+    rdfs:comment """A type for an absolute reference to a termination point.
+(This type should not be used for relative references.
+In such a case, a relative path should be used instead.)""",
+        """Reference to the underlay node (the underlay node must
+be in a different topology).""" ;
+    rdfs:domain netLink:tp,
+        netTP:linked-termination-point,
+        netTP:supporting-termination-point ;
+    rdfs:range netNode:termination-point ;
+    prov:wasDerivedFrom "nt:link?list/st:tp?list/nt:tp-ref?leaf",
+        "nt:termination-point?list/nt:supporting-termination-point?list/nt:tp-ref?leaf",
+        "nt:termination-point?list/st:linked-termination-point?list/nt:tp-ref?leaf" .
+
+ex:tp-role a owl:ObjectProperty ;
+    rdfs:label "tp-role" ;
+    rdfs:domain netLink:tp ;
+    rdfs:range <http://www.huawei.com/ontology/identity/simap-yang/tp-role> ;
+    prov:wasDerivedFrom "nt:link?list/st:tp?list/st:tp-role?leaf" .
+
+inetIpVer:ipv4 a inetTypes:ip-version,
+        owl:NamedIndividual ;
+    rdfs:label "ipv4" ;
+    rdfs:comment "The IPv4 protocol as defined in RFC 791." .
+
+inetIpVer:ipv6 a inetTypes:ip-version,
+        owl:NamedIndividual ;
+    rdfs:label "ipv6" ;
+    rdfs:comment "The IPv6 protocol as defined in RFC 2460." .
+
+inetIpVer:unknown a inetTypes:ip-version,
+        owl:NamedIndividual ;
+    rdfs:label "unknown" ;
+    rdfs:comment """An unknown or unspecified version of the Internet
+protocol.""" .
+
+ex:viaCable a owl:ObjectProperty ;
+    rdfs:label "via cable" ;
+    rdfs:comment "RDF-star annotation on ex:hasUpstreamDevice: the physical cable realising this hop." .
+
+ex:hasUpstreamDevice a owl:ObjectProperty ;
+    rdfs:label "has upstream device" ;
+    rdfs:comment "Materialised shortcut: device at Z-end of a cable -> device at A-end (upstream). Annotated via RDF-star with ex:viaCable and ex:cableRole. Enables: ?device ex:hasUpstreamDevice+ ?odf ." .
+
+<http://www.huawei.com/ontology/identity/simap-yang/tp-role> a owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "tp-role" ;
+    rdfs:comment "Base identity for termination point roles." ;
+    prov:wasDerivedFrom "st:tp-role?identity" .
+
+net:network-types a owl:Class ;
+    rdfs:label "network-types" ;
+    rdfs:comment """Serves as an augmentation target.
+The network type is indicated through corresponding
+presence containers augmented into this container.""" ;
+    prov:wasDerivedFrom "nw:networks?container/nw:network?list/nw:network-types?container" .
+
+grpNetTop:tp-ref a owl:Class ;
+    rdfs:label "tp-ref" ;
+    rdfs:comment "Grouping definition: tp-ref",
+        """This grouping can be used to reference a termination point
+in a specific node.  Although it is not used in this module,
+it is defined here for the convenience of augmenting
+modules.""" .
+
+netRoot:networks a owl:Class ;
+    rdfs:label "networks" ;
+    rdfs:comment "Serves as a top-level container for a list of networks." ;
+    prov:wasDerivedFrom "nw:networks?container" .
+
+netNode:linked-node a owl:Class ;
+    rdfs:label "linked-node" ;
+    ex:isStateData true ;
+    rdfs:subClassOf grpNet:node-ref,
+        <http://www.huawei.com/ontology/grouping/simap-yang/network-ref> ;
+    prov:wasDerivedFrom "st:linked-node?list" .
+
+net:subnetwork a owl:Class ;
+    rdfs:label "subnetwork" ;
+    prov:wasDerivedFrom "st:subnetwork?list" .
+
+<http://www.huawei.com/ontology/simap-yang/networks-history> a owl:Class ;
+    rdfs:label "networks-history" ;
+    ex:isStateData true ;
+    rdfs:comment "Retrieval of historical topology snapshots." ;
+    prov:wasDerivedFrom "st:networks-history?container" .
+
+grpNet:node-ref a owl:Class ;
+    rdfs:label "node-ref" ;
+    rdfs:comment "Contains the information necessary to reference a node.",
+        "Grouping definition: node-ref" .
+
+<http://www.huawei.com/ontology/identity/simap-yang/link-direction> a owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "link-direction" ;
+    rdfs:comment "Base identity for link directionality." ;
+    prov:wasDerivedFrom "st:link-direction?identity" .
+
+netLink:destination a owl:Class ;
+    rdfs:label "destination" ;
+    rdfs:comment """This container holds the logical destination of a
+particular link.""" ;
+    prov:wasDerivedFrom "nt:link?list/nt:destination?container" .
+
+netLink:source a owl:Class ;
+    rdfs:label "source" ;
+    rdfs:comment """This container holds the logical source of a particular
+link.""" ;
+    prov:wasDerivedFrom "nt:link?list/nt:source?container" .
+
+netTP:linked-termination-point a owl:Class ;
+    rdfs:label "linked-termination-point" ;
+    ex:isStateData true ;
+    rdfs:subClassOf grpNetTop:tp-ref,
+        grpNet:node-ref,
+        <http://www.huawei.com/ontology/grouping/simap-yang/network-ref> ;
+    prov:wasDerivedFrom "nt:termination-point?list/st:linked-termination-point?list" .
+
+inetTypes:ip-version a owl:Class ;
+    rdfs:label "ip-version" .
+
+<http://www.huawei.com/ontology/grouping/simap-yang/simap-common> a owl:Class ;
+    rdfs:label "simap-common" ;
+    rdfs:comment "Grouping definition: simap-common",
+        "Reusable set of optional extensions." .
+
+<http://www.huawei.com/ontology/identity/simap-yang/link-type> a owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "link-type" ;
+    rdfs:comment "Base identity for internal structure of the link." ;
+    prov:wasDerivedFrom "st:link-type?identity" .
+
+<http://www.huawei.com/ontology/identity/simap-yang/network-category> a owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "network-category" ;
+    rdfs:comment "Base identity for the network category" ;
+    prov:wasDerivedFrom "st:network-category?identity" .
+
+<http://www.huawei.com/ontology/identity/simap-yang/tp-direction> a owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "tp-direction" ;
+    rdfs:comment "Base identity for directionality of the tp." ;
+    prov:wasDerivedFrom "st:tp-direction?identity" .
+
+netLink:supporting-link a owl:Class ;
+    rdfs:label "supporting-link" ;
+    rdfs:comment "Identifies the link or links on which this link depends." ;
+    owl:hasKey ( netSuppLink:network-ref netSuppLink:link-ref ) ;
+    prov:wasDerivedFrom "nt:link?list/nt:supporting-link?list" .
+
+net:supporting-network a owl:Class ;
+    rdfs:label "supporting-network" ;
+    rdfs:comment """An underlay network, used to represent layered network
+topologies.""" ;
+    owl:hasKey ( netSuppNet:network-ref ) ;
+    prov:wasDerivedFrom "nw:networks?container/nw:network?list/nw:supporting-network?list" .
+
+netLink:tp a owl:Class ;
+    rdfs:label "tp" ;
+    rdfs:subClassOf grpNetTop:tp-ref,
+        grpNet:node-ref,
+        <http://www.huawei.com/ontology/grouping/simap-yang/network-ref> ;
+    prov:wasDerivedFrom "nt:link?list/st:tp?list" .
+
+netTP:supporting-termination-point a owl:Class ;
+    rdfs:label "supporting-termination-point" ;
+    rdfs:comment """This list identifies any termination points on which a
+given termination point depends or onto which it maps.
+Those termination points will themselves be contained
+in a supporting node.  This dependency information can be
+inferred from the dependencies between links.  Therefore,
+this item is not separately configurable.  Hence, no
+corresponding constraint needs to be articulated.
+The corresponding information is simply provided by the
+implementing system.""" ;
+    owl:hasKey ( netSuppTP:network-ref netSuppTP:node-ref netSuppTP:tp-ref ) ;
+    prov:wasDerivedFrom "nt:termination-point?list/nt:supporting-termination-point?list" .
+
+<http://www.huawei.com/ontology/simap-yang/networks-history/network-history> a owl:Class ;
+    rdfs:label "network-history" ;
+    owl:hasKey ( <http://www.huawei.com/ontology/simap-yang/networks-history/network-history/live-network-ref> <http://www.huawei.com/ontology/simap-yang/networks-history/network-history/timestamp> ) ;
+    prov:wasDerivedFrom "st:networks-history?container/st:network-history?list" .
+
+netNode:supporting-node a owl:Class ;
+    rdfs:label "supporting-node" ;
+    rdfs:comment """Represents another node that is in an underlay network
+and that supports this node.  Used to represent layering
+structure.""" ;
+    owl:hasKey ( netSuppNode:network-ref netSuppNode:node-ref ) ;
+    prov:wasDerivedFrom "nw:networks?container/nw:network?list/nw:node?list/nw:supporting-node?list" .
+
+netNode:termination-point a owl:Class ;
+    rdfs:label "termination-point" ;
+    rdfs:comment """A termination point can terminate a link.
+Depending on the type of topology, a termination point
+could, for example, refer to a port or an interface.""" ;
+    rdfs:subClassOf <http://www.huawei.com/ontology/grouping/simap-yang/simap-common> ;
+    prov:wasDerivedFrom "nt:termination-point?list" .
+
+net:link a owl:Class ;
+    rdfs:label "link" ;
+    rdfs:comment """A network link connects a local (source) node and
+a remote (destination) node via a set of the respective
+node's termination points.  It is possible to have several
+links between the same source and destination nodes.
+Likewise, a link could potentially be re-homed between
+termination points.  Therefore, in order to ensure that we
+would always know to distinguish between links, every link
+is identified by a dedicated link identifier.  Note that a
+link models a point-to-point link, not a multipoint link.""" ;
+    rdfs:subClassOf <http://www.huawei.com/ontology/grouping/simap-yang/simap-common> ;
+    prov:wasDerivedFrom "nt:link?list" .
+
+net:node a owl:Class ;
+    rdfs:label "node" ;
+    rdfs:comment "The inventory of nodes of this network." ;
+    rdfs:subClassOf <http://www.huawei.com/ontology/grouping/simap-yang/simap-common> ;
+    owl:hasKey ( netNode:node-id ) ;
+    prov:wasDerivedFrom "nw:networks?container/nw:network?list/nw:node?list" .
+
+netNetworks:network a owl:Class ;
+    rdfs:label "network" ;
+    rdfs:comment """Describes a network.
+A network typically contains an inventory of nodes,
+topological information (augmented through the
+network-topology data model), and layering information.""" ;
+    rdfs:subClassOf <http://www.huawei.com/ontology/grouping/simap-yang/simap-common> ;
+    owl:hasKey ( net:network-id ) ;
+    prov:wasDerivedFrom "nw:networks?container/nw:network?list" .
+

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-YANG to OWL Ontology Converter - VERSION 4.7.28 (RDF-star Connectivity)
+YANG to OWL Ontology Converter - VERSION 4.7.29 (RDF-star Connectivity)
 
 Release Note: Semantic Interoperability via OWL 2 Punning
 This update implements OWL 2 Punning to resolve "dead-end" string traversals common in standard YANG-to-OWL conversions.
@@ -46,7 +46,7 @@ ALL IMPROVEMENTS IMPLEMENTED:
     - Eliminates bounded UNION / multi-hop workarounds for graph traversal
     - Run: python yang4owl.py --abox-enrich <abox.ttl> --abox-out <enriched.ttls>
 
-Author: YANG-to-OWL Converter v4.7.28
+Author: YANG-to-OWL Converter v4.7.29
 Date: 2026-05-19
 """
 
@@ -485,9 +485,10 @@ class GroupingContextTracker:
         return any(name == grouping_name for name, _ in self.uses_stack)
 
 class YANGToOWL:
-    def __init__(self, yang_dir: str, base_uri: str = "http://example.org/ontology/"):
+    def __init__(self, yang_dir: str, base_uri: str = "http://example.org/ontology/", raw_mode: bool = False):
         self.yang_dir = Path(yang_dir)
         self.base_uri = base_uri.rstrip('/')
+        self.raw_mode = raw_mode
         self.ex = Namespace(self.base_uri + '/')
         self.resolver = YANGDependencyResolver(self.yang_dir)
         self.type_resolver = YANGTypeResolver()
@@ -659,7 +660,7 @@ class YANGToOWL:
     
     def convert(self, main_module: str, output_file: str) -> None:
         log.info("=" * 70)
-        log.info("YANG to OWL Converter v4.7.23 (Separate SHACL Output)")
+        log.info("YANG to OWL Converter v4.7.29 (Separate SHACL Output)")
         log.info("=" * 70)
 
         log.info("\n[Step 1] Loading YANG modules...")
@@ -708,108 +709,111 @@ class YANGToOWL:
         # ==========================================
         # --- START OF CUSTOM TBOX PATCH --- for leafref that are strings but we want to link to deicces
         # ==========================================
-        log.info("[Step 13] Applying custom TBox extensions for direct URIs...")
-        
-        rank_prop = self.ex["rank"]
-        self.graph.add((rank_prop, RDF.type, OWL.DatatypeProperty))
-        self.graph.add((rank_prop, RDFS.label, Literal("rank")))
-        self.graph.add((rank_prop, RDFS.range, XSD.integer))
-
-        base_prefix = str(self.base_uri).rstrip("/") + "/"
-        ni_base_path = f"{base_prefix}ietf-network-inventory/network-inventory/"
-        
-        # 1. Define namespaces to match the exact Class URIs in your TBox
-        cab_ns = Namespace(f"{ni_base_path}cable/")
-        cabChild_ns = Namespace(f"{ni_base_path}cable/child-cable/")
-        nwi_ns = Namespace(ni_base_path)
-        
-        # Fix: Using parent paths for ranges to match TBox Class URIs exactly
-        nwiNEs_ns = Namespace(f"{ni_base_path}network-elements/")
-        nwiComp_ns = Namespace(f"{ni_base_path}network-elements/network-element/components/")
-        
-        # Define common domains for all cable termination points
-        cable_termination_domains = [
-            cab_ns["a-end"], 
-            cab_ns["z-end"], 
-            cabChild_ns["a-end"], 
-            cabChild_ns["z-end"]
-        ]
-
-        # 2. Define ex:device-ref for Passive Devices (ATBs/Enclosures)
-        device_ref = self.ex["device-ref"]
-        self.graph.add((device_ref, RDF.type, OWL.ObjectProperty))
-        self.graph.add((device_ref, RDFS.label, Literal("device-ref")))
-        self.graph.add((device_ref, RDFS.comment, Literal("Reference to a passive device (e.g. ATB or Enclosure).")))
-        self.graph.add((device_ref, RDFS.range, nwi_ns["passive-device"]))
-        for dom in cable_termination_domains:
-            self.graph.add((device_ref, RDFS.domain, dom))
-
-        # 3. Define Active Reference ObjectProperties (for NTDs and Exchanges)
-        # This resolves the namespace mismatch by targeting the correct range classes
-        for prop_name, range_uri in [
-            ("ne-ref", nwiNEs_ns["network-element"]),
-            ("component-ref", nwiComp_ns["component"])
-        ]:
-            prop = self.ex[prop_name]
-            self.graph.add((prop, RDF.type, OWL.ObjectProperty))
-            self.graph.add((prop, RDFS.label, Literal(prop_name)))
-            self.graph.add((prop, RDFS.range, range_uri))
-            for dom in cable_termination_domains:
-                self.graph.add((prop, RDFS.domain, dom))
+        if not self.raw_mode:
+            log.info("[Step 13] Applying custom TBox extensions for direct URIs...")
             
-        # ==========================================
-        # --- STEP 14: RDF-star shortcut properties ---
-        # These enable: ?device ex:hasUpstreamDevice+ ?odf  (single SPARQL line)
-        # The ABoxConnectivityEnricher materialises the actual instance triples.
-        # ==========================================
-        log.info("[Step 14] Adding RDF-star upstream connectivity properties to TBox...")
+            rank_prop = self.ex["rank"]
+            self.graph.add((rank_prop, RDF.type, OWL.DatatypeProperty))
+            self.graph.add((rank_prop, RDFS.label, Literal("rank")))
+            self.graph.add((rank_prop, RDFS.range, XSD.integer))
 
-        has_upstream_prop = self.ex["hasUpstreamDevice"]
-        self.graph.add((has_upstream_prop, RDF.type, OWL.ObjectProperty))
-        self.graph.add((has_upstream_prop, RDFS.label, Literal("has upstream device")))
-        self.graph.add((has_upstream_prop, RDFS.comment, Literal(
-            "Materialised shortcut: device at Z-end of a cable -> device at A-end (upstream). "
-            "Annotated via RDF-star with ex:viaCable and ex:cableRole. "
-            "Enables: ?device ex:hasUpstreamDevice+ ?odf ."
-        )))
+            base_prefix = str(self.base_uri).rstrip("/") + "/"
+            ni_base_path = f"{base_prefix}ietf-network-inventory/network-inventory/"
+            
+            # 1. Define namespaces to match the exact Class URIs in your TBox
+            cab_ns = Namespace(f"{ni_base_path}cable/")
+            cabChild_ns = Namespace(f"{ni_base_path}cable/child-cable/")
+            nwi_ns = Namespace(ni_base_path)
+            
+            # Fix: Using parent paths for ranges to match TBox Class URIs exactly
+            nwiNEs_ns = Namespace(f"{ni_base_path}network-elements/")
+            nwiComp_ns = Namespace(f"{ni_base_path}network-elements/network-element/components/")
+            
+            # Define common domains for all cable termination points
+            cable_termination_domains = [
+                cab_ns["a-end"], 
+                cab_ns["z-end"], 
+                cabChild_ns["a-end"], 
+                cabChild_ns["z-end"]
+            ]
 
-        has_downstream_prop = self.ex["hasDownstreamDevice"]
-        self.graph.add((has_downstream_prop, RDF.type, OWL.ObjectProperty))
-        self.graph.add((has_downstream_prop, RDFS.label, Literal("has downstream device")))
-        self.graph.add((has_downstream_prop, RDFS.comment, Literal("Inverse of ex:hasUpstreamDevice.")))
-        self.graph.add((has_downstream_prop, OWL.inverseOf, has_upstream_prop))
+            # 2. Define ex:device-ref for Passive Devices (ATBs/Enclosures)
+            device_ref = self.ex["device-ref"]
+            self.graph.add((device_ref, RDF.type, OWL.ObjectProperty))
+            self.graph.add((device_ref, RDFS.label, Literal("device-ref")))
+            self.graph.add((device_ref, RDFS.comment, Literal("Reference to a passive device (e.g. ATB or Enclosure).")))
+            self.graph.add((device_ref, RDFS.range, nwi_ns["passive-device"]))
+            for dom in cable_termination_domains:
+                self.graph.add((device_ref, RDFS.domain, dom))
 
-        via_cable_prop = self.ex["viaCable"]
-        self.graph.add((via_cable_prop, RDF.type, OWL.ObjectProperty))
-        self.graph.add((via_cable_prop, RDFS.label, Literal("via cable")))
-        self.graph.add((via_cable_prop, RDFS.comment, Literal(
-            "RDF-star annotation on ex:hasUpstreamDevice: the physical cable realising this hop."
-        )))
+            # 3. Define Active Reference ObjectProperties (for NTDs and Exchanges)
+            # This resolves the namespace mismatch by targeting the correct range classes
+            for prop_name, range_uri in [
+                ("ne-ref", nwiNEs_ns["network-element"]),
+                ("component-ref", nwiComp_ns["component"])
+            ]:
+                prop = self.ex[prop_name]
+                self.graph.add((prop, RDF.type, OWL.ObjectProperty))
+                self.graph.add((prop, RDFS.label, Literal(prop_name)))
+                self.graph.add((prop, RDFS.range, range_uri))
+                for dom in cable_termination_domains:
+                    self.graph.add((prop, RDFS.domain, dom))
+                
+            # ==========================================
+            # --- STEP 14: RDF-star shortcut properties ---
+            # These enable: ?device ex:hasUpstreamDevice+ ?odf  (single SPARQL line)
+            # The ABoxConnectivityEnricher materialises the actual instance triples.
+            # ==========================================
+            log.info("[Step 14] Adding RDF-star upstream connectivity properties to TBox...")
 
-        cable_role_anno_prop = self.ex["cableRole"]
-        self.graph.add((cable_role_anno_prop, RDF.type, OWL.ObjectProperty))
-        self.graph.add((cable_role_anno_prop, RDFS.label, Literal("cable role")))
-        self.graph.add((cable_role_anno_prop, RDFS.comment, Literal(
-            "RDF-star annotation on ex:hasUpstreamDevice: role/tier of the cable. "
-            "Priority ascending: internal=0, drop=1, access=2, branch=3, aggregation=4, distribution=5, trunk=6."
-        )))
+            has_upstream_prop = self.ex["hasUpstreamDevice"]
+            self.graph.add((has_upstream_prop, RDF.type, OWL.ObjectProperty))
+            self.graph.add((has_upstream_prop, RDFS.label, Literal("has upstream device")))
+            self.graph.add((has_upstream_prop, RDFS.comment, Literal(
+                "Materialised shortcut: device at Z-end of a cable -> device at A-end (upstream). "
+                "Annotated via RDF-star with ex:viaCable and ex:cableRole. "
+                "Enables: ?device ex:hasUpstreamDevice+ ?odf ."
+            )))
 
-        role_priority_prop = self.ex["rolePriority"]
-        self.graph.add((role_priority_prop, RDF.type, OWL.DatatypeProperty))
-        self.graph.add((role_priority_prop, RDFS.label, Literal("role priority")))
-        self.graph.add((role_priority_prop, RDFS.range, XSD.integer))
-        self.graph.add((role_priority_prop, RDFS.comment, Literal(
-            "Numeric priority for cable role used in upstream-ascending traversal filter. "
-            "Matches CABLE_RANK_MAP: internal=0, drop=1, access=2, branch=3, aggregation=4, distribution=5, trunk=6."
-        )))
+            has_downstream_prop = self.ex["hasDownstreamDevice"]
+            self.graph.add((has_downstream_prop, RDF.type, OWL.ObjectProperty))
+            self.graph.add((has_downstream_prop, RDFS.label, Literal("has downstream device")))
+            self.graph.add((has_downstream_prop, RDFS.comment, Literal("Inverse of ex:hasUpstreamDevice.")))
+            self.graph.add((has_downstream_prop, OWL.inverseOf, has_upstream_prop))
 
-        # Annotate each cable-role named individual with its numeric priority
-        _nwi_pass_id_ns = Namespace(f"{str(self.base_uri).rstrip('/')}/identity/ietf-nwi-passive-inventory/")
-        for role_name, priority in CABLE_RANK_MAP.items():
-            role_uri = _nwi_pass_id_ns[role_name]
-            self.graph.add((role_uri, role_priority_prop, Literal(priority, datatype=XSD.integer)))
+            via_cable_prop = self.ex["viaCable"]
+            self.graph.add((via_cable_prop, RDF.type, OWL.ObjectProperty))
+            self.graph.add((via_cable_prop, RDFS.label, Literal("via cable")))
+            self.graph.add((via_cable_prop, RDFS.comment, Literal(
+                "RDF-star annotation on ex:hasUpstreamDevice: the physical cable realising this hop."
+            )))
 
-        log.info(f"  ✓ Added {len(CABLE_RANK_MAP)} cable-role priority annotations.")
+            cable_role_anno_prop = self.ex["cableRole"]
+            self.graph.add((cable_role_anno_prop, RDF.type, OWL.ObjectProperty))
+            self.graph.add((cable_role_anno_prop, RDFS.label, Literal("cable role")))
+            self.graph.add((cable_role_anno_prop, RDFS.comment, Literal(
+                "RDF-star annotation on ex:hasUpstreamDevice: role/tier of the cable. "
+                "Priority ascending: internal=0, drop=1, access=2, branch=3, aggregation=4, distribution=5, trunk=6."
+            )))
+
+            role_priority_prop = self.ex["rolePriority"]
+            self.graph.add((role_priority_prop, RDF.type, OWL.DatatypeProperty))
+            self.graph.add((role_priority_prop, RDFS.label, Literal("role priority")))
+            self.graph.add((role_priority_prop, RDFS.range, XSD.integer))
+            self.graph.add((role_priority_prop, RDFS.comment, Literal(
+                "Numeric priority for cable role used in upstream-ascending traversal filter. "
+                "Matches CABLE_RANK_MAP: internal=0, drop=1, access=2, branch=3, aggregation=4, distribution=5, trunk=6."
+            )))
+
+            # Annotate each cable-role named individual with its numeric priority
+            _nwi_pass_id_ns = Namespace(f"{str(self.base_uri).rstrip('/')}/identity/ietf-nwi-passive-inventory/")
+            for role_name, priority in CABLE_RANK_MAP.items():
+                role_uri = _nwi_pass_id_ns[role_name]
+                self.graph.add((role_uri, role_priority_prop, Literal(priority, datatype=XSD.integer)))
+
+            log.info(f"  ✓ Added {len(CABLE_RANK_MAP)} cable-role priority annotations.")
+        else:
+            log.info("[Step 13 & 14] SKIPPED custom TBox extensions (--raw mode active).")
 
         # ==========================================
         # --- END OF CUSTOM TBOX PATCH ---
@@ -1993,7 +1997,7 @@ class ABoxConnectivityEnricher:
         Turtle* file to output_file.  Returns the count of links materialised.
         """
         log.info(f"\n{'='*60}")
-        log.info(f" ABoxConnectivityEnricher  v4.7.28")
+        log.info(f" ABoxConnectivityEnricher  v4.7.29")
         log.info(f" Input : {self.abox_file}")
         log.info(f" Output: {output_file}")
         log.info(f"{'='*60}")
@@ -2131,6 +2135,7 @@ def main():
     parser.add_argument('--modules',      default='simap-yang.yang', help='Main YANG module to process')
     parser.add_argument('--base-uri',     default='http://www.huawei.com/ontology', help='Base URI for ontology')
     parser.add_argument('--verbose',      action='store_true', help='Enable verbose debug logging')
+    parser.add_argument('--raw',          action='store_true', dest='raw_mode', help='Skip custom TBox semantic overlays for a raw YANG-to-OWL conversion')
     parser.add_argument('--html',         dest='html_output', default=None,
                         help='Optional: output path for HTML parse-tree visualisation')
 
@@ -2182,6 +2187,7 @@ def main():
     log.info(f" Output file    : {output_file}")
     log.info(f" Main module    : {args.modules}")
     log.info(f" Base URI       : {args.base_uri}")
+    log.info(f" Raw Mode       : {args.raw_mode}")
     log.info("")
 
     converter = YANGToOWL(yang_dir, args.base_uri)

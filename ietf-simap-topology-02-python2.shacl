@@ -1,0 +1,663 @@
+@prefix ex: <http://www.huawei.com/ontology/> .
+@prefix net: <http://www.huawei.com/ontology/ietf-network/networks/network/> .
+@prefix netLink: <http://www.huawei.com/ontology/ietf-network/networks/network/link/> .
+@prefix netNetworks: <http://www.huawei.com/ontology/ietf-network/networks/> .
+@prefix netNode: <http://www.huawei.com/ontology/ietf-network/networks/network/node/> .
+@prefix netRoot: <http://www.huawei.com/ontology/ietf-network/> .
+@prefix netSuppLink: <http://www.huawei.com/ontology/ietf-network/networks/network/link/supporting-link/> .
+@prefix netSuppNet: <http://www.huawei.com/ontology/ietf-network/networks/network/supporting-network/> .
+@prefix netSuppNode: <http://www.huawei.com/ontology/ietf-network/networks/network/node/supporting-node/> .
+@prefix netSuppTP: <http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/supporting-termination-point/> .
+@prefix netTP: <http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix shapes: <http://www.huawei.com/ontology/shapes/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<http://www.huawei.com/ontology/ietf-network/networks/network/link/destination/shape> a sh:NodeShape ;
+    rdfs:label "Shape for destination" ;
+    sh:property [ a sh:PropertyShape ;
+            sh:class netNode:termination-point ;
+            sh:maxCount 1 ;
+            sh:message "Leafref dest-tp must target an instance of termination-point" ;
+            sh:nodeKind sh:IRI ;
+            sh:path ex:dest-tp ],
+        [ a sh:PropertyShape ;
+            sh:class net:node ;
+            sh:maxCount 1 ;
+            sh:message "Leafref dest-node must target an instance of node" ;
+            sh:nodeKind sh:IRI ;
+            sh:path ex:dest-node ] ;
+    sh:targetClass netLink:destination .
+
+netLink:shape a sh:NodeShape ;
+    rdfs:label "Shape for link" ;
+    sh:property [ a sh:PropertyShape ;
+            sh:class netLink:supporting-link ;
+            sh:nodeKind sh:IRI ;
+            sh:path netLink:hasSupportingLink ],
+        [ a sh:PropertyShape ;
+            sh:class netLink:destination ;
+            sh:nodeKind sh:IRI ;
+            sh:path netLink:hasDestination ],
+        [ a sh:PropertyShape ;
+            sh:class netLink:source ;
+            sh:nodeKind sh:IRI ;
+            sh:path netLink:hasSource ],
+        [ a sh:PropertyShape ;
+            sh:class netLink:tp ;
+            sh:nodeKind sh:IRI ;
+            sh:path netLink:hasTp ],
+        shapes:description,
+        shapes:label,
+        shapes:link-direction,
+        shapes:link-id,
+        shapes:link-type,
+        shapes:name ;
+    sh:targetClass net:link .
+
+<http://www.huawei.com/ontology/ietf-network/networks/network/link/source/shape> a sh:NodeShape ;
+    rdfs:label "Shape for source" ;
+    sh:property [ a sh:PropertyShape ;
+            sh:class netNode:termination-point ;
+            sh:maxCount 1 ;
+            sh:message "Leafref source-tp must target an instance of termination-point" ;
+            sh:nodeKind sh:IRI ;
+            sh:path ex:source-tp ],
+        [ a sh:PropertyShape ;
+            sh:class net:node ;
+            sh:maxCount 1 ;
+            sh:message "Leafref source-node must target an instance of node" ;
+            sh:nodeKind sh:IRI ;
+            sh:path ex:source-node ] ;
+    sh:targetClass netLink:source .
+
+netSuppLink:shape a sh:NodeShape ;
+    rdfs:label "Shape for supporting-link" ;
+    sh:property [ a sh:PropertyShape ;
+            sh:maxCount 1 ;
+            sh:message "List key 'network-ref' is required" ;
+            sh:minCount 1 ;
+            sh:path netSuppLink:network-ref ],
+        [ a sh:PropertyShape ;
+            sh:class net:supporting-network ;
+            sh:maxCount 1 ;
+            sh:message "Leafref network-ref must target an instance of supporting-network" ;
+            sh:nodeKind sh:IRI ;
+            sh:path ex:network-ref ],
+        [ a sh:PropertyShape ;
+            sh:maxCount 1 ;
+            sh:message "List key 'link-ref' is required" ;
+            sh:minCount 1 ;
+            sh:path netSuppLink:link-ref ],
+        [ a sh:PropertyShape ;
+            sh:class net:link ;
+            sh:maxCount 1 ;
+            sh:message "Leafref link-ref must target an instance of link" ;
+            sh:nodeKind sh:IRI ;
+            sh:path ex:link-ref ] ;
+    sh:sparql [ a sh:SPARQLConstraint ;
+            sh:message "Duplicate key combination in list supporting-link" ;
+            sh:select """SELECT $this WHERE {
+  $this a <http://www.huawei.com/ontology/ietf-network/networks/network/link/supporting-link> .
+  $this <http://www.huawei.com/ontology/ietf-network/networks/network/link/supporting-link/network-ref> ?k1 .
+  $this <http://www.huawei.com/ontology/ietf-network/networks/network/link/supporting-link/link-ref> ?k2 .
+  ?other a <http://www.huawei.com/ontology/ietf-network/networks/network/link/supporting-link> .
+  ?other <http://www.huawei.com/ontology/ietf-network/networks/network/link/supporting-link/network-ref> ?k1 .
+  ?other <http://www.huawei.com/ontology/ietf-network/networks/network/link/supporting-link/link-ref> ?k2 .
+  FILTER(?other != $this)
+}""" ] ;
+    sh:targetClass netLink:supporting-link .
+
+<http://www.huawei.com/ontology/ietf-network/networks/network/link/tp/shape> a sh:NodeShape ;
+    rdfs:label "Shape for tp" ;
+    sh:property [ a sh:PropertyShape ;
+            sh:class net:node ;
+            sh:maxCount 1 ;
+            sh:message "Leafref node-ref must target an instance of node" ;
+            sh:nodeKind sh:IRI ;
+            sh:path ex:node-ref ],
+        [ a sh:PropertyShape ;
+            sh:class netNode:termination-point ;
+            sh:maxCount 1 ;
+            sh:message "Leafref tp-ref must target an instance of termination-point" ;
+            sh:nodeKind sh:IRI ;
+            sh:path ex:tp-ref ],
+        shapes:tp-direction,
+        shapes:tp-role ;
+    sh:targetClass netLink:tp .
+
+<http://www.huawei.com/ontology/ietf-network/networks/network/node/linked-node/shape> a sh:NodeShape ;
+    rdfs:label "Shape for linked-node" ;
+    sh:property [ a sh:PropertyShape ;
+            sh:class net:node ;
+            sh:maxCount 1 ;
+            sh:message "Leafref node-ref must target an instance of node" ;
+            sh:nodeKind sh:IRI ;
+            sh:path ex:node-ref ] ;
+    sh:targetClass netNode:linked-node .
+
+netNode:shape a sh:NodeShape ;
+    rdfs:label "Shape for node" ;
+    sh:property [ a sh:PropertyShape ;
+            sh:class netNode:supporting-node ;
+            sh:nodeKind sh:IRI ;
+            sh:path netNode:hasSupportingNode ],
+        [ a sh:PropertyShape ;
+            sh:maxCount 1 ;
+            sh:message "List key 'node-id' is required" ;
+            sh:minCount 1 ;
+            sh:path netNode:node-id ],
+        [ a sh:PropertyShape ;
+            sh:class netNode:termination-point ;
+            sh:nodeKind sh:IRI ;
+            sh:path netNode:hasTerminationPoint ],
+        [ a sh:PropertyShape ;
+            sh:class netNode:linked-node ;
+            sh:nodeKind sh:IRI ;
+            sh:path netNode:hasLinkedNode ],
+        shapes:description,
+        shapes:label,
+        shapes:name,
+        shapes:node-id ;
+    sh:sparql [ a sh:SPARQLConstraint ;
+            sh:message "Duplicate key combination in list node" ;
+            sh:select """SELECT $this WHERE {
+  $this a <http://www.huawei.com/ontology/ietf-network/networks/network/node> .
+  $this <http://www.huawei.com/ontology/ietf-network/networks/network/node/node-id> ?k1 .
+  ?other a <http://www.huawei.com/ontology/ietf-network/networks/network/node> .
+  ?other <http://www.huawei.com/ontology/ietf-network/networks/network/node/node-id> ?k1 .
+  FILTER(?other != $this)
+}""" ] ;
+    sh:targetClass net:node .
+
+netSuppNode:shape a sh:NodeShape ;
+    rdfs:label "Shape for supporting-node" ;
+    sh:property [ a sh:PropertyShape ;
+            sh:class net:supporting-network ;
+            sh:maxCount 1 ;
+            sh:message "Leafref network-ref must target an instance of supporting-network" ;
+            sh:nodeKind sh:IRI ;
+            sh:path ex:network-ref ],
+        [ a sh:PropertyShape ;
+            sh:class net:node ;
+            sh:maxCount 1 ;
+            sh:message "Leafref node-ref must target an instance of node" ;
+            sh:nodeKind sh:IRI ;
+            sh:path ex:node-ref ],
+        [ a sh:PropertyShape ;
+            sh:maxCount 1 ;
+            sh:message "List key 'network-ref' is required" ;
+            sh:minCount 1 ;
+            sh:path netSuppNode:network-ref ],
+        [ a sh:PropertyShape ;
+            sh:maxCount 1 ;
+            sh:message "List key 'node-ref' is required" ;
+            sh:minCount 1 ;
+            sh:path netSuppNode:node-ref ] ;
+    sh:sparql [ a sh:SPARQLConstraint ;
+            sh:message "Duplicate key combination in list supporting-node" ;
+            sh:select """SELECT $this WHERE {
+  $this a <http://www.huawei.com/ontology/ietf-network/networks/network/node/supporting-node> .
+  $this <http://www.huawei.com/ontology/ietf-network/networks/network/node/supporting-node/network-ref> ?k1 .
+  $this <http://www.huawei.com/ontology/ietf-network/networks/network/node/supporting-node/node-ref> ?k2 .
+  ?other a <http://www.huawei.com/ontology/ietf-network/networks/network/node/supporting-node> .
+  ?other <http://www.huawei.com/ontology/ietf-network/networks/network/node/supporting-node/network-ref> ?k1 .
+  ?other <http://www.huawei.com/ontology/ietf-network/networks/network/node/supporting-node/node-ref> ?k2 .
+  FILTER(?other != $this)
+}""" ] ;
+    sh:targetClass netNode:supporting-node .
+
+<http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/linked-termination-point/shape> a sh:NodeShape ;
+    rdfs:label "Shape for linked-termination-point" ;
+    sh:property [ a sh:PropertyShape ;
+            sh:class netNode:termination-point ;
+            sh:maxCount 1 ;
+            sh:message "Leafref tp-ref must target an instance of termination-point" ;
+            sh:nodeKind sh:IRI ;
+            sh:path ex:tp-ref ],
+        [ a sh:PropertyShape ;
+            sh:class net:node ;
+            sh:maxCount 1 ;
+            sh:message "Leafref node-ref must target an instance of node" ;
+            sh:nodeKind sh:IRI ;
+            sh:path ex:node-ref ] ;
+    sh:targetClass netTP:linked-termination-point .
+
+netTP:shape a sh:NodeShape ;
+    rdfs:label "Shape for termination-point" ;
+    sh:property [ a sh:PropertyShape ;
+            sh:class netTP:supporting-termination-point ;
+            sh:nodeKind sh:IRI ;
+            sh:path netTP:hasSupportingTerminationPoint ],
+        [ a sh:PropertyShape ;
+            sh:class netTP:linked-termination-point ;
+            sh:nodeKind sh:IRI ;
+            sh:path netTP:hasLinkedTerminationPoint ],
+        shapes:description,
+        shapes:label,
+        shapes:name,
+        shapes:tp-id ;
+    sh:targetClass netNode:termination-point .
+
+netSuppTP:shape a sh:NodeShape ;
+    rdfs:label "Shape for supporting-termination-point" ;
+    sh:property [ a sh:PropertyShape ;
+            sh:maxCount 1 ;
+            sh:message "List key 'tp-ref' is required" ;
+            sh:minCount 1 ;
+            sh:path netSuppTP:tp-ref ],
+        [ a sh:PropertyShape ;
+            sh:class netNode:supporting-node ;
+            sh:maxCount 1 ;
+            sh:message "Leafref network-ref must target an instance of supporting-node" ;
+            sh:nodeKind sh:IRI ;
+            sh:path ex:network-ref ],
+        [ a sh:PropertyShape ;
+            sh:maxCount 1 ;
+            sh:message "List key 'node-ref' is required" ;
+            sh:minCount 1 ;
+            sh:path netSuppTP:node-ref ],
+        [ a sh:PropertyShape ;
+            sh:maxCount 1 ;
+            sh:message "List key 'network-ref' is required" ;
+            sh:minCount 1 ;
+            sh:path netSuppTP:network-ref ],
+        [ a sh:PropertyShape ;
+            sh:class netNode:termination-point ;
+            sh:maxCount 1 ;
+            sh:message "Leafref tp-ref must target an instance of termination-point" ;
+            sh:nodeKind sh:IRI ;
+            sh:path ex:tp-ref ],
+        [ a sh:PropertyShape ;
+            sh:class netNode:supporting-node ;
+            sh:maxCount 1 ;
+            sh:message "Leafref node-ref must target an instance of supporting-node" ;
+            sh:nodeKind sh:IRI ;
+            sh:path ex:node-ref ] ;
+    sh:sparql [ a sh:SPARQLConstraint ;
+            sh:message "Duplicate key combination in list supporting-termination-point" ;
+            sh:select """SELECT $this WHERE {
+  $this a <http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/supporting-termination-point> .
+  $this <http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/supporting-termination-point/network-ref> ?k1 .
+  $this <http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/supporting-termination-point/node-ref> ?k2 .
+  $this <http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/supporting-termination-point/tp-ref> ?k3 .
+  ?other a <http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/supporting-termination-point> .
+  ?other <http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/supporting-termination-point/network-ref> ?k1 .
+  ?other <http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/supporting-termination-point/node-ref> ?k2 .
+  ?other <http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/supporting-termination-point/tp-ref> ?k3 .
+  FILTER(?other != $this)
+}""" ] ;
+    sh:targetClass netTP:supporting-termination-point .
+
+net:shape a sh:NodeShape ;
+    rdfs:label "Shape for network" ;
+    sh:property [ a sh:PropertyShape ;
+            sh:class net:network-types ;
+            sh:nodeKind sh:IRI ;
+            sh:path net:hasNetworkTypes ],
+        [ a sh:PropertyShape ;
+            sh:class net:supporting-network ;
+            sh:nodeKind sh:IRI ;
+            sh:path net:hasSupportingNetwork ],
+        [ a sh:PropertyShape ;
+            sh:class net:link ;
+            sh:nodeKind sh:IRI ;
+            sh:path net:hasLink ],
+        [ a sh:PropertyShape ;
+            sh:maxCount 1 ;
+            sh:message "List key 'network-id' is required" ;
+            sh:minCount 1 ;
+            sh:path net:network-id ],
+        [ a sh:PropertyShape ;
+            sh:class netNetworks:network ;
+            sh:maxCount 1 ;
+            sh:message "Leafref live-network-ref must target an instance of network" ;
+            sh:nodeKind sh:IRI ;
+            sh:path ex:live-network-ref ],
+        [ a sh:PropertyShape ;
+            sh:class net:node ;
+            sh:nodeKind sh:IRI ;
+            sh:path net:hasNode ],
+        [ a sh:PropertyShape ;
+            sh:class net:subnetwork ;
+            sh:nodeKind sh:IRI ;
+            sh:path net:hasSubnetwork ],
+        shapes:description,
+        shapes:label,
+        shapes:name,
+        shapes:network-category,
+        shapes:network-id,
+        shapes:timestamp ;
+    sh:sparql [ a sh:SPARQLConstraint ;
+            sh:message "Duplicate key combination in list network" ;
+            sh:select """SELECT $this WHERE {
+  $this a <http://www.huawei.com/ontology/ietf-network/networks/network> .
+  $this <http://www.huawei.com/ontology/ietf-network/networks/network/network-id> ?k1 .
+  ?other a <http://www.huawei.com/ontology/ietf-network/networks/network> .
+  ?other <http://www.huawei.com/ontology/ietf-network/networks/network/network-id> ?k1 .
+  FILTER(?other != $this)
+}""" ] ;
+    sh:targetClass netNetworks:network .
+
+<http://www.huawei.com/ontology/ietf-network/networks/network/subnetwork/shape> a sh:NodeShape ;
+    rdfs:label "Shape for subnetwork" ;
+    sh:property [ a sh:PropertyShape ;
+            sh:class netNetworks:network ;
+            sh:maxCount 1 ;
+            sh:message "Leafref network-ref must target an instance of network" ;
+            sh:nodeKind sh:IRI ;
+            sh:path ex:network-ref ] ;
+    sh:targetClass net:subnetwork .
+
+netSuppNet:shape a sh:NodeShape ;
+    rdfs:label "Shape for supporting-network" ;
+    sh:property [ a sh:PropertyShape ;
+            sh:maxCount 1 ;
+            sh:message "List key 'network-ref' is required" ;
+            sh:minCount 1 ;
+            sh:path netSuppNet:network-ref ],
+        [ a sh:PropertyShape ;
+            sh:class netNetworks:network ;
+            sh:maxCount 1 ;
+            sh:message "Leafref network-ref must target an instance of network" ;
+            sh:nodeKind sh:IRI ;
+            sh:path ex:network-ref ] ;
+    sh:sparql [ a sh:SPARQLConstraint ;
+            sh:message "Duplicate key combination in list supporting-network" ;
+            sh:select """SELECT $this WHERE {
+  $this a <http://www.huawei.com/ontology/ietf-network/networks/network/supporting-network> .
+  $this <http://www.huawei.com/ontology/ietf-network/networks/network/supporting-network/network-ref> ?k1 .
+  ?other a <http://www.huawei.com/ontology/ietf-network/networks/network/supporting-network> .
+  ?other <http://www.huawei.com/ontology/ietf-network/networks/network/supporting-network/network-ref> ?k1 .
+  FILTER(?other != $this)
+}""" ] ;
+    sh:targetClass net:supporting-network .
+
+netNetworks:shape a sh:NodeShape ;
+    rdfs:label "Shape for networks" ;
+    sh:property [ a sh:PropertyShape ;
+            sh:class netNetworks:network ;
+            sh:nodeKind sh:IRI ;
+            sh:path netNetworks:hasNetwork ] ;
+    sh:targetClass netRoot:networks .
+
+<http://www.huawei.com/ontology/simap-yang/networks-history/network-history/shape> a sh:NodeShape ;
+    rdfs:label "Shape for network-history" ;
+    sh:property [ a sh:PropertyShape ;
+            sh:class netNetworks:network ;
+            sh:maxCount 1 ;
+            sh:message "Leafref live-network-ref must target an instance of network" ;
+            sh:nodeKind sh:IRI ;
+            sh:path ex:live-network-ref ],
+        [ a sh:PropertyShape ;
+            sh:maxCount 1 ;
+            sh:message "List key 'live-network-ref' is required" ;
+            sh:minCount 1 ;
+            sh:path <http://www.huawei.com/ontology/simap-yang/networks-history/network-history/live-network-ref> ],
+        [ a sh:PropertyShape ;
+            sh:maxCount 1 ;
+            sh:message "List key 'timestamp' is required" ;
+            sh:minCount 1 ;
+            sh:path <http://www.huawei.com/ontology/simap-yang/networks-history/network-history/timestamp> ],
+        shapes:file-id,
+        shapes:timestamp ;
+    sh:sparql [ a sh:SPARQLConstraint ;
+            sh:message "Duplicate key combination in list network-history" ;
+            sh:select """SELECT $this WHERE {
+  $this a <http://www.huawei.com/ontology/simap-yang/networks-history/network-history> .
+  $this <http://www.huawei.com/ontology/simap-yang/networks-history/network-history/live-network-ref> ?k1 .
+  $this <http://www.huawei.com/ontology/simap-yang/networks-history/network-history/timestamp> ?k2 .
+  ?other a <http://www.huawei.com/ontology/simap-yang/networks-history/network-history> .
+  ?other <http://www.huawei.com/ontology/simap-yang/networks-history/network-history/live-network-ref> ?k1 .
+  ?other <http://www.huawei.com/ontology/simap-yang/networks-history/network-history/timestamp> ?k2 .
+  FILTER(?other != $this)
+}""" ] ;
+    sh:targetClass <http://www.huawei.com/ontology/simap-yang/networks-history/network-history> .
+
+<http://www.huawei.com/ontology/simap-yang/networks-history/shape> a sh:NodeShape ;
+    rdfs:label "Shape for networks-history" ;
+    sh:property [ a sh:PropertyShape ;
+            sh:class <http://www.huawei.com/ontology/simap-yang/networks-history/network-history> ;
+            sh:nodeKind sh:IRI ;
+            sh:path <http://www.huawei.com/ontology/simap-yang/networks-history/hasNetworkHistory> ] ;
+    sh:targetClass <http://www.huawei.com/ontology/simap-yang/networks-history> .
+
+<http://www.huawei.com/ontology/typedef/ietf-inet-types/as-number> a sh:NodeShape ;
+    rdfs:label "as-number" ;
+    sh:datatype xsd:unsignedInt .
+
+<http://www.huawei.com/ontology/typedef/ietf-inet-types/domain-name> a sh:NodeShape ;
+    rdfs:label "domain-name" ;
+    sh:datatype xsd:string ;
+    sh:maxLength 253 ;
+    sh:minLength 1 ;
+    sh:pattern "((([a-zA-Z0-9_]([a-zA-Z0-9\\-_]){0,61})?[a-zA-Z0-9]\\.)*([a-zA-Z0-9_]([a-zA-Z0-9\\-_]){0,61})?[a-zA-Z0-9]\\.?)|\\." .
+
+<http://www.huawei.com/ontology/typedef/ietf-inet-types/dscp> a sh:NodeShape ;
+    rdfs:label "dscp" ;
+    sh:datatype xsd:unsignedByte ;
+    sh:maxInclusive 63 ;
+    sh:minInclusive 0 .
+
+<http://www.huawei.com/ontology/typedef/ietf-inet-types/ipv4-address> a sh:NodeShape ;
+    rdfs:label "ipv4-address" ;
+    sh:datatype xsd:string ;
+    sh:pattern "(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(%[\\p{N}\\p{L}]+)?" .
+
+<http://www.huawei.com/ontology/typedef/ietf-inet-types/ipv4-address-no-zone> a sh:NodeShape ;
+    rdfs:label "ipv4-address-no-zone" ;
+    sh:datatype xsd:string ;
+    sh:pattern "[0-9\\.]*" .
+
+<http://www.huawei.com/ontology/typedef/ietf-inet-types/ipv4-prefix> a sh:NodeShape ;
+    rdfs:label "ipv4-prefix" ;
+    sh:datatype xsd:string ;
+    sh:pattern "(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])/(([0-9])|([1-2][0-9])|(3[0-2]))" .
+
+<http://www.huawei.com/ontology/typedef/ietf-inet-types/ipv6-address> a sh:NodeShape ;
+    rdfs:label "ipv6-address" ;
+    sh:datatype xsd:string ;
+    sh:pattern "((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))(%[\\p{N}\\p{L}]+)?",
+        "(([^:]+:){6}(([^:]+:[^:]+)|(.*\\..*)))|((([^:]+:)*[^:]+)?::(([^:]+:)*[^:]+)?)(%.+)?" .
+
+<http://www.huawei.com/ontology/typedef/ietf-inet-types/ipv6-address-no-zone> a sh:NodeShape ;
+    rdfs:label "ipv6-address-no-zone" ;
+    sh:datatype xsd:string ;
+    sh:pattern "[0-9a-fA-F:\\.]*" .
+
+<http://www.huawei.com/ontology/typedef/ietf-inet-types/ipv6-flow-label> a sh:NodeShape ;
+    rdfs:label "ipv6-flow-label" ;
+    sh:datatype xsd:unsignedInt ;
+    sh:maxInclusive 1048575 ;
+    sh:minInclusive 0 .
+
+<http://www.huawei.com/ontology/typedef/ietf-inet-types/ipv6-prefix> a sh:NodeShape ;
+    rdfs:label "ipv6-prefix" ;
+    sh:datatype xsd:string ;
+    sh:pattern "((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))(/(([0-9])|([0-9]{2})|(1[0-1][0-9])|(12[0-8])))",
+        "(([^:]+:){6}(([^:]+:[^:]+)|(.*\\..*)))|((([^:]+:)*[^:]+)?::(([^:]+:)*[^:]+)?)(/.+)" .
+
+<http://www.huawei.com/ontology/typedef/ietf-inet-types/port-number> a sh:NodeShape ;
+    rdfs:label "port-number" ;
+    sh:datatype xsd:unsignedShort ;
+    sh:maxInclusive 65535 ;
+    sh:minInclusive 0 .
+
+<http://www.huawei.com/ontology/typedef/ietf-inet-types/uri> a sh:NodeShape ;
+    rdfs:label "uri" ;
+    sh:datatype xsd:string .
+
+<http://www.huawei.com/ontology/typedef/ietf-network-topology/link-id> a sh:NodeShape ;
+    rdfs:label "link-id" ;
+    sh:datatype xsd:anyURI .
+
+<http://www.huawei.com/ontology/typedef/ietf-network-topology/tp-id> a sh:NodeShape ;
+    rdfs:label "tp-id" ;
+    sh:datatype xsd:anyURI .
+
+<http://www.huawei.com/ontology/typedef/ietf-network/network-id> a sh:NodeShape ;
+    rdfs:label "network-id" ;
+    sh:datatype xsd:anyURI .
+
+<http://www.huawei.com/ontology/typedef/ietf-network/node-id> a sh:NodeShape ;
+    rdfs:label "node-id" ;
+    sh:datatype xsd:anyURI .
+
+<http://www.huawei.com/ontology/typedef/ietf-yang-types/counter32> a sh:NodeShape ;
+    rdfs:label "counter32" ;
+    sh:datatype xsd:unsignedInt .
+
+<http://www.huawei.com/ontology/typedef/ietf-yang-types/counter64> a sh:NodeShape ;
+    rdfs:label "counter64" ;
+    sh:datatype xsd:unsignedLong .
+
+<http://www.huawei.com/ontology/typedef/ietf-yang-types/date-and-time> a sh:NodeShape ;
+    rdfs:label "date-and-time" ;
+    sh:datatype xsd:string ;
+    sh:pattern "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?(Z|[\\+\\-]\\d{2}:\\d{2})" .
+
+<http://www.huawei.com/ontology/typedef/ietf-yang-types/dotted-quad> a sh:NodeShape ;
+    rdfs:label "dotted-quad" ;
+    sh:datatype xsd:string ;
+    sh:pattern "(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])" .
+
+<http://www.huawei.com/ontology/typedef/ietf-yang-types/gauge32> a sh:NodeShape ;
+    rdfs:label "gauge32" ;
+    sh:datatype xsd:unsignedInt .
+
+<http://www.huawei.com/ontology/typedef/ietf-yang-types/gauge64> a sh:NodeShape ;
+    rdfs:label "gauge64" ;
+    sh:datatype xsd:unsignedLong .
+
+<http://www.huawei.com/ontology/typedef/ietf-yang-types/hex-string> a sh:NodeShape ;
+    rdfs:label "hex-string" ;
+    sh:datatype xsd:string ;
+    sh:pattern "([0-9a-fA-F]{2}(:[0-9a-fA-F]{2})*)?" .
+
+<http://www.huawei.com/ontology/typedef/ietf-yang-types/mac-address> a sh:NodeShape ;
+    rdfs:label "mac-address" ;
+    sh:datatype xsd:string ;
+    sh:pattern "[0-9a-fA-F]{2}(:[0-9a-fA-F]{2}){5}" .
+
+<http://www.huawei.com/ontology/typedef/ietf-yang-types/object-identifier> a sh:NodeShape ;
+    rdfs:label "object-identifier" ;
+    sh:datatype xsd:string ;
+    sh:pattern "(([0-1](\\.[1-3]?[0-9]))|(2\\.(0|([1-9]\\d*))))(\\.(0|([1-9]\\d*)))*" .
+
+<http://www.huawei.com/ontology/typedef/ietf-yang-types/object-identifier-128> a sh:NodeShape ;
+    rdfs:label "object-identifier-128" ;
+    sh:datatype xsd:string ;
+    sh:pattern "\\d*(\\.\\d*){1,127}" .
+
+<http://www.huawei.com/ontology/typedef/ietf-yang-types/phys-address> a sh:NodeShape ;
+    rdfs:label "phys-address" ;
+    sh:datatype xsd:string ;
+    sh:pattern "([0-9a-fA-F]{2}(:[0-9a-fA-F]{2})*)?" .
+
+<http://www.huawei.com/ontology/typedef/ietf-yang-types/timestamp> a sh:NodeShape ;
+    rdfs:label "timestamp" ;
+    sh:datatype xsd:unsignedInt .
+
+<http://www.huawei.com/ontology/typedef/ietf-yang-types/timeticks> a sh:NodeShape ;
+    rdfs:label "timeticks" ;
+    sh:datatype xsd:unsignedInt .
+
+<http://www.huawei.com/ontology/typedef/ietf-yang-types/uuid> a sh:NodeShape ;
+    rdfs:label "uuid" ;
+    sh:datatype xsd:string ;
+    sh:pattern "[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}" .
+
+<http://www.huawei.com/ontology/typedef/ietf-yang-types/xpath1.0> a sh:NodeShape ;
+    rdfs:label "xpath1.0" ;
+    sh:datatype xsd:string .
+
+<http://www.huawei.com/ontology/typedef/ietf-yang-types/yang-identifier> a sh:NodeShape ;
+    rdfs:label "yang-identifier" ;
+    sh:datatype xsd:string ;
+    sh:pattern ".|..|[^xX].*|.[^mM].*|..[^lL].*",
+        "[a-zA-Z_][a-zA-Z0-9\\-_.]*" .
+
+<http://www.huawei.com/ontology/typedef/ietf-yang-types/zero-based-counter32> a sh:NodeShape ;
+    rdfs:label "zero-based-counter32" ;
+    sh:datatype xsd:unsignedInt .
+
+<http://www.huawei.com/ontology/typedef/ietf-yang-types/zero-based-counter64> a sh:NodeShape ;
+    rdfs:label "zero-based-counter64" ;
+    sh:datatype xsd:unsignedLong .
+
+shapes:file-id a sh:PropertyShape ;
+    sh:datatype xsd:anyURI ;
+    sh:maxCount 1 ;
+    sh:path ex:file-id .
+
+shapes:link-direction a sh:PropertyShape ;
+    sh:class <http://www.huawei.com/ontology/identity/simap-yang/link-direction> ;
+    sh:maxCount 1 ;
+    sh:nodeKind sh:IRI ;
+    sh:path ex:link-direction .
+
+shapes:link-id a sh:PropertyShape ;
+    sh:datatype xsd:anyURI ;
+    sh:maxCount 1 ;
+    sh:path ex:link-id .
+
+shapes:link-type a sh:PropertyShape ;
+    sh:class <http://www.huawei.com/ontology/identity/simap-yang/link-type> ;
+    sh:maxCount 1 ;
+    sh:nodeKind sh:IRI ;
+    sh:path ex:link-type .
+
+shapes:network-category a sh:PropertyShape ;
+    sh:class <http://www.huawei.com/ontology/identity/simap-yang/network-category> ;
+    sh:maxCount 1 ;
+    sh:nodeKind sh:IRI ;
+    sh:path ex:network-category .
+
+shapes:network-id a sh:PropertyShape ;
+    sh:datatype xsd:anyURI ;
+    sh:maxCount 1 ;
+    sh:path ex:network-id .
+
+shapes:node-id a sh:PropertyShape ;
+    sh:datatype xsd:anyURI ;
+    sh:maxCount 1 ;
+    sh:path ex:node-id .
+
+shapes:tp-direction a sh:PropertyShape ;
+    sh:class <http://www.huawei.com/ontology/identity/simap-yang/tp-direction> ;
+    sh:maxCount 1 ;
+    sh:nodeKind sh:IRI ;
+    sh:path ex:tp-direction .
+
+shapes:tp-id a sh:PropertyShape ;
+    sh:datatype xsd:anyURI ;
+    sh:maxCount 1 ;
+    sh:path ex:tp-id .
+
+shapes:tp-role a sh:PropertyShape ;
+    sh:class <http://www.huawei.com/ontology/identity/simap-yang/tp-role> ;
+    sh:maxCount 1 ;
+    sh:nodeKind sh:IRI ;
+    sh:path ex:tp-role .
+
+shapes:timestamp a sh:PropertyShape ;
+    sh:datatype xsd:dateTime ;
+    sh:maxCount 1 ;
+    sh:path ex:timestamp ;
+    sh:pattern "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?(Z|[\\+\\-]\\d{2}:\\d{2})" .
+
+shapes:description a sh:PropertyShape ;
+    sh:datatype xsd:string ;
+    sh:maxCount 1 ;
+    sh:path ex:description .
+
+shapes:label a sh:PropertyShape ;
+    sh:datatype xsd:string ;
+    sh:path ex:label .
+
+shapes:name a sh:PropertyShape ;
+    sh:datatype xsd:string ;
+    sh:maxCount 1 ;
+    sh:path ex:name .
+

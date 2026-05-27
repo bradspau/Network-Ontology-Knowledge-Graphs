@@ -1,0 +1,3378 @@
+@prefix cab: <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/cable/> .
+@prefix cabChild: <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/cable/child-cable/> .
+@prefix ex: <http://www.huawei.com/ontology/> .
+@prefix grpGeo: <http://www.huawei.com/ontology/grouping/ietf-geo-location/> .
+@prefix grpNet: <http://www.huawei.com/ontology/grouping/ietf-network/> .
+@prefix grpNetTop: <http://www.huawei.com/ontology/grouping/ietf-network-topology/> .
+@prefix grpNiLoc: <http://www.huawei.com/ontology/grouping/ietf-ni-location/> .
+@prefix grpNwi: <http://www.huawei.com/ontology/grouping/ietf-network-inventory/> .
+@prefix grpNwiPass: <http://www.huawei.com/ontology/grouping/ietf-nwi-passive-inventory/> .
+@prefix grpNwiTop: <http://www.huawei.com/ontology/grouping/ietf-network-inventory-topology/> .
+@prefix hw: <http://www.huawei.com/ontology/ietf-hardware/hardware/> .
+@prefix hwAdminSt: <http://www.huawei.com/ontology/types/ietf-hardware/admin-state/> .
+@prefix hwComp: <http://www.huawei.com/ontology/ietf-hardware/hardware/component/> .
+@prefix hwId: <http://www.huawei.com/ontology/identity/ietf-hardware/> .
+@prefix hwNotif: <http://www.huawei.com/ontology/notification/ietf-hardware/> .
+@prefix hwOperSt: <http://www.huawei.com/ontology/types/ietf-hardware/oper-state/> .
+@prefix hwRoot: <http://www.huawei.com/ontology/ietf-hardware/> .
+@prefix hwSensorSt: <http://www.huawei.com/ontology/types/ietf-hardware/sensor-status/> .
+@prefix hwSensorVSc: <http://www.huawei.com/ontology/types/ietf-hardware/sensor-value-scale/> .
+@prefix hwSensorVTy: <http://www.huawei.com/ontology/types/ietf-hardware/sensor-value-type/> .
+@prefix hwTypes: <http://www.huawei.com/ontology/types/ietf-hardware/> .
+@prefix hwUsageSt: <http://www.huawei.com/ontology/types/ietf-hardware/standby-state/> .
+@prefix ianaHw: <http://www.huawei.com/ontology/identity/iana-hardware/> .
+@prefix inetIpVer: <http://www.huawei.com/ontology/types/ietf-inet-types/ip-version/> .
+@prefix inetTypes: <http://www.huawei.com/ontology/types/ietf-inet-types/> .
+@prefix net: <http://www.huawei.com/ontology/ietf-network/networks/network/> .
+@prefix netBrkChan: <http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/inventory-mapping-attributes/port-breakout/breakout-channel/> .
+@prefix netInvMap: <http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/inventory-mapping-attributes/> .
+@prefix netLink: <http://www.huawei.com/ontology/ietf-network/networks/network/link/> .
+@prefix netNetworks: <http://www.huawei.com/ontology/ietf-network/networks/> .
+@prefix netNode: <http://www.huawei.com/ontology/ietf-network/networks/network/node/> .
+@prefix netPortBrk: <http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/inventory-mapping-attributes/port-breakout/> .
+@prefix netRoot: <http://www.huawei.com/ontology/ietf-network/> .
+@prefix netSuppLink: <http://www.huawei.com/ontology/ietf-network/networks/network/link/supporting-link/> .
+@prefix netSuppNet: <http://www.huawei.com/ontology/ietf-network/networks/network/supporting-network/> .
+@prefix netSuppNode: <http://www.huawei.com/ontology/ietf-network/networks/network/node/supporting-node/> .
+@prefix netSuppTP: <http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/supporting-termination-point/> .
+@prefix netTP: <http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/> .
+@prefix nwi: <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/> .
+@prefix nwiChassis: <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/locations/racks/rack/contained-chassis/> .
+@prefix nwiComp: <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component/> .
+@prefix nwiCompPatch: <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component/software-rev/patch/> .
+@prefix nwiCompSwRev: <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component/software-rev/> .
+@prefix nwiGeo: <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/locations/location/geo-location/> .
+@prefix nwiInvId: <http://www.huawei.com/ontology/identity/ietf-network-inventory/> .
+@prefix nwiLoc: <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/locations/location/> .
+@prefix nwiLocs: <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/locations/> .
+@prefix nwiNE: <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/> .
+@prefix nwiNEs: <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/> .
+@prefix nwiPassId: <http://www.huawei.com/ontology/identity/ietf-nwi-passive-inventory/> .
+@prefix nwiRack: <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/locations/racks/rack/> .
+@prefix nwiRacks: <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/locations/racks/> .
+@prefix nwiRefFrame: <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/locations/location/geo-location/reference-frame/> .
+@prefix nwiRoot: <http://www.huawei.com/ontology/ietf-network-inventory/> .
+@prefix nwiSwRev: <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/software-rev/> .
+@prefix nwiSwRevPatch: <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/software-rev/patch/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix pae: <http://www.huawei.com/ontology/ietf-power-and-energy/energy-objects/> .
+@prefix paeId: <http://www.huawei.com/ontology/identity/ietf-power-and-energy/> .
+@prefix paePwrEntry: <http://www.huawei.com/ontology/ietf-power-and-energy/energy-objects/power-entry/> .
+@prefix paeRoot: <http://www.huawei.com/ontology/ietf-power-and-energy/> .
+@prefix pdev: <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/passive-device/> .
+@prefix pdevPort: <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/passive-device/passive-port/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix yangId: <http://www.huawei.com/ontology/identity/ietf-yang-types/> .
+
+ex:address a owl:DatatypeProperty ;
+    rdfs:label "address" ;
+    rdfs:comment "Specifies an address (number and street)." ;
+    rdfs:domain nwiLoc:physical-address ;
+    rdfs:range xsd:string ;
+    prov:wasDerivedFrom "nil:physical-address?container/nil:address?leaf" .
+
+ex:admin-state a owl:ObjectProperty ;
+    rdfs:label "admin-state" ;
+    rdfs:comment """The administrative state for this component.
+
+This node refers to a component's administrative
+permission to service both other components within its
+containment hierarchy as well other users of its
+services defined by means outside the scope of this
+module.
+
+Some components exhibit only a subset of the remaining
+administrative state values.  Some components cannot be
+locked; hence, this node exhibits only the 'unlocked'
+state.  Other components cannot be shut down gracefully;
+hence, this node does not exhibit the 'shutting-down'
+state.""" ;
+    rdfs:domain hwComp:state ;
+    rdfs:range hwTypes:admin-state ;
+    prov:wasDerivedFrom "hw:hardware?container/hw:component?list/hw:state?container/hw:admin-state?leaf" .
+
+ex:alarm-state a owl:DatatypeProperty ;
+    rdfs:label "alarm-state" ;
+    ex:isStateData true ;
+    rdfs:comment """The alarm state for this component.  It does not
+include the alarms raised on child components within its
+containment hierarchy.""" ;
+    rdfs:domain hwComp:state ;
+    rdfs:range rdfs:Literal ;
+    prov:wasDerivedFrom "hw:hardware?container/hw:component?list/hw:state?container/hw:alarm-state?leaf" .
+
+ex:alias a owl:DatatypeProperty ;
+    rdfs:label "alias" ;
+    rdfs:comment """An 'alias' name for the component, as specified by a
+network manager, that provides a non-volatile 'handle' for
+the component.
+
+If no configured value exists, the server MAY set the
+value of this node to a locally unique value in the
+operational state.
+
+A server implementation MAY map this leaf to the
+entPhysicalAlias MIB object.  Such an implementation needs
+to use some mechanism to handle the differences in size
+and characters allowed between this leaf and
+entPhysicalAlias.  The definition of such a mechanism is
+outside the scope of this document.""",
+        """The alias name of the entity (e.g., component). This alias
+name can be specified by a network operator.""" ;
+    rdfs:domain hw:component,
+        nwi:cable,
+        nwiLocs:location,
+        nwiRacks:rack,
+        nwiNEs:network-element,
+        <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component>,
+        nwi:passive-device,
+        pdev:passive-port ;
+    rdfs:range xsd:string ;
+    prov:wasDerivedFrom "hw:hardware?container/hw:component?list/hw:alias?leaf",
+        "nwi:alias?leaf" .
+
+ex:alternate-system a owl:DatatypeProperty ;
+    rdfs:label "alternate-system" ;
+    rdfs:comment """The system in which the astronomical body and
+geodetic-datum is defined.  Normally, this value is not
+present and the system is the natural universe; however,
+when present, this value allows for specifying alternate
+systems (e.g., virtual realities).  An alternate-system
+modifies the definition (but not the type) of the other
+values in the reference frame.""" ;
+    rdfs:domain nwiGeo:reference-frame ;
+    rdfs:range xsd:string ;
+    prov:wasDerivedFrom "geo:geo-location?container/geo:reference-frame?container/geo:alternate-system?leaf" .
+
+ex:asset-id a owl:DatatypeProperty ;
+    rdfs:label "asset-id" ;
+    rdfs:comment """This node is a user-assigned asset tracking identifier for
+the component.
+
+A server implementation MAY map this leaf to the
+entPhysicalAssetID MIB object.  Such an implementation
+needs to use some mechanism to handle the differences in
+size and characters allowed between this leaf and
+entPhysicalAssetID.  The definition of such a mechanism is
+outside the scope of this document.""",
+        """This node is an asset tracking identifier for the component,
+as specified by a network operator.
+
+A server implementation MAY map this leaf to the
+entPhysicalAssetID MIB object.  Such an
+implementation needs to use some mechanism to handle
+the differences in size and characters allowed
+between this leaf and entPhysicalAssetID.
+
+The definition of such a mechanism is outside the
+scope of this document.""" ;
+    rdfs:domain hw:component,
+        <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component> ;
+    rdfs:range xsd:string ;
+    prov:wasDerivedFrom "hw:hardware?container/hw:component?list/hw:asset-id?leaf",
+        "nwi:asset-id?leaf" .
+
+ex:astronomical-body a owl:DatatypeProperty ;
+    rdfs:label "astronomical-body" ;
+    rdfs:comment """An astronomical body as named by the International
+Astronomical Union (IAU) or according to the alternate
+system if specified.  Examples include 'sun' (our star),
+'earth' (our planet), 'moon' (our moon), 'enceladus' (a
+moon of Saturn), 'ceres' (an asteroid), and
+'67p/churyumov-gerasimenko (a comet).  The ASCII value
+SHOULD have uppercase converted to lowercase and not
+include control characters (i.e., values 32..64, and
+91..126).  Any preceding 'the' in the name SHOULD NOT be
+included.""" ;
+    rdfs:domain nwiGeo:reference-frame ;
+    rdfs:range xsd:string ;
+    prov:wasDerivedFrom "geo:geo-location?container/geo:reference-frame?container/geo:astronomical-body?leaf" .
+
+ex:attenuation a owl:DatatypeProperty ;
+    rdfs:label "attenuation" ;
+    ex:unit "dB" ;
+    rdfs:comment "The fiber attenuation in dB." ;
+    rdfs:domain cab:optical-cable ;
+    rdfs:range xsd:decimal ;
+    prov:wasDerivedFrom "nwi-passive:optical-cable?container/nwi-passive:attenuation?leaf" .
+
+ex:cable-role a owl:ObjectProperty ;
+    rdfs:label "cable-role" ;
+    rdfs:comment "Role of cable." ;
+    rdfs:domain nwi:cable ;
+    rdfs:range nwiPassId:cable-role ;
+    prov:wasDerivedFrom "nwi-passive:cable-role?leaf" .
+
+ex:cable-type a owl:ObjectProperty ;
+    rdfs:label "cable-type" ;
+    rdfs:comment "Type of cable." ;
+    rdfs:domain nwi:cable ;
+    rdfs:range nwiPassId:cable-type ;
+    prov:wasDerivedFrom "nwi-passive:cable-type?leaf" .
+
+ex:cableRole a owl:ObjectProperty ;
+    rdfs:label "cable role" ;
+    rdfs:comment "RDF-star annotation on ex:hasUpstreamDevice: role/tier of the cable. Priority ascending: internal=0, drop=1, access=2, branch=3, aggregation=4, distribution=5, trunk=6." .
+
+ex:channel-id a owl:DatatypeProperty ;
+    rdfs:label "channel-id" ;
+    rdfs:comment """Unique identifier for the breakout channel within the
+scope of the parent port.""" ;
+    rdfs:domain netPortBrk:breakout-channel ;
+    rdfs:range xsd:unsignedShort ;
+    prov:wasDerivedFrom "nwit:inventory-mapping-attributes?container/nwit:port-breakout?container/nwit:breakout-channel?list/nwit:channel-id?leaf" .
+
+ex:child a owl:ObjectProperty ;
+    rdfs:label "child" ;
+    ex:xpathPath "../../location/id" ;
+    rdfs:comment "The name of the contained child locations." ;
+    rdfs:domain nwiLocs:location ;
+    rdfs:range nwiLocs:location ;
+    prov:wasDerivedFrom "nwi:network-inventory?container/nil:locations?container/nil:location?list/nil:child?leaf-list" .
+
+ex:city a owl:DatatypeProperty ;
+    rdfs:label "city" ;
+    rdfs:comment "Specifies a city." ;
+    rdfs:domain nwiLoc:physical-address ;
+    rdfs:range xsd:string ;
+    prov:wasDerivedFrom "nil:physical-address?container/nil:city?leaf" .
+
+ex:class a owl:DatatypeProperty,
+        owl:ObjectProperty ;
+    rdfs:label "class" ;
+    rdfs:comment """An indication of the general hardware type of the
+component.""",
+        "The type of the component." ;
+    rdfs:domain hw:component,
+        <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component> ;
+    rdfs:range hwId:hardware-class ;
+    prov:wasDerivedFrom "hw:hardware?container/hw:component?list/hw:class?leaf",
+        "nwi:class?leaf" .
+
+ex:column-number a owl:DatatypeProperty ;
+    rdfs:label "column-number" ;
+    rdfs:comment """Identifies the physical location of the rack within
+the column.""" ;
+    rdfs:domain nwiRack:rack-location ;
+    rdfs:range xsd:unsignedInt ;
+    prov:wasDerivedFrom "nwi:network-inventory?container/nil:locations?container/nil:racks?container/nil:rack?list/nil:rack-location?container/nil:column-number?leaf" .
+
+ex:component-id a owl:DatatypeProperty ;
+    rdfs:label "component-id" ;
+    rdfs:comment """An identifier that uniquely identifies the component
+in a node.""" ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component> ;
+    rdfs:range xsd:string ;
+    prov:wasDerivedFrom "nwi:component-id?leaf" .
+
+ex:component-ref a owl:ObjectProperty ;
+    rdfs:label "component-ref" ;
+    ex:xpathPath "/nwi:network-inventory/nwi:network-elements/nwi:network-element[nwi:ne-id=current()/../ne-ref]/nwi:components/nwi:component/nwi:component-id" ;
+    rdfs:comment """Referenced connected active device's component,
+e.g. port component.""",
+        """The reference to the chassis component within
+the network element and contained by the rack.""" ;
+    rdfs:domain cab:a-end,
+        cabChild:a-end,
+        cabChild:z-end,
+        cab:z-end,
+        nwiRack:contained-chassis ;
+    rdfs:range <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component> ;
+    prov:wasDerivedFrom "nwi-passive:a-end?container/nwi-passive:component-ref?leaf",
+        "nwi-passive:z-end?container/nwi-passive:component-ref?leaf",
+        "nwi:network-inventory?container/nil:locations?container/nil:racks?container/nil:rack?list/nil:contained-chassis?list/nil:component-ref?leaf" .
+
+ex:contains-child a owl:ObjectProperty ;
+    rdfs:label "contains-child" ;
+    ex:isStateData true ;
+    ex:xpathPath "../../component/name" ;
+    rdfs:comment "The name of the contained component." ;
+    rdfs:domain hw:component ;
+    rdfs:range hw:component ;
+    prov:wasDerivedFrom "hw:hardware?container/hw:component?list/hw:contains-child?leaf-list" .
+
+ex:coord-accuracy a owl:DatatypeProperty ;
+    rdfs:label "coord-accuracy" ;
+    rdfs:comment """The accuracy of the latitude/longitude pair for
+ellipsoidal coordinates, or the X, Y, and Z components
+for Cartesian coordinates.  When coord-accuracy is
+specified, it indicates how precisely the coordinates
+in the associated list of locations have been
+determined with respect to the coordinate system
+defined by the geodetic-datum.  For example, there
+might be uncertainty due to measurement error if an
+experimental measurement was made to determine each
+location.""" ;
+    rdfs:domain nwiRefFrame:geodetic-system ;
+    rdfs:range xsd:decimal ;
+    prov:wasDerivedFrom "geo:geo-location?container/geo:reference-frame?container/geo:geodetic-system?container/geo:coord-accuracy?leaf" .
+
+ex:country-code a owl:DatatypeProperty ;
+    rdfs:label "country-code" ;
+    rdfs:comment """Specifies a country.
+Expressed as ISO ALPHA-2 code.""" ;
+    rdfs:domain nwiLoc:physical-address ;
+    rdfs:range xsd:string ;
+    prov:wasDerivedFrom "nil:physical-address?container/nil:country-code?leaf" .
+
+ex:custom-tags a owl:DatatypeProperty ;
+    rdfs:label "custom-tags" ;
+    rdfs:comment """Customized tags, e.g. RFID, QR code that are
+attached to the device.""" ;
+    rdfs:domain nwi:passive-device ;
+    rdfs:range xsd:string ;
+    prov:wasDerivedFrom "nwi:network-inventory?container/nwi-passive:passive-device?list/nwi-passive:custom-tags?leaf-list" .
+
+ex:depth a owl:DatatypeProperty ;
+    rdfs:label "depth" ;
+    ex:unit "millimeter" ;
+    rdfs:comment "Rack depth." ;
+    rdfs:domain nwiRacks:rack ;
+    rdfs:range xsd:unsignedShort ;
+    prov:wasDerivedFrom "nwi:network-inventory?container/nil:locations?container/nil:racks?container/nil:rack?list/nil:depth?leaf" .
+
+ex:description a owl:DatatypeProperty ;
+    rdfs:label "description" ;
+    ex:isStateData true ;
+    rdfs:comment """A textual description of the component.  This node should
+contain a string that identifies the manufacturer's name
+for the component and should be set to a distinct value
+for each version or model of the component.""",
+        "The textual description of the entity (e.g., component)." ;
+    rdfs:domain hw:component,
+        nwi:cable,
+        nwiLocs:location,
+        nwiRacks:rack,
+        nwiNEs:network-element,
+        <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component>,
+        nwi:passive-device,
+        pdev:passive-port ;
+    rdfs:range xsd:string ;
+    prov:wasDerivedFrom "hw:hardware?container/hw:component?list/hw:description?leaf",
+        "nwi:description?leaf" .
+
+ex:dest-node a owl:ObjectProperty ;
+    rdfs:label "dest-node" ;
+    ex:xpathPath "../../../nw:node/nw:node-id" ;
+    rdfs:comment """Destination node identifier.  Must be in the same
+network.""" ;
+    rdfs:domain netLink:destination ;
+    rdfs:range net:node ;
+    prov:wasDerivedFrom "nt:link?list/nt:destination?container/nt:dest-node?leaf" .
+
+ex:dest-tp a owl:ObjectProperty ;
+    rdfs:label "dest-tp" ;
+    ex:xpathPath "../../../nw:node[nw:node-id=current()/../dest-node]/termination-point/tp-id" ;
+    rdfs:comment """This termination point is located within the
+destination node and terminates the link.""" ;
+    rdfs:domain netLink:destination ;
+    rdfs:range netNode:termination-point ;
+    prov:wasDerivedFrom "nt:link?list/nt:destination?container/nt:dest-tp?leaf" .
+
+ex:device-id a owl:DatatypeProperty ;
+    rdfs:label "device-id" ;
+    rdfs:comment "Connected passive device identifier." ;
+    rdfs:domain cab:a-end,
+        cabChild:a-end,
+        cabChild:z-end,
+        cab:z-end ;
+    rdfs:range xsd:string ;
+    prov:wasDerivedFrom "nwi-passive:a-end?container/nwi-passive:device-id?leaf",
+        "nwi-passive:z-end?container/nwi-passive:device-id?leaf" .
+
+ex:device-ref a owl:ObjectProperty ;
+    rdfs:label "device-ref" ;
+    rdfs:comment "Reference to a passive device (e.g. ATB or Enclosure)." ;
+    rdfs:domain cab:a-end,
+        cabChild:a-end,
+        cabChild:z-end,
+        cab:z-end ;
+    rdfs:range nwi:passive-device .
+
+ex:device-type a owl:ObjectProperty ;
+    rdfs:label "device-type" ;
+    rdfs:comment "Type of connected device.",
+        "Type of passive device." ;
+    rdfs:domain cab:a-end,
+        cabChild:a-end,
+        cabChild:z-end,
+        cab:z-end,
+        nwi:passive-device ;
+    rdfs:range nwiPassId:connected-device-type,
+        nwiPassId:passive-device-type ;
+    prov:wasDerivedFrom "nwi-passive:a-end?container/nwi-passive:device-type?leaf",
+        "nwi-passive:z-end?container/nwi-passive:device-type?leaf",
+        "nwi:network-inventory?container/nwi-passive:passive-device?list/nwi-passive:device-type?leaf" .
+
+ex:eo-power a owl:DatatypeProperty ;
+    rdfs:label "eo-power" ;
+    ex:isStateData true ;
+    ex:unit "Watts" ;
+    rdfs:comment """The current power usage measurement for the energy object.
+This value represents the instantaneous power consumption
+of the component. Positive values indicate power
+consumption, while negative values can indicate power
+generation (e.g., for devices with battery backup or
+renewable energy sources).""" ;
+    rdfs:domain pae:power-entry ;
+    rdfs:range xsd:int ;
+    prov:wasDerivedFrom "eo:energy-objects?container/eo:power-entry?list/eo:eo-power?leaf" .
+
+ex:eo-power-data-source-accuracy a owl:ObjectProperty ;
+    rdfs:label "eo-power-data-source-accuracy" ;
+    ex:isStateData true ;
+    rdfs:comment """The accuracy of the power data source. Indicates whether
+the data source is a direct measurement, an estimate, or
+unavailable and also the accuracy level of the data source.
+This metadata is crucial for network management
+applications to assess the reliability and accuracy of the
+power data.""" ;
+    rdfs:domain pae:power-entry ;
+    rdfs:range paeId:data-source-accuracy ;
+    prov:wasDerivedFrom "eo:energy-objects?container/eo:power-entry?list/eo:eo-power-data-source-accuracy?leaf" .
+
+ex:eo-power-measurement-local a owl:DatatypeProperty ;
+    rdfs:label "eo-power-measurement-local" ;
+    ex:isStateData true ;
+    rdfs:comment """Indicates whether the power measurement is local (true) or
+remote (false). A local measurement is taken directly at
+the device, while a remote measurement is collected from
+an external source. This information can be useful for
+troubleshooting and understanding the data source.""" ;
+    rdfs:domain pae:power-entry ;
+    rdfs:range xsd:boolean ;
+    prov:wasDerivedFrom "eo:energy-objects?container/eo:power-entry?list/eo:eo-power-measurement-local?leaf" .
+
+ex:eo-power-nameplate a owl:DatatypeProperty ;
+    rdfs:label "eo-power-nameplate" ;
+    ex:isStateData true ;
+    ex:unit "Watts" ;
+    rdfs:comment """The nameplate power rating of an energy object. This is
+the maximum power that the device is designed to consume or
+produce, as specified by the manufacturer. Essential for
+power budget calculations and capacity planning.""" ;
+    rdfs:domain pae:power-entry ;
+    rdfs:range xsd:unsignedInt ;
+    prov:wasDerivedFrom "eo:energy-objects?container/eo:power-entry?list/eo:eo-power-nameplate?leaf" .
+
+ex:eo-power-power-factor a owl:DatatypeProperty ;
+    rdfs:label "eo-power-power-factor" ;
+    ex:isStateData true ;
+    rdfs:comment """The percent value of the power factor measurement for the
+energy object. This information is important for
+understanding the electrical characteristics of the device
+and for correctly interpreting the power data.""" ;
+    rdfs:domain pae:power-entry ;
+    rdfs:range xsd:unsignedByte ;
+    prov:wasDerivedFrom "eo:energy-objects?container/eo:power-entry?list/eo:eo-power-power-factor?leaf" .
+
+ex:eo-power-unit-multiplier a owl:ObjectProperty ;
+    rdfs:label "eo-power-unit-multiplier" ;
+    ex:isStateData true ;
+    rdfs:comment """The unit multiplier used to measure the power or energy.
+This multiplier applies to both eo-power and
+eo-power-nameplate values, allowing representation of power
+values from milliwatts to gigawatts using integer
+arithmetic.""" ;
+    rdfs:domain pae:power-entry ;
+    rdfs:range paeId:unit-multiplier ;
+    prov:wasDerivedFrom "eo:energy-objects?container/eo:power-entry?list/eo:eo-power-unit-multiplier?leaf" .
+
+ex:fiber-core-num a owl:DatatypeProperty ;
+    rdfs:label "fiber-core-num" ;
+    rdfs:comment "Number of fiber cores within the cable.",
+        "Number of fiber cores within the port." ;
+    rdfs:domain cab:optical-cable,
+        pdev:passive-port ;
+    rdfs:range xsd:unsignedInt ;
+    prov:wasDerivedFrom "nwi-passive:optical-cable?container/nwi-passive:fiber-core-num?leaf",
+        "nwi-passive:passive-port?list/nwi-passive:fiber-core-num?leaf" .
+
+ex:fiber-type a owl:ObjectProperty ;
+    rdfs:label "fiber-type" ;
+    rdfs:comment "Type of fiber contained in the cable." ;
+    rdfs:domain cab:optical-cable ;
+    rdfs:range nwiPassId:fiber-type ;
+    prov:wasDerivedFrom "nwi-passive:optical-cable?container/nwi-passive:fiber-type?leaf" .
+
+ex:firmware-rev a owl:DatatypeProperty ;
+    rdfs:label "firmware-rev" ;
+    ex:isStateData true ;
+    rdfs:comment """The vendor-specific firmware revision string for the
+component.""" ;
+    rdfs:domain hw:component ;
+    rdfs:range xsd:string ;
+    prov:wasDerivedFrom "hw:hardware?container/hw:component?list/hw:firmware-rev?leaf" .
+
+ex:geodetic-datum a owl:DatatypeProperty ;
+    rdfs:label "geodetic-datum" ;
+    rdfs:comment """A geodetic-datum defining the meaning of latitude,
+longitude, and height.  The default when the
+astronomical body is 'earth' is 'wgs-84', which is
+used by the Global Positioning System (GPS).  The
+ASCII value SHOULD have uppercase converted to
+lowercase and not include control characters
+(i.e., values 32..64, and 91..126).  The IANA registry
+further restricts the value by converting all spaces
+(' ') to dashes ('-').
+The specification for the geodetic-datum indicates
+how accurately it models the astronomical body in
+question, both for the 'horizontal'
+latitude/longitude coordinates and for height
+coordinates.""" ;
+    rdfs:domain nwiRefFrame:geodetic-system ;
+    rdfs:range xsd:string ;
+    prov:wasDerivedFrom "geo:geo-location?container/geo:reference-frame?container/geo:geodetic-system?container/geo:geodetic-datum?leaf" .
+
+grpNetTop:link-ref a owl:Class ;
+    rdfs:label "link-ref" ;
+    rdfs:comment "Grouping definition: link-ref",
+        """This grouping can be used to reference a link in a specific
+network.  Although it is not used in this module, it is
+defined here for the convenience of augmenting modules.""" .
+
+grpNetTop:tp-ref a owl:Class ;
+    rdfs:label "tp-ref" ;
+    rdfs:comment "Grouping definition: tp-ref",
+        """This grouping can be used to reference a termination point
+in a specific node.  Although it is not used in this module,
+it is defined here for the convenience of augmenting
+modules.""" .
+
+grpNet:network-ref a owl:Class ;
+    rdfs:label "network-ref" ;
+    rdfs:comment """Contains the information necessary to reference a network --
+for example, an underlay network.""",
+        "Grouping definition: network-ref" .
+
+grpNet:node-ref a owl:Class ;
+    rdfs:label "node-ref" ;
+    rdfs:comment "Contains the information necessary to reference a node.",
+        "Grouping definition: node-ref" .
+
+ex:hardware-rev a owl:DatatypeProperty ;
+    rdfs:label "hardware-rev" ;
+    ex:isStateData true ;
+    rdfs:comment """The vendor-specific hardware revision string for the
+component.
+
+The preferred value is the hardware revision identifier
+actually printed on the component itself (if present).""",
+        """The vendor-specific hardware revision string for the
+component.  The preferred value is the hardware revision
+identifier actually printed on the component itself (if
+present).""" ;
+    rdfs:domain hw:component,
+        <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component> ;
+    rdfs:range xsd:string ;
+    prov:wasDerivedFrom "hw:hardware?container/hw:component?list/hw:hardware-rev?leaf",
+        "nwi:hardware-rev?leaf" .
+
+ex:hasDownstreamDevice a owl:ObjectProperty ;
+    rdfs:label "has downstream device" ;
+    rdfs:comment "Inverse of ex:hasUpstreamDevice." ;
+    owl:inverseOf ex:hasUpstreamDevice .
+
+ex:has_breakout-channel a owl:ObjectProperty ;
+    rdfs:label "has breakout-channel" ;
+    rdfs:domain netInvMap:port-breakout ;
+    rdfs:range netPortBrk:breakout-channel .
+
+ex:has_cable a owl:ObjectProperty ;
+    rdfs:label "has cable" ;
+    rdfs:domain nwiRoot:network-inventory ;
+    rdfs:range nwi:cable .
+
+ex:has_child-cable a owl:ObjectProperty ;
+    rdfs:label "has child-cable" ;
+    rdfs:domain nwi:cable ;
+    rdfs:range cab:child-cable .
+
+ex:has_component a owl:ObjectProperty ;
+    rdfs:label "has component" ;
+    rdfs:domain hwRoot:hardware,
+        nwiNE:components ;
+    rdfs:range hw:component,
+        <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component> .
+
+ex:has_contained-chassis a owl:ObjectProperty ;
+    rdfs:label "has contained-chassis" ;
+    rdfs:domain nwiRacks:rack ;
+    rdfs:range nwiRack:contained-chassis .
+
+ex:has_location a owl:ObjectProperty ;
+    rdfs:label "has location" ;
+    rdfs:domain nwi:locations ;
+    rdfs:range nwiLocs:location .
+
+ex:has_network a owl:ObjectProperty ;
+    rdfs:label "has network" ;
+    rdfs:domain netRoot:networks ;
+    rdfs:range netNetworks:network .
+
+ex:has_network-element a owl:ObjectProperty ;
+    rdfs:label "has network-element" ;
+    rdfs:domain nwi:network-elements ;
+    rdfs:range nwiNEs:network-element .
+
+ex:has_node a owl:ObjectProperty ;
+    rdfs:label "has node" ;
+    rdfs:domain netNetworks:network ;
+    rdfs:range net:node .
+
+ex:has_passive-device a owl:ObjectProperty ;
+    rdfs:label "has passive-device" ;
+    rdfs:domain nwiRoot:network-inventory ;
+    rdfs:range nwi:passive-device .
+
+ex:has_passive-port a owl:ObjectProperty ;
+    rdfs:label "has passive-port" ;
+    rdfs:domain nwi:passive-device ;
+    rdfs:range pdev:passive-port .
+
+ex:has_patch a owl:ObjectProperty ;
+    rdfs:label "has patch" ;
+    rdfs:domain nwiComp:software-rev,
+        nwiNE:software-rev ;
+    rdfs:range nwiCompSwRev:patch,
+        nwiSwRev:patch .
+
+ex:has_power-entry a owl:ObjectProperty ;
+    rdfs:label "has power-entry" ;
+    rdfs:domain paeRoot:energy-objects ;
+    rdfs:range pae:power-entry .
+
+ex:has_rack a owl:ObjectProperty ;
+    rdfs:label "has rack" ;
+    rdfs:domain nwiLocs:racks ;
+    rdfs:range nwiRacks:rack .
+
+ex:has_software-rev a owl:ObjectProperty ;
+    rdfs:label "has software-rev" ;
+    rdfs:domain nwiNEs:network-element,
+        <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component> ;
+    rdfs:range nwiComp:software-rev,
+        nwiNE:software-rev .
+
+ex:has_supporting-link a owl:ObjectProperty ;
+    rdfs:label "has supporting-link" ;
+    rdfs:domain net:link ;
+    rdfs:range netLink:supporting-link .
+
+ex:has_supporting-network a owl:ObjectProperty ;
+    rdfs:label "has supporting-network" ;
+    rdfs:domain netNetworks:network ;
+    rdfs:range net:supporting-network .
+
+ex:has_supporting-node a owl:ObjectProperty ;
+    rdfs:label "has supporting-node" ;
+    rdfs:domain net:node ;
+    rdfs:range netNode:supporting-node .
+
+ex:has_supporting-termination-point a owl:ObjectProperty ;
+    rdfs:label "has supporting-termination-point" ;
+    rdfs:domain netNode:termination-point ;
+    rdfs:range netTP:supporting-termination-point .
+
+ex:height a owl:DatatypeProperty ;
+    rdfs:label "height" ;
+    ex:unit "meters",
+        "millimeter" ;
+    rdfs:comment """Height from a reference 0 value.  The precision and
+'0' value is defined by the reference-frame.""",
+        "Rack height." ;
+    rdfs:domain nwiLoc:geo-location,
+        nwiRacks:rack ;
+    rdfs:range xsd:decimal,
+        xsd:unsignedShort ;
+    prov:wasDerivedFrom "geo:geo-location?container/geo:height?leaf",
+        "nwi:network-inventory?container/nil:locations?container/nil:racks?container/nil:rack?list/nil:height?leaf" .
+
+ex:height-accuracy a owl:DatatypeProperty ;
+    rdfs:label "height-accuracy" ;
+    ex:unit "meters" ;
+    rdfs:comment """The accuracy of the height value for ellipsoidal
+coordinates; this value is not used with Cartesian
+coordinates.  When height-accuracy is specified, it
+indicates how precisely the heights in the
+associated list of locations have been determined
+with respect to the coordinate system defined by the
+geodetic-datum.  For example, there might be
+uncertainty due to measurement error if an
+experimental measurement was made to determine each
+location.""" ;
+    rdfs:domain nwiRefFrame:geodetic-system ;
+    rdfs:range xsd:decimal ;
+    prov:wasDerivedFrom "geo:geo-location?container/geo:reference-frame?container/geo:geodetic-system?container/geo:height-accuracy?leaf" .
+
+ex:id a owl:DatatypeProperty ;
+    rdfs:label "id" ;
+    rdfs:comment "An identifier of the location.",
+        """An identifier that uniquely identifies the rack
+within a location, e.g. equipment room.""",
+        "Cable identifier.",
+        "Port identifier." ;
+    rdfs:domain nwi:cable,
+        cab:child-cable,
+        nwiLocs:location,
+        nwiRacks:rack,
+        nwi:passive-device,
+        pdev:passive-port ;
+    rdfs:range xsd:string ;
+    prov:wasDerivedFrom "nwi-passive:id?leaf",
+        "nwi-passive:passive-port?list/nwi-passive:id?leaf",
+        "nwi:network-inventory?container/nil:locations?container/nil:location?list/nil:id?leaf",
+        "nwi:network-inventory?container/nil:locations?container/nil:racks?container/nil:rack?list/nil:id?leaf",
+        "nwi:network-inventory?container/nwi-passive:passive-device?list/nwi-passive:id?leaf" .
+
+ianaHw:backplane a owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "backplane" ;
+    rdfs:comment """This identity is applicable if the hardware class is some sort
+of device for aggregating and forwarding networking traffic,
+such as a shared backplane in a modular ethernet switch.  Note
+that an implementation may model a backplane as a single
+physical component, which is actually implemented as multiple
+discrete physical components (within a chassis or stack).""" ;
+    rdfs:subClassOf yangId:hardware-class ;
+    prov:wasDerivedFrom "ianahw:backplane?identity" .
+
+ianaHw:battery a owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "battery" ;
+    rdfs:comment """This identity is applicable if the hardware class is some sort
+of battery.""" ;
+    rdfs:subClassOf yangId:hardware-class ;
+    prov:wasDerivedFrom "ianahw:battery?identity" .
+
+ianaHw:chassis a owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "chassis" ;
+    rdfs:comment """This identity is applicable if the hardware class is an
+overall container for networking equipment.  Any class of
+physical component, except a stack, may be contained within a
+chassis; a chassis may only be contained within a stack.""" ;
+    rdfs:subClassOf yangId:hardware-class ;
+    prov:wasDerivedFrom "ianahw:chassis?identity" .
+
+ianaHw:container a owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "container" ;
+    rdfs:comment """This identity is applicable if the hardware class is capable
+of containing one or more removable physical entities,
+possibly of different types.  For example, each (empty or
+full) slot in a chassis will be modeled as a container.  Note
+that all removable physical components should be modeled
+within a container component, such as field-replaceable
+modules, fans, or power supplies.  Note that all known
+containers should be modeled by the agent, including empty
+containers.""" ;
+    rdfs:subClassOf yangId:hardware-class ;
+    prov:wasDerivedFrom "ianahw:container?identity" .
+
+ianaHw:cpu a owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "cpu" ;
+    rdfs:comment """This identity is applicable if the hardware class is some sort
+of central processing unit.""" ;
+    rdfs:subClassOf yangId:hardware-class ;
+    prov:wasDerivedFrom "ianahw:cpu?identity" .
+
+ianaHw:energy-object a owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "energy-object" ;
+    rdfs:comment """This identity is applicable if the hardware class is some sort
+of energy object, i.e., it is a piece of equipment that is
+part of or attached to a communications network that is
+monitored, it is controlled, or it aids in the management of
+another device for Energy Management.""" ;
+    rdfs:subClassOf yangId:hardware-class ;
+    prov:wasDerivedFrom "ianahw:energy-object?identity" .
+
+ianaHw:fan a owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "fan" ;
+    rdfs:comment """This identity is applicable if the hardware class is a fan or
+other heat-reduction component.""" ;
+    rdfs:subClassOf yangId:hardware-class ;
+    prov:wasDerivedFrom "ianahw:fan?identity" .
+
+ianaHw:hardware-class a owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "hardware-class" ;
+    rdfs:comment """This identity is the base for all hardware class
+identifiers.""" ;
+    prov:wasDerivedFrom "ianahw:hardware-class?identity" .
+
+ianaHw:module a owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "module" ;
+    rdfs:comment """This identity is applicable if the hardware class is some sort
+of self-contained sub-system.  If a module component is
+removable, then it should be modeled within a container
+component; otherwise, it should be modeled directly within
+another physical component (e.g., a chassis or another
+module).""" ;
+    rdfs:subClassOf yangId:hardware-class ;
+    prov:wasDerivedFrom "ianahw:module?identity" .
+
+ianaHw:port a owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "port" ;
+    rdfs:comment """This identity is applicable if the hardware class is some sort
+of networking port capable of receiving and/or transmitting
+networking traffic.""" ;
+    rdfs:subClassOf yangId:hardware-class ;
+    prov:wasDerivedFrom "ianahw:port?identity" .
+
+ianaHw:power-supply a owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "power-supply" ;
+    rdfs:comment """This identity is applicable if the hardware class is a
+power-supplying component.""" ;
+    rdfs:subClassOf yangId:hardware-class ;
+    prov:wasDerivedFrom "ianahw:power-supply?identity" .
+
+ianaHw:sensor a owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "sensor" ;
+    rdfs:comment """This identity is applicable if the hardware class is some sort
+of sensor, such as a temperature sensor within a router
+chassis.""" ;
+    rdfs:subClassOf yangId:hardware-class ;
+    prov:wasDerivedFrom "ianahw:sensor?identity" .
+
+ianaHw:stack a owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "stack" ;
+    rdfs:comment """This identity is applicable if the hardware class is some sort
+of super-container (possibly virtual) intended to group
+together multiple chassis entities.  A stack may be realized
+by a virtual cable, a real interconnect cable attached to
+multiple chassis, or multiple interconnect cables.  A stack
+should not be modeled within any other physical components,
+but a stack may be contained within another stack.  Only
+chassis components should be contained within a stack.""" ;
+    rdfs:subClassOf yangId:hardware-class ;
+    prov:wasDerivedFrom "ianahw:stack?identity" .
+
+ianaHw:storage-drive a owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "storage-drive" ;
+    rdfs:comment """This identity is applicable if the hardware class is some sort
+of component with data storage capability as its main
+functionality, e.g., hard disk drive (HDD), solid-state device
+(SSD), solid-state hybrid drive (SSHD), object storage device
+(OSD), or other.""" ;
+    rdfs:subClassOf yangId:hardware-class ;
+    prov:wasDerivedFrom "ianahw:storage-drive?identity" .
+
+ianaHw:unknown a owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "unknown" ;
+    rdfs:comment """This identity is applicable if the hardware class is unknown
+to the server.""" ;
+    rdfs:subClassOf yangId:hardware-class ;
+    prov:wasDerivedFrom "ianahw:unknown?identity" .
+
+nwiInvId:ne-physical a owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "ne-physical" ;
+    rdfs:comment "A physical network element (NE). " ;
+    rdfs:subClassOf yangId:ne-type ;
+    prov:wasDerivedFrom "nwi:ne-physical?identity" .
+
+nwiInvId:non-hardware-component-class a owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "non-hardware-component-class" ;
+    rdfs:comment """Base identity for non hardware components (e.g., software
+components) in a managed device.""" ;
+    prov:wasDerivedFrom "nwi:non-hardware-component-class?identity" .
+
+nwiPassId:ATB a owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "ATB" ;
+    rdfs:comment "Access Terminal Box." ;
+    rdfs:subClassOf yangId:passive-device-type ;
+    prov:wasDerivedFrom "nwi-passive:ATB?identity" .
+
+nwiPassId:FAT a owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "FAT" ;
+    rdfs:comment "Fiber Access Terminal." ;
+    rdfs:subClassOf yangId:passive-device-type ;
+    prov:wasDerivedFrom "nwi-passive:FAT?identity" .
+
+nwiPassId:FDT a owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "FDT" ;
+    rdfs:comment "Fiber Distribution Terminal." ;
+    rdfs:subClassOf yangId:passive-device-type ;
+    prov:wasDerivedFrom "nwi-passive:FDT?identity" .
+
+nwiPassId:G652A a owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "G652A" ;
+    rdfs:comment "ITU-T G.652A fiber." ;
+    rdfs:subClassOf yangId:fiber-type ;
+    prov:wasDerivedFrom "nwi-passive:G652A?identity" .
+
+nwiPassId:G652B a owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "G652B" ;
+    rdfs:comment "ITU-T G.652B fiber." ;
+    rdfs:subClassOf yangId:fiber-type ;
+    prov:wasDerivedFrom "nwi-passive:G652B?identity" .
+
+nwiPassId:G652C a owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "G652C" ;
+    rdfs:comment "ITU-T G.652C fiber." ;
+    rdfs:subClassOf yangId:fiber-type ;
+    prov:wasDerivedFrom "nwi-passive:G652C?identity" .
+
+nwiPassId:G652D a owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "G652D" ;
+    rdfs:comment "ITU-T G.652D fiber." ;
+    rdfs:subClassOf yangId:fiber-type ;
+    prov:wasDerivedFrom "nwi-passive:G652D?identity" .
+
+nwiPassId:G653 a owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "G653" ;
+    rdfs:comment "ITU-T G.653 fiber." ;
+    rdfs:subClassOf yangId:fiber-type ;
+    prov:wasDerivedFrom "nwi-passive:G653?identity" .
+
+nwiPassId:G654 a owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "G654" ;
+    rdfs:comment "ITU-T G.654 fiber." ;
+    rdfs:subClassOf yangId:fiber-type ;
+    prov:wasDerivedFrom "nwi-passive:G654?identity" .
+
+nwiPassId:G655 a owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "G655" ;
+    rdfs:comment "ITU-T G.655 fiber." ;
+    rdfs:subClassOf yangId:fiber-type ;
+    prov:wasDerivedFrom "nwi-passive:G655?identity" .
+
+nwiPassId:G656 a owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "G656" ;
+    rdfs:comment "ITU-T G.656 fiber." ;
+    rdfs:subClassOf yangId:fiber-type ;
+    prov:wasDerivedFrom "nwi-passive:G656?identity" .
+
+nwiPassId:G657A1 a owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "G657A1" ;
+    rdfs:comment "ITU-T G.657A1 fiber." ;
+    rdfs:subClassOf yangId:fiber-type ;
+    prov:wasDerivedFrom "nwi-passive:G657A1?identity" .
+
+nwiPassId:G657A2 a owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "G657A2" ;
+    rdfs:comment "ITU-T G.657A2 fiber." ;
+    rdfs:subClassOf yangId:fiber-type ;
+    prov:wasDerivedFrom "nwi-passive:G657A2?identity" .
+
+nwiPassId:G657B a owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "G657B" ;
+    rdfs:comment "ITU-T G.657B fiber." ;
+    rdfs:subClassOf yangId:fiber-type ;
+    prov:wasDerivedFrom "nwi-passive:G657B?identity" .
+
+nwiPassId:ODF a owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "ODF" ;
+    rdfs:comment "Optical Distribution Frame." ;
+    rdfs:subClassOf yangId:passive-device-type ;
+    prov:wasDerivedFrom "nwi-passive:ODF?identity" .
+
+nwiPassId:WDM a owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "WDM" ;
+    rdfs:comment "Wavelength Division Multiplexer." ;
+    rdfs:subClassOf yangId:passive-device-type ;
+    prov:wasDerivedFrom "nwi-passive:WDM?identity" .
+
+nwiPassId:access a owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "access" ;
+    rdfs:comment "Access cable." ;
+    rdfs:subClassOf yangId:cable-role ;
+    prov:wasDerivedFrom "nwi-passive:access?identity" .
+
+nwiPassId:access-cable ex:rolePriority 2 .
+
+nwiPassId:active-device a owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "active-device" ;
+    rdfs:comment "Active device, e.g. network element." ;
+    rdfs:subClassOf yangId:connected-device-type ;
+    prov:wasDerivedFrom "nwi-passive:active-device?identity" .
+
+nwiPassId:aggregation a owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "aggregation" ;
+    rdfs:comment "Aggregation cable." ;
+    rdfs:subClassOf yangId:cable-role ;
+    prov:wasDerivedFrom "nwi-passive:aggregation?identity" .
+
+nwiPassId:aggregation-cable ex:rolePriority 4 .
+
+nwiPassId:backbone a owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "backbone" ;
+    rdfs:comment "Backbone cable." ;
+    rdfs:subClassOf yangId:cable-role ;
+    prov:wasDerivedFrom "nwi-passive:backbone?identity" .
+
+nwiPassId:branch a owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "branch" ;
+    rdfs:comment "Branch cable." ;
+    rdfs:subClassOf yangId:cable-role ;
+    prov:wasDerivedFrom "nwi-passive:branch?identity" .
+
+nwiPassId:branch-cable ex:rolePriority 3 .
+
+nwiPassId:coaxial-cable a owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "coaxial-cable" ;
+    rdfs:comment "Coaxial cable." ;
+    rdfs:subClassOf yangId:electrical-cable ;
+    prov:wasDerivedFrom "nwi-passive:coaxial-cable?identity" .
+
+nwiPassId:distribution a owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "distribution" ;
+    rdfs:comment "Distribution cable." ;
+    rdfs:subClassOf yangId:cable-role ;
+    prov:wasDerivedFrom "nwi-passive:distribution?identity" .
+
+nwiPassId:distribution-cable ex:rolePriority 5 .
+
+nwiPassId:drop-cable ex:rolePriority 1 .
+
+nwiPassId:electrical-cable a owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "electrical-cable" ;
+    rdfs:comment "Electrical cable." ;
+    rdfs:subClassOf yangId:cable-type ;
+    prov:wasDerivedFrom "nwi-passive:electrical-cable?identity" .
+
+nwiPassId:input-port a owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "input-port" ;
+    rdfs:comment "Input port." ;
+    rdfs:subClassOf yangId:passive-port-type ;
+    prov:wasDerivedFrom "nwi-passive:input-port?identity" .
+
+nwiPassId:internal-cable ex:rolePriority 0 .
+
+nwiPassId:optical-fiber a owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "optical-fiber" ;
+    rdfs:comment "Fiber optic cable." ;
+    rdfs:subClassOf yangId:cable-type ;
+    prov:wasDerivedFrom "nwi-passive:optical-fiber?identity" .
+
+nwiPassId:other a owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "other" ;
+    rdfs:comment "Other type of fiber." ;
+    rdfs:subClassOf yangId:fiber-type ;
+    prov:wasDerivedFrom "nwi-passive:other?identity" .
+
+nwiPassId:output-port a owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "output-port" ;
+    rdfs:comment "Output port." ;
+    rdfs:subClassOf yangId:passive-port-type ;
+    prov:wasDerivedFrom "nwi-passive:output-port?identity" .
+
+nwiPassId:p2mp-port a owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "p2mp-port" ;
+    rdfs:comment "Input port." ;
+    rdfs:subClassOf yangId:passive-port-type ;
+    prov:wasDerivedFrom "nwi-passive:p2mp-port?identity" .
+
+nwiPassId:passive-device a owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "passive-device" ;
+    rdfs:comment "Passive/unmanaged device." ;
+    rdfs:subClassOf yangId:connected-device-type ;
+    prov:wasDerivedFrom "nwi-passive:passive-device?identity" .
+
+nwiPassId:service-port a owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "service-port" ;
+    rdfs:comment "Service port." ;
+    rdfs:subClassOf yangId:passive-port-type ;
+    prov:wasDerivedFrom "nwi-passive:service-port?identity" .
+
+nwiPassId:trunk a owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "trunk" ;
+    rdfs:comment "Trunk cable." ;
+    rdfs:subClassOf yangId:cable-role ;
+    prov:wasDerivedFrom "nwi-passive:trunk?identity" .
+
+nwiPassId:trunk-cable ex:rolePriority 6 .
+
+paeId:accuracy-estimated a owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "accuracy-estimated" ;
+    rdfs:comment """The power data is estimated, perhaps based on a model,
+history or calculation rather than a direct measurement.""" ;
+    rdfs:subClassOf yangId:data-source-accuracy ;
+    prov:wasDerivedFrom "eo:accuracy-estimated?identity" .
+
+paeId:accuracy-historic a owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "accuracy-historic" ;
+    rdfs:comment """The power data is based on an historic measurement data
+for this specific system and usage pattern.""" ;
+    rdfs:subClassOf yangId:accuracy-estimated ;
+    prov:wasDerivedFrom "eo:accuracy-historic?identity" .
+
+paeId:accuracy-learned a owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "accuracy-learned" ;
+    rdfs:comment """The power data is based on an machine learning
+model prediction.""" ;
+    rdfs:subClassOf yangId:accuracy-estimated ;
+    prov:wasDerivedFrom "eo:accuracy-learned?identity" .
+
+paeId:accuracy-measured a owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "accuracy-measured" ;
+    rdfs:comment """The power data is a direct, real-time measurement
+from a sensor.""" ;
+    rdfs:subClassOf yangId:data-source-accuracy ;
+    prov:wasDerivedFrom "eo:accuracy-measured?identity" .
+
+paeId:accuracy-measured-bronze a owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "accuracy-measured-bronze" ;
+    rdfs:comment """The power data is a direct, real-time measurement
+from a sensor with +/- 30% accuracy for typical values.""" ;
+    rdfs:subClassOf yangId:accuracy-measured ;
+    prov:wasDerivedFrom "eo:accuracy-measured-bronze?identity" .
+
+paeId:accuracy-measured-gold a owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "accuracy-measured-gold" ;
+    rdfs:comment """The power data is a direct, real-time measurement
+from a sensor with +/- 5% accuracy for typical values.""" ;
+    rdfs:subClassOf yangId:accuracy-measured ;
+    prov:wasDerivedFrom "eo:accuracy-measured-gold?identity" .
+
+paeId:accuracy-measured-ones a owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "accuracy-measured-ones" ;
+    rdfs:comment """The power data is a direct, real-time measurement
+from a sensor with all non-zero digits valid.""" ;
+    rdfs:subClassOf yangId:accuracy-measured ;
+    prov:wasDerivedFrom "eo:accuracy-measured-ones?identity" .
+
+paeId:accuracy-measured-red a owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "accuracy-measured-red" ;
+    rdfs:comment """The power data is a direct, real-time measurement
+from a sensor with +/- 2% accuracy for typical values.""" ;
+    rdfs:subClassOf yangId:accuracy-measured ;
+    prov:wasDerivedFrom "eo:accuracy-measured-red?identity" .
+
+paeId:accuracy-measured-silver a owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "accuracy-measured-silver" ;
+    rdfs:comment """The power data is a direct, real-time measurement
+from a sensor with +/- 10% accuracy for typical values.""" ;
+    rdfs:subClassOf yangId:accuracy-measured ;
+    prov:wasDerivedFrom "eo:accuracy-measured-silver?identity" .
+
+paeId:accuracy-static a owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "accuracy-static" ;
+    rdfs:comment """The power data is based on static data, such as
+manufacturer specifications, datasheet of typical power values
+or nameplate ratings, rather than real-time measurements.""" ;
+    rdfs:subClassOf yangId:accuracy-estimated ;
+    prov:wasDerivedFrom "eo:accuracy-static?identity" .
+
+paeId:accuracy-unavailable a owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "accuracy-unavailable" ;
+    rdfs:comment """A power data is not available for some reason, such
+as a sensor failure or a component being powered off.""" ;
+    rdfs:subClassOf yangId:accuracy-unknown ;
+    prov:wasDerivedFrom "eo:accuracy-unavailable?identity" .
+
+paeId:accuracy-unknown a owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "accuracy-unknown" ;
+    rdfs:comment "The accuracy of the power data is unknown." ;
+    rdfs:subClassOf yangId:data-source-accuracy ;
+    prov:wasDerivedFrom "eo:accuracy-unknown?identity" .
+
+paeId:multiplier-giga a owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "multiplier-giga" ;
+    rdfs:comment """Represents a multiplier of 10^9 (1,000,000,000) associated
+with the integer units used to measure the power or energy.""" ;
+    prov:wasDerivedFrom "eo:multiplier-giga?identity" .
+
+paeId:multiplier-kilo a owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "multiplier-kilo" ;
+    rdfs:comment """Represents a multiplier of 10^3 (1,000) associated with the
+integer units used to measure the power or energy.""" ;
+    prov:wasDerivedFrom "eo:multiplier-kilo?identity" .
+
+paeId:multiplier-mega a owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "multiplier-mega" ;
+    rdfs:comment """Represents a multiplier of 10^6 (1,000,000) associated with
+the integer units used to measure the power or energy.""" ;
+    prov:wasDerivedFrom "eo:multiplier-mega?identity" .
+
+paeId:multiplier-milli a owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "multiplier-milli" ;
+    rdfs:comment """Represents a multiplier of 10^-3 (0.001) associated with the
+integer units used to measure the power or energy.""" ;
+    prov:wasDerivedFrom "eo:multiplier-milli?identity" .
+
+paeId:multiplier-none a owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "multiplier-none" ;
+    rdfs:comment """Represents a multiplier of 10^0 (1) associated with
+the integer units used to measure the power or energy.""" ;
+    prov:wasDerivedFrom "eo:multiplier-none?identity" .
+
+paeId:power-state a owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "power-state" ;
+    rdfs:comment """Base identity for all possible power states. This identity
+serves as the root for a hierarchy of power states, allowing
+for extensibility while maintaining alignment with the IANA
+Power State Set Registry.""" ;
+    prov:wasDerivedFrom "eo:power-state?identity" .
+
+hwComp:hasSensorData a owl:ObjectProperty ;
+    rdfs:label "hasSensorData" ;
+    rdfs:comment "Containment relation" ;
+    rdfs:domain hw:component ;
+    rdfs:range hwComp:sensor-data .
+
+hwComp:hasState a owl:ObjectProperty ;
+    rdfs:label "hasState" ;
+    rdfs:comment "Containment relation" ;
+    rdfs:domain hw:component ;
+    rdfs:range hwComp:state .
+
+hw:hasComponent a owl:ObjectProperty ;
+    rdfs:label "hasComponent" ;
+    rdfs:comment "Containment relation" ;
+    rdfs:domain hwRoot:hardware ;
+    rdfs:range hw:component ;
+    prov:wasDerivedFrom "hw:hardware?container/hasComponent" .
+
+cabChild:hasAEnd a owl:ObjectProperty ;
+    rdfs:label "hasAEnd" ;
+    rdfs:comment "Containment relation" ;
+    rdfs:domain cab:child-cable ;
+    rdfs:range cabChild:a-end .
+
+cabChild:hasZEnd a owl:ObjectProperty ;
+    rdfs:label "hasZEnd" ;
+    rdfs:comment "Containment relation" ;
+    rdfs:domain cab:child-cable ;
+    rdfs:range cabChild:z-end .
+
+cab:hasAEnd a owl:ObjectProperty ;
+    rdfs:label "hasAEnd" ;
+    rdfs:comment "Containment relation" ;
+    rdfs:domain nwi:cable ;
+    rdfs:range cab:a-end .
+
+cab:hasChildCable a owl:ObjectProperty ;
+    rdfs:label "hasChildCable" ;
+    rdfs:comment "Containment relation" ;
+    rdfs:domain nwi:cable ;
+    rdfs:range cab:child-cable .
+
+cab:hasOpticalCable a owl:ObjectProperty ;
+    rdfs:label "hasOpticalCable" ;
+    rdfs:comment "Containment relation" ;
+    rdfs:domain nwi:cable ;
+    rdfs:range cab:optical-cable .
+
+cab:hasZEnd a owl:ObjectProperty ;
+    rdfs:label "hasZEnd" ;
+    rdfs:comment "Containment relation" ;
+    rdfs:domain nwi:cable ;
+    rdfs:range cab:z-end .
+
+nwi:hasCable a owl:ObjectProperty ;
+    rdfs:label "hasCable" ;
+    rdfs:comment "Containment relation" ;
+    rdfs:domain nwiRoot:network-inventory ;
+    rdfs:range nwi:cable ;
+    prov:wasDerivedFrom "nwi:network-inventory?container/hasCable" .
+
+nwi:hasLocations a owl:ObjectProperty ;
+    rdfs:label "hasLocations" ;
+    rdfs:comment "Containment relation" ;
+    rdfs:domain nwiRoot:network-inventory ;
+    rdfs:range nwi:locations ;
+    prov:wasDerivedFrom "nwi:network-inventory?container/hasLocations" .
+
+nwi:hasNetworkElements a owl:ObjectProperty ;
+    rdfs:label "hasNetworkElements" ;
+    rdfs:comment "Containment relation" ;
+    rdfs:domain nwiRoot:network-inventory ;
+    rdfs:range nwi:network-elements ;
+    prov:wasDerivedFrom "nwi:network-inventory?container/hasNetworkElements" .
+
+nwi:hasPassiveDevice a owl:ObjectProperty ;
+    rdfs:label "hasPassiveDevice" ;
+    rdfs:comment "Containment relation" ;
+    rdfs:domain nwiRoot:network-inventory ;
+    rdfs:range nwi:passive-device ;
+    prov:wasDerivedFrom "nwi:network-inventory?container/hasPassiveDevice" .
+
+nwiLocs:hasLocation a owl:ObjectProperty ;
+    rdfs:label "hasLocation" ;
+    rdfs:comment "Containment relation" ;
+    rdfs:domain nwi:locations ;
+    rdfs:range nwiLocs:location ;
+    prov:wasDerivedFrom "nwi:network-inventory?container/nil:locations?container/hasLocation" .
+
+nwiLocs:hasRacks a owl:ObjectProperty ;
+    rdfs:label "hasRacks" ;
+    rdfs:comment "Containment relation" ;
+    rdfs:domain nwi:locations ;
+    rdfs:range nwiLocs:racks ;
+    prov:wasDerivedFrom "nwi:network-inventory?container/nil:locations?container/hasRacks" .
+
+nwiGeo:hasReferenceFrame a owl:ObjectProperty ;
+    rdfs:label "hasReferenceFrame" ;
+    rdfs:comment "Containment relation" ;
+    rdfs:domain nwiLoc:geo-location ;
+    rdfs:range nwiGeo:reference-frame ;
+    prov:wasDerivedFrom "geo:geo-location?container/hasReferenceFrame" .
+
+nwiGeo:hasVelocity a owl:ObjectProperty ;
+    rdfs:label "hasVelocity" ;
+    rdfs:comment "Containment relation" ;
+    rdfs:domain nwiLoc:geo-location ;
+    rdfs:range nwiGeo:velocity ;
+    prov:wasDerivedFrom "geo:geo-location?container/hasVelocity" .
+
+nwiRefFrame:hasGeodeticSystem a owl:ObjectProperty ;
+    rdfs:label "hasGeodeticSystem" ;
+    rdfs:comment "Containment relation" ;
+    rdfs:domain nwiGeo:reference-frame ;
+    rdfs:range nwiRefFrame:geodetic-system ;
+    prov:wasDerivedFrom "geo:geo-location?container/geo:reference-frame?container/hasGeodeticSystem" .
+
+nwiLoc:hasGeoLocation a owl:ObjectProperty ;
+    rdfs:label "hasGeoLocation" ;
+    rdfs:comment "Containment relation" ;
+    rdfs:domain nwiLocs:location ;
+    rdfs:range nwiLoc:geo-location .
+
+nwiLoc:hasPhysicalAddress a owl:ObjectProperty ;
+    rdfs:label "hasPhysicalAddress" ;
+    rdfs:comment "Containment relation" ;
+    rdfs:domain nwiLocs:location ;
+    rdfs:range nwiLoc:physical-address .
+
+nwiRacks:hasRack a owl:ObjectProperty ;
+    rdfs:label "hasRack" ;
+    rdfs:comment "Containment relation" ;
+    rdfs:domain nwiLocs:racks ;
+    rdfs:range nwiRacks:rack ;
+    prov:wasDerivedFrom "nwi:network-inventory?container/nil:locations?container/nil:racks?container/hasRack" .
+
+nwiRack:hasContainedChassis a owl:ObjectProperty ;
+    rdfs:label "hasContainedChassis" ;
+    rdfs:comment "Containment relation" ;
+    rdfs:domain nwiRacks:rack ;
+    rdfs:range nwiRack:contained-chassis .
+
+nwiRack:hasRackLocation a owl:ObjectProperty ;
+    rdfs:label "hasRackLocation" ;
+    rdfs:comment "Containment relation" ;
+    rdfs:domain nwiRacks:rack ;
+    rdfs:range nwiRack:rack-location .
+
+nwiNEs:hasNetworkElement a owl:ObjectProperty ;
+    rdfs:label "hasNetworkElement" ;
+    rdfs:comment "Containment relation" ;
+    rdfs:domain nwi:network-elements ;
+    rdfs:range nwiNEs:network-element ;
+    prov:wasDerivedFrom "nwi:network-inventory?container/nwi:network-elements?container/hasNetworkElement" .
+
+nwiComp:hasSoftwareRev a owl:ObjectProperty ;
+    rdfs:label "hasSoftwareRev" ;
+    rdfs:comment "Containment relation" ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component> ;
+    rdfs:range nwiComp:software-rev .
+
+nwiCompSwRev:hasPatch a owl:ObjectProperty ;
+    rdfs:label "hasPatch" ;
+    rdfs:comment "Containment relation" ;
+    rdfs:domain nwiComp:software-rev ;
+    rdfs:range nwiCompSwRev:patch .
+
+<http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/hasComponent> a owl:ObjectProperty ;
+    rdfs:label "hasComponent" ;
+    rdfs:comment "Containment relation" ;
+    rdfs:domain nwiNE:components ;
+    rdfs:range <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component> ;
+    prov:wasDerivedFrom "nwi:network-inventory?container/nwi:network-elements?container/nwi:network-element?list/nwi:components?container/hasComponent" .
+
+nwiNE:hasComponents a owl:ObjectProperty ;
+    rdfs:label "hasComponents" ;
+    rdfs:comment "Containment relation" ;
+    rdfs:domain nwiNEs:network-element ;
+    rdfs:range nwiNE:components .
+
+nwiNE:hasLocations a owl:ObjectProperty ;
+    rdfs:label "hasLocations" ;
+    rdfs:comment "Containment relation" ;
+    rdfs:domain nwiNEs:network-element ;
+    rdfs:range nwiNE:locations .
+
+nwiNE:hasSoftwareRev a owl:ObjectProperty ;
+    rdfs:label "hasSoftwareRev" ;
+    rdfs:comment "Containment relation" ;
+    rdfs:domain nwiNEs:network-element ;
+    rdfs:range nwiNE:software-rev .
+
+nwiSwRev:hasPatch a owl:ObjectProperty ;
+    rdfs:label "hasPatch" ;
+    rdfs:comment "Containment relation" ;
+    rdfs:domain nwiNE:software-rev ;
+    rdfs:range nwiSwRev:patch .
+
+pdev:hasPassivePort a owl:ObjectProperty ;
+    rdfs:label "hasPassivePort" ;
+    rdfs:comment "Containment relation" ;
+    rdfs:domain nwi:passive-device ;
+    rdfs:range pdev:passive-port .
+
+netNetworks:hasNetwork a owl:ObjectProperty ;
+    rdfs:label "hasNetwork" ;
+    rdfs:comment "Containment relation" ;
+    rdfs:domain netRoot:networks ;
+    rdfs:range netNetworks:network ;
+    prov:wasDerivedFrom "nw:networks?container/hasNetwork" .
+
+net:hasLink a owl:ObjectProperty ;
+    rdfs:label "hasLink" ;
+    rdfs:comment "Containment relation" ;
+    rdfs:domain netNetworks:network ;
+    rdfs:range net:link .
+
+net:hasNetworkTypes a owl:ObjectProperty ;
+    rdfs:label "hasNetworkTypes" ;
+    rdfs:comment "Containment relation" ;
+    rdfs:domain netNetworks:network ;
+    rdfs:range net:network-types .
+
+net:hasNode a owl:ObjectProperty ;
+    rdfs:label "hasNode" ;
+    rdfs:comment "Containment relation" ;
+    rdfs:domain netNetworks:network ;
+    rdfs:range net:node .
+
+net:hasSupportingNetwork a owl:ObjectProperty ;
+    rdfs:label "hasSupportingNetwork" ;
+    rdfs:comment "Containment relation" ;
+    rdfs:domain netNetworks:network ;
+    rdfs:range net:supporting-network .
+
+netLink:hasDestination a owl:ObjectProperty ;
+    rdfs:label "hasDestination" ;
+    rdfs:comment "Containment relation" ;
+    rdfs:domain net:link ;
+    rdfs:range netLink:destination ;
+    prov:wasDerivedFrom "nt:link?list/hasDestination" .
+
+netLink:hasInventoryMappingAttributes a owl:ObjectProperty ;
+    rdfs:label "hasInventoryMappingAttributes" ;
+    rdfs:comment "Containment relation" ;
+    rdfs:domain net:link ;
+    rdfs:range netLink:inventory-mapping-attributes ;
+    prov:wasDerivedFrom "nt:link?list/hasInventoryMappingAttributes" .
+
+netLink:hasSource a owl:ObjectProperty ;
+    rdfs:label "hasSource" ;
+    rdfs:comment "Containment relation" ;
+    rdfs:domain net:link ;
+    rdfs:range netLink:source ;
+    prov:wasDerivedFrom "nt:link?list/hasSource" .
+
+netLink:hasSupportingLink a owl:ObjectProperty ;
+    rdfs:label "hasSupportingLink" ;
+    rdfs:comment "Containment relation" ;
+    rdfs:domain net:link ;
+    rdfs:range netLink:supporting-link ;
+    prov:wasDerivedFrom "nt:link?list/hasSupportingLink" .
+
+netNode:hasInventoryMappingAttributes a owl:ObjectProperty ;
+    rdfs:label "hasInventoryMappingAttributes" ;
+    rdfs:comment "Containment relation" ;
+    rdfs:domain net:node ;
+    rdfs:range netNode:inventory-mapping-attributes .
+
+netNode:hasSupportingNode a owl:ObjectProperty ;
+    rdfs:label "hasSupportingNode" ;
+    rdfs:comment "Containment relation" ;
+    rdfs:domain net:node ;
+    rdfs:range netNode:supporting-node .
+
+netNode:hasTerminationPoint a owl:ObjectProperty ;
+    rdfs:label "hasTerminationPoint" ;
+    rdfs:comment "Containment relation" ;
+    rdfs:domain net:node ;
+    rdfs:range netNode:termination-point .
+
+netTP:hasInventoryMappingAttributes a owl:ObjectProperty ;
+    rdfs:label "hasInventoryMappingAttributes" ;
+    rdfs:comment "Containment relation" ;
+    rdfs:domain netNode:termination-point ;
+    rdfs:range netTP:inventory-mapping-attributes ;
+    prov:wasDerivedFrom "nt:termination-point?list/hasInventoryMappingAttributes" .
+
+netTP:hasSupportingTerminationPoint a owl:ObjectProperty ;
+    rdfs:label "hasSupportingTerminationPoint" ;
+    rdfs:comment "Containment relation" ;
+    rdfs:domain netNode:termination-point ;
+    rdfs:range netTP:supporting-termination-point ;
+    prov:wasDerivedFrom "nt:termination-point?list/hasSupportingTerminationPoint" .
+
+netInvMap:hasPortBreakout a owl:ObjectProperty ;
+    rdfs:label "hasPortBreakout" ;
+    rdfs:comment "Containment relation" ;
+    rdfs:domain netTP:inventory-mapping-attributes ;
+    rdfs:range netInvMap:port-breakout ;
+    prov:wasDerivedFrom "nwit:inventory-mapping-attributes?container/hasPortBreakout" .
+
+netPortBrk:hasBreakoutChannel a owl:ObjectProperty ;
+    rdfs:label "hasBreakoutChannel" ;
+    rdfs:comment "Containment relation" ;
+    rdfs:domain netInvMap:port-breakout ;
+    rdfs:range netPortBrk:breakout-channel ;
+    prov:wasDerivedFrom "nwit:inventory-mapping-attributes?container/nwit:port-breakout?container/hasBreakoutChannel" .
+
+pae:hasPowerEntry a owl:ObjectProperty ;
+    rdfs:label "hasPowerEntry" ;
+    rdfs:comment "Containment relation" ;
+    rdfs:domain paeRoot:energy-objects ;
+    rdfs:range pae:power-entry ;
+    prov:wasDerivedFrom "eo:energy-objects?container/hasPowerEntry" .
+
+ex:index a owl:DatatypeProperty ;
+    rdfs:label "index" ;
+    rdfs:comment """An index number used to identify the concatenation
+order of the child cables.""" ;
+    rdfs:domain cab:child-cable ;
+    rdfs:range xsd:unsignedByte ;
+    prov:wasDerivedFrom "nwi-passive:child-cable?list/nwi-passive:index?leaf" .
+
+ex:is-fru a owl:DatatypeProperty ;
+    rdfs:label "is-fru" ;
+    ex:isStateData true ;
+    rdfs:comment """This node indicates whether or not this component is
+considered a 'field-replaceable unit' by the vendor.
+If this node contains the value 'true', then this
+component identifies a field-replaceable unit.
+For all components that are permanently contained
+within a field-replaceable unit, the value 'false'
+should be returned for this node.""",
+        """This node indicates whether or not this component is
+considered a 'field-replaceable unit' by the vendor.  If
+this node contains the value 'true', then this component
+identifies a field-replaceable unit.  For all components
+that are permanently contained within a field-replaceable
+unit, the value 'false' should be returned for this
+node.""" ;
+    rdfs:domain hw:component,
+        <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component> ;
+    rdfs:range xsd:boolean ;
+    prov:wasDerivedFrom "hw:hardware?container/hw:component?list/hw:is-fru?leaf",
+        "nwi:is-fru?leaf" .
+
+ex:is-main a owl:DatatypeProperty ;
+    rdfs:label "is-main" ;
+    rdfs:comment """This node indicates whether the chassis is taking or
+not the 'main' role.
+
+This node is applicable only to scenarios where
+there are chassis components which can take the
+'main' role (e.g., multi-chassis network elements),
+otherwise it is omitted.""" ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component> ;
+    rdfs:range xsd:boolean ;
+    prov:wasDerivedFrom "nwi:network-inventory?container/nwi:network-elements?container/nwi:network-element?list/nwi:components?container/nwi:component?list/nwi:is-main?leaf" .
+
+ex:last-change a owl:DatatypeProperty ;
+    rdfs:label "last-change" ;
+    ex:isStateData true ;
+    rdfs:comment """The time the '/hardware/component' list changed in the
+operational state.""" ;
+    rdfs:domain hwRoot:hardware ;
+    rdfs:range xsd:dateTime ;
+    prov:wasDerivedFrom "hw:hardware?container/hw:last-change?leaf" .
+
+ex:latitude a owl:DatatypeProperty ;
+    rdfs:label "latitude" ;
+    ex:unit "decimal degrees" ;
+    rdfs:comment """The latitude value on the astronomical body.  The
+definition and precision of this measurement is
+indicated by the reference-frame.""" ;
+    rdfs:domain nwiLoc:geo-location ;
+    rdfs:range xsd:decimal ;
+    prov:wasDerivedFrom "geo:geo-location?container/geo:latitude?leaf" .
+
+ex:length a owl:DatatypeProperty ;
+    rdfs:label "length" ;
+    ex:unit "meter" ;
+    rdfs:comment "Length of the cable in meter." ;
+    rdfs:domain nwi:cable,
+        cab:child-cable ;
+    rdfs:range xsd:unsignedInt ;
+    prov:wasDerivedFrom "nwi-passive:length?leaf" .
+
+ex:link-id a owl:DatatypeProperty ;
+    rdfs:label "link-id" ;
+    rdfs:comment """The identifier of a link in the topology.
+A link is specific to a topology to which it belongs.""" ;
+    rdfs:domain net:link ;
+    rdfs:range xsd:anyURI ;
+    prov:wasDerivedFrom "nt:link?list/nt:link-id?leaf" .
+
+ex:link-ref a owl:ObjectProperty ;
+    rdfs:label "link-ref" ;
+    ex:xpathPath "/nw:networks/nw:network[nw:network-id=current()/../network-ref]/link/link-id" ;
+    rdfs:comment """This leaf identifies a link that is a part
+of this link's underlay.  Reference loops in which
+a link identifies itself as its underlay, either
+directly or transitively, are not allowed.""" ;
+    rdfs:domain netLink:supporting-link ;
+    rdfs:range net:link ;
+    prov:wasDerivedFrom "nt:link?list/nt:supporting-link?list/nt:link-ref?leaf" .
+
+ex:link-type a owl:DatatypeProperty ;
+    rdfs:label "link-type" ;
+    rdfs:comment """Classification of the link media type at the topology
+layer. Example values include 'copper', 'fiber',
+'microwave', or 'wifi'.""" ;
+    rdfs:domain netLink:inventory-mapping-attributes ;
+    rdfs:range xsd:string ;
+    prov:wasDerivedFrom "nwit:inventory-mapping-attributes?container/nwit:link-type?leaf" .
+
+ex:location a owl:ObjectProperty ;
+    rdfs:label "location" ;
+    ex:xpathPath "/nwi:network-inventory/nil:locations/nil:location/nil:id" ;
+    rdfs:comment "The reference of the location." ;
+    rdfs:domain nwiNE:locations ;
+    rdfs:range nwiLocs:location ;
+    prov:wasDerivedFrom "nil:locations?container/nil:location?leaf-list" .
+
+ex:location-ref a owl:ObjectProperty ;
+    rdfs:label "location-ref" ;
+    ex:xpathPath "/nwi:network-inventory/nil:locations/nil:location/nil:id" ;
+    rdfs:comment "Name of location where this rack is located.",
+        "Referenced location for the passive device." ;
+    rdfs:domain nwiRack:rack-location,
+        nwi:passive-device ;
+    rdfs:range nwiLocs:location ;
+    prov:wasDerivedFrom "nwi:network-inventory?container/nil:locations?container/nil:racks?container/nil:rack?list/nil:rack-location?container/nil:location-ref?leaf",
+        "nwi:network-inventory?container/nwi-passive:passive-device?list/nwi-passive:location-ref?leaf" .
+
+ex:longitude a owl:DatatypeProperty ;
+    rdfs:label "longitude" ;
+    ex:unit "decimal degrees" ;
+    rdfs:comment """The longitude value on the astronomical body.  The
+definition and precision of this measurement is
+indicated by the reference-frame.""" ;
+    rdfs:domain nwiLoc:geo-location ;
+    rdfs:range xsd:decimal ;
+    prov:wasDerivedFrom "geo:geo-location?container/geo:longitude?leaf" .
+
+ex:max-allocated-power a owl:DatatypeProperty ;
+    rdfs:label "max-allocated-power" ;
+    ex:unit "watts" ;
+    rdfs:comment "The maximum allocated power to the rack." ;
+    rdfs:domain nwiRacks:rack ;
+    rdfs:range xsd:unsignedShort ;
+    prov:wasDerivedFrom "nwi:network-inventory?container/nil:locations?container/nil:racks?container/nil:rack?list/nil:max-allocated-power?leaf" .
+
+ex:max-voltage a owl:DatatypeProperty ;
+    rdfs:label "max-voltage" ;
+    ex:unit "volt" ;
+    rdfs:comment "The maximum voltage could be supported by the rack." ;
+    rdfs:domain nwiRacks:rack ;
+    rdfs:range xsd:unsignedShort ;
+    prov:wasDerivedFrom "nwi:network-inventory?container/nil:locations?container/nil:racks?container/nil:rack?list/nil:max-voltage?leaf" .
+
+ex:mfg-date a owl:DatatypeProperty ;
+    rdfs:label "mfg-date" ;
+    ex:isStateData true ;
+    rdfs:comment "The date of manufacturing of the component.",
+        "The date of manufacturing of the managed component." ;
+    rdfs:domain hw:component,
+        <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component> ;
+    rdfs:range xsd:dateTime ;
+    prov:wasDerivedFrom "hw:hardware?container/hw:component?list/hw:mfg-date?leaf",
+        "nwi:mfg-date?leaf" .
+
+ex:mfg-name a owl:DatatypeProperty ;
+    rdfs:label "mfg-name" ;
+    ex:isStateData true ;
+    rdfs:comment """The name of the manufacturer of this entity
+(e.g., component).""",
+        """The name of the manufacturer of this physical component.
+The preferred value is the manufacturer name string
+actually printed on the component itself (if present).
+
+Note that comparisons between instances of the
+'model-name', 'firmware-rev', 'software-rev', and
+'serial-num' nodes are only meaningful amongst components
+with the same value of 'mfg-name'.
+
+If the manufacturer name string associated with the
+physical component is unknown to the server, then this
+node is not instantiated.""" ;
+    rdfs:domain hw:component,
+        nwiNEs:network-element,
+        <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component> ;
+    rdfs:range xsd:string ;
+    prov:wasDerivedFrom "hw:hardware?container/hw:component?list/hw:mfg-name?leaf",
+        "nwi:mfg-name?leaf" .
+
+ex:model-name a owl:DatatypeProperty ;
+    rdfs:label "model-name" ;
+    ex:isStateData true ;
+    rdfs:comment """The vendor-specific model name identifier string
+associated with this physical component.  The preferred
+value is the customer-visible part number, which may be
+printed on the component itself.
+
+If the model name string associated with the physical
+component is unknown to the server, then this node is not
+instantiated.""" ;
+    rdfs:domain hw:component ;
+    rdfs:range xsd:string ;
+    prov:wasDerivedFrom "hw:hardware?container/hw:component?list/hw:model-name?leaf" .
+
+ex:name a owl:DatatypeProperty ;
+    rdfs:label "name" ;
+    rdfs:comment """The name assigned to this component.
+
+This name is not required to be the same as
+entPhysicalName.""",
+        """The name of the  entity (e.g., component), as specified by
+a network operator, that provides a non-volatile 'handle'
+for the entity and that can be modified anytime during the
+entity lifetime.
+
+If no value is discovered, the server MAY set the value of
+this node to a locally unique value in the operational
+state.""",
+        "The vendor-specific name of the software module." ;
+    rdfs:domain hw:component,
+        nwi:cable,
+        nwiLocs:location,
+        nwiRacks:rack,
+        nwiNEs:network-element,
+        <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component>,
+        nwiComp:software-rev,
+        nwiNE:software-rev,
+        nwi:passive-device,
+        pdev:passive-port ;
+    rdfs:range xsd:string ;
+    prov:wasDerivedFrom "hw:hardware?container/hw:component?list/hw:name?leaf",
+        "nwi:name?leaf",
+        "nwi:software-rev?list/nwi:name?leaf" .
+
+ex:ne-id a owl:DatatypeProperty ;
+    rdfs:label "ne-id" ;
+    rdfs:comment """An identifier that uniquely identifies the NE in
+a network.""" ;
+    rdfs:domain nwiNEs:network-element ;
+    rdfs:range xsd:string ;
+    prov:wasDerivedFrom "nwi:network-inventory?container/nwi:network-elements?container/nwi:network-element?list/nwi:ne-id?leaf" .
+
+ex:ne-ref a owl:DatatypeProperty,
+        owl:ObjectProperty ;
+    rdfs:label "ne-ref" ;
+    ex:xpathPath "/nwi:network-inventory/nwi:network-elements/nwi:network-element/nwi:ne-id" ;
+    rdfs:comment """Reference to the NE in the inventory that corresponds to
+this topology node.
+
+This reference establishes a 1:1 mapping between the
+logical node and its physical NE.""",
+        "Referenced Network Element (NE).",
+        """The reference to the Network Element which contains the
+port to be referenced.""",
+        """The reference to the network element containing
+the chassis component.""" ;
+    rdfs:domain cab:a-end,
+        cabChild:a-end,
+        cabChild:z-end,
+        cab:z-end,
+        nwiRack:contained-chassis,
+        netNode:inventory-mapping-attributes,
+        netTP:inventory-mapping-attributes ;
+    rdfs:range nwiNEs:network-element,
+        xsd:string ;
+    prov:wasDerivedFrom "nwi-passive:a-end?container/nwi-passive:ne-ref?leaf",
+        "nwi-passive:z-end?container/nwi-passive:ne-ref?leaf",
+        "nwi:network-inventory?container/nil:locations?container/nil:racks?container/nil:rack?list/nil:contained-chassis?list/nil:ne-ref?leaf",
+        "nwit:inventory-mapping-attributes?container/nwi:ne-ref?leaf",
+        "nwit:inventory-mapping-attributes?container/nwit:ne-ref?leaf" .
+
+ex:ne-type a owl:ObjectProperty ;
+    rdfs:label "ne-type" ;
+    rdfs:comment "The network element type." ;
+    rdfs:domain nwiNEs:network-element ;
+    rdfs:range nwiInvId:ne-type ;
+    prov:wasDerivedFrom "nwi:network-inventory?container/nwi:network-elements?container/nwi:network-element?list/nwi:ne-type?leaf" .
+
+ex:network-id a owl:DatatypeProperty ;
+    rdfs:label "network-id" ;
+    rdfs:comment "Identifies a network." ;
+    rdfs:domain netNetworks:network ;
+    rdfs:range xsd:anyURI ;
+    prov:wasDerivedFrom "nw:networks?container/nw:network?list/nw:network-id?leaf" .
+
+ex:network-ref a owl:ObjectProperty ;
+    rdfs:label "network-ref" ;
+    ex:xpathPath "../../../nw:supporting-network/nw:network-ref",
+        "../../../nw:supporting-node/nw:network-ref",
+        "/nw:networks/nw:network/nw:network-id" ;
+    rdfs:comment """References the underlay network of which the
+underlay node is a part.""",
+        "References the underlay network.",
+        """This leaf identifies in which topology the
+supporting termination point is present.""",
+        """This leaf identifies in which underlay topology
+the supporting link is present.""" ;
+    rdfs:domain netLink:supporting-link,
+        netNode:supporting-node,
+        netTP:supporting-termination-point,
+        net:supporting-network ;
+    rdfs:range netNetworks:network,
+        netNode:supporting-node,
+        net:supporting-network ;
+    prov:wasDerivedFrom "nt:link?list/nt:supporting-link?list/nt:network-ref?leaf",
+        "nt:termination-point?list/nt:supporting-termination-point?list/nt:network-ref?leaf",
+        "nw:networks?container/nw:network?list/nw:node?list/nw:supporting-node?list/nw:network-ref?leaf",
+        "nw:networks?container/nw:network?list/nw:supporting-network?list/nw:network-ref?leaf" .
+
+ex:node-id a owl:DatatypeProperty ;
+    rdfs:label "node-id" ;
+    rdfs:comment """Uniquely identifies a node within the containing
+network.""" ;
+    rdfs:domain net:node ;
+    rdfs:range xsd:anyURI ;
+    prov:wasDerivedFrom "nw:networks?container/nw:network?list/nw:node?list/nw:node-id?leaf" .
+
+ex:node-ref a owl:ObjectProperty ;
+    rdfs:label "node-ref" ;
+    ex:xpathPath "../../../nw:supporting-node/nw:node-ref",
+        "/nw:networks/nw:network/nw:node/nw:node-id" ;
+    rdfs:comment "References the underlay node itself.",
+        """This leaf identifies in which node the supporting
+termination point is present.""" ;
+    rdfs:domain netNode:supporting-node,
+        netTP:supporting-termination-point ;
+    rdfs:range net:node,
+        netNode:supporting-node ;
+    prov:wasDerivedFrom "nt:termination-point?list/nt:supporting-termination-point?list/nt:node-ref?leaf",
+        "nw:networks?container/nw:network?list/nw:node?list/nw:supporting-node?list/nw:node-ref?leaf" .
+
+hwNotif:hardware-state-change a owl:Class ;
+    rdfs:label "hardware-state-change" .
+
+hwNotif:hardware-state-oper-disabled a owl:Class ;
+    rdfs:label "hardware-state-oper-disabled" .
+
+hwNotif:hardware-state-oper-enabled a owl:Class ;
+    rdfs:label "hardware-state-oper-enabled" .
+
+ex:object-id a owl:DatatypeProperty ;
+    rdfs:label "object-id" ;
+    rdfs:comment """An identifier that uniquely identifies the energy object
+in a device.""" ;
+    rdfs:domain pae:power-entry ;
+    rdfs:range xsd:string ;
+    prov:wasDerivedFrom "eo:energy-objects?container/eo:power-entry?list/eo:object-id?leaf" .
+
+ex:oper-state a owl:ObjectProperty ;
+    rdfs:label "oper-state" ;
+    ex:isStateData true ;
+    rdfs:comment """The operational state for this component.
+
+Note that this node does not follow the administrative
+state.  An administrative state of 'down' does not
+predict an operational state of 'disabled'.
+
+Note that some implementations may not be able to
+accurately report oper-state while the admin-state node
+has a value other than 'unlocked'.  In these cases, this
+node MUST have a value of 'unknown'.""" ;
+    rdfs:domain hwComp:state ;
+    rdfs:range hwTypes:oper-state ;
+    prov:wasDerivedFrom "hw:hardware?container/hw:component?list/hw:state?container/hw:oper-state?leaf" .
+
+ex:oper-status a owl:ObjectProperty ;
+    rdfs:label "oper-status" ;
+    rdfs:comment "The operational status of the sensor." ;
+    rdfs:domain hwComp:sensor-data ;
+    rdfs:range hwTypes:sensor-status ;
+    prov:wasDerivedFrom "hw:hardware?container/hw:component?list/hw:sensor-data?container/hw:oper-status?leaf" .
+
+ex:parent a owl:ObjectProperty ;
+    rdfs:label "parent" ;
+    ex:xpathPath "../../component/component-id",
+        "../../component/name",
+        "../../location/id" ;
+    rdfs:comment """The identifiers of all the components that
+physically contain this component.
+
+If this list is empty, this component is not
+contained in any other component but it is contained
+in the network-element.""",
+        """The name of the component that physically contains this
+component.
+
+If this leaf is not instantiated, it indicates that this
+component is not contained in any other component.
+
+In the event that a physical component is contained by
+more than one physical component (e.g., double-wide
+modules), this node contains the name of one of these
+components.  An implementation MUST use the same name
+every time this node is instantiated.""",
+        """The name of the location that physically contains this
+location.""" ;
+    rdfs:domain hw:component,
+        nwiLocs:location,
+        <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component> ;
+    rdfs:range hw:component,
+        nwiLocs:location,
+        <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component> ;
+    prov:wasDerivedFrom "hw:hardware?container/hw:component?list/hw:parent?leaf",
+        "nwi:network-inventory?container/nil:locations?container/nil:location?list/nil:parent?leaf",
+        "nwi:network-inventory?container/nwi:network-elements?container/nwi:network-element?list/nwi:components?container/nwi:component?list/nwi:parent?leaf-list" .
+
+ex:parent-rel-pos a owl:DatatypeProperty ;
+    rdfs:label "parent-rel-pos" ;
+    rdfs:comment """An indication of the relative position of this child
+component among all its sibling components.  Sibling
+components are defined as components that:
+
+  o share the same value of the 'parent' node and
+
+  o share a common base identity for the 'class' node.
+
+Note that the last rule gives implementations flexibility
+in how components are numbered.  For example, some
+implementations might have a single number series for all
+components derived from 'ianahw:port', while some others
+might have different number series for different
+components with identities derived from 'ianahw:port' (for
+example, one for registered jack 45 (RJ45) and one for
+small form-factor pluggable (SFP)).""",
+        """The relative position with respect to the parent
+component among all the sibling components.""" ;
+    rdfs:domain hw:component,
+        <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component> ;
+    rdfs:range xsd:int ;
+    prov:wasDerivedFrom "hw:hardware?container/hw:component?list/hw:parent-rel-pos?leaf",
+        "nwi:network-inventory?container/nwi:network-elements?container/nwi:network-element?list/nwi:components?container/nwi:component?list/nwi:parent-rel-pos?leaf" .
+
+ex:part-number a owl:DatatypeProperty ;
+    rdfs:label "part-number" ;
+    rdfs:comment """The vendor-specific part number of the component
+type. It is expected that vendors assign unique part
+numbers to different component types within the
+scope of the vendor.""" ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component> ;
+    rdfs:range xsd:string ;
+    prov:wasDerivedFrom "nwi:part-number?leaf" .
+
+ex:physical-index a owl:DatatypeProperty ;
+    rdfs:label "physical-index" ;
+    ex:isStateData true ;
+    rdfs:comment """The entPhysicalIndex for the entPhysicalEntry represented
+by this list entry.""" ;
+    rdfs:domain hw:component ;
+    rdfs:range xsd:int ;
+    prov:wasDerivedFrom "hw:hardware?container/hw:component?list/hw:physical-index?leaf" .
+
+ex:port-ref a owl:ObjectProperty ;
+    rdfs:label "port-ref" ;
+    ex:xpathPath "/nwi:network-inventory/nwi:network-elements/nwi:network-element[nwi:ne-id=current()/../ne-ref]/nwi:components/nwi:component/nwi:component-id" ;
+    rdfs:comment "The reference to the port component." ;
+    rdfs:domain netTP:inventory-mapping-attributes ;
+    rdfs:range <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component> ;
+    prov:wasDerivedFrom "nwit:inventory-mapping-attributes?container/nwi:port-ref?leaf" .
+
+ex:port-type a owl:ObjectProperty ;
+    rdfs:label "port-type" ;
+    rdfs:comment "Type of passive port." ;
+    rdfs:domain pdev:passive-port ;
+    rdfs:range nwiPassId:passive-port-type ;
+    prov:wasDerivedFrom "nwi-passive:passive-port?list/nwi-passive:port-type?leaf" .
+
+ex:postal-code a owl:DatatypeProperty ;
+    rdfs:label "postal-code" ;
+    rdfs:comment "Specifies a postal code." ;
+    rdfs:domain nwiLoc:physical-address ;
+    rdfs:range xsd:string ;
+    prov:wasDerivedFrom "nil:physical-address?container/nil:postal-code?leaf" .
+
+ex:product-name a owl:DatatypeProperty ;
+    rdfs:label "product-name" ;
+    rdfs:comment """The vendor-specific and human-interpretable string
+describing the entity (e.g., component) type. It is expected
+that vendors assign unique product names to different entity
+(e.g., component) types within the scope of the vendor.""" ;
+    rdfs:domain nwiNEs:network-element,
+        <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component> ;
+    rdfs:range xsd:string ;
+    prov:wasDerivedFrom "nwi:product-name?leaf" .
+
+ex:product-rev a owl:DatatypeProperty ;
+    rdfs:label "product-rev" ;
+    rdfs:comment """The vendor-specific product revision string for the
+network-element.""" ;
+    rdfs:domain nwiNEs:network-element ;
+    rdfs:range xsd:string ;
+    prov:wasDerivedFrom "nwi:network-inventory?container/nwi:network-elements?container/nwi:network-element?list/nwi:product-rev?leaf" .
+
+ex:rack a owl:ObjectProperty ;
+    rdfs:label "rack" ;
+    ex:xpathPath "/nwi:network-inventory/nil:locations/nil:racks/nil:rack/nil:id" ;
+    rdfs:comment "The reference to the rack." ;
+    rdfs:domain nwiNE:locations ;
+    rdfs:range nwiRacks:rack ;
+    prov:wasDerivedFrom "nil:locations?container/nil:rack?leaf" .
+
+ex:rank a owl:DatatypeProperty ;
+    rdfs:label "rank" ;
+    rdfs:range xsd:integer .
+
+ex:relative-position a owl:DatatypeProperty ;
+    rdfs:label "relative-position" ;
+    rdfs:comment """A relative position of chassis within
+the rack""" ;
+    rdfs:domain nwiRack:contained-chassis ;
+    rdfs:range xsd:unsignedByte ;
+    prov:wasDerivedFrom "nwi:network-inventory?container/nil:locations?container/nil:racks?container/nil:rack?list/nil:contained-chassis?list/nil:relative-position?leaf" .
+
+ex:revision a owl:DatatypeProperty ;
+    rdfs:label "revision" ;
+    rdfs:comment """The vendor-specific revision string of the software
+module when not implicitly defined as part of the name of
+the software module.""",
+        """The vendor-specific revision string of the software
+patch when not implicitly defined as part of the name or
+revision of the software module.""" ;
+    rdfs:domain nwiComp:software-rev,
+        nwiCompSwRev:patch,
+        nwiNE:software-rev,
+        nwiSwRev:patch ;
+    rdfs:range xsd:string ;
+    prov:wasDerivedFrom "nwi:software-rev?list/nwi:patch?list/nwi:revision?leaf",
+        "nwi:software-rev?list/nwi:revision?leaf" .
+
+ex:rolePriority a owl:DatatypeProperty ;
+    rdfs:label "role priority" ;
+    rdfs:comment "Numeric priority for cable role used in upstream-ascending traversal filter. Matches CABLE_RANK_MAP: internal=0, drop=1, access=2, branch=3, aggregation=4, distribution=5, trunk=6." ;
+    rdfs:range xsd:integer .
+
+ex:row-number a owl:DatatypeProperty ;
+    rdfs:label "row-number" ;
+    rdfs:comment """Identifies the row within the equipment room where
+the rack is located.""" ;
+    rdfs:domain nwiRack:rack-location ;
+    rdfs:range xsd:unsignedInt ;
+    prov:wasDerivedFrom "nwi:network-inventory?container/nil:locations?container/nil:racks?container/nil:rack?list/nil:rack-location?container/nil:row-number?leaf" .
+
+ex:serial-num a owl:DatatypeProperty ;
+    rdfs:label "serial-num" ;
+    ex:isStateData true ;
+    rdfs:comment """The vendor-specific serial number string for the
+component.  The preferred value is the serial number
+string actually printed on the component itself (if
+present).""" ;
+    rdfs:domain hw:component ;
+    rdfs:range xsd:string ;
+    prov:wasDerivedFrom "hw:hardware?container/hw:component?list/hw:serial-num?leaf" .
+
+ex:serial-number a owl:DatatypeProperty ;
+    rdfs:label "serial-number" ;
+    rdfs:comment """The vendor-specific serial number of the component instance.
+
+It is expected that vendors assign unique serial numbers to
+different component instances within the scope of the
+'part-number'.""" ;
+    rdfs:domain <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component> ;
+    rdfs:range xsd:string ;
+    prov:wasDerivedFrom "nwi:serial-number?leaf" .
+
+ex:software-rev a owl:DatatypeProperty ;
+    rdfs:label "software-rev" ;
+    ex:isStateData true ;
+    rdfs:comment """The vendor-specific software revision string for the
+component.""" ;
+    rdfs:domain hw:component ;
+    rdfs:range xsd:string ;
+    prov:wasDerivedFrom "hw:hardware?container/hw:component?list/hw:software-rev?leaf" .
+
+ex:source-component-id a owl:ObjectProperty ;
+    rdfs:label "source-component-id" ;
+    ex:isStateData true ;
+    ex:xpathPath "/hw:hardware/hw:component/hw:name" ;
+    rdfs:comment """Reference to the component name in the ietf-hardware
+model. This leaf creates a direct semantic link between the
+power attributes and the physical component they describe.
+""" ;
+    rdfs:domain pae:power-entry ;
+    rdfs:range hw:component ;
+    prov:wasDerivedFrom "eo:energy-objects?container/eo:power-entry?list/eo:source-component-id?leaf" .
+
+ex:source-node a owl:ObjectProperty ;
+    rdfs:label "source-node" ;
+    ex:xpathPath "../../../nw:node/nw:node-id" ;
+    rdfs:comment "Source node identifier.  Must be in the same topology." ;
+    rdfs:domain netLink:source ;
+    rdfs:range net:node ;
+    prov:wasDerivedFrom "nt:link?list/nt:source?container/nt:source-node?leaf" .
+
+ex:source-tp a owl:ObjectProperty ;
+    rdfs:label "source-tp" ;
+    ex:xpathPath "../../../nw:node[nw:node-id=current()/../source-node]/termination-point/tp-id" ;
+    rdfs:comment """This termination point is located within the source node
+and terminates the link.""" ;
+    rdfs:domain netLink:source ;
+    rdfs:range netNode:termination-point ;
+    prov:wasDerivedFrom "nt:link?list/nt:source?container/nt:source-tp?leaf" .
+
+ex:standby-state a owl:ObjectProperty ;
+    rdfs:label "standby-state" ;
+    ex:isStateData true ;
+    rdfs:comment """The standby state for this component.
+
+Some components will exhibit only a subset of the
+remaining standby state values.  If this component
+cannot operate in a standby role, the value of this node
+will always be 'providing-service'.""" ;
+    rdfs:domain hwComp:state ;
+    rdfs:range hwTypes:standby-state ;
+    prov:wasDerivedFrom "hw:hardware?container/hw:component?list/hw:state?container/hw:standby-state?leaf" .
+
+ex:state a owl:DatatypeProperty ;
+    rdfs:label "state" ;
+    rdfs:comment """Specifies a state. This leaf can also be
+used to describe a region for a country that
+does not have states.""" ;
+    rdfs:domain nwiLoc:physical-address ;
+    rdfs:range xsd:string ;
+    prov:wasDerivedFrom "nil:physical-address?container/nil:state?leaf" .
+
+ex:state-last-changed a owl:DatatypeProperty ;
+    rdfs:label "state-last-changed" ;
+    ex:isStateData true ;
+    rdfs:comment """The date and time when the value of any of the
+admin-state, oper-state, usage-state, alarm-state, or
+standby-state changed for this component.
+
+If there has been no change since the last
+re-initialization of the local system, this node
+contains the date and time of local system
+initialization.  If there has been no change since the
+component was added to the local system, this node
+contains the date and time of the insertion.""" ;
+    rdfs:domain hwComp:state ;
+    rdfs:range xsd:dateTime ;
+    prov:wasDerivedFrom "hw:hardware?container/hw:component?list/hw:state?container/hw:state-last-changed?leaf" .
+
+ex:timestamp a owl:DatatypeProperty ;
+    rdfs:label "timestamp" ;
+    rdfs:comment "Reference time when location was recorded." ;
+    rdfs:domain nwiLocs:location,
+        nwiLoc:geo-location,
+        nwiRacks:rack ;
+    rdfs:range xsd:dateTime ;
+    prov:wasDerivedFrom "geo:geo-location?container/geo:timestamp?leaf",
+        "nwi:network-inventory?container/nil:locations?container/nil:location?list/nil:timestamp?leaf",
+        "nwi:network-inventory?container/nil:locations?container/nil:racks?container/nil:rack?list/nil:timestamp?leaf" .
+
+ex:tp-id a owl:DatatypeProperty ;
+    rdfs:label "tp-id" ;
+    rdfs:comment "Termination point identifier." ;
+    rdfs:domain netNode:termination-point ;
+    rdfs:range xsd:anyURI ;
+    prov:wasDerivedFrom "nt:termination-point?list/nt:tp-id?leaf" .
+
+ex:tp-ref a owl:ObjectProperty ;
+    rdfs:label "tp-ref" ;
+    ex:xpathPath "/nw:networks/nw:network[nw:network-id=current()/../network-ref]/nw:node[nw:node-id=current()/../node-ref]/termination-point/tp-id" ;
+    rdfs:comment """Reference to the underlay node (the underlay node must
+be in a different topology).""" ;
+    rdfs:domain netTP:supporting-termination-point ;
+    rdfs:range netNode:termination-point ;
+    prov:wasDerivedFrom "nt:termination-point?list/nt:supporting-termination-point?list/nt:tp-ref?leaf" .
+
+ex:type a owl:DatatypeProperty ;
+    rdfs:label "type" ;
+    rdfs:comment """The type of network inventory location, e.g.
+equipment room, building, or site.
+
+This allows operators to flexibly define custom location
+types (e.g., 'pole', 'roof', 'floor') based on their
+specific network scenarios without requiring model
+extensions. String-based types enable dynamic adaptation
+to heterogeneous organizational naming conventions.""" ;
+    rdfs:domain nwiLocs:location ;
+    rdfs:range xsd:string ;
+    prov:wasDerivedFrom "nwi:network-inventory?container/nil:locations?container/nil:location?list/nil:type?leaf" .
+
+hwAdminSt:locked a hwTypes:admin-state,
+        owl:NamedIndividual ;
+    rdfs:label "locked" ;
+    rdfs:comment "The resource is administratively prohibited from use." .
+
+hwAdminSt:shutting-down a hwTypes:admin-state,
+        owl:NamedIndividual ;
+    rdfs:label "shutting-down" ;
+    rdfs:comment """The resource usage is administratively limited to current
+instances of use.""" .
+
+hwAdminSt:unknown a hwTypes:admin-state,
+        owl:NamedIndividual ;
+    rdfs:label "unknown" ;
+    rdfs:comment "The resource is unable to report administrative state." .
+
+hwAdminSt:unlocked a hwTypes:admin-state,
+        owl:NamedIndividual ;
+    rdfs:label "unlocked" ;
+    rdfs:comment """The resource is not administratively prohibited from
+use.""" .
+
+hwOperSt:disabled a hwTypes:oper-state,
+        owl:NamedIndividual ;
+    rdfs:label "disabled" ;
+    rdfs:comment "The resource is totally inoperable." .
+
+hwOperSt:enabled a hwTypes:oper-state,
+        owl:NamedIndividual ;
+    rdfs:label "enabled" ;
+    rdfs:comment "The resource is partially or fully operable." .
+
+hwOperSt:testing a hwTypes:oper-state,
+        owl:NamedIndividual ;
+    rdfs:label "testing" ;
+    rdfs:comment """The resource is currently being tested and cannot
+therefore report whether or not it is operational.""" .
+
+hwOperSt:unknown a hwTypes:oper-state,
+        owl:NamedIndividual ;
+    rdfs:label "unknown" ;
+    rdfs:comment "The resource is unable to report its operational state." .
+
+hwSensorSt:nonoperational a hwTypes:sensor-status,
+        owl:NamedIndividual ;
+    rdfs:label "nonoperational" ;
+    rdfs:comment """Indicates that the server believes the sensor is broken.
+The sensor could have a hard failure (disconnected wire)
+or a soft failure such as out-of-range, jittery, or wildly
+fluctuating readings.""" .
+
+hwSensorSt:ok a hwTypes:sensor-status,
+        owl:NamedIndividual ;
+    rdfs:label "ok" ;
+    rdfs:comment "Indicates that the server can obtain the sensor value." .
+
+hwSensorSt:unavailable a hwTypes:sensor-status,
+        owl:NamedIndividual ;
+    rdfs:label "unavailable" ;
+    rdfs:comment """Indicates that the server presently cannot obtain the
+sensor value.""" .
+
+hwSensorVSc:atto a hwTypes:sensor-value-scale,
+        owl:NamedIndividual ;
+    rdfs:label "atto" ;
+    rdfs:comment "Data scaling factor of 10^-18." .
+
+hwSensorVSc:exa a hwTypes:sensor-value-scale,
+        owl:NamedIndividual ;
+    rdfs:label "exa" ;
+    rdfs:comment "Data scaling factor of 10^18." .
+
+hwSensorVSc:femto a hwTypes:sensor-value-scale,
+        owl:NamedIndividual ;
+    rdfs:label "femto" ;
+    rdfs:comment "Data scaling factor of 10^-15." .
+
+hwSensorVSc:giga a hwTypes:sensor-value-scale,
+        owl:NamedIndividual ;
+    rdfs:label "giga" ;
+    rdfs:comment "Data scaling factor of 10^9." .
+
+hwSensorVSc:kilo a hwTypes:sensor-value-scale,
+        owl:NamedIndividual ;
+    rdfs:label "kilo" ;
+    rdfs:comment "Data scaling factor of 10^3." .
+
+hwSensorVSc:mega a hwTypes:sensor-value-scale,
+        owl:NamedIndividual ;
+    rdfs:label "mega" ;
+    rdfs:comment "Data scaling factor of 10^6." .
+
+hwSensorVSc:micro a hwTypes:sensor-value-scale,
+        owl:NamedIndividual ;
+    rdfs:label "micro" ;
+    rdfs:comment "Data scaling factor of 10^-6." .
+
+hwSensorVSc:milli a hwTypes:sensor-value-scale,
+        owl:NamedIndividual ;
+    rdfs:label "milli" ;
+    rdfs:comment "Data scaling factor of 10^-3." .
+
+hwSensorVSc:nano a hwTypes:sensor-value-scale,
+        owl:NamedIndividual ;
+    rdfs:label "nano" ;
+    rdfs:comment "Data scaling factor of 10^-9." .
+
+hwSensorVSc:peta a hwTypes:sensor-value-scale,
+        owl:NamedIndividual ;
+    rdfs:label "peta" ;
+    rdfs:comment "Data scaling factor of 10^15." .
+
+hwSensorVSc:pico a hwTypes:sensor-value-scale,
+        owl:NamedIndividual ;
+    rdfs:label "pico" ;
+    rdfs:comment "Data scaling factor of 10^-12." .
+
+hwSensorVSc:tera a hwTypes:sensor-value-scale,
+        owl:NamedIndividual ;
+    rdfs:label "tera" ;
+    rdfs:comment "Data scaling factor of 10^12." .
+
+hwSensorVSc:units a hwTypes:sensor-value-scale,
+        owl:NamedIndividual ;
+    rdfs:label "units" ;
+    rdfs:comment "Data scaling factor of 10^0." .
+
+hwSensorVSc:yocto a hwTypes:sensor-value-scale,
+        owl:NamedIndividual ;
+    rdfs:label "yocto" ;
+    rdfs:comment "Data scaling factor of 10^-24." .
+
+hwSensorVSc:yotta a hwTypes:sensor-value-scale,
+        owl:NamedIndividual ;
+    rdfs:label "yotta" ;
+    rdfs:comment "Data scaling factor of 10^24." .
+
+hwSensorVSc:zepto a hwTypes:sensor-value-scale,
+        owl:NamedIndividual ;
+    rdfs:label "zepto" ;
+    rdfs:comment "Data scaling factor of 10^-21." .
+
+hwSensorVSc:zetta a hwTypes:sensor-value-scale,
+        owl:NamedIndividual ;
+    rdfs:label "zetta" ;
+    rdfs:comment "Data scaling factor of 10^21." .
+
+hwSensorVTy:amperes a hwTypes:sensor-value-type,
+        owl:NamedIndividual ;
+    rdfs:label "amperes" ;
+    rdfs:comment "A measure of electric current." .
+
+hwSensorVTy:celsius a hwTypes:sensor-value-type,
+        owl:NamedIndividual ;
+    rdfs:label "celsius" ;
+    rdfs:comment "A measure of temperature." .
+
+hwSensorVTy:cmm a hwTypes:sensor-value-type,
+        owl:NamedIndividual ;
+    rdfs:label "cmm" ;
+    rdfs:comment "A measure of cubic meters per minute (airflow)." .
+
+hwSensorVTy:hertz a hwTypes:sensor-value-type,
+        owl:NamedIndividual ;
+    rdfs:label "hertz" ;
+    rdfs:comment "A measure of frequency." .
+
+hwSensorVTy:other a hwTypes:sensor-value-type,
+        owl:NamedIndividual ;
+    rdfs:label "other" ;
+    rdfs:comment "A measure other than those listed below." .
+
+hwSensorVTy:percent-RH a hwTypes:sensor-value-type,
+        owl:NamedIndividual ;
+    rdfs:label "percent-RH" ;
+    rdfs:comment "A measure of percent relative humidity." .
+
+hwSensorVTy:rpm a hwTypes:sensor-value-type,
+        owl:NamedIndividual ;
+    rdfs:label "rpm" ;
+    rdfs:comment "A measure of shaft revolutions per minute." .
+
+hwSensorVTy:truth-value a hwTypes:sensor-value-type,
+        owl:NamedIndividual ;
+    rdfs:label "truth-value" ;
+    rdfs:comment "Value is one of 1 (true) or 2 (false)" .
+
+hwSensorVTy:unknown a hwTypes:sensor-value-type,
+        owl:NamedIndividual ;
+    rdfs:label "unknown" ;
+    rdfs:comment "An unknown measurement or arbitrary, relative numbers" .
+
+hwSensorVTy:volts-AC a hwTypes:sensor-value-type,
+        owl:NamedIndividual ;
+    rdfs:label "volts-AC" ;
+    rdfs:comment "A measure of electric potential (alternating current)." .
+
+hwSensorVTy:volts-DC a hwTypes:sensor-value-type,
+        owl:NamedIndividual ;
+    rdfs:label "volts-DC" ;
+    rdfs:comment "A measure of electric potential (direct current)." .
+
+hwSensorVTy:watts a hwTypes:sensor-value-type,
+        owl:NamedIndividual ;
+    rdfs:label "watts" ;
+    rdfs:comment "A measure of power." .
+
+hwUsageSt:cold-standby a hwTypes:standby-state,
+        owl:NamedIndividual ;
+    rdfs:label "cold-standby" ;
+    rdfs:comment """The resource is to back up another resource, but it will
+not be immediately able to take over the role of a
+resource to be backed up and will require some
+initialization activity.""" .
+
+hwUsageSt:hot-standby a hwTypes:standby-state,
+        owl:NamedIndividual ;
+    rdfs:label "hot-standby" ;
+    rdfs:comment """The resource is not providing service, but it will be
+immediately able to take over the role of the resource to
+be backed up, without the need for initialization
+activity, and will contain the same information as the
+resource to be backed up.""" .
+
+hwUsageSt:providing-service a hwTypes:standby-state,
+        owl:NamedIndividual ;
+    rdfs:label "providing-service" ;
+    rdfs:comment "The resource is providing service." .
+
+hwUsageSt:unknown a hwTypes:standby-state,
+        owl:NamedIndividual ;
+    rdfs:label "unknown" ;
+    rdfs:comment "The resource is unable to report standby state." .
+
+<http://www.huawei.com/ontology/types/ietf-hardware/usage-state/active> a hwTypes:usage-state,
+        owl:NamedIndividual ;
+    rdfs:label "active" ;
+    rdfs:comment """The resource is currently in use, and it has sufficient
+spare capacity to provide for additional users.""" .
+
+<http://www.huawei.com/ontology/types/ietf-hardware/usage-state/busy> a hwTypes:usage-state,
+        owl:NamedIndividual ;
+    rdfs:label "busy" ;
+    rdfs:comment """The resource is currently in use, but it currently has no
+spare capacity to provide for additional users.""" .
+
+<http://www.huawei.com/ontology/types/ietf-hardware/usage-state/idle> a hwTypes:usage-state,
+        owl:NamedIndividual ;
+    rdfs:label "idle" ;
+    rdfs:comment "The resource is servicing no users." .
+
+<http://www.huawei.com/ontology/types/ietf-hardware/usage-state/unknown> a hwTypes:usage-state,
+        owl:NamedIndividual ;
+    rdfs:label "unknown" ;
+    rdfs:comment "The resource is unable to report usage state." .
+
+inetIpVer:ipv4 a inetTypes:ip-version,
+        owl:NamedIndividual ;
+    rdfs:label "ipv4" ;
+    rdfs:comment "The IPv4 protocol as defined in RFC 791." .
+
+inetIpVer:ipv6 a inetTypes:ip-version,
+        owl:NamedIndividual ;
+    rdfs:label "ipv6" ;
+    rdfs:comment "The IPv6 protocol as defined in RFC 2460." .
+
+inetIpVer:unknown a inetTypes:ip-version,
+        owl:NamedIndividual ;
+    rdfs:label "unknown" ;
+    rdfs:comment """An unknown or unspecified version of the Internet
+protocol.""" .
+
+ex:units-display a owl:DatatypeProperty ;
+    rdfs:label "units-display" ;
+    rdfs:comment """A textual description of the data units that should be
+used in the display of the sensor value.""" ;
+    rdfs:domain hwComp:sensor-data ;
+    rdfs:range xsd:string ;
+    prov:wasDerivedFrom "hw:hardware?container/hw:component?list/hw:sensor-data?container/hw:units-display?leaf" .
+
+ex:uri a owl:DatatypeProperty ;
+    rdfs:label "uri" ;
+    rdfs:comment """This node contains identification information about
+the component.""",
+        """This node contains identification information about the
+component.""" ;
+    rdfs:domain hw:component,
+        <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component> ;
+    rdfs:range xsd:anyURI ;
+    prov:wasDerivedFrom "hw:hardware?container/hw:component?list/hw:uri?leaf-list",
+        "nwi:uri?leaf-list" .
+
+ex:usage-state a owl:ObjectProperty ;
+    rdfs:label "usage-state" ;
+    ex:isStateData true ;
+    rdfs:comment """The usage state for this component.
+
+This node refers to a component's ability to service
+more components in a containment hierarchy.
+
+Some components will exhibit only a subset of the usage
+state values.  Components that are unable to ever
+service any components within a containment hierarchy
+will always have a usage state of 'busy'.  In some
+cases, a component will be able to support only one
+other component within its containment hierarchy and
+will therefore only exhibit values of 'idle' and
+'busy'.""" ;
+    rdfs:domain hwComp:state ;
+    rdfs:range hwTypes:usage-state ;
+    prov:wasDerivedFrom "hw:hardware?container/hw:component?list/hw:state?container/hw:usage-state?leaf" .
+
+ex:uuid a owl:DatatypeProperty ;
+    rdfs:label "uuid" ;
+    ex:isStateData true ;
+    rdfs:comment "A Universally Unique Identifier of the component.",
+        """The Universally Unique Identifier of the entity
+(e.g., component).""" ;
+    rdfs:domain hw:component,
+        nwi:cable,
+        nwiLocs:location,
+        nwiRacks:rack,
+        nwiNEs:network-element,
+        <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component>,
+        nwi:passive-device,
+        pdev:passive-port ;
+    rdfs:range xsd:string ;
+    prov:wasDerivedFrom "hw:hardware?container/hw:component?list/hw:uuid?leaf",
+        "nwi:uuid?leaf" .
+
+ex:v-east a owl:DatatypeProperty ;
+    rdfs:label "v-east" ;
+    ex:unit "meters per second" ;
+    rdfs:comment """v-east is the rate of change (i.e., speed) perpendicular
+to the right of true north as defined by
+the geodetic-system.""" ;
+    rdfs:domain nwiGeo:velocity ;
+    rdfs:range xsd:decimal ;
+    prov:wasDerivedFrom "geo:geo-location?container/geo:velocity?container/geo:v-east?leaf" .
+
+ex:v-north a owl:DatatypeProperty ;
+    rdfs:label "v-north" ;
+    ex:unit "meters per second" ;
+    rdfs:comment """v-north is the rate of change (i.e., speed) towards
+true north as defined by the geodetic-system.""" ;
+    rdfs:domain nwiGeo:velocity ;
+    rdfs:range xsd:decimal ;
+    prov:wasDerivedFrom "geo:geo-location?container/geo:velocity?container/geo:v-north?leaf" .
+
+ex:v-up a owl:DatatypeProperty ;
+    rdfs:label "v-up" ;
+    ex:unit "meters per second" ;
+    rdfs:comment """v-up is the rate of change (i.e., speed) away from the
+center of mass.""" ;
+    rdfs:domain nwiGeo:velocity ;
+    rdfs:range xsd:decimal ;
+    prov:wasDerivedFrom "geo:geo-location?container/geo:velocity?container/geo:v-up?leaf" .
+
+ex:valid-until a owl:DatatypeProperty ;
+    rdfs:label "valid-until" ;
+    rdfs:comment """The timestamp for which this geo-location is valid until.
+If unspecified, the geo-location has no specific
+expiration time.""",
+        """The timestamp for which this location is valid until.
+If unspecified, the location has no specific
+expiration time.""" ;
+    rdfs:domain nwiLocs:location,
+        nwiLoc:geo-location,
+        nwiRacks:rack ;
+    rdfs:range xsd:dateTime ;
+    prov:wasDerivedFrom "geo:geo-location?container/geo:valid-until?leaf",
+        "nwi:network-inventory?container/nil:locations?container/nil:location?list/nil:valid-until?leaf",
+        "nwi:network-inventory?container/nil:locations?container/nil:racks?container/nil:rack?list/nil:valid-until?leaf" .
+
+ex:value a owl:DatatypeProperty ;
+    rdfs:label "value" ;
+    rdfs:comment """The most recent measurement obtained by the server
+for this sensor.
+
+A client that periodically fetches this node should also
+fetch the nodes 'value-type', 'value-scale', and
+'value-precision', since they may change when the value
+is changed.""" ;
+    rdfs:domain hwComp:sensor-data ;
+    rdfs:range xsd:int ;
+    prov:wasDerivedFrom "hw:hardware?container/hw:component?list/hw:sensor-data?container/hw:value?leaf" .
+
+ex:value-precision a owl:DatatypeProperty ;
+    rdfs:label "value-precision" ;
+    rdfs:comment """The number of decimal places of precision
+associated with the sensor value""" ;
+    rdfs:domain hwComp:sensor-data ;
+    rdfs:range xsd:byte ;
+    prov:wasDerivedFrom "hw:hardware?container/hw:component?list/hw:sensor-data?container/hw:value-precision?leaf" .
+
+ex:value-scale a owl:ObjectProperty ;
+    rdfs:label "value-scale" ;
+    rdfs:comment """The (power of 10) scaling factor associated
+with the sensor value""" ;
+    rdfs:domain hwComp:sensor-data ;
+    rdfs:range hwTypes:sensor-value-scale ;
+    prov:wasDerivedFrom "hw:hardware?container/hw:component?list/hw:sensor-data?container/hw:value-scale?leaf" .
+
+ex:value-timestamp a owl:DatatypeProperty ;
+    rdfs:label "value-timestamp" ;
+    rdfs:comment """The time the status and/or value of this sensor was last
+obtained by the server.""" ;
+    rdfs:domain hwComp:sensor-data ;
+    rdfs:range xsd:dateTime ;
+    prov:wasDerivedFrom "hw:hardware?container/hw:component?list/hw:sensor-data?container/hw:value-timestamp?leaf" .
+
+ex:value-type a owl:ObjectProperty ;
+    rdfs:label "value-type" ;
+    rdfs:comment """The type of data units associated with the
+sensor value""" ;
+    rdfs:domain hwComp:sensor-data ;
+    rdfs:range hwTypes:sensor-value-type ;
+    prov:wasDerivedFrom "hw:hardware?container/hw:component?list/hw:sensor-data?container/hw:value-type?leaf" .
+
+ex:value-update-rate a owl:DatatypeProperty ;
+    rdfs:label "value-update-rate" ;
+    ex:unit "milliseconds" ;
+    rdfs:comment """An indication of the frequency that the server updates
+the associated 'value' node, represented in
+milliseconds.  The value zero indicates:
+
+ - the sensor value is updated on demand (e.g.,
+   when polled by the server for a get-request),
+
+ - the sensor value is updated when the sensor
+   value changes (event-driven), or
+
+ - the server does not know the update rate.""" ;
+    rdfs:domain hwComp:sensor-data ;
+    rdfs:range xsd:unsignedInt ;
+    prov:wasDerivedFrom "hw:hardware?container/hw:component?list/hw:sensor-data?container/hw:value-update-rate?leaf" .
+
+ex:viaCable a owl:ObjectProperty ;
+    rdfs:label "via cable" ;
+    rdfs:comment "RDF-star annotation on ex:hasUpstreamDevice: the physical cable realising this hop." .
+
+ex:width a owl:DatatypeProperty ;
+    rdfs:label "width" ;
+    ex:unit "millimeter" ;
+    rdfs:comment "Rack width." ;
+    rdfs:domain nwiRacks:rack ;
+    rdfs:range xsd:unsignedShort ;
+    prov:wasDerivedFrom "nwi:network-inventory?container/nil:locations?container/nil:racks?container/nil:rack?list/nil:width?leaf" .
+
+ex:x a owl:DatatypeProperty ;
+    rdfs:label "x" ;
+    ex:unit "meters" ;
+    rdfs:comment "The X value as defined by the reference-frame." ;
+    rdfs:domain nwiLoc:geo-location ;
+    rdfs:range xsd:decimal ;
+    prov:wasDerivedFrom "geo:geo-location?container/geo:x?leaf" .
+
+ex:y a owl:DatatypeProperty ;
+    rdfs:label "y" ;
+    ex:unit "meters" ;
+    rdfs:comment "The Y value as defined by the reference-frame." ;
+    rdfs:domain nwiLoc:geo-location ;
+    rdfs:range xsd:decimal ;
+    prov:wasDerivedFrom "geo:geo-location?container/geo:y?leaf" .
+
+ex:z a owl:DatatypeProperty ;
+    rdfs:label "z" ;
+    ex:unit "meters" ;
+    rdfs:comment "The Z value as defined by the reference-frame." ;
+    rdfs:domain nwiLoc:geo-location ;
+    rdfs:range xsd:decimal ;
+    prov:wasDerivedFrom "geo:geo-location?container/geo:z?leaf" .
+
+grpGeo:geo-location a owl:Class ;
+    rdfs:label "geo-location" ;
+    rdfs:comment "Grouping definition: geo-location",
+        "Grouping to identify a location on an astronomical object." .
+
+grpNwiTop:link-inventory-mapping-attributes a owl:Class ;
+    rdfs:label "link-inventory-mapping-attributes" ;
+    rdfs:comment """Attributes for classifying link media type.
+Detailed inventory reference is intentionally omitted from
+this model; implementations should use the appropriate
+specialized inventory modules based on the indicated
+link-type.""",
+        "Grouping definition: link-inventory-mapping-attributes" .
+
+grpNwiTop:node-inventory-mapping-attributes a owl:Class ;
+    rdfs:label "node-inventory-mapping-attributes" ;
+    rdfs:comment """Attributes for mapping a topology node to a Network Element
+(NE) in the physical inventory.""",
+        "Grouping definition: node-inventory-mapping-attributes" .
+
+grpNwiTop:tp-inventory-mapping-attributes a owl:Class ;
+    rdfs:label "tp-inventory-mapping-attributes" ;
+    rdfs:comment """Attributes for mapping a topology termination point (TP)
+to a physical port in the network inventory.""",
+        "Grouping definition: tp-inventory-mapping-attributes" .
+
+grpNwi:component-attributes a owl:Class ;
+    rdfs:label "component-attributes" ;
+    rdfs:comment "Grouping definition: component-attributes",
+        """The set of common attributes of a component.
+
+This grouping is intended also to be re-used by data models
+that need to report the common attributes of a component.""" .
+
+grpNwi:port-ref a owl:Class ;
+    rdfs:label "port-ref" ;
+    rdfs:comment "Grouping definition: port-ref",
+        """This grouping is intended to be used by data models that need
+to reference a port component within a Network Element.""" .
+
+grpNiLoc:locations a owl:Class ;
+    rdfs:label "locations" ;
+    rdfs:comment "Grouping definition: locations",
+        "The grouping of the locations." .
+
+grpNiLoc:locations-ref a owl:Class ;
+    rdfs:label "locations-ref" ;
+    rdfs:comment "Grouping definition: locations-ref",
+        "The attributes of the locations." .
+
+grpNiLoc:physical-address a owl:Class ;
+    rdfs:label "physical-address" ;
+    rdfs:comment "Grouping definition: physical-address",
+        "The grouping of the physical address." .
+
+grpNiLoc:racks a owl:Class ;
+    rdfs:label "racks" ;
+    rdfs:comment "Grouping definition: racks",
+        "The attributes of the rack." .
+
+grpNwiPass:cable-attributes a owl:Class ;
+    rdfs:label "cable-attributes" ;
+    rdfs:comment "Attributes of cables.",
+        "Grouping definition: cable-attributes" .
+
+grpNwiPass:cables a owl:Class ;
+    rdfs:label "cables" ;
+    rdfs:comment "Attributes applicable to cables.",
+        "Grouping definition: cables" .
+
+grpNwiPass:child-cables a owl:Class ;
+    rdfs:label "child-cables" ;
+    rdfs:comment """Attributes applicable to child cables that are concatnated
+to form the cable.""",
+        "Grouping definition: child-cables" .
+
+grpNwiPass:optical-cable-attributes a owl:Class ;
+    rdfs:label "optical-cable-attributes" ;
+    rdfs:comment "Attributes applicable to fiber optic cables.",
+        "Grouping definition: optical-cable-attributes" .
+
+grpNwiPass:passive-device-ports a owl:Class ;
+    rdfs:label "passive-device-ports" ;
+    rdfs:comment "Attributes applicable to passive device ports.",
+        "Grouping definition: passive-device-ports" .
+
+grpNwiPass:passive-devices a owl:Class ;
+    rdfs:label "passive-devices" ;
+    rdfs:comment "Attributes applicable to passive devices.",
+        "Grouping definition: passive-devices" .
+
+ex:hasUpstreamDevice a owl:ObjectProperty ;
+    rdfs:label "has upstream device" ;
+    rdfs:comment "Materialised shortcut: device at Z-end of a cable -> device at A-end (upstream). Annotated via RDF-star with ex:viaCable and ex:cableRole. Enables: ?device ex:hasUpstreamDevice+ ?odf ." .
+
+nwiInvId:ne-type a owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "ne-type" ;
+    rdfs:comment "Base identity for network element (NE) types." ;
+    prov:wasDerivedFrom "nwi:ne-type?identity" .
+
+nwiPassId:cable-role a owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "cable-role" ;
+    rdfs:comment "Base identity for cable roles." ;
+    prov:wasDerivedFrom "nwi-passive:cable-role?identity" .
+
+nwiPassId:cable-type a owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "cable-type" ;
+    rdfs:comment "Base identity for cable types." ;
+    prov:wasDerivedFrom "nwi-passive:cable-type?identity" .
+
+nwiPassId:connected-device-type a owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "connected-device-type" ;
+    rdfs:comment "Base identity for connected device types." ;
+    prov:wasDerivedFrom "nwi-passive:connected-device-type?identity" .
+
+nwiPassId:fiber-type a owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "fiber-type" ;
+    rdfs:comment "Base identity for fiber types." ;
+    prov:wasDerivedFrom "nwi-passive:fiber-type?identity" .
+
+nwiPassId:passive-device-type a owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "passive-device-type" ;
+    rdfs:comment "Base identity for passive device types." ;
+    prov:wasDerivedFrom "nwi-passive:passive-device-type?identity" .
+
+nwiPassId:passive-port-type a owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "passive-port-type" ;
+    rdfs:comment "Base identity for passive port types." ;
+    prov:wasDerivedFrom "nwi-passive:passive-port-type?identity" .
+
+paeId:data-source-accuracy a owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "data-source-accuracy" ;
+    rdfs:comment """Base identity for all possible data accuracy types.
+This identity serves as the root for a hierarchy of accuracy
+types, allowing for extensibility while maintaining alignment
+with current and future industry standards.
+
+The hierarchy, as defined in this YANG module, is as follows.
+Other modules may extend this hierarchy with additional
+accuracy base- and sub-types as needed.
+
+data-source-accuracy
+ ├── accuracy-unknown
+ │    └── accuracy-unavailable
+ ├── accuracy-estimated
+ │    ├── accuracy-static
+ │    ├── accuracy-historic
+ │    └── accuracy-learned
+ └── accuracy-measured
+      ├── accuracy-measured-bronze
+      ├── accuracy-measured-silver
+      ├── accuracy-measured-gold
+      ├── accuracy-measured-red
+      └── accuracy-measured-ones
+""" ;
+    prov:wasDerivedFrom "eo:data-source-accuracy?identity" .
+
+paeId:unit-multiplier a owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "unit-multiplier" ;
+    rdfs:comment """Base identity for unit multipliers as defined in IEC 61850-7-3
+Annex A. These represent exponents of 10 for scaling units
+associated with the integer units used to measure the power or
+energy.""" ;
+    prov:wasDerivedFrom "eo:unit-multiplier?identity" .
+
+net:network-types a owl:Class ;
+    rdfs:label "network-types" ;
+    rdfs:comment """Serves as an augmentation target.
+The network type is indicated through corresponding
+presence containers augmented into this container.""" ;
+    prov:wasDerivedFrom "nw:networks?container/nw:network?list/nw:network-types?container" .
+
+grpNwi:ne-component-common-entity-attributes a owl:Class ;
+    rdfs:label "ne-component-common-entity-attributes" ;
+    rdfs:comment "Grouping definition: ne-component-common-entity-attributes",
+        """The set of attributes which are common to all the entities
+(e.g., component, network elements) defined in this module.""" .
+
+grpNwiPass:common-cable-attributes a owl:Class ;
+    rdfs:label "common-cable-attributes" ;
+    rdfs:comment """Common attributes of cables applicable to the cable
+and its child cables.""",
+        "Grouping definition: common-cable-attributes" .
+
+grpNwiPass:connected-device-ref a owl:Class ;
+    rdfs:label "connected-device-ref" ;
+    rdfs:comment "Attributes applicable to connected devices.",
+        "Grouping definition: connected-device-ref" .
+
+netRoot:networks a owl:Class ;
+    rdfs:label "networks" ;
+    rdfs:comment "Serves as a top-level container for a list of networks." ;
+    prov:wasDerivedFrom "nw:networks?container" .
+
+netLink:inventory-mapping-attributes a owl:Class ;
+    rdfs:label "inventory-mapping-attributes" ;
+    rdfs:comment """Container for inventory-related attributes of a link.
+
+This container provides lightweight media classification.
+The link-type indicates which specialized inventory model
+contains detailed resource information:
+
+- Wired media (fiber, copper): passive network inventory
+- Wireless media (microwave, Wi-Fi): wireless-specific
+  inventory
+
+  Detailed inventory references may be added in future
+  modules.""" ;
+    prov:wasDerivedFrom "nwit:inventory-mapping-attributes?container" .
+
+netNode:inventory-mapping-attributes a owl:Class ;
+    rdfs:label "inventory-mapping-attributes" ;
+    rdfs:comment "Container for inventory mapping attributes of a node." ;
+    prov:wasDerivedFrom "nwit:inventory-mapping-attributes?container" .
+
+paeRoot:energy-objects a owl:Class ;
+    rdfs:label "energy-objects" ;
+    rdfs:comment "Energy objects container for power attributes." ;
+    prov:wasDerivedFrom "eo:energy-objects?container" .
+
+hwRoot:hardware a owl:Class ;
+    rdfs:label "hardware" ;
+    rdfs:comment """Data nodes representing components.
+
+If the server supports configuration of hardware components,
+then this data model is instantiated in the configuration
+datastores supported by the server.  The leaf-list 'datastore'
+for the module 'ietf-hardware' in the YANG library provides
+this information.""" ;
+    prov:wasDerivedFrom "hw:hardware?container" .
+
+nwiLocs:racks a owl:Class ;
+    rdfs:label "racks" ;
+    rdfs:comment "Top level container for the list of racks." ;
+    prov:wasDerivedFrom "nwi:network-inventory?container/nil:locations?container/nil:racks?container" .
+
+nwi:network-elements a owl:Class ;
+    rdfs:label "network-elements" ;
+    rdfs:comment """The top-level container for the list of network elements
+within the network.""" ;
+    prov:wasDerivedFrom "nwi:network-inventory?container/nwi:network-elements?container" .
+
+nwiNE:components a owl:Class ;
+    rdfs:label "components" ;
+    rdfs:comment """The top-level container for the list of components
+within a network element.""" ;
+    prov:wasDerivedFrom "nwi:network-inventory?container/nwi:network-elements?container/nwi:network-element?list/nwi:components?container" .
+
+nwiCompSwRev:patch a owl:Class ;
+    rdfs:label "patch" ;
+    rdfs:comment """The list of software patches configured to be active for
+the software module.""" ;
+    owl:hasKey ( nwiCompPatch:revision ) ;
+    prov:wasDerivedFrom "nwi:software-rev?list/nwi:patch?list" .
+
+nwiNE:locations a owl:Class ;
+    rdfs:label "locations" ;
+    rdfs:comment "The container for the location." ;
+    prov:wasDerivedFrom "nil:locations?container" .
+
+nwiSwRev:patch a owl:Class ;
+    rdfs:label "patch" ;
+    rdfs:comment """The list of software patches configured to be active for
+the software module.""" ;
+    owl:hasKey ( nwiSwRevPatch:revision ) ;
+    prov:wasDerivedFrom "nwi:software-rev?list/nwi:patch?list" .
+
+netLink:destination a owl:Class ;
+    rdfs:label "destination" ;
+    rdfs:comment """This container holds the logical destination of a
+particular link.""" ;
+    prov:wasDerivedFrom "nt:link?list/nt:destination?container" .
+
+netLink:source a owl:Class ;
+    rdfs:label "source" ;
+    rdfs:comment """This container holds the logical source of a particular
+link.""" ;
+    prov:wasDerivedFrom "nt:link?list/nt:source?container" .
+
+netInvMap:port-breakout a owl:Class ;
+    rdfs:label "port-breakout" ;
+    ex:isStateData true ;
+    rdfs:comment """Breakout capability of the physical port represented by
+this TP. One TP maps to one physical port; channels are
+listed here. This container is present only when the
+underlying hardware supports partitioning the port into
+multiple independent channels (e.g., 400G to 4x100G).""" ;
+    prov:wasDerivedFrom "nwit:inventory-mapping-attributes?container/nwit:port-breakout?container" .
+
+netPortBrk:breakout-channel a owl:Class ;
+    rdfs:label "breakout-channel" ;
+    rdfs:comment """List of breakout channels available on this port.
+Each entry represents an independent lane or sub-port
+that can be used for channelized interfaces.""" ;
+    owl:hasKey ( netBrkChan:channel-id ) ;
+    prov:wasDerivedFrom "nwit:inventory-mapping-attributes?container/nwit:port-breakout?container/nwit:breakout-channel?list" .
+
+inetTypes:ip-version a owl:Class ;
+    rdfs:label "ip-version" .
+
+grpNwiPass:connected-device-end a owl:Class ;
+    rdfs:label "connected-device-end" ;
+    rdfs:comment "Attributes applicable to connected device end.",
+        "Grouping definition: connected-device-end" .
+
+cab:optical-cable a owl:Class ;
+    rdfs:label "optical-cable" ;
+    rdfs:comment """Container for attributes associated with fiber
+optic cables.""" ;
+    prov:wasDerivedFrom "nwi-passive:optical-cable?container" .
+
+nwi:locations a owl:Class ;
+    rdfs:label "locations" ;
+    rdfs:comment "The container for the NE location information." ;
+    rdfs:subClassOf grpNiLoc:racks ;
+    prov:wasDerivedFrom "nwi:network-inventory?container/nil:locations?container" .
+
+nwiGeo:reference-frame a owl:Class ;
+    rdfs:label "reference-frame" ;
+    rdfs:comment "The Frame of Reference for the location values." ;
+    prov:wasDerivedFrom "geo:geo-location?container/geo:reference-frame?container" .
+
+nwiRefFrame:geodetic-system a owl:Class ;
+    rdfs:label "geodetic-system" ;
+    rdfs:comment "The geodetic system of the location data." ;
+    prov:wasDerivedFrom "geo:geo-location?container/geo:reference-frame?container/geo:geodetic-system?container" .
+
+nwiGeo:velocity a owl:Class ;
+    rdfs:label "velocity" ;
+    rdfs:comment """If the object is in motion, the velocity vector describes
+this motion at the time given by the timestamp.  For a
+formula to convert these values to speed and heading, see
+RFC 9179.""" ;
+    prov:wasDerivedFrom "geo:geo-location?container/geo:velocity?container" .
+
+nwiRack:rack-location a owl:Class ;
+    rdfs:label "rack-location" ;
+    rdfs:comment """The location information of the rack, which
+comprises the name of the location, row number, and
+column number.""" ;
+    prov:wasDerivedFrom "nwi:network-inventory?container/nil:locations?container/nil:racks?container/nil:rack?list/nil:rack-location?container" .
+
+netLink:supporting-link a owl:Class ;
+    rdfs:label "supporting-link" ;
+    rdfs:comment "Identifies the link or links on which this link depends." ;
+    owl:hasKey ( netSuppLink:network-ref netSuppLink:link-ref ) ;
+    prov:wasDerivedFrom "nt:link?list/nt:supporting-link?list" .
+
+netTP:inventory-mapping-attributes a owl:Class ;
+    rdfs:label "inventory-mapping-attributes" ;
+    rdfs:comment "Container for inventory mapping attributes of a TP." ;
+    rdfs:subClassOf grpNwi:port-ref ;
+    prov:wasDerivedFrom "nwit:inventory-mapping-attributes?container" .
+
+net:supporting-network a owl:Class ;
+    rdfs:label "supporting-network" ;
+    rdfs:comment """An underlay network, used to represent layered network
+topologies.""" ;
+    owl:hasKey ( netSuppNet:network-ref ) ;
+    prov:wasDerivedFrom "nw:networks?container/nw:network?list/nw:supporting-network?list" .
+
+hwTypes:sensor-status a owl:Class ;
+    rdfs:label "sensor-status" .
+
+nwiRack:contained-chassis a owl:Class ;
+    rdfs:label "contained-chassis" ;
+    rdfs:comment "The list of chassis within a rack." ;
+    owl:hasKey ( nwiChassis:relative-position ) ;
+    prov:wasDerivedFrom "nwi:network-inventory?container/nil:locations?container/nil:racks?container/nil:rack?list/nil:contained-chassis?list" .
+
+netTP:supporting-termination-point a owl:Class ;
+    rdfs:label "supporting-termination-point" ;
+    rdfs:comment """This list identifies any termination points on which a
+given termination point depends or onto which it maps.
+Those termination points will themselves be contained
+in a supporting node.  This dependency information can be
+inferred from the dependencies between links.  Therefore,
+this item is not separately configurable.  Hence, no
+corresponding constraint needs to be articulated.
+The corresponding information is simply provided by the
+implementing system.""" ;
+    owl:hasKey ( netSuppTP:network-ref netSuppTP:node-ref netSuppTP:tp-ref ) ;
+    prov:wasDerivedFrom "nt:termination-point?list/nt:supporting-termination-point?list" .
+
+hwTypes:admin-state a owl:Class ;
+    rdfs:label "admin-state" .
+
+hwTypes:oper-state a owl:Class ;
+    rdfs:label "oper-state" .
+
+hwTypes:standby-state a owl:Class ;
+    rdfs:label "standby-state" .
+
+hwTypes:usage-state a owl:Class ;
+    rdfs:label "usage-state" .
+
+nwiRoot:network-inventory a owl:Class ;
+    rdfs:label "network-inventory" ;
+    ex:isStateData true ;
+    rdfs:comment "Top-level container for network inventory." ;
+    rdfs:subClassOf grpNiLoc:locations,
+        grpNwiPass:cables,
+        grpNwiPass:passive-devices ;
+    prov:wasDerivedFrom "nwi:network-inventory?container" .
+
+cab:a-end a owl:Class ;
+    rdfs:label "a-end" ;
+    rdfs:comment "A-end device reference" ;
+    rdfs:subClassOf grpNwiPass:connected-device-end ;
+    prov:wasDerivedFrom "nwi-passive:a-end?container" .
+
+cabChild:a-end a owl:Class ;
+    rdfs:label "a-end" ;
+    rdfs:comment "A-end device reference" ;
+    rdfs:subClassOf grpNwiPass:connected-device-end ;
+    prov:wasDerivedFrom "nwi-passive:a-end?container" .
+
+cabChild:z-end a owl:Class ;
+    rdfs:label "z-end" ;
+    rdfs:comment "Z-end device reference" ;
+    rdfs:subClassOf grpNwiPass:connected-device-end ;
+    prov:wasDerivedFrom "nwi-passive:z-end?container" .
+
+cab:z-end a owl:Class ;
+    rdfs:label "z-end" ;
+    rdfs:comment "Z-end device reference" ;
+    rdfs:subClassOf grpNwiPass:connected-device-end ;
+    prov:wasDerivedFrom "nwi-passive:z-end?container" .
+
+nwiLoc:physical-address a owl:Class ;
+    rdfs:label "physical-address" ;
+    rdfs:comment "Top level container for the physical address." ;
+    prov:wasDerivedFrom "nil:physical-address?container" .
+
+nwiComp:software-rev a owl:Class ;
+    rdfs:label "software-rev" ;
+    rdfs:comment """The list of the software modules configured to be active
+within the entity (e.g., component).""" ;
+    owl:hasKey ( nwiCompSwRev:name ) ;
+    prov:wasDerivedFrom "nwi:software-rev?list" .
+
+nwiNE:software-rev a owl:Class ;
+    rdfs:label "software-rev" ;
+    rdfs:comment """The list of the software modules configured to be active
+within the entity (e.g., component).""" ;
+    owl:hasKey ( nwiSwRev:name ) ;
+    prov:wasDerivedFrom "nwi:software-rev?list" .
+
+netNode:supporting-node a owl:Class ;
+    rdfs:label "supporting-node" ;
+    rdfs:comment """Represents another node that is in an underlay network
+and that supports this node.  Used to represent layering
+structure.""" ;
+    owl:hasKey ( netSuppNode:network-ref netSuppNode:node-ref ) ;
+    prov:wasDerivedFrom "nw:networks?container/nw:network?list/nw:node?list/nw:supporting-node?list" .
+
+grpNwi:basic-common-entity-attributes a owl:Class ;
+    rdfs:label "basic-common-entity-attributes" ;
+    rdfs:comment "Grouping definition: basic-common-entity-attributes",
+        """The set of basic attributes which are common to all the
+entities (e.g., component, network elements, location, passive
+entities) defined in this module and in other inventory
+modules.""" .
+
+hwComp:state a owl:Class ;
+    rdfs:label "state" ;
+    rdfs:comment "State-related nodes" ;
+    prov:wasDerivedFrom "hw:hardware?container/hw:component?list/hw:state?container" .
+
+cab:child-cable a owl:Class ;
+    rdfs:label "child-cable" ;
+    rdfs:comment "Ordered list of concatenated child cables." ;
+    rdfs:subClassOf grpNwiPass:common-cable-attributes,
+        grpNwiPass:connected-device-ref ;
+    owl:hasKey ( cabChild:index ) ;
+    prov:wasDerivedFrom "nwi-passive:child-cable?list" .
+
+net:link a owl:Class ;
+    rdfs:label "link" ;
+    rdfs:comment """A network link connects a local (source) node and
+a remote (destination) node via a set of the respective
+node's termination points.  It is possible to have several
+links between the same source and destination nodes.
+Likewise, a link could potentially be re-homed between
+termination points.  Therefore, in order to ensure that we
+would always know to distinguish between links, every link
+is identified by a dedicated link identifier.  Note that a
+link models a point-to-point link, not a multipoint link.""" ;
+    rdfs:subClassOf grpNwiTop:link-inventory-mapping-attributes ;
+    prov:wasDerivedFrom "nt:link?list" .
+
+netNode:termination-point a owl:Class ;
+    rdfs:label "termination-point" ;
+    rdfs:comment """A termination point can terminate a link.
+Depending on the type of topology, a termination point
+could, for example, refer to a port or an interface.""" ;
+    rdfs:subClassOf grpNwiTop:tp-inventory-mapping-attributes ;
+    prov:wasDerivedFrom "nt:termination-point?list" .
+
+hwComp:sensor-data a owl:Class ;
+    rdfs:label "sensor-data" ;
+    ex:isStateData true ;
+    rdfs:comment "Sensor-related nodes." ;
+    prov:wasDerivedFrom "hw:hardware?container/hw:component?list/hw:sensor-data?container" .
+
+pdev:passive-port a owl:Class ;
+    rdfs:label "passive-port" ;
+    rdfs:comment "List of ports on a passive device." ;
+    rdfs:subClassOf grpNwi:basic-common-entity-attributes ;
+    owl:hasKey ( pdevPort:id ) ;
+    prov:wasDerivedFrom "nwi-passive:passive-port?list" .
+
+netNetworks:network a owl:Class ;
+    rdfs:label "network" ;
+    rdfs:comment """Describes a network.
+A network typically contains an inventory of nodes,
+topological information (augmented through the
+network-topology data model), and layering information.""" ;
+    owl:hasKey ( net:network-id ) ;
+    prov:wasDerivedFrom "nw:networks?container/nw:network?list" .
+
+net:node a owl:Class ;
+    rdfs:label "node" ;
+    rdfs:comment "The inventory of nodes of this network." ;
+    rdfs:subClassOf grpNwiTop:node-inventory-mapping-attributes ;
+    owl:hasKey ( netNode:node-id ) ;
+    prov:wasDerivedFrom "nw:networks?container/nw:network?list/nw:node?list" .
+
+pae:power-entry a owl:Class ;
+    rdfs:label "power-entry" ;
+    rdfs:comment """Power entry for an energy object, indexed by object id.
+Each entry contains the complete set of power attributes
+for a specific physical component.""" ;
+    owl:hasKey ( paePwrEntry:object-id ) ;
+    prov:wasDerivedFrom "eo:energy-objects?container/eo:power-entry?list" .
+
+nwiLoc:geo-location a owl:Class ;
+    rdfs:label "geo-location" ;
+    rdfs:comment """A location on an astronomical body (e.g., 'earth')
+somewhere in a universe.""" ;
+    prov:wasDerivedFrom "geo:geo-location?container" .
+
+nwi:passive-device a owl:Class ;
+    rdfs:label "passive-device" ;
+    rdfs:comment "List of passive devices." ;
+    rdfs:subClassOf grpNwi:basic-common-entity-attributes,
+        grpNwiPass:passive-device-ports ;
+    owl:hasKey ( pdev:id ) ;
+    prov:wasDerivedFrom "nwi:network-inventory?container/nwi-passive:passive-device?list" .
+
+hwTypes:sensor-value-type a owl:Class ;
+    rdfs:label "sensor-value-type" .
+
+nwi:cable a owl:Class ;
+    rdfs:label "cable" ;
+    rdfs:comment "List of cables." ;
+    rdfs:subClassOf grpNwi:basic-common-entity-attributes,
+        grpNwiPass:cable-attributes,
+        grpNwiPass:child-cables,
+        grpNwiPass:common-cable-attributes,
+        grpNwiPass:connected-device-ref,
+        grpNwiPass:optical-cable-attributes ;
+    owl:hasKey ( cab:id ) ;
+    prov:wasDerivedFrom "nwi:network-inventory?container/nwi-passive:cable?list" .
+
+nwiNEs:network-element a owl:Class ;
+    rdfs:label "network-element" ;
+    rdfs:comment "The list of network elements within the network." ;
+    rdfs:subClassOf grpNwi:basic-common-entity-attributes,
+        grpNwi:ne-component-common-entity-attributes,
+        grpNiLoc:locations-ref ;
+    owl:hasKey ( nwiNE:ne-id ) ;
+    prov:wasDerivedFrom "nwi:network-inventory?container/nwi:network-elements?container/nwi:network-element?list" .
+
+nwiLocs:location a owl:Class ;
+    rdfs:label "location" ;
+    rdfs:comment "The list of locations within the network." ;
+    rdfs:subClassOf grpGeo:geo-location,
+        grpNwi:basic-common-entity-attributes,
+        grpNiLoc:physical-address ;
+    owl:hasKey ( nwiLoc:id ) ;
+    prov:wasDerivedFrom "nwi:network-inventory?container/nil:locations?container/nil:location?list" .
+
+nwiRacks:rack a owl:Class ;
+    rdfs:label "rack" ;
+    rdfs:comment """The list of racks within a location,
+e.g. equipment room.""" ;
+    rdfs:subClassOf grpNwi:basic-common-entity-attributes ;
+    owl:hasKey ( nwiRack:id ) ;
+    prov:wasDerivedFrom "nwi:network-inventory?container/nil:locations?container/nil:racks?container/nil:rack?list" .
+
+hwTypes:sensor-value-scale a owl:Class ;
+    rdfs:label "sensor-value-scale" .
+
+<http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component> a owl:Class ;
+    rdfs:label "component" ;
+    rdfs:comment "The list of components within a network element." ;
+    rdfs:subClassOf grpNwi:basic-common-entity-attributes,
+        grpNwi:component-attributes,
+        grpNwi:ne-component-common-entity-attributes ;
+    owl:hasKey ( nwiComp:component-id ) ;
+    prov:wasDerivedFrom "nwi:network-inventory?container/nwi:network-elements?container/nwi:network-element?list/nwi:components?container/nwi:component?list" .
+
+hw:component a owl:Class ;
+    rdfs:label "component" ;
+    rdfs:comment """List of components.
+
+When the server detects a new hardware component, it
+initializes a list entry in the operational state.
+
+If the server does not support configuration of hardware
+components, list entries in the operational state are
+initialized with values for all nodes as detected by the
+implementation.
+
+Otherwise, this procedure is followed:
+
+  1. If there is an entry in the '/hardware/component' list
+     in the intended configuration with values for the nodes
+     'class', 'parent', and 'parent-rel-pos' that are equal
+     to the detected values, then the list entry in the
+     operational state is initialized with the configured
+     values, including the 'name'.
+
+  2. Otherwise (i.e., there is no matching configuration
+     entry), the list entry in the operational state is
+     initialized with values for all nodes as detected by
+     the implementation.
+
+If the '/hardware/component' list in the intended
+configuration is modified, then the system MUST behave as if
+it re-initializes itself and follow the procedure in (1).""" ;
+    owl:hasKey ( hwComp:name ) ;
+    prov:wasDerivedFrom "hw:hardware?container/hw:component?list" .
+
