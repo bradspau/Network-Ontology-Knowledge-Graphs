@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-YANG to OWL Ontology Converter - VERSION 4.7.29 (RDF-star Connectivity)
+YANG to OWL Ontology Converter - VERSION 4.7.30 (RDF-star Connectivity)
 
 Release Note: Semantic Interoperability via OWL 2 Punning
 This update implements OWL 2 Punning to resolve "dead-end" string traversals common in standard YANG-to-OWL conversions.
@@ -46,7 +46,7 @@ ALL IMPROVEMENTS IMPLEMENTED:
     - Eliminates bounded UNION / multi-hop workarounds for graph traversal
     - Run: python yang4owl.py --abox-enrich <abox.ttl> --abox-out <enriched.ttls>
 
-Author: YANG-to-OWL Converter v4.7.29
+Author: YANG-to-OWL Converter v4.7.30
 Date: 2026-05-19
 """
 
@@ -660,7 +660,7 @@ class YANGToOWL:
     
     def convert(self, main_module: str, output_file: str) -> None:
         log.info("=" * 70)
-        log.info("YANG to OWL Converter v4.7.29 (Separate SHACL Output)")
+        log.info("YANG to OWL Converter v4.7.30 (Separate SHACL Output)")
         log.info("=" * 70)
 
         log.info("\n[Step 1] Loading YANG modules...")
@@ -748,16 +748,35 @@ class YANGToOWL:
 
             # 3. Define Active Reference ObjectProperties (for NTDs and Exchanges)
             # This resolves the namespace mismatch by targeting the correct range classes
-            for prop_name, range_uri in [
-                ("ne-ref", nwiNEs_ns["network-element"]),
-                ("component-ref", nwiComp_ns["component"])
-            ]:
-                prop = self.ex[prop_name]
-                self.graph.add((prop, RDF.type, OWL.ObjectProperty))
-                self.graph.add((prop, RDFS.label, Literal(prop_name)))
-                self.graph.add((prop, RDFS.range, range_uri))
-                for dom in cable_termination_domains:
-                    self.graph.add((prop, RDFS.domain, dom))
+            #for prop_name, range_uri in [
+            #    ("ne-ref", nwiNEs_ns["network-element"]),
+            #    ("component-ref", nwiComp_ns["component"])
+            #]:
+            #    prop = self.ex[prop_name]
+            #    self.graph.add((prop, RDF.type, OWL.ObjectProperty))
+            #    self.graph.add((prop, RDFS.label, Literal(prop_name)))
+            #    self.graph.add((prop, RDFS.range, range_uri))
+            #    for dom in cable_termination_domains:
+            #        self.graph.add((prop, RDFS.domain, dom))
+            # A. ne-ref: Keep strict domain constraints (only for cable ends) as both the passive inventory and active currently have component-ref 
+            ne_prop = self.ex["ne-ref"]
+            self.graph.add((ne_prop, RDF.type, OWL.ObjectProperty))
+            self.graph.add((ne_prop, RDFS.label, Literal("ne-ref")))
+            self.graph.add((ne_prop, RDFS.range, nwiNEs_ns["network-element"]))
+            for dom in cable_termination_domains:
+                self.graph.add((ne_prop, RDFS.domain, dom))
+
+            # B. component-ref: Remove domain constraints (globally applicable)
+            # This reflects the netork inventory draft-18 promotion of component-ref to a core grouping
+            comp_prop = self.ex["component-ref"]
+
+            # WIPE any automatically inferred domains from the base parsing phase
+            self.graph.remove((comp_prop, RDFS.domain, None))
+
+            self.graph.add((comp_prop, RDF.type, OWL.ObjectProperty))
+            self.graph.add((comp_prop, RDFS.label, Literal("component-ref")))
+            self.graph.add((comp_prop, RDFS.range, nwiComp_ns["component"]))
+            # NOTE: The loop applying RDFS.domain to cable_termination_domains has been removed.
                 
             # ==========================================
             # --- STEP 14: RDF-star shortcut properties ---
@@ -1997,7 +2016,7 @@ class ABoxConnectivityEnricher:
         Turtle* file to output_file.  Returns the count of links materialised.
         """
         log.info(f"\n{'='*60}")
-        log.info(f" ABoxConnectivityEnricher  v4.7.29")
+        log.info(f" ABoxConnectivityEnricher  v4.7.30")
         log.info(f" Input : {self.abox_file}")
         log.info(f" Output: {output_file}")
         log.info(f"{'='*60}")

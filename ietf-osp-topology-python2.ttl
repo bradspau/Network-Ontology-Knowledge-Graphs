@@ -275,11 +275,6 @@ ex:component-ref a owl:ObjectProperty ;
 e.g. port component.""",
         """The reference to the chassis component within
 the network element and contained by the rack.""" ;
-    rdfs:domain cab:a-end,
-        cabChild:a-end,
-        cabChild:z-end,
-        cab:z-end,
-        nwiRack:contained-chassis ;
     rdfs:range <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component> ;
     prov:wasDerivedFrom "nwi-passive:a-end?container/nwi-passive:component-ref?leaf",
         "nwi-passive:z-end?container/nwi-passive:component-ref?leaf",
@@ -526,6 +521,12 @@ coordinates.""" ;
     rdfs:domain nwiRefFrame:geodetic-system ;
     rdfs:range xsd:string ;
     prov:wasDerivedFrom "geo:geo-location?container/geo:reference-frame?container/geo:geodetic-system?container/geo:geodetic-datum?leaf" .
+
+grpNwi:component-ref a owl:Class ;
+    rdfs:label "component-ref" ;
+    rdfs:comment "Grouping definition: component-ref",
+        """This grouping is intended to be used by data models that need
+to reference a component within a Network Element.""" .
 
 grpNetTop:link-ref a owl:Class ;
     rdfs:label "link-ref" ;
@@ -1623,10 +1624,15 @@ ex:is-main a owl:DatatypeProperty ;
     rdfs:comment """This node indicates whether the chassis is taking or
 not the 'main' role.
 
-This node is applicable only to scenarios where
-there are chassis components which can take the
-'main' role (e.g., multi-chassis network elements),
-otherwise it is omitted.""" ;
+This node is applicable only to scenarios where the
+network element contains chassis components which
+can take or not the 'main' role (e.g., multi-chassis
+network elements).
+
+It is therefore omitted in scenarios where the
+network element does not contain chassis components
+which can can take or not the 'main' role
+(e.g., single-chassis network elements).""" ;
     rdfs:domain <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component> ;
     rdfs:range xsd:boolean ;
     prov:wasDerivedFrom "nwi:network-inventory?container/nwi:network-elements?container/nwi:network-element?list/nwi:components?container/nwi:component?list/nwi:is-main?leaf" .
@@ -1790,8 +1796,8 @@ This name is not required to be the same as
 entPhysicalName.""",
         """The name of the  entity (e.g., component), as specified by
 a network operator, that provides a non-volatile 'handle'
-for the entity and that can be modified anytime during the
-entity lifetime.
+for the entity. The The network operator can specify a
+different value anytime during the entity lifetime.
 
 If no value is discovered, the server MAY set the value of
 this node to a locally unique value in the operational
@@ -2003,10 +2009,16 @@ components with identities derived from 'ianahw:port' (for
 example, one for registered jack 45 (RJ45) and one for
 small form-factor pluggable (SFP)).""",
         """The relative position with respect to the parent
-component among all the sibling components.""" ;
+component among all the sibling components.
+
+The format of this string is
+implementation-specific. When mapping from RFC 6933,
+the entPhysicalParentRelPos integer value SHOULD be
+encoded as an integer string.""" ;
     rdfs:domain hw:component,
         <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component> ;
-    rdfs:range xsd:int ;
+    rdfs:range xsd:int,
+        xsd:string ;
     prov:wasDerivedFrom "hw:hardware?container/hw:component?list/hw:parent-rel-pos?leaf",
         "nwi:network-inventory?container/nwi:network-elements?container/nwi:network-element?list/nwi:components?container/nwi:component?list/nwi:parent-rel-pos?leaf" .
 
@@ -2032,7 +2044,10 @@ by this list entry.""" ;
 ex:port-ref a owl:ObjectProperty ;
     rdfs:label "port-ref" ;
     ex:xpathPath "/nwi:network-inventory/nwi:network-elements/nwi:network-element[nwi:ne-id=current()/../ne-ref]/nwi:components/nwi:component/nwi:component-id" ;
-    rdfs:comment "The reference to the port component." ;
+    rdfs:comment """The reference to the port component.
+
+Note: the class of the referenced port component MUST be
+'ianahw:port' or a derived identity.""" ;
     rdfs:domain netTP:inventory-mapping-attributes ;
     rdfs:range <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component> ;
     prov:wasDerivedFrom "nwit:inventory-mapping-attributes?container/nwi:port-ref?leaf" .
@@ -3076,6 +3091,12 @@ formula to convert these values to speed and heading, see
 RFC 9179.""" ;
     prov:wasDerivedFrom "geo:geo-location?container/geo:velocity?container" .
 
+nwiRack:contained-chassis a owl:Class ;
+    rdfs:label "contained-chassis" ;
+    rdfs:comment "The list of chassis within a rack." ;
+    owl:hasKey ( nwiChassis:relative-position ) ;
+    prov:wasDerivedFrom "nwi:network-inventory?container/nil:locations?container/nil:racks?container/nil:rack?list/nil:contained-chassis?list" .
+
 nwiRack:rack-location a owl:Class ;
     rdfs:label "rack-location" ;
     rdfs:comment """The location information of the rack, which
@@ -3105,11 +3126,29 @@ topologies.""" ;
 hwTypes:sensor-status a owl:Class ;
     rdfs:label "sensor-status" .
 
-nwiRack:contained-chassis a owl:Class ;
-    rdfs:label "contained-chassis" ;
-    rdfs:comment "The list of chassis within a rack." ;
-    owl:hasKey ( nwiChassis:relative-position ) ;
-    prov:wasDerivedFrom "nwi:network-inventory?container/nil:locations?container/nil:racks?container/nil:rack?list/nil:contained-chassis?list" .
+cab:a-end a owl:Class ;
+    rdfs:label "a-end" ;
+    rdfs:comment "A-end device reference" ;
+    rdfs:subClassOf grpNwiPass:connected-device-end ;
+    prov:wasDerivedFrom "nwi-passive:a-end?container" .
+
+cabChild:a-end a owl:Class ;
+    rdfs:label "a-end" ;
+    rdfs:comment "A-end device reference" ;
+    rdfs:subClassOf grpNwiPass:connected-device-end ;
+    prov:wasDerivedFrom "nwi-passive:a-end?container" .
+
+cabChild:z-end a owl:Class ;
+    rdfs:label "z-end" ;
+    rdfs:comment "Z-end device reference" ;
+    rdfs:subClassOf grpNwiPass:connected-device-end ;
+    prov:wasDerivedFrom "nwi-passive:z-end?container" .
+
+cab:z-end a owl:Class ;
+    rdfs:label "z-end" ;
+    rdfs:comment "Z-end device reference" ;
+    rdfs:subClassOf grpNwiPass:connected-device-end ;
+    prov:wasDerivedFrom "nwi-passive:z-end?container" .
 
 netTP:supporting-termination-point a owl:Class ;
     rdfs:label "supporting-termination-point" ;
@@ -3146,30 +3185,6 @@ nwiRoot:network-inventory a owl:Class ;
         grpNwiPass:passive-devices ;
     prov:wasDerivedFrom "nwi:network-inventory?container" .
 
-cab:a-end a owl:Class ;
-    rdfs:label "a-end" ;
-    rdfs:comment "A-end device reference" ;
-    rdfs:subClassOf grpNwiPass:connected-device-end ;
-    prov:wasDerivedFrom "nwi-passive:a-end?container" .
-
-cabChild:a-end a owl:Class ;
-    rdfs:label "a-end" ;
-    rdfs:comment "A-end device reference" ;
-    rdfs:subClassOf grpNwiPass:connected-device-end ;
-    prov:wasDerivedFrom "nwi-passive:a-end?container" .
-
-cabChild:z-end a owl:Class ;
-    rdfs:label "z-end" ;
-    rdfs:comment "Z-end device reference" ;
-    rdfs:subClassOf grpNwiPass:connected-device-end ;
-    prov:wasDerivedFrom "nwi-passive:z-end?container" .
-
-cab:z-end a owl:Class ;
-    rdfs:label "z-end" ;
-    rdfs:comment "Z-end device reference" ;
-    rdfs:subClassOf grpNwiPass:connected-device-end ;
-    prov:wasDerivedFrom "nwi-passive:z-end?container" .
-
 nwiLoc:physical-address a owl:Class ;
     rdfs:label "physical-address" ;
     rdfs:comment "Top level container for the physical address." ;
@@ -3177,15 +3192,17 @@ nwiLoc:physical-address a owl:Class ;
 
 nwiComp:software-rev a owl:Class ;
     rdfs:label "software-rev" ;
-    rdfs:comment """The list of the software modules configured to be active
-within the entity (e.g., component).""" ;
+    rdfs:comment """The list of the software modules representing the software
+images intended to be running within the entity
+(e.g., component).""" ;
     owl:hasKey ( nwiCompSwRev:name ) ;
     prov:wasDerivedFrom "nwi:software-rev?list" .
 
 nwiNE:software-rev a owl:Class ;
     rdfs:label "software-rev" ;
-    rdfs:comment """The list of the software modules configured to be active
-within the entity (e.g., component).""" ;
+    rdfs:comment """The list of the software modules representing the software
+images intended to be running within the entity
+(e.g., component).""" ;
     owl:hasKey ( nwiSwRev:name ) ;
     prov:wasDerivedFrom "nwi:software-rev?list" .
 

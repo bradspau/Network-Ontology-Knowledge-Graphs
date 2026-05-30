@@ -593,8 +593,11 @@ PREFIX nwiPassId: <http://www.huawei.com/identity/passive-equipment/>
 
 SELECT ?ont ?odf
 FROM <ietf:topology:abox>
+FROM <ietf:topology:tbox>
 WHERE {
     ?ont  a nwiNEs:network-element .
+    ?ont ex:ne-id ?ontId .
+    Filter(CONTAINS(STR(?ontId), "ONT"))
     ?ont  ex:hasUpstreamDevice+  ?odf .
     ?odf  ex:device-type  nwiPassId:ODF .
 }
@@ -602,43 +605,16 @@ WHERE {
 
 ```csv 
 ont,odf
-
 http://www.huawei.com/instances/network-element/ONT_2,http://www.huawei.com/instances/passive-device/ODF_1
-
 http://www.huawei.com/instances/network-element/ONT_4,http://www.huawei.com/instances/passive-device/ODF_1
-
 http://www.huawei.com/instances/network-element/ONT_6,http://www.huawei.com/instances/passive-device/ODF_1
-
-http://www.huawei.com/instances/passive-device/enclosure_25,http://www.huawei.com/instances/passive-device/ODF_1
-
 http://www.huawei.com/instances/network-element/ONT_8,http://www.huawei.com/instances/passive-device/ODF_1
-
-http://www.huawei.com/instances/passive-device/enclosure_33,http://www.huawei.com/instances/passive-device/ODF_1
-
 http://www.huawei.com/instances/network-element/ONT_9,http://www.huawei.com/instances/passive-device/ODF_1
-
-http://www.huawei.com/instances/passive-device/enclosure_39,http://www.huawei.com/instances/passive-device/ODF_1
-
 http://www.huawei.com/instances/network-element/ONT_11,http://www.huawei.com/instances/passive-device/ODF_1
-
-http://www.huawei.com/instances/passive-device/enclosure_48,http://www.huawei.com/instances/passive-device/ODF_1
-
 http://www.huawei.com/instances/network-element/ONT_13,http://www.huawei.com/instances/passive-device/ODF_1
-
-http://www.huawei.com/instances/passive-device/enclosure_56,http://www.huawei.com/instances/passive-device/ODF_1
-
 http://www.huawei.com/instances/network-element/ONT_14,http://www.huawei.com/instances/passive-device/ODF_1
-
-http://www.huawei.com/instances/passive-device/enclosure_65,http://www.huawei.com/instances/passive-device/ODF_1
-
-http://www.huawei.com/instances/passive-device/enclosure_66,http://www.huawei.com/instances/passive-device/ODF_1
-
-http://www.huawei.com/instances/passive-device/enclosure_70,http://www.huawei.com/instances/passive-device/ODF_1
-
-http://www.huawei.com/instances/passive-device/enclosure_71,http://www.huawei.com/instances/passive-device/ODF_1
-
-http://www.huawei.com/instances/passive-device/enclosure_75,http://www.huawei.com/instances/passive-device/ODF_1
 ```
+
 ### Annotated hop-by-hop path for a single ONT
 
 ```sparql
@@ -677,14 +653,15 @@ http://www.huawei.com/instances/passive-device/enclosure_75,http://www.huawei.co
 
 http://www.huawei.com/instances/passive-device/enclosure_65,http://www.huawei.com/instances/passive-device/enclosure_75,http://www.huawei.com/instances/cable/cable_133,984,http://www.huawei.com/ontology/identity/ietf-nwi-passive-inventory/distribution-cable,5
 ```
+
 ### Total path length for ONT_6
 ```sparql
 PREFIX inv-ne: <http://www.huawei.com/instances/network-element/>
 PREFIX ex: <http://www.huawei.com/ontology/>
 
 SELECT ?ont (SUM(COALESCE(?length,0)) AS ?totalMetres) (COUNT(?cable) AS ?hops)
-FROM <ietf:abox>
-FROM <ietf:tbox>
+FROM <ietf:topology:abox>
+FROM <ietf:topology:tbox>
 WHERE {
 BIND(inv-ne:ONT_6 AS ?ont)
 ?ont ex:hasUpstreamDevice* ?from .
@@ -703,40 +680,107 @@ http://www.huawei.com/instances/network-element/ONT_6,2864,7
 
 ### ONT_6 cable path and length to ODF
 ```sparql 
-PREFIX inv-ne: <http://www.huawei.com/instances/network-element/>
-PREFIX ex: <http://www.huawei.com/ontology/>
-PREFIX nwiPassId: <http://www.huawei.com/identity/passive-equipment/>
+PREFIX inv-ne:   <http://www.huawei.com/instances/network-element/>
+PREFIX ex:       <http://www.huawei.com/ontology/>
 
-SELECT ?from ?to ?cable ?length ?role ?priority
-FROM <ietf:abox>
-FROM <ietf:tbox>
+SELECT ?from ?to ?cable ?length ?cleanRole ?priority
+FROM <ietf:topology:abox>
+FROM <ietf:topology:tbox>
 WHERE {
-inv-ne:ONT_6 ex:hasUpstreamDevice* ?from .
-?from ex:hasUpstreamDevice ?to .
-<< ?from ex:hasUpstreamDevice ?to >> ex:viaCable ?cable .
-<< ?from ex:hasUpstreamDevice ?to >> ex:cableRole ?role .
-?role ex:rolePriority ?priority .
-OPTIONAL { ?cable ex:length ?length . }
+  # 1. Traverse the hierarchy
+  inv-ne:ONT_6 ex:hasUpstreamDevice* ?from .
+  ?from ex:hasUpstreamDevice ?to .
+  
+  # 2. Extract the RDF-star edge properties
+  << ?from ex:hasUpstreamDevice ?to >> ex:viaCable  ?cable .
+  << ?from ex:hasUpstreamDevice ?to >> ex:cableRole ?rawRole .
+  
+  # 3. Clean the role string to a NEW variable
+  BIND(REPLACE(STR(?rawRole), "^.*[:/#]", "") AS ?cleanRole)
+  
+  # 4. Map the priorities to a reference variable (?targetRole)
+  VALUES (?targetRole ?priority) {
+      ("internal-cable" 1)
+      ("drop-cable" 2)
+      ("access-cable" 3)
+      ("branch-cable" 4)
+      ("aggregation-cable" 5)
+      ("distribution-cable" 6)
+  }
+  
+  # 5. Connect the cleaned graph data to the priority table
+  FILTER(?cleanRole = ?targetRole)
+  
+  OPTIONAL { ?cable ex:length ?length . }
 }
 ORDER BY ?priority
 ```
 
 ```csv
-from,to,cable,length,role,priority
-
-http://www.huawei.com/instances/network-element/ONT_6,http://www.huawei.com/instances/passive-device/ATB_71,http://www.huawei.com/instances/cable/cable_311,,http://www.huawei.com/ontology/identity/ietf-nwi-passive-inventory/internal-cable,0
-
-http://www.huawei.com/instances/passive-device/ATB_71,http://www.huawei.com/instances/passive-device/enclosure_33,http://www.huawei.com/instances/cable/cable_316,55,http://www.huawei.com/ontology/identity/ietf-nwi-passive-inventory/drop-cable,1
-
-http://www.huawei.com/instances/passive-device/enclosure_33,http://www.huawei.com/instances/passive-device/enclosure_39,http://www.huawei.com/instances/cable/cable_30,37,http://www.huawei.com/ontology/identity/ietf-nwi-passive-inventory/access-cable,2
-
-http://www.huawei.com/instances/passive-device/enclosure_39,http://www.huawei.com/instances/passive-device/enclosure_56,http://www.huawei.com/instances/cable/cable_53,100,http://www.huawei.com/ontology/identity/ietf-nwi-passive-inventory/branch-cable,3
-
-http://www.huawei.com/instances/passive-device/enclosure_56,http://www.huawei.com/instances/passive-device/enclosure_65,http://www.huawei.com/instances/cable/cable_337,130,http://www.huawei.com/ontology/identity/ietf-nwi-passive-inventory/aggregation-cable,4
-
-http://www.huawei.com/instances/passive-device/enclosure_75,http://www.huawei.com/instances/passive-device/ODF_1,http://www.huawei.com/instances/cable/cable_417,1558,http://www.huawei.com/ontology/identity/ietf-nwi-passive-inventory/distribution-cable,5
-
-http://www.huawei.com/instances/passive-device/enclosure_65,http://www.huawei.com/instances/passive-device/enclosure_75,http://www.huawei.com/instances/cable/cable_133,984,http://www.huawei.com/ontology/identity/ietf-nwi-passive-inventory/distribution-cable,5
+from,to,cable,length,cleanRole,priority
+http://www.huawei.com/instances/network-element/ONT_6,http://www.huawei.com/instances/passive-device/ATB_71,http://www.huawei.com/instances/cable/cable_311,,internal-cable,1
+http://www.huawei.com/instances/passive-device/ATB_71,http://www.huawei.com/instances/passive-device/enclosure_33,http://www.huawei.com/instances/cable/cable_316,55,drop-cable,2
+http://www.huawei.com/instances/passive-device/enclosure_33,http://www.huawei.com/instances/passive-device/enclosure_39,http://www.huawei.com/instances/cable/cable_30,37,access-cable,3
+http://www.huawei.com/instances/passive-device/enclosure_39,http://www.huawei.com/instances/passive-device/enclosure_56,http://www.huawei.com/instances/cable/cable_53,100,branch-cable,4
+http://www.huawei.com/instances/passive-device/enclosure_56,http://www.huawei.com/instances/passive-device/enclosure_65,http://www.huawei.com/instances/cable/cable_337,130,aggregation-cable,5
+http://www.huawei.com/instances/passive-device/enclosure_75,http://www.huawei.com/instances/passive-device/ODF_1,http://www.huawei.com/instances/cable/cable_417,1558,distribution-cable,6
+http://www.huawei.com/instances/passive-device/enclosure_65,http://www.huawei.com/instances/passive-device/enclosure_75,http://www.huawei.com/instances/cable/cable_133,984,distribution-cable,6
 ```
+
+### All ONT upstream hops and cable length
+```sparql
+PREFIX inv-ne:    <http://www.huawei.com/instances/network-element/>
+PREFIX ex:        <http://www.huawei.com/ontology/>
+
+SELECT ?ont ?ontId (SUM(COALESCE(?length,0)) AS ?totalMetres) (COUNT(?cable) AS ?hops)
+FROM <ietf:topology:abox>
+FROM <ietf:topology:tbox>
+WHERE {
+  
+  # 1. Force Stardog to find all ONTs FIRST
+  {
+    SELECT ?ont ?ontId
+    WHERE {
+      ?ont ex:ne-id ?ontId .
+      FILTER(CONTAINS(STR(?ontId), "ONT"))
+    }
+  }
+
+  # 2. Traverse the hierarchy strictly from that filtered list
+  ?ont ex:hasUpstreamDevice* ?from .
+  ?from ex:hasUpstreamDevice ?to .
+  
+  # 3. Extract the RDF-star edge properties
+  << ?from ex:hasUpstreamDevice ?to >> ex:viaCable  ?cable .
+  << ?from ex:hasUpstreamDevice ?to >> ex:cableRole ?role .
+  
+  OPTIONAL { ?cable ex:length ?length . }
+}
+GROUP BY ?ont ?ontId
+ORDER BY ?ontId
+```
+```csv
+ont,ontId,totalMetres,hops
+http://www.huawei.com/instances/network-element/ONT_1,ONT_1,283,6
+http://www.huawei.com/instances/network-element/ONT_10,ONT_10,283,6
+http://www.huawei.com/instances/network-element/ONT_11,ONT_11,2846,7
+http://www.huawei.com/instances/network-element/ONT_12,ONT_12,980,5
+http://www.huawei.com/instances/network-element/ONT_13,ONT_13,2839,7
+http://www.huawei.com/instances/network-element/ONT_14,ONT_14,2872,7
+http://www.huawei.com/instances/network-element/ONT_15,ONT_15,0,1
+http://www.huawei.com/instances/network-element/ONT_16,ONT_16,0,1
+http://www.huawei.com/instances/network-element/ONT_17,ONT_17,0,1
+http://www.huawei.com/instances/network-element/ONT_18,ONT_18,0,1
+http://www.huawei.com/instances/network-element/ONT_2,ONT_2,2830,7
+http://www.huawei.com/instances/network-element/ONT_3,ONT_3,0,1
+http://www.huawei.com/instances/network-element/ONT_4,ONT_4,2843,7
+http://www.huawei.com/instances/network-element/ONT_5,ONT_5,283,6
+http://www.huawei.com/instances/network-element/ONT_6,ONT_6,2864,7
+http://www.huawei.com/instances/network-element/ONT_7,ONT_7,283,6
+http://www.huawei.com/instances/network-element/ONT_8,ONT_8,2854,7
+http://www.huawei.com/instances/network-element/ONT_9,ONT_9,2851,7
+```
+
+
 
 ---
