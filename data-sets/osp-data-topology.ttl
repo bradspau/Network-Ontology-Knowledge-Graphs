@@ -13,27 +13,56 @@
 @prefix hwComp: <http://www.huawei.com/ontology/ietf-hardware/hardware/component/> .
 @prefix hwId: <http://www.huawei.com/ontology/identity/ietf-hardware/> .
 @prefix hwNotif: <http://www.huawei.com/ontology/notification/ietf-hardware/> .
+@prefix hwOperSt: <http://www.huawei.com/ontology/types/ietf-hardware/oper-state/> .
 @prefix hwRoot: <http://www.huawei.com/ontology/ietf-hardware/> .
 @prefix hwSensorSt: <http://www.huawei.com/ontology/types/ietf-hardware/sensor-status/> .
 @prefix hwSensorVSc: <http://www.huawei.com/ontology/types/ietf-hardware/sensor-value-scale/> .
 @prefix hwSensorVTy: <http://www.huawei.com/ontology/types/ietf-hardware/sensor-value-type/> .
+@prefix hwStandbySt: <http://www.huawei.com/ontology/types/ietf-hardware/standby-state/> .
 @prefix hwTypes: <http://www.huawei.com/ontology/types/ietf-hardware/> .
-@prefix hwUsageSt: <http://www.huawei.com/ontology/types/ietf-hardware/standby-state/> .
-@prefix hwOperSt: <http://www.huawei.com/ontology/types/ietf-hardware/oper-state/> .
+@prefix hwUsageSt: <http://www.huawei.com/ontology/types/ietf-hardware/usage-state/> .
 @prefix ianaHw: <http://www.huawei.com/ontology/identity/iana-hardware/> .
 @prefix inetIpVer: <http://www.huawei.com/ontology/types/ietf-inet-types/ip-version/> .
 @prefix inetTypes: <http://www.huawei.com/ontology/types/ietf-inet-types/> .
-@prefix loc: <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/locations/location/> .
-@prefix ne: <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/> .
+@prefix net: <http://www.huawei.com/ontology/ietf-network/networks/network/> .
+@prefix netBrkChan: <http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/inventory-mapping-attributes/port-breakout/breakout-channel/> .
+@prefix netInvMap: <http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/inventory-mapping-attributes/> .
+@prefix netLink: <http://www.huawei.com/ontology/ietf-network/networks/network/link/> .
+@prefix netNetworks: <http://www.huawei.com/ontology/ietf-network/networks/> .
+@prefix netNode: <http://www.huawei.com/ontology/ietf-network/networks/network/node/> .
+@prefix netPortBrk: <http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/inventory-mapping-attributes/port-breakout/> .
+@prefix netRoot: <http://www.huawei.com/ontology/ietf-network/> .
+@prefix netSuppLink: <http://www.huawei.com/ontology/ietf-network/networks/network/link/supporting-link/> .
+@prefix netSuppNet: <http://www.huawei.com/ontology/ietf-network/networks/network/supporting-network/> .
+@prefix netSuppNode: <http://www.huawei.com/ontology/ietf-network/networks/network/node/supporting-node/> .
+@prefix netSuppTP: <http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/supporting-termination-point/> .
+@prefix netTP: <http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/> .
 @prefix nwi: <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/> .
-@prefix nwiNEs: <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/> .
-@prefix nwiComp: <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/> .
+@prefix nwiChassis: <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/locations/racks/rack/contained-chassis/> .
+@prefix nwiComp: <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component/> .
+@prefix nwiCompPatch: <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component/software-rev/patch/> .
+@prefix nwiCompSwRev: <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component/software-rev/> .
+@prefix nwiComps: <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/> .
 @prefix nwiGeo: <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/locations/location/geo-location/> .
+@prefix nwiInvId: <http://www.huawei.com/ontology/identity/ietf-network-inventory/> .
 @prefix nwiLoc: <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/locations/location/> .
 @prefix nwiLocs: <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/locations/> .
+@prefix nwiNE: <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/> .
+@prefix nwiNEs: <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/> .
 @prefix nwiPassId: <http://www.huawei.com/ontology/identity/ietf-nwi-passive-inventory/> .
+@prefix nwiRack: <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/locations/racks/rack/> .
+@prefix nwiRacks: <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/locations/racks/> .
+@prefix nwiRefFrame: <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/locations/location/geo-location/reference-frame/> .
+@prefix nwiRoot: <http://www.huawei.com/ontology/ietf-network-inventory/> .
+@prefix nwiSwRev: <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/software-rev/> .
+@prefix nwiSwRevPatch: <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/software-rev/patch/> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix pae: <http://www.huawei.com/ontology/ietf-power-and-energy/energy-objects/> .
+@prefix paeId: <http://www.huawei.com/ontology/identity/ietf-power-and-energy/> .
+@prefix paePwrEntry: <http://www.huawei.com/ontology/ietf-power-and-energy/energy-objects/power-entry/> .
+@prefix paeRoot: <http://www.huawei.com/ontology/ietf-power-and-energy/> .
 @prefix pdev: <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/passive-device/> .
+@prefix pdevPort: <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/passive-device/passive-port/> .
 @prefix prov: <http://www.w3.org/ns/prov#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
@@ -42,7 +71,6 @@
 @prefix stardog: <tag:stardog:api:> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix yangId: <http://www.huawei.com/ontology/identity/ietf-yang-types/> .
-@prefix nwiInvId: <http://www.huawei.com/ontology/identity/ietf-network-inventory/> .
 @prefix : <http://api.stardog.com/> .
 @prefix inv-ne: <http://www.huawei.com/instances/network-element/> .
 @prefix inv-loc: <http://www.huawei.com/instances/location/> .
@@ -53,7 +81,7 @@
 inv-loc:Area_1
     rdf:type nwiLocs:location ;
     ex:id "Area_1" ;
-    ex:name "Area 1" .
+    ex:name "Area 2ESP" .
 
 inv-loc:Site_1
     rdf:type nwiLocs:location ;
@@ -41605,10 +41633,10 @@ inv-ne:ONT_1
     rdf:type nwiNEs:network-element ;
     ex:ne-type nwiInvId:ne-physical ;
     ex:ne-id "ONT_1" ;
-    ex:node-id "ONT_1" ;
-    ex:hasComponents inv-ne:ONT_1_components .
+    nwiNE:hasComponents inv-ne:ONT_1_components .
 inv-ne:ONT_1_components
-    ex:hasComponent inv-ne:ONT_1_board_main , inv-ne:ONT_1_port_Uplink_1 , inv-ne:ONT_1_port_UNI_1 , inv-ne:ONT_1_port_UNI_2 , inv-ne:ONT_1_port_UNI_3 , inv-ne:ONT_1_port_UNI_4 ;
+    rdf:type nwiNE:components ;
+    nwiComps:hasComponent inv-ne:ONT_1_board_main , inv-ne:ONT_1_port_Uplink_1 , inv-ne:ONT_1_port_UNI_1 , inv-ne:ONT_1_port_UNI_2 , inv-ne:ONT_1_port_UNI_3 , inv-ne:ONT_1_port_UNI_4 ;
     ex:description "ONT_ENCLOSURE" ;
     rdfs:comment "ONT_ENCLOSURE" ;
     ex:location-ref inv-loc:location_1810 .
@@ -42518,10 +42546,10 @@ inv-ne:ONT_2
     rdf:type nwiNEs:network-element ;
     ex:ne-type nwiInvId:ne-physical ;
     ex:ne-id "ONT_2" ;
-    ex:node-id "ONT_2" ;
-    ex:hasComponents inv-ne:ONT_2_components .
+    nwiNE:hasComponents inv-ne:ONT_2_components .
 inv-ne:ONT_2_components
-    ex:hasComponent inv-ne:ONT_2_board_main , inv-ne:ONT_2_port_Uplink_1 , inv-ne:ONT_2_port_UNI_1 , inv-ne:ONT_2_port_UNI_2 , inv-ne:ONT_2_port_UNI_3 , inv-ne:ONT_2_port_UNI_4 ;
+    rdf:type nwiNE:components ;
+    nwiComps:hasComponent inv-ne:ONT_2_board_main , inv-ne:ONT_2_port_Uplink_1 , inv-ne:ONT_2_port_UNI_1 , inv-ne:ONT_2_port_UNI_2 , inv-ne:ONT_2_port_UNI_3 , inv-ne:ONT_2_port_UNI_4 ;
     ex:description "ONT_ENCLOSURE" ;
     rdfs:comment "ONT_ENCLOSURE" ;
     ex:location-ref inv-loc:location_223 .
@@ -43181,10 +43209,10 @@ inv-ne:ONT_3
     rdf:type nwiNEs:network-element ;
     ex:ne-type nwiInvId:ne-physical ;
     ex:ne-id "ONT_3" ;
-    ex:node-id "ONT_3" ;
-    ex:hasComponents inv-ne:ONT_3_components .
+    nwiNE:hasComponents inv-ne:ONT_3_components .
 inv-ne:ONT_3_components
-    ex:hasComponent inv-ne:ONT_3_board_main , inv-ne:ONT_3_port_Uplink_1 , inv-ne:ONT_3_port_UNI_1 , inv-ne:ONT_3_port_UNI_2 , inv-ne:ONT_3_port_UNI_3 , inv-ne:ONT_3_port_UNI_4 ;
+    rdf:type nwiNE:components ;
+    nwiComps:hasComponent inv-ne:ONT_3_board_main , inv-ne:ONT_3_port_Uplink_1 , inv-ne:ONT_3_port_UNI_1 , inv-ne:ONT_3_port_UNI_2 , inv-ne:ONT_3_port_UNI_3 , inv-ne:ONT_3_port_UNI_4 ;
     ex:description "ONT_ENCLOSURE" ;
     rdfs:comment "ONT_ENCLOSURE" ;
     ex:location-ref inv-loc:location_1806 .
@@ -44063,10 +44091,10 @@ inv-ne:ONT_4
     rdf:type nwiNEs:network-element ;
     ex:ne-type nwiInvId:ne-physical ;
     ex:ne-id "ONT_4" ;
-    ex:node-id "ONT_4" ;
-    ex:hasComponents inv-ne:ONT_4_components .
+    nwiNE:hasComponents inv-ne:ONT_4_components .
 inv-ne:ONT_4_components
-    ex:hasComponent inv-ne:ONT_4_board_main , inv-ne:ONT_4_port_Uplink_1 , inv-ne:ONT_4_port_UNI_1 , inv-ne:ONT_4_port_UNI_2 , inv-ne:ONT_4_port_UNI_3 , inv-ne:ONT_4_port_UNI_4 ;
+    rdf:type nwiNE:components ;
+    nwiComps:hasComponent inv-ne:ONT_4_board_main , inv-ne:ONT_4_port_Uplink_1 , inv-ne:ONT_4_port_UNI_1 , inv-ne:ONT_4_port_UNI_2 , inv-ne:ONT_4_port_UNI_3 , inv-ne:ONT_4_port_UNI_4 ;
     ex:description "ONT_ENCLOSURE" ;
     rdfs:comment "ONT_ENCLOSURE" ;
     ex:location-ref inv-loc:location_3615 .
@@ -44272,10 +44300,10 @@ inv-ne:ONT_5
     rdf:type nwiNEs:network-element ;
     ex:ne-type nwiInvId:ne-physical ;
     ex:ne-id "ONT_5" ;
-    ex:node-id "ONT_5" ;
-    ex:hasComponents inv-ne:ONT_5_components .
+    nwiNE:hasComponents inv-ne:ONT_5_components .
 inv-ne:ONT_5_components
-    ex:hasComponent inv-ne:ONT_5_board_main , inv-ne:ONT_5_port_Uplink_1 , inv-ne:ONT_5_port_UNI_1 , inv-ne:ONT_5_port_UNI_2 , inv-ne:ONT_5_port_UNI_3 , inv-ne:ONT_5_port_UNI_4 ;
+    rdf:type nwiNE:components ;
+    nwiComps:hasComponent inv-ne:ONT_5_board_main , inv-ne:ONT_5_port_Uplink_1 , inv-ne:ONT_5_port_UNI_1 , inv-ne:ONT_5_port_UNI_2 , inv-ne:ONT_5_port_UNI_3 , inv-ne:ONT_5_port_UNI_4 ;
     ex:description "ONT_ENCLOSURE" ;
     rdfs:comment "ONT_ENCLOSURE" ;
     ex:location-ref inv-loc:location_1738 .
@@ -45611,10 +45639,10 @@ inv-ne:ONT_6
     rdf:type nwiNEs:network-element ;
     ex:ne-type nwiInvId:ne-physical ;
     ex:ne-id "ONT_6" ;
-    ex:node-id "ONT_6" ;
-    ex:hasComponents inv-ne:ONT_6_components .
+    nwiNE:hasComponents inv-ne:ONT_6_components .
 inv-ne:ONT_6_components
-    ex:hasComponent inv-ne:ONT_6_board_main , inv-ne:ONT_6_port_Uplink_1 , inv-ne:ONT_6_port_UNI_1 , inv-ne:ONT_6_port_UNI_2 , inv-ne:ONT_6_port_UNI_3 , inv-ne:ONT_6_port_UNI_4 ;
+    rdf:type nwiNE:components ;
+    nwiComps:hasComponent inv-ne:ONT_6_board_main , inv-ne:ONT_6_port_Uplink_1 , inv-ne:ONT_6_port_UNI_1 , inv-ne:ONT_6_port_UNI_2 , inv-ne:ONT_6_port_UNI_3 , inv-ne:ONT_6_port_UNI_4 ;
     ex:description "ONT_ENCLOSURE" ;
     rdfs:comment "ONT_ENCLOSURE" ;
     ex:location-ref inv-loc:location_836 .
@@ -47791,10 +47819,10 @@ inv-ne:ONT_7
     rdf:type nwiNEs:network-element ;
     ex:ne-type nwiInvId:ne-physical ;
     ex:ne-id "ONT_7" ;
-    ex:node-id "ONT_7" ;
-    ex:hasComponents inv-ne:ONT_7_components .
+    nwiNE:hasComponents inv-ne:ONT_7_components .
 inv-ne:ONT_7_components
-    ex:hasComponent inv-ne:ONT_7_board_main , inv-ne:ONT_7_port_Uplink_1 , inv-ne:ONT_7_port_UNI_1 , inv-ne:ONT_7_port_UNI_2 , inv-ne:ONT_7_port_UNI_3 , inv-ne:ONT_7_port_UNI_4 ;
+    rdf:type nwiNE:components ;
+    nwiComps:hasComponent inv-ne:ONT_7_board_main , inv-ne:ONT_7_port_Uplink_1 , inv-ne:ONT_7_port_UNI_1 , inv-ne:ONT_7_port_UNI_2 , inv-ne:ONT_7_port_UNI_3 , inv-ne:ONT_7_port_UNI_4 ;
     ex:description "ONT_ENCLOSURE" ;
     rdfs:comment "ONT_ENCLOSURE" ;
     ex:location-ref inv-loc:location_2400 .
@@ -48212,10 +48240,10 @@ inv-ne:ONT_8
     rdf:type nwiNEs:network-element ;
     ex:ne-type nwiInvId:ne-physical ;
     ex:ne-id "ONT_8" ;
-    ex:node-id "ONT_8" ;
-    ex:hasComponents inv-ne:ONT_8_components .
+    nwiNE:hasComponents inv-ne:ONT_8_components .
 inv-ne:ONT_8_components
-    ex:hasComponent inv-ne:ONT_8_board_main , inv-ne:ONT_8_port_Uplink_1 , inv-ne:ONT_8_port_UNI_1 , inv-ne:ONT_8_port_UNI_2 , inv-ne:ONT_8_port_UNI_3 , inv-ne:ONT_8_port_UNI_4 ;
+    rdf:type nwiNE:components ;
+    nwiComps:hasComponent inv-ne:ONT_8_board_main , inv-ne:ONT_8_port_Uplink_1 , inv-ne:ONT_8_port_UNI_1 , inv-ne:ONT_8_port_UNI_2 , inv-ne:ONT_8_port_UNI_3 , inv-ne:ONT_8_port_UNI_4 ;
     ex:description "ONT_ENCLOSURE" ;
     rdfs:comment "ONT_ENCLOSURE" ;
     ex:location-ref inv-loc:location_267 .
@@ -49729,10 +49757,10 @@ inv-ne:ONT_9
     rdf:type nwiNEs:network-element ;
     ex:ne-type nwiInvId:ne-physical ;
     ex:ne-id "ONT_9" ;
-    ex:node-id "ONT_9" ;
-    ex:hasComponents inv-ne:ONT_9_components .
+    nwiNE:hasComponents inv-ne:ONT_9_components .
 inv-ne:ONT_9_components
-    ex:hasComponent inv-ne:ONT_9_board_main , inv-ne:ONT_9_port_Uplink_1 , inv-ne:ONT_9_port_UNI_1 , inv-ne:ONT_9_port_UNI_2 , inv-ne:ONT_9_port_UNI_3 , inv-ne:ONT_9_port_UNI_4 ;
+    rdf:type nwiNE:components ;
+    nwiComps:hasComponent inv-ne:ONT_9_board_main , inv-ne:ONT_9_port_Uplink_1 , inv-ne:ONT_9_port_UNI_1 , inv-ne:ONT_9_port_UNI_2 , inv-ne:ONT_9_port_UNI_3 , inv-ne:ONT_9_port_UNI_4 ;
     ex:description "ONT_ENCLOSURE" ;
     rdfs:comment "ONT_ENCLOSURE" ;
     ex:location-ref inv-loc:location_3499 .
@@ -50985,10 +51013,10 @@ inv-ne:ONT_10
     rdf:type nwiNEs:network-element ;
     ex:ne-type nwiInvId:ne-physical ;
     ex:ne-id "ONT_10" ;
-    ex:node-id "ONT_10" ;
-    ex:hasComponents inv-ne:ONT_10_components .
+    nwiNE:hasComponents inv-ne:ONT_10_components .
 inv-ne:ONT_10_components
-    ex:hasComponent inv-ne:ONT_10_board_main , inv-ne:ONT_10_port_Uplink_1 , inv-ne:ONT_10_port_UNI_1 , inv-ne:ONT_10_port_UNI_2 , inv-ne:ONT_10_port_UNI_3 , inv-ne:ONT_10_port_UNI_4 ;
+    rdf:type nwiNE:components ;
+    nwiComps:hasComponent inv-ne:ONT_10_board_main , inv-ne:ONT_10_port_Uplink_1 , inv-ne:ONT_10_port_UNI_1 , inv-ne:ONT_10_port_UNI_2 , inv-ne:ONT_10_port_UNI_3 , inv-ne:ONT_10_port_UNI_4 ;
     ex:description "ONT_ENCLOSURE" ;
     rdfs:comment "ONT_ENCLOSURE" ;
     ex:location-ref inv-loc:location_1432 .
@@ -51248,10 +51276,10 @@ inv-ne:ONT_11
     rdf:type nwiNEs:network-element ;
     ex:ne-type nwiInvId:ne-physical ;
     ex:ne-id "ONT_11" ;
-    ex:node-id "ONT_11" ;
-    ex:hasComponents inv-ne:ONT_11_components .
+    nwiNE:hasComponents inv-ne:ONT_11_components .
 inv-ne:ONT_11_components
-    ex:hasComponent inv-ne:ONT_11_board_main , inv-ne:ONT_11_port_Uplink_1 , inv-ne:ONT_11_port_UNI_1 , inv-ne:ONT_11_port_UNI_2 , inv-ne:ONT_11_port_UNI_3 , inv-ne:ONT_11_port_UNI_4 ;
+    rdf:type nwiNE:components ;
+    nwiComps:hasComponent inv-ne:ONT_11_board_main , inv-ne:ONT_11_port_Uplink_1 , inv-ne:ONT_11_port_UNI_1 , inv-ne:ONT_11_port_UNI_2 , inv-ne:ONT_11_port_UNI_3 , inv-ne:ONT_11_port_UNI_4 ;
     ex:description "ONT_ENCLOSURE" ;
     rdfs:comment "ONT_ENCLOSURE" ;
     ex:location-ref inv-loc:location_4192 .
@@ -52287,10 +52315,10 @@ inv-ne:ONT_12
     rdf:type nwiNEs:network-element ;
     ex:ne-type nwiInvId:ne-physical ;
     ex:ne-id "ONT_12" ;
-    ex:node-id "ONT_12" ;
-    ex:hasComponents inv-ne:ONT_12_components .
+    nwiNE:hasComponents inv-ne:ONT_12_components .
 inv-ne:ONT_12_components
-    ex:hasComponent inv-ne:ONT_12_board_main , inv-ne:ONT_12_port_Uplink_1 , inv-ne:ONT_12_port_UNI_1 , inv-ne:ONT_12_port_UNI_2 , inv-ne:ONT_12_port_UNI_3 , inv-ne:ONT_12_port_UNI_4 ;
+    rdf:type nwiNE:components ;
+    nwiComps:hasComponent inv-ne:ONT_12_board_main , inv-ne:ONT_12_port_Uplink_1 , inv-ne:ONT_12_port_UNI_1 , inv-ne:ONT_12_port_UNI_2 , inv-ne:ONT_12_port_UNI_3 , inv-ne:ONT_12_port_UNI_4 ;
     ex:description "ONT_ENCLOSURE" ;
     rdfs:comment "ONT_ENCLOSURE" ;
     ex:location-ref inv-loc:location_3263 .
@@ -53657,10 +53685,10 @@ inv-ne:ONT_13
     rdf:type nwiNEs:network-element ;
     ex:ne-type nwiInvId:ne-physical ;
     ex:ne-id "ONT_13" ;
-    ex:node-id "ONT_13" ;
-    ex:hasComponents inv-ne:ONT_13_components .
+    nwiNE:hasComponents inv-ne:ONT_13_components .
 inv-ne:ONT_13_components
-    ex:hasComponent inv-ne:ONT_13_board_main , inv-ne:ONT_13_port_Uplink_1 , inv-ne:ONT_13_port_UNI_1 , inv-ne:ONT_13_port_UNI_2 , inv-ne:ONT_13_port_UNI_3 , inv-ne:ONT_13_port_UNI_4 ;
+    rdf:type nwiNE:components ;
+    nwiComps:hasComponent inv-ne:ONT_13_board_main , inv-ne:ONT_13_port_Uplink_1 , inv-ne:ONT_13_port_UNI_1 , inv-ne:ONT_13_port_UNI_2 , inv-ne:ONT_13_port_UNI_3 , inv-ne:ONT_13_port_UNI_4 ;
     ex:description "ONT_ENCLOSURE" ;
     rdfs:comment "ONT_ENCLOSURE" ;
     ex:location-ref inv-loc:location_2770 .
@@ -57620,10 +57648,10 @@ inv-ne:ONT_14
     rdf:type nwiNEs:network-element ;
     ex:ne-type nwiInvId:ne-physical ;
     ex:ne-id "ONT_14" ;
-    ex:node-id "ONT_14" ;
-    ex:hasComponents inv-ne:ONT_14_components .
+    nwiNE:hasComponents inv-ne:ONT_14_components .
 inv-ne:ONT_14_components
-    ex:hasComponent inv-ne:ONT_14_board_main , inv-ne:ONT_14_port_Uplink_1 , inv-ne:ONT_14_port_UNI_1 , inv-ne:ONT_14_port_UNI_2 , inv-ne:ONT_14_port_UNI_3 , inv-ne:ONT_14_port_UNI_4 ;
+    rdf:type nwiNE:components ;
+    nwiComps:hasComponent inv-ne:ONT_14_board_main , inv-ne:ONT_14_port_Uplink_1 , inv-ne:ONT_14_port_UNI_1 , inv-ne:ONT_14_port_UNI_2 , inv-ne:ONT_14_port_UNI_3 , inv-ne:ONT_14_port_UNI_4 ;
     ex:description "ONT_ENCLOSURE" ;
     rdfs:comment "ONT_ENCLOSURE" ;
     ex:location-ref inv-loc:location_1470 .
@@ -58538,10 +58566,10 @@ inv-ne:ONT_15
     rdf:type nwiNEs:network-element ;
     ex:ne-type nwiInvId:ne-physical ;
     ex:ne-id "ONT_15" ;
-    ex:node-id "ONT_15" ;
-    ex:hasComponents inv-ne:ONT_15_components .
+    nwiNE:hasComponents inv-ne:ONT_15_components .
 inv-ne:ONT_15_components
-    ex:hasComponent inv-ne:ONT_15_board_main , inv-ne:ONT_15_port_Uplink_1 , inv-ne:ONT_15_port_UNI_1 , inv-ne:ONT_15_port_UNI_2 , inv-ne:ONT_15_port_UNI_3 , inv-ne:ONT_15_port_UNI_4 ;
+    rdf:type nwiNE:components ;
+    nwiComps:hasComponent inv-ne:ONT_15_board_main , inv-ne:ONT_15_port_Uplink_1 , inv-ne:ONT_15_port_UNI_1 , inv-ne:ONT_15_port_UNI_2 , inv-ne:ONT_15_port_UNI_3 , inv-ne:ONT_15_port_UNI_4 ;
     ex:description "ONT_ENCLOSURE" ;
     rdfs:comment "ONT_ENCLOSURE" ;
     ex:location-ref inv-loc:location_1294 .
@@ -58603,10 +58631,10 @@ inv-ne:ONT_16
     rdf:type nwiNEs:network-element ;
     ex:ne-type nwiInvId:ne-physical ;
     ex:ne-id "ONT_16" ;
-    ex:node-id "ONT_16" ;
-    ex:hasComponents inv-ne:ONT_16_components .
+    nwiNE:hasComponents inv-ne:ONT_16_components .
 inv-ne:ONT_16_components
-    ex:hasComponent inv-ne:ONT_16_board_main , inv-ne:ONT_16_port_Uplink_1 , inv-ne:ONT_16_port_UNI_1 , inv-ne:ONT_16_port_UNI_2 , inv-ne:ONT_16_port_UNI_3 , inv-ne:ONT_16_port_UNI_4 ;
+    rdf:type nwiNE:components ;
+    nwiComps:hasComponent inv-ne:ONT_16_board_main , inv-ne:ONT_16_port_Uplink_1 , inv-ne:ONT_16_port_UNI_1 , inv-ne:ONT_16_port_UNI_2 , inv-ne:ONT_16_port_UNI_3 , inv-ne:ONT_16_port_UNI_4 ;
     ex:description "ONT_ENCLOSURE" ;
     rdfs:comment "ONT_ENCLOSURE" ;
     ex:location-ref inv-loc:location_1079 .
@@ -62039,10 +62067,10 @@ inv-ne:ONT_17
     rdf:type nwiNEs:network-element ;
     ex:ne-type nwiInvId:ne-physical ;
     ex:ne-id "ONT_17" ;
-    ex:node-id "ONT_17" ;
-    ex:hasComponents inv-ne:ONT_17_components .
+    nwiNE:hasComponents inv-ne:ONT_17_components .
 inv-ne:ONT_17_components
-    ex:hasComponent inv-ne:ONT_17_board_main , inv-ne:ONT_17_port_Uplink_1 , inv-ne:ONT_17_port_UNI_1 , inv-ne:ONT_17_port_UNI_2 , inv-ne:ONT_17_port_UNI_3 , inv-ne:ONT_17_port_UNI_4 ;
+    rdf:type nwiNE:components ;
+    nwiComps:hasComponent inv-ne:ONT_17_board_main , inv-ne:ONT_17_port_Uplink_1 , inv-ne:ONT_17_port_UNI_1 , inv-ne:ONT_17_port_UNI_2 , inv-ne:ONT_17_port_UNI_3 , inv-ne:ONT_17_port_UNI_4 ;
     ex:description "ONT_ENCLOSURE" ;
     rdfs:comment "ONT_ENCLOSURE" ;
     ex:location-ref inv-loc:location_2150 .
@@ -62718,10 +62746,10 @@ inv-ne:ONT_18
     rdf:type nwiNEs:network-element ;
     ex:ne-type nwiInvId:ne-physical ;
     ex:ne-id "ONT_18" ;
-    ex:node-id "ONT_18" ;
-    ex:hasComponents inv-ne:ONT_18_components .
+    nwiNE:hasComponents inv-ne:ONT_18_components .
 inv-ne:ONT_18_components
-    ex:hasComponent inv-ne:ONT_18_board_main , inv-ne:ONT_18_port_Uplink_1 , inv-ne:ONT_18_port_UNI_1 , inv-ne:ONT_18_port_UNI_2 , inv-ne:ONT_18_port_UNI_3 , inv-ne:ONT_18_port_UNI_4 ;
+    rdf:type nwiNE:components ;
+    nwiComps:hasComponent inv-ne:ONT_18_board_main , inv-ne:ONT_18_port_Uplink_1 , inv-ne:ONT_18_port_UNI_1 , inv-ne:ONT_18_port_UNI_2 , inv-ne:ONT_18_port_UNI_3 , inv-ne:ONT_18_port_UNI_4 ;
     ex:description "ONT_ENCLOSURE" ;
     rdfs:comment "ONT_ENCLOSURE" ;
     ex:location-ref inv-loc:location_404 .
@@ -62958,21 +62986,37 @@ inv-dev:ATB_3956
     ex:id "ATB_3956" ;
     ex:node-id "ATB_3956" ;
     ex:location-ref inv-loc:location_3904 .
-inv-dev:enclosure_38_port_PORT_2
+inv-dev:enclosure_29_port_PORT_1
+    rdf:type pdev:passive-port ;
+    ex:name "PORT_1" ;
+    ex:fiber-core-num "72"^^xsd:unsignedInt .
+inv-dev:enclosure_29_port_PORT_1
+    rdf:type pdev:passive-port ;
+    ex:name "PORT_1" ;
+    ex:fiber-core-num "72"^^xsd:unsignedInt .
+inv-dev:enclosure_29_port_PORT_2
+    rdf:type pdev:passive-port ;
+    ex:name "PORT_2" ;
+    ex:fiber-core-num "72"^^xsd:unsignedInt .
+inv-dev:enclosure_29_port_PORT_3
+    rdf:type pdev:passive-port ;
+    ex:name "PORT_3" ;
+    ex:fiber-core-num "12"^^xsd:unsignedInt .
+inv-dev:enclosure_26_port_PORT_2
     rdf:type pdev:passive-port ;
     ex:name "PORT_2" ;
     ex:fiber-core-num "12"^^xsd:unsignedInt .
-inv-dev:enclosure_38_port_PORT_6
+inv-dev:enclosure_26_port_PORT_5
     rdf:type pdev:passive-port ;
-    ex:name "PORT_6" ;
+    ex:name "PORT_5" ;
     ex:fiber-core-num "1"^^xsd:unsignedInt .
-inv-dev:enclosure_38_port_PORT_1
-    rdf:type pdev:passive-port ;
-    ex:name "PORT_1" ;
-    ex:fiber-core-num "1"^^xsd:unsignedInt .
-inv-dev:enclosure_38_port_PORT_4
+inv-dev:enclosure_26_port_PORT_4
     rdf:type pdev:passive-port ;
     ex:name "PORT_4" ;
+    ex:fiber-core-num "1"^^xsd:unsignedInt .
+inv-dev:enclosure_26_port_PORT_1
+    rdf:type pdev:passive-port ;
+    ex:name "PORT_1" ;
     ex:fiber-core-num "1"^^xsd:unsignedInt .
 inv-dev:enclosure_73_port_PORT_2
     rdf:type pdev:passive-port ;
@@ -63006,6 +63050,358 @@ inv-dev:enclosure_73_port_OVERFLOW
     rdf:type pdev:passive-port ;
     ex:name "OVERFLOW" ;
     ex:fiber-core-num "1"^^xsd:unsignedInt .
+inv-ne:ONT_8_board_main
+    rdf:type nwiComp:component ;
+    ex:component-id "board_main" ;
+    ex:class ianaHw:module ;
+    ex:is-fru "false"^^xsd:boolean .
+inv-ne:ONT_8_port_Uplink_1
+    rdf:type nwiComp:component ;
+    ex:component-id "port_Uplink_1" ;
+    ex:class ianaHw:port ;
+    ex:parent inv-ne:ONT_8_board_main .
+inv-ne:ONT_8_port_UNI_1
+    rdf:type nwiComp:component ;
+    ex:component-id "port_UNI_1" ;
+    ex:class ianaHw:port ;
+    ex:parent inv-ne:ONT_8_board_main .
+inv-ne:ONT_8_port_UNI_2
+    rdf:type nwiComp:component ;
+    ex:component-id "port_UNI_2" ;
+    ex:class ianaHw:port ;
+    ex:parent inv-ne:ONT_8_board_main .
+inv-ne:ONT_8_port_UNI_3
+    rdf:type nwiComp:component ;
+    ex:component-id "port_UNI_3" ;
+    ex:class ianaHw:port ;
+    ex:parent inv-ne:ONT_8_board_main .
+inv-ne:ONT_8_port_UNI_4
+    rdf:type nwiComp:component ;
+    ex:component-id "port_UNI_4" ;
+    ex:class ianaHw:port ;
+    ex:parent inv-ne:ONT_8_board_main .
+inv-ne:ONT_15_board_main
+    rdf:type nwiComp:component ;
+    ex:component-id "board_main" ;
+    ex:class ianaHw:module ;
+    ex:is-fru "false"^^xsd:boolean .
+inv-ne:ONT_15_port_Uplink_1
+    rdf:type nwiComp:component ;
+    ex:component-id "port_Uplink_1" ;
+    ex:class ianaHw:port ;
+    ex:parent inv-ne:ONT_15_board_main .
+inv-ne:ONT_15_port_UNI_1
+    rdf:type nwiComp:component ;
+    ex:component-id "port_UNI_1" ;
+    ex:class ianaHw:port ;
+    ex:parent inv-ne:ONT_15_board_main .
+inv-ne:ONT_15_port_UNI_2
+    rdf:type nwiComp:component ;
+    ex:component-id "port_UNI_2" ;
+    ex:class ianaHw:port ;
+    ex:parent inv-ne:ONT_15_board_main .
+inv-ne:ONT_15_port_UNI_3
+    rdf:type nwiComp:component ;
+    ex:component-id "port_UNI_3" ;
+    ex:class ianaHw:port ;
+    ex:parent inv-ne:ONT_15_board_main .
+inv-ne:ONT_15_port_UNI_4
+    rdf:type nwiComp:component ;
+    ex:component-id "port_UNI_4" ;
+    ex:class ianaHw:port ;
+    ex:parent inv-ne:ONT_15_board_main .
+inv-ne:ONT_3_board_main
+    rdf:type nwiComp:component ;
+    ex:component-id "board_main" ;
+    ex:class ianaHw:module ;
+    ex:is-fru "false"^^xsd:boolean .
+inv-ne:ONT_3_port_Uplink_1
+    rdf:type nwiComp:component ;
+    ex:component-id "port_Uplink_1" ;
+    ex:class ianaHw:port ;
+    ex:parent inv-ne:ONT_3_board_main .
+inv-ne:ONT_3_port_UNI_1
+    rdf:type nwiComp:component ;
+    ex:component-id "port_UNI_1" ;
+    ex:class ianaHw:port ;
+    ex:parent inv-ne:ONT_3_board_main .
+inv-ne:ONT_3_port_UNI_2
+    rdf:type nwiComp:component ;
+    ex:component-id "port_UNI_2" ;
+    ex:class ianaHw:port ;
+    ex:parent inv-ne:ONT_3_board_main .
+inv-ne:ONT_3_port_UNI_3
+    rdf:type nwiComp:component ;
+    ex:component-id "port_UNI_3" ;
+    ex:class ianaHw:port ;
+    ex:parent inv-ne:ONT_3_board_main .
+inv-ne:ONT_3_port_UNI_4
+    rdf:type nwiComp:component ;
+    ex:component-id "port_UNI_4" ;
+    ex:class ianaHw:port ;
+    ex:parent inv-ne:ONT_3_board_main .
+inv-dev:enclosure_60_port_PORT_2
+    rdf:type pdev:passive-port ;
+    ex:name "PORT_2" ;
+    ex:fiber-core-num "12"^^xsd:unsignedInt .
+inv-dev:enclosure_60_port_PORT_5
+    rdf:type pdev:passive-port ;
+    ex:name "PORT_5" ;
+    ex:fiber-core-num "1"^^xsd:unsignedInt .
+inv-dev:enclosure_60_port_PORT_1
+    rdf:type pdev:passive-port ;
+    ex:name "PORT_1" ;
+    ex:fiber-core-num "1"^^xsd:unsignedInt .
+inv-dev:enclosure_60_port_PORT_4
+    rdf:type pdev:passive-port ;
+    ex:name "PORT_4" ;
+    ex:fiber-core-num "1"^^xsd:unsignedInt .
+inv-dev:enclosure_3_port_PORT_2
+    rdf:type pdev:passive-port ;
+    ex:name "PORT_2" ;
+    ex:fiber-core-num "12"^^xsd:unsignedInt .
+inv-dev:enclosure_3_port_PORT_4
+    rdf:type pdev:passive-port ;
+    ex:name "PORT_4" ;
+    ex:fiber-core-num "1"^^xsd:unsignedInt .
+inv-dev:enclosure_3_port_PORT_1
+    rdf:type pdev:passive-port ;
+    ex:name "PORT_1" ;
+    ex:fiber-core-num "1"^^xsd:unsignedInt .
+inv-dev:enclosure_3_port_PORT_1
+    rdf:type pdev:passive-port ;
+    ex:name "PORT_1" ;
+    ex:fiber-core-num "1"^^xsd:unsignedInt .
+inv-dev:enclosure_3_port_PORT_5
+    rdf:type pdev:passive-port ;
+    ex:name "PORT_5" ;
+    ex:fiber-core-num "1"^^xsd:unsignedInt .
+inv-ne:ONT_14_board_main
+    rdf:type nwiComp:component ;
+    ex:component-id "board_main" ;
+    ex:class ianaHw:module ;
+    ex:is-fru "false"^^xsd:boolean .
+inv-ne:ONT_14_port_Uplink_1
+    rdf:type nwiComp:component ;
+    ex:component-id "port_Uplink_1" ;
+    ex:class ianaHw:port ;
+    ex:parent inv-ne:ONT_14_board_main .
+inv-ne:ONT_14_port_UNI_1
+    rdf:type nwiComp:component ;
+    ex:component-id "port_UNI_1" ;
+    ex:class ianaHw:port ;
+    ex:parent inv-ne:ONT_14_board_main .
+inv-ne:ONT_14_port_UNI_2
+    rdf:type nwiComp:component ;
+    ex:component-id "port_UNI_2" ;
+    ex:class ianaHw:port ;
+    ex:parent inv-ne:ONT_14_board_main .
+inv-ne:ONT_14_port_UNI_3
+    rdf:type nwiComp:component ;
+    ex:component-id "port_UNI_3" ;
+    ex:class ianaHw:port ;
+    ex:parent inv-ne:ONT_14_board_main .
+inv-ne:ONT_14_port_UNI_4
+    rdf:type nwiComp:component ;
+    ex:component-id "port_UNI_4" ;
+    ex:class ianaHw:port ;
+    ex:parent inv-ne:ONT_14_board_main .
+inv-ne:ONT_11_board_main
+    rdf:type nwiComp:component ;
+    ex:component-id "board_main" ;
+    ex:class ianaHw:module ;
+    ex:is-fru "false"^^xsd:boolean .
+inv-ne:ONT_11_port_Uplink_1
+    rdf:type nwiComp:component ;
+    ex:component-id "port_Uplink_1" ;
+    ex:class ianaHw:port ;
+    ex:parent inv-ne:ONT_11_board_main .
+inv-ne:ONT_11_port_UNI_1
+    rdf:type nwiComp:component ;
+    ex:component-id "port_UNI_1" ;
+    ex:class ianaHw:port ;
+    ex:parent inv-ne:ONT_11_board_main .
+inv-ne:ONT_11_port_UNI_2
+    rdf:type nwiComp:component ;
+    ex:component-id "port_UNI_2" ;
+    ex:class ianaHw:port ;
+    ex:parent inv-ne:ONT_11_board_main .
+inv-ne:ONT_11_port_UNI_3
+    rdf:type nwiComp:component ;
+    ex:component-id "port_UNI_3" ;
+    ex:class ianaHw:port ;
+    ex:parent inv-ne:ONT_11_board_main .
+inv-ne:ONT_11_port_UNI_4
+    rdf:type nwiComp:component ;
+    ex:component-id "port_UNI_4" ;
+    ex:class ianaHw:port ;
+    ex:parent inv-ne:ONT_11_board_main .
+inv-dev:enclosure_39_port_PORT_2
+    rdf:type pdev:passive-port ;
+    ex:name "PORT_2" ;
+    ex:fiber-core-num "12"^^xsd:unsignedInt .
+inv-dev:enclosure_39_port_PORT_6
+    rdf:type pdev:passive-port ;
+    ex:name "PORT_6" ;
+    ex:fiber-core-num "1"^^xsd:unsignedInt .
+inv-dev:enclosure_56_port_PORT_2
+    rdf:type pdev:passive-port ;
+    ex:name "PORT_2" ;
+    ex:fiber-core-num "12"^^xsd:unsignedInt .
+inv-dev:enclosure_56_port_PORT_3
+    rdf:type pdev:passive-port ;
+    ex:name "PORT_3" ;
+    ex:fiber-core-num "12"^^xsd:unsignedInt .
+inv-ne:ONT_4_board_main
+    rdf:type nwiComp:component ;
+    ex:component-id "board_main" ;
+    ex:class ianaHw:module ;
+    ex:is-fru "false"^^xsd:boolean .
+inv-ne:ONT_4_port_Uplink_1
+    rdf:type nwiComp:component ;
+    ex:component-id "port_Uplink_1" ;
+    ex:class ianaHw:port ;
+    ex:parent inv-ne:ONT_4_board_main .
+inv-ne:ONT_4_port_UNI_1
+    rdf:type nwiComp:component ;
+    ex:component-id "port_UNI_1" ;
+    ex:class ianaHw:port ;
+    ex:parent inv-ne:ONT_4_board_main .
+inv-ne:ONT_4_port_UNI_2
+    rdf:type nwiComp:component ;
+    ex:component-id "port_UNI_2" ;
+    ex:class ianaHw:port ;
+    ex:parent inv-ne:ONT_4_board_main .
+inv-ne:ONT_4_port_UNI_3
+    rdf:type nwiComp:component ;
+    ex:component-id "port_UNI_3" ;
+    ex:class ianaHw:port ;
+    ex:parent inv-ne:ONT_4_board_main .
+inv-ne:ONT_4_port_UNI_4
+    rdf:type nwiComp:component ;
+    ex:component-id "port_UNI_4" ;
+    ex:class ianaHw:port ;
+    ex:parent inv-ne:ONT_4_board_main .
+inv-ne:ONT_6_board_main
+    rdf:type nwiComp:component ;
+    ex:component-id "board_main" ;
+    ex:class ianaHw:module ;
+    ex:is-fru "false"^^xsd:boolean .
+inv-ne:ONT_6_port_Uplink_1
+    rdf:type nwiComp:component ;
+    ex:component-id "port_Uplink_1" ;
+    ex:class ianaHw:port ;
+    ex:parent inv-ne:ONT_6_board_main .
+inv-ne:ONT_6_port_UNI_1
+    rdf:type nwiComp:component ;
+    ex:component-id "port_UNI_1" ;
+    ex:class ianaHw:port ;
+    ex:parent inv-ne:ONT_6_board_main .
+inv-ne:ONT_6_port_UNI_2
+    rdf:type nwiComp:component ;
+    ex:component-id "port_UNI_2" ;
+    ex:class ianaHw:port ;
+    ex:parent inv-ne:ONT_6_board_main .
+inv-ne:ONT_6_port_UNI_3
+    rdf:type nwiComp:component ;
+    ex:component-id "port_UNI_3" ;
+    ex:class ianaHw:port ;
+    ex:parent inv-ne:ONT_6_board_main .
+inv-ne:ONT_6_port_UNI_4
+    rdf:type nwiComp:component ;
+    ex:component-id "port_UNI_4" ;
+    ex:class ianaHw:port ;
+    ex:parent inv-ne:ONT_6_board_main .
+inv-ne:ONT_12_board_main
+    rdf:type nwiComp:component ;
+    ex:component-id "board_main" ;
+    ex:class ianaHw:module ;
+    ex:is-fru "false"^^xsd:boolean .
+inv-ne:ONT_12_port_Uplink_1
+    rdf:type nwiComp:component ;
+    ex:component-id "port_Uplink_1" ;
+    ex:class ianaHw:port ;
+    ex:parent inv-ne:ONT_12_board_main .
+inv-ne:ONT_12_port_UNI_1
+    rdf:type nwiComp:component ;
+    ex:component-id "port_UNI_1" ;
+    ex:class ianaHw:port ;
+    ex:parent inv-ne:ONT_12_board_main .
+inv-ne:ONT_12_port_UNI_2
+    rdf:type nwiComp:component ;
+    ex:component-id "port_UNI_2" ;
+    ex:class ianaHw:port ;
+    ex:parent inv-ne:ONT_12_board_main .
+inv-ne:ONT_12_port_UNI_3
+    rdf:type nwiComp:component ;
+    ex:component-id "port_UNI_3" ;
+    ex:class ianaHw:port ;
+    ex:parent inv-ne:ONT_12_board_main .
+inv-ne:ONT_12_port_UNI_4
+    rdf:type nwiComp:component ;
+    ex:component-id "port_UNI_4" ;
+    ex:class ianaHw:port ;
+    ex:parent inv-ne:ONT_12_board_main .
+inv-ne:ONT_7_board_main
+    rdf:type nwiComp:component ;
+    ex:component-id "board_main" ;
+    ex:class ianaHw:module ;
+    ex:is-fru "false"^^xsd:boolean .
+inv-ne:ONT_7_port_Uplink_1
+    rdf:type nwiComp:component ;
+    ex:component-id "port_Uplink_1" ;
+    ex:class ianaHw:port ;
+    ex:parent inv-ne:ONT_7_board_main .
+inv-ne:ONT_7_port_UNI_1
+    rdf:type nwiComp:component ;
+    ex:component-id "port_UNI_1" ;
+    ex:class ianaHw:port ;
+    ex:parent inv-ne:ONT_7_board_main .
+inv-ne:ONT_7_port_UNI_2
+    rdf:type nwiComp:component ;
+    ex:component-id "port_UNI_2" ;
+    ex:class ianaHw:port ;
+    ex:parent inv-ne:ONT_7_board_main .
+inv-ne:ONT_7_port_UNI_3
+    rdf:type nwiComp:component ;
+    ex:component-id "port_UNI_3" ;
+    ex:class ianaHw:port ;
+    ex:parent inv-ne:ONT_7_board_main .
+inv-ne:ONT_7_port_UNI_4
+    rdf:type nwiComp:component ;
+    ex:component-id "port_UNI_4" ;
+    ex:class ianaHw:port ;
+    ex:parent inv-ne:ONT_7_board_main .
+inv-ne:ONT_18_board_main
+    rdf:type nwiComp:component ;
+    ex:component-id "board_main" ;
+    ex:class ianaHw:module ;
+    ex:is-fru "false"^^xsd:boolean .
+inv-ne:ONT_18_port_Uplink_1
+    rdf:type nwiComp:component ;
+    ex:component-id "port_Uplink_1" ;
+    ex:class ianaHw:port ;
+    ex:parent inv-ne:ONT_18_board_main .
+inv-ne:ONT_18_port_UNI_1
+    rdf:type nwiComp:component ;
+    ex:component-id "port_UNI_1" ;
+    ex:class ianaHw:port ;
+    ex:parent inv-ne:ONT_18_board_main .
+inv-ne:ONT_18_port_UNI_2
+    rdf:type nwiComp:component ;
+    ex:component-id "port_UNI_2" ;
+    ex:class ianaHw:port ;
+    ex:parent inv-ne:ONT_18_board_main .
+inv-ne:ONT_18_port_UNI_3
+    rdf:type nwiComp:component ;
+    ex:component-id "port_UNI_3" ;
+    ex:class ianaHw:port ;
+    ex:parent inv-ne:ONT_18_board_main .
+inv-ne:ONT_18_port_UNI_4
+    rdf:type nwiComp:component ;
+    ex:component-id "port_UNI_4" ;
+    ex:class ianaHw:port ;
+    ex:parent inv-ne:ONT_18_board_main .
 inv-dev:enclosure_50_port_PORT_2
     rdf:type pdev:passive-port ;
     ex:name "PORT_2" ;
@@ -63046,94 +63442,106 @@ inv-dev:enclosure_50_port_OVERFLOW
     rdf:type pdev:passive-port ;
     ex:name "OVERFLOW" ;
     ex:fiber-core-num "1"^^xsd:unsignedInt .
-inv-dev:enclosure_6_port_PORT_2
+inv-ne:ONT_10_board_main
+    rdf:type nwiComp:component ;
+    ex:component-id "board_main" ;
+    ex:class ianaHw:module ;
+    ex:is-fru "false"^^xsd:boolean .
+inv-ne:ONT_10_port_Uplink_1
+    rdf:type nwiComp:component ;
+    ex:component-id "port_Uplink_1" ;
+    ex:class ianaHw:port ;
+    ex:parent inv-ne:ONT_10_board_main .
+inv-ne:ONT_10_port_UNI_1
+    rdf:type nwiComp:component ;
+    ex:component-id "port_UNI_1" ;
+    ex:class ianaHw:port ;
+    ex:parent inv-ne:ONT_10_board_main .
+inv-ne:ONT_10_port_UNI_2
+    rdf:type nwiComp:component ;
+    ex:component-id "port_UNI_2" ;
+    ex:class ianaHw:port ;
+    ex:parent inv-ne:ONT_10_board_main .
+inv-ne:ONT_10_port_UNI_3
+    rdf:type nwiComp:component ;
+    ex:component-id "port_UNI_3" ;
+    ex:class ianaHw:port ;
+    ex:parent inv-ne:ONT_10_board_main .
+inv-ne:ONT_10_port_UNI_4
+    rdf:type nwiComp:component ;
+    ex:component-id "port_UNI_4" ;
+    ex:class ianaHw:port ;
+    ex:parent inv-ne:ONT_10_board_main .
+inv-ne:ONT_13_board_main
+    rdf:type nwiComp:component ;
+    ex:component-id "board_main" ;
+    ex:class ianaHw:module ;
+    ex:is-fru "false"^^xsd:boolean .
+inv-ne:ONT_13_port_Uplink_1
+    rdf:type nwiComp:component ;
+    ex:component-id "port_Uplink_1" ;
+    ex:class ianaHw:port ;
+    ex:parent inv-ne:ONT_13_board_main .
+inv-ne:ONT_13_port_UNI_1
+    rdf:type nwiComp:component ;
+    ex:component-id "port_UNI_1" ;
+    ex:class ianaHw:port ;
+    ex:parent inv-ne:ONT_13_board_main .
+inv-ne:ONT_13_port_UNI_2
+    rdf:type nwiComp:component ;
+    ex:component-id "port_UNI_2" ;
+    ex:class ianaHw:port ;
+    ex:parent inv-ne:ONT_13_board_main .
+inv-ne:ONT_13_port_UNI_3
+    rdf:type nwiComp:component ;
+    ex:component-id "port_UNI_3" ;
+    ex:class ianaHw:port ;
+    ex:parent inv-ne:ONT_13_board_main .
+inv-ne:ONT_13_port_UNI_4
+    rdf:type nwiComp:component ;
+    ex:component-id "port_UNI_4" ;
+    ex:class ianaHw:port ;
+    ex:parent inv-ne:ONT_13_board_main .
+inv-dev:enclosure_63_port_PORT_2
     rdf:type pdev:passive-port ;
     ex:name "PORT_2" ;
     ex:fiber-core-num "12"^^xsd:unsignedInt .
-inv-dev:enclosure_6_port_PORT_4
+inv-dev:enclosure_63_port_PORT_4
     rdf:type pdev:passive-port ;
     ex:name "PORT_4" ;
     ex:fiber-core-num "1"^^xsd:unsignedInt .
-inv-dev:enclosure_6_port_PORT_1
-    rdf:type pdev:passive-port ;
-    ex:name "PORT_1" ;
-    ex:fiber-core-num "1"^^xsd:unsignedInt .
-inv-dev:enclosure_6_port_PORT_6
-    rdf:type pdev:passive-port ;
-    ex:name "PORT_6" ;
-    ex:fiber-core-num "1"^^xsd:unsignedInt .
-inv-dev:enclosure_6_port_PORT_5
-    rdf:type pdev:passive-port ;
-    ex:name "PORT_5" ;
-    ex:fiber-core-num "1"^^xsd:unsignedInt .
-inv-ne:ONT_11_board_main
-    rdf:type nwiComp:component ;
-    ex:component-id "board_main" ;
-    ex:class ianaHw:module ;
-    ex:is-fru "false"^^xsd:boolean .
-inv-ne:ONT_11_port_Uplink_1
-    rdf:type nwiComp:component ;
-    ex:component-id "port_Uplink_1" ;
-    ex:class ianaHw:port ;
-    ex:parent inv-ne:ONT_11_board_main .
-inv-ne:ONT_11_port_UNI_1
-    rdf:type nwiComp:component ;
-    ex:component-id "port_UNI_1" ;
-    ex:class ianaHw:port ;
-    ex:parent inv-ne:ONT_11_board_main .
-inv-ne:ONT_11_port_UNI_2
-    rdf:type nwiComp:component ;
-    ex:component-id "port_UNI_2" ;
-    ex:class ianaHw:port ;
-    ex:parent inv-ne:ONT_11_board_main .
-inv-ne:ONT_11_port_UNI_3
-    rdf:type nwiComp:component ;
-    ex:component-id "port_UNI_3" ;
-    ex:class ianaHw:port ;
-    ex:parent inv-ne:ONT_11_board_main .
-inv-ne:ONT_11_port_UNI_4
-    rdf:type nwiComp:component ;
-    ex:component-id "port_UNI_4" ;
-    ex:class ianaHw:port ;
-    ex:parent inv-ne:ONT_11_board_main .
-inv-dev:enclosure_20_port_PORT_2
+inv-dev:enclosure_17_port_PORT_2
     rdf:type pdev:passive-port ;
     ex:name "PORT_2" ;
     ex:fiber-core-num "12"^^xsd:unsignedInt .
-inv-dev:enclosure_20_port_PORT_6
+inv-dev:enclosure_17_port_PORT_3
+    rdf:type pdev:passive-port ;
+    ex:name "PORT_3" ;
+    ex:fiber-core-num "12"^^xsd:unsignedInt .
+inv-dev:enclosure_17_port_PORT_5
+    rdf:type pdev:passive-port ;
+    ex:name "PORT_5" ;
+    ex:fiber-core-num "1"^^xsd:unsignedInt .
+inv-dev:enclosure_17_port_PORT_4
+    rdf:type pdev:passive-port ;
+    ex:name "PORT_4" ;
+    ex:fiber-core-num "1"^^xsd:unsignedInt .
+inv-dev:enclosure_17_port_PORT_6
     rdf:type pdev:passive-port ;
     ex:name "PORT_6" ;
     ex:fiber-core-num "1"^^xsd:unsignedInt .
-inv-ne:ONT_18_board_main
-    rdf:type nwiComp:component ;
-    ex:component-id "board_main" ;
-    ex:class ianaHw:module ;
-    ex:is-fru "false"^^xsd:boolean .
-inv-ne:ONT_18_port_Uplink_1
-    rdf:type nwiComp:component ;
-    ex:component-id "port_Uplink_1" ;
-    ex:class ianaHw:port ;
-    ex:parent inv-ne:ONT_18_board_main .
-inv-ne:ONT_18_port_UNI_1
-    rdf:type nwiComp:component ;
-    ex:component-id "port_UNI_1" ;
-    ex:class ianaHw:port ;
-    ex:parent inv-ne:ONT_18_board_main .
-inv-ne:ONT_18_port_UNI_2
-    rdf:type nwiComp:component ;
-    ex:component-id "port_UNI_2" ;
-    ex:class ianaHw:port ;
-    ex:parent inv-ne:ONT_18_board_main .
-inv-ne:ONT_18_port_UNI_3
-    rdf:type nwiComp:component ;
-    ex:component-id "port_UNI_3" ;
-    ex:class ianaHw:port ;
-    ex:parent inv-ne:ONT_18_board_main .
-inv-ne:ONT_18_port_UNI_4
-    rdf:type nwiComp:component ;
-    ex:component-id "port_UNI_4" ;
-    ex:class ianaHw:port ;
-    ex:parent inv-ne:ONT_18_board_main .
+inv-dev:enclosure_17_port_PORT_1
+    rdf:type pdev:passive-port ;
+    ex:name "PORT_1" ;
+    ex:fiber-core-num "1"^^xsd:unsignedInt .
+inv-dev:enclosure_71_port_PORT_2
+    rdf:type pdev:passive-port ;
+    ex:name "PORT_2" ;
+    ex:fiber-core-num "12"^^xsd:unsignedInt .
+inv-dev:enclosure_71_port_PORT_5
+    rdf:type pdev:passive-port ;
+    ex:name "PORT_5" ;
+    ex:fiber-core-num "1"^^xsd:unsignedInt .
 inv-ne:ONT_9_board_main
     rdf:type nwiComp:component ;
     ex:component-id "board_main" ;
@@ -63180,69 +63588,211 @@ inv-dev:enclosure_69_port_PORT_5
     rdf:type pdev:passive-port ;
     ex:name "PORT_5" ;
     ex:fiber-core-num "1"^^xsd:unsignedInt .
-inv-dev:enclosure_29_port_PORT_1
-    rdf:type pdev:passive-port ;
-    ex:name "PORT_1" ;
-    ex:fiber-core-num "72"^^xsd:unsignedInt .
-inv-dev:enclosure_29_port_PORT_1
-    rdf:type pdev:passive-port ;
-    ex:name "PORT_1" ;
-    ex:fiber-core-num "72"^^xsd:unsignedInt .
-inv-dev:enclosure_29_port_PORT_2
-    rdf:type pdev:passive-port ;
-    ex:name "PORT_2" ;
-    ex:fiber-core-num "72"^^xsd:unsignedInt .
-inv-dev:enclosure_29_port_PORT_3
-    rdf:type pdev:passive-port ;
-    ex:name "PORT_3" ;
-    ex:fiber-core-num "12"^^xsd:unsignedInt .
-inv-ne:ONT_14_board_main
+inv-ne:ONT_17_board_main
     rdf:type nwiComp:component ;
     ex:component-id "board_main" ;
     ex:class ianaHw:module ;
     ex:is-fru "false"^^xsd:boolean .
-inv-ne:ONT_14_port_Uplink_1
+inv-ne:ONT_17_port_Uplink_1
     rdf:type nwiComp:component ;
     ex:component-id "port_Uplink_1" ;
     ex:class ianaHw:port ;
-    ex:parent inv-ne:ONT_14_board_main .
-inv-ne:ONT_14_port_UNI_1
+    ex:parent inv-ne:ONT_17_board_main .
+inv-ne:ONT_17_port_UNI_1
     rdf:type nwiComp:component ;
     ex:component-id "port_UNI_1" ;
     ex:class ianaHw:port ;
-    ex:parent inv-ne:ONT_14_board_main .
-inv-ne:ONT_14_port_UNI_2
+    ex:parent inv-ne:ONT_17_board_main .
+inv-ne:ONT_17_port_UNI_2
     rdf:type nwiComp:component ;
     ex:component-id "port_UNI_2" ;
     ex:class ianaHw:port ;
-    ex:parent inv-ne:ONT_14_board_main .
-inv-ne:ONT_14_port_UNI_3
+    ex:parent inv-ne:ONT_17_board_main .
+inv-ne:ONT_17_port_UNI_3
     rdf:type nwiComp:component ;
     ex:component-id "port_UNI_3" ;
     ex:class ianaHw:port ;
-    ex:parent inv-ne:ONT_14_board_main .
-inv-ne:ONT_14_port_UNI_4
+    ex:parent inv-ne:ONT_17_board_main .
+inv-ne:ONT_17_port_UNI_4
     rdf:type nwiComp:component ;
     ex:component-id "port_UNI_4" ;
     ex:class ianaHw:port ;
-    ex:parent inv-ne:ONT_14_board_main .
-inv-dev:enclosure_14_port_PORT_2
+    ex:parent inv-ne:ONT_17_board_main .
+inv-dev:enclosure_41_port_PORT_2
     rdf:type pdev:passive-port ;
     ex:name "PORT_2" ;
     ex:fiber-core-num "12"^^xsd:unsignedInt .
-inv-dev:enclosure_14_port_PORT_6
-    rdf:type pdev:passive-port ;
-    ex:name "PORT_6" ;
-    ex:fiber-core-num "1"^^xsd:unsignedInt .
-inv-dev:enclosure_14_port_PORT_4
+inv-dev:enclosure_41_port_PORT_4
     rdf:type pdev:passive-port ;
     ex:name "PORT_4" ;
     ex:fiber-core-num "1"^^xsd:unsignedInt .
-inv-dev:enclosure_14_port_PORT_1
+inv-ne:ONT_1_board_main
+    rdf:type nwiComp:component ;
+    ex:component-id "board_main" ;
+    ex:class ianaHw:module ;
+    ex:is-fru "false"^^xsd:boolean .
+inv-ne:ONT_1_port_Uplink_1
+    rdf:type nwiComp:component ;
+    ex:component-id "port_Uplink_1" ;
+    ex:class ianaHw:port ;
+    ex:parent inv-ne:ONT_1_board_main .
+inv-ne:ONT_1_port_UNI_1
+    rdf:type nwiComp:component ;
+    ex:component-id "port_UNI_1" ;
+    ex:class ianaHw:port ;
+    ex:parent inv-ne:ONT_1_board_main .
+inv-ne:ONT_1_port_UNI_2
+    rdf:type nwiComp:component ;
+    ex:component-id "port_UNI_2" ;
+    ex:class ianaHw:port ;
+    ex:parent inv-ne:ONT_1_board_main .
+inv-ne:ONT_1_port_UNI_3
+    rdf:type nwiComp:component ;
+    ex:component-id "port_UNI_3" ;
+    ex:class ianaHw:port ;
+    ex:parent inv-ne:ONT_1_board_main .
+inv-ne:ONT_1_port_UNI_4
+    rdf:type nwiComp:component ;
+    ex:component-id "port_UNI_4" ;
+    ex:class ianaHw:port ;
+    ex:parent inv-ne:ONT_1_board_main .
+inv-ne:ONT_2_board_main
+    rdf:type nwiComp:component ;
+    ex:component-id "board_main" ;
+    ex:class ianaHw:module ;
+    ex:is-fru "false"^^xsd:boolean .
+inv-ne:ONT_2_port_Uplink_1
+    rdf:type nwiComp:component ;
+    ex:component-id "port_Uplink_1" ;
+    ex:class ianaHw:port ;
+    ex:parent inv-ne:ONT_2_board_main .
+inv-ne:ONT_2_port_UNI_1
+    rdf:type nwiComp:component ;
+    ex:component-id "port_UNI_1" ;
+    ex:class ianaHw:port ;
+    ex:parent inv-ne:ONT_2_board_main .
+inv-ne:ONT_2_port_UNI_2
+    rdf:type nwiComp:component ;
+    ex:component-id "port_UNI_2" ;
+    ex:class ianaHw:port ;
+    ex:parent inv-ne:ONT_2_board_main .
+inv-ne:ONT_2_port_UNI_3
+    rdf:type nwiComp:component ;
+    ex:component-id "port_UNI_3" ;
+    ex:class ianaHw:port ;
+    ex:parent inv-ne:ONT_2_board_main .
+inv-ne:ONT_2_port_UNI_4
+    rdf:type nwiComp:component ;
+    ex:component-id "port_UNI_4" ;
+    ex:class ianaHw:port ;
+    ex:parent inv-ne:ONT_2_board_main .
+inv-dev:enclosure_49_port_PORT_2
+    rdf:type pdev:passive-port ;
+    ex:name "PORT_2" ;
+    ex:fiber-core-num "12"^^xsd:unsignedInt .
+inv-dev:enclosure_49_port_PORT_4
+    rdf:type pdev:passive-port ;
+    ex:name "PORT_4" ;
+    ex:fiber-core-num "1"^^xsd:unsignedInt .
+inv-dev:enclosure_49_port_PORT_5
+    rdf:type pdev:passive-port ;
+    ex:name "PORT_5" ;
+    ex:fiber-core-num "1"^^xsd:unsignedInt .
+inv-dev:enclosure_49_port_PORT_1
     rdf:type pdev:passive-port ;
     ex:name "PORT_1" ;
     ex:fiber-core-num "1"^^xsd:unsignedInt .
-inv-dev:enclosure_14_port_PORT_5
+inv-dev:enclosure_49_port_PORT_6
+    rdf:type pdev:passive-port ;
+    ex:name "PORT_6" ;
+    ex:fiber-core-num "1"^^xsd:unsignedInt .
+inv-dev:enclosure_6_port_PORT_2
+    rdf:type pdev:passive-port ;
+    ex:name "PORT_2" ;
+    ex:fiber-core-num "12"^^xsd:unsignedInt .
+inv-dev:enclosure_6_port_PORT_4
+    rdf:type pdev:passive-port ;
+    ex:name "PORT_4" ;
+    ex:fiber-core-num "1"^^xsd:unsignedInt .
+inv-dev:enclosure_6_port_PORT_1
+    rdf:type pdev:passive-port ;
+    ex:name "PORT_1" ;
+    ex:fiber-core-num "1"^^xsd:unsignedInt .
+inv-dev:enclosure_6_port_PORT_6
+    rdf:type pdev:passive-port ;
+    ex:name "PORT_6" ;
+    ex:fiber-core-num "1"^^xsd:unsignedInt .
+inv-dev:enclosure_6_port_PORT_5
+    rdf:type pdev:passive-port ;
+    ex:name "PORT_5" ;
+    ex:fiber-core-num "1"^^xsd:unsignedInt .
+inv-ne:ONT_16_board_main
+    rdf:type nwiComp:component ;
+    ex:component-id "board_main" ;
+    ex:class ianaHw:module ;
+    ex:is-fru "false"^^xsd:boolean .
+inv-ne:ONT_16_port_Uplink_1
+    rdf:type nwiComp:component ;
+    ex:component-id "port_Uplink_1" ;
+    ex:class ianaHw:port ;
+    ex:parent inv-ne:ONT_16_board_main .
+inv-ne:ONT_16_port_UNI_1
+    rdf:type nwiComp:component ;
+    ex:component-id "port_UNI_1" ;
+    ex:class ianaHw:port ;
+    ex:parent inv-ne:ONT_16_board_main .
+inv-ne:ONT_16_port_UNI_2
+    rdf:type nwiComp:component ;
+    ex:component-id "port_UNI_2" ;
+    ex:class ianaHw:port ;
+    ex:parent inv-ne:ONT_16_board_main .
+inv-ne:ONT_16_port_UNI_3
+    rdf:type nwiComp:component ;
+    ex:component-id "port_UNI_3" ;
+    ex:class ianaHw:port ;
+    ex:parent inv-ne:ONT_16_board_main .
+inv-ne:ONT_16_port_UNI_4
+    rdf:type nwiComp:component ;
+    ex:component-id "port_UNI_4" ;
+    ex:class ianaHw:port ;
+    ex:parent inv-ne:ONT_16_board_main .
+inv-dev:enclosure_38_port_PORT_2
+    rdf:type pdev:passive-port ;
+    ex:name "PORT_2" ;
+    ex:fiber-core-num "12"^^xsd:unsignedInt .
+inv-dev:enclosure_38_port_PORT_6
+    rdf:type pdev:passive-port ;
+    ex:name "PORT_6" ;
+    ex:fiber-core-num "1"^^xsd:unsignedInt .
+inv-dev:enclosure_38_port_PORT_1
+    rdf:type pdev:passive-port ;
+    ex:name "PORT_1" ;
+    ex:fiber-core-num "1"^^xsd:unsignedInt .
+inv-dev:enclosure_38_port_PORT_4
+    rdf:type pdev:passive-port ;
+    ex:name "PORT_4" ;
+    ex:fiber-core-num "1"^^xsd:unsignedInt .
+inv-dev:enclosure_74_port_PORT_2
+    rdf:type pdev:passive-port ;
+    ex:name "PORT_2" ;
+    ex:fiber-core-num "12"^^xsd:unsignedInt .
+inv-dev:enclosure_74_port_PORT_3
+    rdf:type pdev:passive-port ;
+    ex:name "PORT_3" ;
+    ex:fiber-core-num "12"^^xsd:unsignedInt .
+inv-dev:enclosure_74_port_PORT_4
+    rdf:type pdev:passive-port ;
+    ex:name "PORT_4" ;
+    ex:fiber-core-num "1"^^xsd:unsignedInt .
+inv-dev:enclosure_74_port_PORT_1
+    rdf:type pdev:passive-port ;
+    ex:name "PORT_1" ;
+    ex:fiber-core-num "1"^^xsd:unsignedInt .
+inv-dev:enclosure_74_port_PORT_1
+    rdf:type pdev:passive-port ;
+    ex:name "PORT_1" ;
+    ex:fiber-core-num "1"^^xsd:unsignedInt .
+inv-dev:enclosure_74_port_PORT_5
     rdf:type pdev:passive-port ;
     ex:name "PORT_5" ;
     ex:fiber-core-num "1"^^xsd:unsignedInt .
@@ -63276,230 +63826,6 @@ inv-ne:ONT_5_port_UNI_4
     ex:component-id "port_UNI_4" ;
     ex:class ianaHw:port ;
     ex:parent inv-ne:ONT_5_board_main .
-inv-dev:enclosure_56_port_PORT_2
-    rdf:type pdev:passive-port ;
-    ex:name "PORT_2" ;
-    ex:fiber-core-num "12"^^xsd:unsignedInt .
-inv-dev:enclosure_56_port_PORT_3
-    rdf:type pdev:passive-port ;
-    ex:name "PORT_3" ;
-    ex:fiber-core-num "12"^^xsd:unsignedInt .
-inv-ne:ONT_15_board_main
-    rdf:type nwiComp:component ;
-    ex:component-id "board_main" ;
-    ex:class ianaHw:module ;
-    ex:is-fru "false"^^xsd:boolean .
-inv-ne:ONT_15_port_Uplink_1
-    rdf:type nwiComp:component ;
-    ex:component-id "port_Uplink_1" ;
-    ex:class ianaHw:port ;
-    ex:parent inv-ne:ONT_15_board_main .
-inv-ne:ONT_15_port_UNI_1
-    rdf:type nwiComp:component ;
-    ex:component-id "port_UNI_1" ;
-    ex:class ianaHw:port ;
-    ex:parent inv-ne:ONT_15_board_main .
-inv-ne:ONT_15_port_UNI_2
-    rdf:type nwiComp:component ;
-    ex:component-id "port_UNI_2" ;
-    ex:class ianaHw:port ;
-    ex:parent inv-ne:ONT_15_board_main .
-inv-ne:ONT_15_port_UNI_3
-    rdf:type nwiComp:component ;
-    ex:component-id "port_UNI_3" ;
-    ex:class ianaHw:port ;
-    ex:parent inv-ne:ONT_15_board_main .
-inv-ne:ONT_15_port_UNI_4
-    rdf:type nwiComp:component ;
-    ex:component-id "port_UNI_4" ;
-    ex:class ianaHw:port ;
-    ex:parent inv-ne:ONT_15_board_main .
-inv-dev:enclosure_49_port_PORT_2
-    rdf:type pdev:passive-port ;
-    ex:name "PORT_2" ;
-    ex:fiber-core-num "12"^^xsd:unsignedInt .
-inv-dev:enclosure_49_port_PORT_4
-    rdf:type pdev:passive-port ;
-    ex:name "PORT_4" ;
-    ex:fiber-core-num "1"^^xsd:unsignedInt .
-inv-dev:enclosure_49_port_PORT_5
-    rdf:type pdev:passive-port ;
-    ex:name "PORT_5" ;
-    ex:fiber-core-num "1"^^xsd:unsignedInt .
-inv-dev:enclosure_49_port_PORT_1
-    rdf:type pdev:passive-port ;
-    ex:name "PORT_1" ;
-    ex:fiber-core-num "1"^^xsd:unsignedInt .
-inv-dev:enclosure_49_port_PORT_6
-    rdf:type pdev:passive-port ;
-    ex:name "PORT_6" ;
-    ex:fiber-core-num "1"^^xsd:unsignedInt .
-inv-ne:ONT_7_board_main
-    rdf:type nwiComp:component ;
-    ex:component-id "board_main" ;
-    ex:class ianaHw:module ;
-    ex:is-fru "false"^^xsd:boolean .
-inv-ne:ONT_7_port_Uplink_1
-    rdf:type nwiComp:component ;
-    ex:component-id "port_Uplink_1" ;
-    ex:class ianaHw:port ;
-    ex:parent inv-ne:ONT_7_board_main .
-inv-ne:ONT_7_port_UNI_1
-    rdf:type nwiComp:component ;
-    ex:component-id "port_UNI_1" ;
-    ex:class ianaHw:port ;
-    ex:parent inv-ne:ONT_7_board_main .
-inv-ne:ONT_7_port_UNI_2
-    rdf:type nwiComp:component ;
-    ex:component-id "port_UNI_2" ;
-    ex:class ianaHw:port ;
-    ex:parent inv-ne:ONT_7_board_main .
-inv-ne:ONT_7_port_UNI_3
-    rdf:type nwiComp:component ;
-    ex:component-id "port_UNI_3" ;
-    ex:class ianaHw:port ;
-    ex:parent inv-ne:ONT_7_board_main .
-inv-ne:ONT_7_port_UNI_4
-    rdf:type nwiComp:component ;
-    ex:component-id "port_UNI_4" ;
-    ex:class ianaHw:port ;
-    ex:parent inv-ne:ONT_7_board_main .
-inv-dev:enclosure_41_port_PORT_2
-    rdf:type pdev:passive-port ;
-    ex:name "PORT_2" ;
-    ex:fiber-core-num "12"^^xsd:unsignedInt .
-inv-dev:enclosure_41_port_PORT_4
-    rdf:type pdev:passive-port ;
-    ex:name "PORT_4" ;
-    ex:fiber-core-num "1"^^xsd:unsignedInt .
-inv-dev:enclosure_74_port_PORT_2
-    rdf:type pdev:passive-port ;
-    ex:name "PORT_2" ;
-    ex:fiber-core-num "12"^^xsd:unsignedInt .
-inv-dev:enclosure_74_port_PORT_3
-    rdf:type pdev:passive-port ;
-    ex:name "PORT_3" ;
-    ex:fiber-core-num "12"^^xsd:unsignedInt .
-inv-dev:enclosure_74_port_PORT_4
-    rdf:type pdev:passive-port ;
-    ex:name "PORT_4" ;
-    ex:fiber-core-num "1"^^xsd:unsignedInt .
-inv-dev:enclosure_74_port_PORT_1
-    rdf:type pdev:passive-port ;
-    ex:name "PORT_1" ;
-    ex:fiber-core-num "1"^^xsd:unsignedInt .
-inv-dev:enclosure_74_port_PORT_1
-    rdf:type pdev:passive-port ;
-    ex:name "PORT_1" ;
-    ex:fiber-core-num "1"^^xsd:unsignedInt .
-inv-dev:enclosure_74_port_PORT_5
-    rdf:type pdev:passive-port ;
-    ex:name "PORT_5" ;
-    ex:fiber-core-num "1"^^xsd:unsignedInt .
-inv-dev:enclosure_60_port_PORT_2
-    rdf:type pdev:passive-port ;
-    ex:name "PORT_2" ;
-    ex:fiber-core-num "12"^^xsd:unsignedInt .
-inv-dev:enclosure_60_port_PORT_5
-    rdf:type pdev:passive-port ;
-    ex:name "PORT_5" ;
-    ex:fiber-core-num "1"^^xsd:unsignedInt .
-inv-dev:enclosure_60_port_PORT_1
-    rdf:type pdev:passive-port ;
-    ex:name "PORT_1" ;
-    ex:fiber-core-num "1"^^xsd:unsignedInt .
-inv-dev:enclosure_60_port_PORT_4
-    rdf:type pdev:passive-port ;
-    ex:name "PORT_4" ;
-    ex:fiber-core-num "1"^^xsd:unsignedInt .
-inv-dev:enclosure_3_port_PORT_2
-    rdf:type pdev:passive-port ;
-    ex:name "PORT_2" ;
-    ex:fiber-core-num "12"^^xsd:unsignedInt .
-inv-dev:enclosure_3_port_PORT_4
-    rdf:type pdev:passive-port ;
-    ex:name "PORT_4" ;
-    ex:fiber-core-num "1"^^xsd:unsignedInt .
-inv-dev:enclosure_3_port_PORT_1
-    rdf:type pdev:passive-port ;
-    ex:name "PORT_1" ;
-    ex:fiber-core-num "1"^^xsd:unsignedInt .
-inv-dev:enclosure_3_port_PORT_1
-    rdf:type pdev:passive-port ;
-    ex:name "PORT_1" ;
-    ex:fiber-core-num "1"^^xsd:unsignedInt .
-inv-dev:enclosure_3_port_PORT_5
-    rdf:type pdev:passive-port ;
-    ex:name "PORT_5" ;
-    ex:fiber-core-num "1"^^xsd:unsignedInt .
-inv-dev:enclosure_39_port_PORT_2
-    rdf:type pdev:passive-port ;
-    ex:name "PORT_2" ;
-    ex:fiber-core-num "12"^^xsd:unsignedInt .
-inv-dev:enclosure_39_port_PORT_6
-    rdf:type pdev:passive-port ;
-    ex:name "PORT_6" ;
-    ex:fiber-core-num "1"^^xsd:unsignedInt .
-inv-ne:ONT_4_board_main
-    rdf:type nwiComp:component ;
-    ex:component-id "board_main" ;
-    ex:class ianaHw:module ;
-    ex:is-fru "false"^^xsd:boolean .
-inv-ne:ONT_4_port_Uplink_1
-    rdf:type nwiComp:component ;
-    ex:component-id "port_Uplink_1" ;
-    ex:class ianaHw:port ;
-    ex:parent inv-ne:ONT_4_board_main .
-inv-ne:ONT_4_port_UNI_1
-    rdf:type nwiComp:component ;
-    ex:component-id "port_UNI_1" ;
-    ex:class ianaHw:port ;
-    ex:parent inv-ne:ONT_4_board_main .
-inv-ne:ONT_4_port_UNI_2
-    rdf:type nwiComp:component ;
-    ex:component-id "port_UNI_2" ;
-    ex:class ianaHw:port ;
-    ex:parent inv-ne:ONT_4_board_main .
-inv-ne:ONT_4_port_UNI_3
-    rdf:type nwiComp:component ;
-    ex:component-id "port_UNI_3" ;
-    ex:class ianaHw:port ;
-    ex:parent inv-ne:ONT_4_board_main .
-inv-ne:ONT_4_port_UNI_4
-    rdf:type nwiComp:component ;
-    ex:component-id "port_UNI_4" ;
-    ex:class ianaHw:port ;
-    ex:parent inv-ne:ONT_4_board_main .
-inv-ne:ONT_3_board_main
-    rdf:type nwiComp:component ;
-    ex:component-id "board_main" ;
-    ex:class ianaHw:module ;
-    ex:is-fru "false"^^xsd:boolean .
-inv-ne:ONT_3_port_Uplink_1
-    rdf:type nwiComp:component ;
-    ex:component-id "port_Uplink_1" ;
-    ex:class ianaHw:port ;
-    ex:parent inv-ne:ONT_3_board_main .
-inv-ne:ONT_3_port_UNI_1
-    rdf:type nwiComp:component ;
-    ex:component-id "port_UNI_1" ;
-    ex:class ianaHw:port ;
-    ex:parent inv-ne:ONT_3_board_main .
-inv-ne:ONT_3_port_UNI_2
-    rdf:type nwiComp:component ;
-    ex:component-id "port_UNI_2" ;
-    ex:class ianaHw:port ;
-    ex:parent inv-ne:ONT_3_board_main .
-inv-ne:ONT_3_port_UNI_3
-    rdf:type nwiComp:component ;
-    ex:component-id "port_UNI_3" ;
-    ex:class ianaHw:port ;
-    ex:parent inv-ne:ONT_3_board_main .
-inv-ne:ONT_3_port_UNI_4
-    rdf:type nwiComp:component ;
-    ex:component-id "port_UNI_4" ;
-    ex:class ianaHw:port ;
-    ex:parent inv-ne:ONT_3_board_main .
 inv-dev:enclosure_61_port_PORT_2
     rdf:type pdev:passive-port ;
     ex:name "PORT_2" ;
@@ -63524,332 +63850,34 @@ inv-dev:enclosure_61_port_PORT_1
     rdf:type pdev:passive-port ;
     ex:name "PORT_1" ;
     ex:fiber-core-num "1"^^xsd:unsignedInt .
-inv-dev:enclosure_17_port_PORT_2
+inv-dev:enclosure_14_port_PORT_2
     rdf:type pdev:passive-port ;
     ex:name "PORT_2" ;
     ex:fiber-core-num "12"^^xsd:unsignedInt .
-inv-dev:enclosure_17_port_PORT_3
-    rdf:type pdev:passive-port ;
-    ex:name "PORT_3" ;
-    ex:fiber-core-num "12"^^xsd:unsignedInt .
-inv-dev:enclosure_17_port_PORT_5
-    rdf:type pdev:passive-port ;
-    ex:name "PORT_5" ;
-    ex:fiber-core-num "1"^^xsd:unsignedInt .
-inv-dev:enclosure_17_port_PORT_4
-    rdf:type pdev:passive-port ;
-    ex:name "PORT_4" ;
-    ex:fiber-core-num "1"^^xsd:unsignedInt .
-inv-dev:enclosure_17_port_PORT_6
+inv-dev:enclosure_14_port_PORT_6
     rdf:type pdev:passive-port ;
     ex:name "PORT_6" ;
     ex:fiber-core-num "1"^^xsd:unsignedInt .
-inv-dev:enclosure_17_port_PORT_1
-    rdf:type pdev:passive-port ;
-    ex:name "PORT_1" ;
-    ex:fiber-core-num "1"^^xsd:unsignedInt .
-inv-dev:enclosure_71_port_PORT_2
-    rdf:type pdev:passive-port ;
-    ex:name "PORT_2" ;
-    ex:fiber-core-num "12"^^xsd:unsignedInt .
-inv-dev:enclosure_71_port_PORT_5
-    rdf:type pdev:passive-port ;
-    ex:name "PORT_5" ;
-    ex:fiber-core-num "1"^^xsd:unsignedInt .
-inv-dev:enclosure_63_port_PORT_2
-    rdf:type pdev:passive-port ;
-    ex:name "PORT_2" ;
-    ex:fiber-core-num "12"^^xsd:unsignedInt .
-inv-dev:enclosure_63_port_PORT_4
+inv-dev:enclosure_14_port_PORT_4
     rdf:type pdev:passive-port ;
     ex:name "PORT_4" ;
     ex:fiber-core-num "1"^^xsd:unsignedInt .
-inv-ne:ONT_12_board_main
-    rdf:type nwiComp:component ;
-    ex:component-id "board_main" ;
-    ex:class ianaHw:module ;
-    ex:is-fru "false"^^xsd:boolean .
-inv-ne:ONT_12_port_Uplink_1
-    rdf:type nwiComp:component ;
-    ex:component-id "port_Uplink_1" ;
-    ex:class ianaHw:port ;
-    ex:parent inv-ne:ONT_12_board_main .
-inv-ne:ONT_12_port_UNI_1
-    rdf:type nwiComp:component ;
-    ex:component-id "port_UNI_1" ;
-    ex:class ianaHw:port ;
-    ex:parent inv-ne:ONT_12_board_main .
-inv-ne:ONT_12_port_UNI_2
-    rdf:type nwiComp:component ;
-    ex:component-id "port_UNI_2" ;
-    ex:class ianaHw:port ;
-    ex:parent inv-ne:ONT_12_board_main .
-inv-ne:ONT_12_port_UNI_3
-    rdf:type nwiComp:component ;
-    ex:component-id "port_UNI_3" ;
-    ex:class ianaHw:port ;
-    ex:parent inv-ne:ONT_12_board_main .
-inv-ne:ONT_12_port_UNI_4
-    rdf:type nwiComp:component ;
-    ex:component-id "port_UNI_4" ;
-    ex:class ianaHw:port ;
-    ex:parent inv-ne:ONT_12_board_main .
-inv-ne:ONT_17_board_main
-    rdf:type nwiComp:component ;
-    ex:component-id "board_main" ;
-    ex:class ianaHw:module ;
-    ex:is-fru "false"^^xsd:boolean .
-inv-ne:ONT_17_port_Uplink_1
-    rdf:type nwiComp:component ;
-    ex:component-id "port_Uplink_1" ;
-    ex:class ianaHw:port ;
-    ex:parent inv-ne:ONT_17_board_main .
-inv-ne:ONT_17_port_UNI_1
-    rdf:type nwiComp:component ;
-    ex:component-id "port_UNI_1" ;
-    ex:class ianaHw:port ;
-    ex:parent inv-ne:ONT_17_board_main .
-inv-ne:ONT_17_port_UNI_2
-    rdf:type nwiComp:component ;
-    ex:component-id "port_UNI_2" ;
-    ex:class ianaHw:port ;
-    ex:parent inv-ne:ONT_17_board_main .
-inv-ne:ONT_17_port_UNI_3
-    rdf:type nwiComp:component ;
-    ex:component-id "port_UNI_3" ;
-    ex:class ianaHw:port ;
-    ex:parent inv-ne:ONT_17_board_main .
-inv-ne:ONT_17_port_UNI_4
-    rdf:type nwiComp:component ;
-    ex:component-id "port_UNI_4" ;
-    ex:class ianaHw:port ;
-    ex:parent inv-ne:ONT_17_board_main .
-inv-dev:enclosure_26_port_PORT_2
-    rdf:type pdev:passive-port ;
-    ex:name "PORT_2" ;
-    ex:fiber-core-num "12"^^xsd:unsignedInt .
-inv-dev:enclosure_26_port_PORT_5
-    rdf:type pdev:passive-port ;
-    ex:name "PORT_5" ;
-    ex:fiber-core-num "1"^^xsd:unsignedInt .
-inv-dev:enclosure_26_port_PORT_4
-    rdf:type pdev:passive-port ;
-    ex:name "PORT_4" ;
-    ex:fiber-core-num "1"^^xsd:unsignedInt .
-inv-dev:enclosure_26_port_PORT_1
+inv-dev:enclosure_14_port_PORT_1
     rdf:type pdev:passive-port ;
     ex:name "PORT_1" ;
     ex:fiber-core-num "1"^^xsd:unsignedInt .
-inv-ne:ONT_1_board_main
-    rdf:type nwiComp:component ;
-    ex:component-id "board_main" ;
-    ex:class ianaHw:module ;
-    ex:is-fru "false"^^xsd:boolean .
-inv-ne:ONT_1_port_Uplink_1
-    rdf:type nwiComp:component ;
-    ex:component-id "port_Uplink_1" ;
-    ex:class ianaHw:port ;
-    ex:parent inv-ne:ONT_1_board_main .
-inv-ne:ONT_1_port_UNI_1
-    rdf:type nwiComp:component ;
-    ex:component-id "port_UNI_1" ;
-    ex:class ianaHw:port ;
-    ex:parent inv-ne:ONT_1_board_main .
-inv-ne:ONT_1_port_UNI_2
-    rdf:type nwiComp:component ;
-    ex:component-id "port_UNI_2" ;
-    ex:class ianaHw:port ;
-    ex:parent inv-ne:ONT_1_board_main .
-inv-ne:ONT_1_port_UNI_3
-    rdf:type nwiComp:component ;
-    ex:component-id "port_UNI_3" ;
-    ex:class ianaHw:port ;
-    ex:parent inv-ne:ONT_1_board_main .
-inv-ne:ONT_1_port_UNI_4
-    rdf:type nwiComp:component ;
-    ex:component-id "port_UNI_4" ;
-    ex:class ianaHw:port ;
-    ex:parent inv-ne:ONT_1_board_main .
-inv-ne:ONT_16_board_main
-    rdf:type nwiComp:component ;
-    ex:component-id "board_main" ;
-    ex:class ianaHw:module ;
-    ex:is-fru "false"^^xsd:boolean .
-inv-ne:ONT_16_port_Uplink_1
-    rdf:type nwiComp:component ;
-    ex:component-id "port_Uplink_1" ;
-    ex:class ianaHw:port ;
-    ex:parent inv-ne:ONT_16_board_main .
-inv-ne:ONT_16_port_UNI_1
-    rdf:type nwiComp:component ;
-    ex:component-id "port_UNI_1" ;
-    ex:class ianaHw:port ;
-    ex:parent inv-ne:ONT_16_board_main .
-inv-ne:ONT_16_port_UNI_2
-    rdf:type nwiComp:component ;
-    ex:component-id "port_UNI_2" ;
-    ex:class ianaHw:port ;
-    ex:parent inv-ne:ONT_16_board_main .
-inv-ne:ONT_16_port_UNI_3
-    rdf:type nwiComp:component ;
-    ex:component-id "port_UNI_3" ;
-    ex:class ianaHw:port ;
-    ex:parent inv-ne:ONT_16_board_main .
-inv-ne:ONT_16_port_UNI_4
-    rdf:type nwiComp:component ;
-    ex:component-id "port_UNI_4" ;
-    ex:class ianaHw:port ;
-    ex:parent inv-ne:ONT_16_board_main .
-inv-ne:ONT_13_board_main
-    rdf:type nwiComp:component ;
-    ex:component-id "board_main" ;
-    ex:class ianaHw:module ;
-    ex:is-fru "false"^^xsd:boolean .
-inv-ne:ONT_13_port_Uplink_1
-    rdf:type nwiComp:component ;
-    ex:component-id "port_Uplink_1" ;
-    ex:class ianaHw:port ;
-    ex:parent inv-ne:ONT_13_board_main .
-inv-ne:ONT_13_port_UNI_1
-    rdf:type nwiComp:component ;
-    ex:component-id "port_UNI_1" ;
-    ex:class ianaHw:port ;
-    ex:parent inv-ne:ONT_13_board_main .
-inv-ne:ONT_13_port_UNI_2
-    rdf:type nwiComp:component ;
-    ex:component-id "port_UNI_2" ;
-    ex:class ianaHw:port ;
-    ex:parent inv-ne:ONT_13_board_main .
-inv-ne:ONT_13_port_UNI_3
-    rdf:type nwiComp:component ;
-    ex:component-id "port_UNI_3" ;
-    ex:class ianaHw:port ;
-    ex:parent inv-ne:ONT_13_board_main .
-inv-ne:ONT_13_port_UNI_4
-    rdf:type nwiComp:component ;
-    ex:component-id "port_UNI_4" ;
-    ex:class ianaHw:port ;
-    ex:parent inv-ne:ONT_13_board_main .
-inv-ne:ONT_6_board_main
-    rdf:type nwiComp:component ;
-    ex:component-id "board_main" ;
-    ex:class ianaHw:module ;
-    ex:is-fru "false"^^xsd:boolean .
-inv-ne:ONT_6_port_Uplink_1
-    rdf:type nwiComp:component ;
-    ex:component-id "port_Uplink_1" ;
-    ex:class ianaHw:port ;
-    ex:parent inv-ne:ONT_6_board_main .
-inv-ne:ONT_6_port_UNI_1
-    rdf:type nwiComp:component ;
-    ex:component-id "port_UNI_1" ;
-    ex:class ianaHw:port ;
-    ex:parent inv-ne:ONT_6_board_main .
-inv-ne:ONT_6_port_UNI_2
-    rdf:type nwiComp:component ;
-    ex:component-id "port_UNI_2" ;
-    ex:class ianaHw:port ;
-    ex:parent inv-ne:ONT_6_board_main .
-inv-ne:ONT_6_port_UNI_3
-    rdf:type nwiComp:component ;
-    ex:component-id "port_UNI_3" ;
-    ex:class ianaHw:port ;
-    ex:parent inv-ne:ONT_6_board_main .
-inv-ne:ONT_6_port_UNI_4
-    rdf:type nwiComp:component ;
-    ex:component-id "port_UNI_4" ;
-    ex:class ianaHw:port ;
-    ex:parent inv-ne:ONT_6_board_main .
-inv-ne:ONT_8_board_main
-    rdf:type nwiComp:component ;
-    ex:component-id "board_main" ;
-    ex:class ianaHw:module ;
-    ex:is-fru "false"^^xsd:boolean .
-inv-ne:ONT_8_port_Uplink_1
-    rdf:type nwiComp:component ;
-    ex:component-id "port_Uplink_1" ;
-    ex:class ianaHw:port ;
-    ex:parent inv-ne:ONT_8_board_main .
-inv-ne:ONT_8_port_UNI_1
-    rdf:type nwiComp:component ;
-    ex:component-id "port_UNI_1" ;
-    ex:class ianaHw:port ;
-    ex:parent inv-ne:ONT_8_board_main .
-inv-ne:ONT_8_port_UNI_2
-    rdf:type nwiComp:component ;
-    ex:component-id "port_UNI_2" ;
-    ex:class ianaHw:port ;
-    ex:parent inv-ne:ONT_8_board_main .
-inv-ne:ONT_8_port_UNI_3
-    rdf:type nwiComp:component ;
-    ex:component-id "port_UNI_3" ;
-    ex:class ianaHw:port ;
-    ex:parent inv-ne:ONT_8_board_main .
-inv-ne:ONT_8_port_UNI_4
-    rdf:type nwiComp:component ;
-    ex:component-id "port_UNI_4" ;
-    ex:class ianaHw:port ;
-    ex:parent inv-ne:ONT_8_board_main .
-inv-ne:ONT_2_board_main
-    rdf:type nwiComp:component ;
-    ex:component-id "board_main" ;
-    ex:class ianaHw:module ;
-    ex:is-fru "false"^^xsd:boolean .
-inv-ne:ONT_2_port_Uplink_1
-    rdf:type nwiComp:component ;
-    ex:component-id "port_Uplink_1" ;
-    ex:class ianaHw:port ;
-    ex:parent inv-ne:ONT_2_board_main .
-inv-ne:ONT_2_port_UNI_1
-    rdf:type nwiComp:component ;
-    ex:component-id "port_UNI_1" ;
-    ex:class ianaHw:port ;
-    ex:parent inv-ne:ONT_2_board_main .
-inv-ne:ONT_2_port_UNI_2
-    rdf:type nwiComp:component ;
-    ex:component-id "port_UNI_2" ;
-    ex:class ianaHw:port ;
-    ex:parent inv-ne:ONT_2_board_main .
-inv-ne:ONT_2_port_UNI_3
-    rdf:type nwiComp:component ;
-    ex:component-id "port_UNI_3" ;
-    ex:class ianaHw:port ;
-    ex:parent inv-ne:ONT_2_board_main .
-inv-ne:ONT_2_port_UNI_4
-    rdf:type nwiComp:component ;
-    ex:component-id "port_UNI_4" ;
-    ex:class ianaHw:port ;
-    ex:parent inv-ne:ONT_2_board_main .
-inv-ne:ONT_10_board_main
-    rdf:type nwiComp:component ;
-    ex:component-id "board_main" ;
-    ex:class ianaHw:module ;
-    ex:is-fru "false"^^xsd:boolean .
-inv-ne:ONT_10_port_Uplink_1
-    rdf:type nwiComp:component ;
-    ex:component-id "port_Uplink_1" ;
-    ex:class ianaHw:port ;
-    ex:parent inv-ne:ONT_10_board_main .
-inv-ne:ONT_10_port_UNI_1
-    rdf:type nwiComp:component ;
-    ex:component-id "port_UNI_1" ;
-    ex:class ianaHw:port ;
-    ex:parent inv-ne:ONT_10_board_main .
-inv-ne:ONT_10_port_UNI_2
-    rdf:type nwiComp:component ;
-    ex:component-id "port_UNI_2" ;
-    ex:class ianaHw:port ;
-    ex:parent inv-ne:ONT_10_board_main .
-inv-ne:ONT_10_port_UNI_3
-    rdf:type nwiComp:component ;
-    ex:component-id "port_UNI_3" ;
-    ex:class ianaHw:port ;
-    ex:parent inv-ne:ONT_10_board_main .
-inv-ne:ONT_10_port_UNI_4
-    rdf:type nwiComp:component ;
-    ex:component-id "port_UNI_4" ;
-    ex:class ianaHw:port ;
-    ex:parent inv-ne:ONT_10_board_main .
+inv-dev:enclosure_14_port_PORT_5
+    rdf:type pdev:passive-port ;
+    ex:name "PORT_5" ;
+    ex:fiber-core-num "1"^^xsd:unsignedInt .
+inv-dev:enclosure_20_port_PORT_2
+    rdf:type pdev:passive-port ;
+    ex:name "PORT_2" ;
+    ex:fiber-core-num "12"^^xsd:unsignedInt .
+inv-dev:enclosure_20_port_PORT_6
+    rdf:type pdev:passive-port ;
+    ex:name "PORT_6" ;
+    ex:fiber-core-num "1"^^xsd:unsignedInt .
 inv-cab:cable_2
     rdf:type nwi:cable ;
     ex:id "cable_2" ;
