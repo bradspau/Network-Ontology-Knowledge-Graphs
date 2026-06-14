@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-YANG to OWL Ontology Converter - VERSION 4.7.31 (RDF-star Connectivity)
+YANG to OWL Ontology Converter - VERSION 4.7.32 (RDF-star Connectivity)
 
 Release Note: Semantic Interoperability via OWL 2 Punning
 This update implements OWL 2 Punning to resolve "dead-end" string traversals common in standard YANG-to-OWL conversions.
@@ -46,7 +46,7 @@ ALL IMPROVEMENTS IMPLEMENTED:
     - Eliminates bounded UNION / multi-hop workarounds for graph traversal
     - Run: python yang4owl.py --abox-enrich <abox.ttl> --abox-out <enriched.ttls>
 
-Author: YANG-to-OWL Converter v4.7.31
+Author: YANG-to-OWL Converter v4.7.32
 Date: 2026-06-14
 """
 
@@ -1895,6 +1895,49 @@ SELECT $this WHERE {{
             ("netLink",     f"{base}/ietf-network/networks/network/link/"),
             ("netTP",       f"{base}/ietf-network/networks/network/node/termination-point/"),
             ("netInvMap",   f"{base}/ietf-network/networks/network/node/termination-point/inventory-mapping-attributes/"),
+            # Layer 2 Topology (RFC 8944)
+            ("l2t",       f"{base}/ietf-l2-topology/"),
+            ("l2t-s",     f"{base}/ietf-l2-topology-state/"),
+            # Layer 2 Groupings
+            ("grpL2t",    f"{base}/grouping/ietf-l2-topology/"),
+            ("grpL2t-s",  f"{base}/grouping/ietf-l2-topology-state/"),
+            # Layer 2 Types & Identities (for VLANs, MACs, link types, etc.)
+            ("l2tTypes",  f"{base}/types/ietf-l2-topology/"),
+            # Deep Augmentation Targets (RFC 8345 base paths)
+            ("nw-tp",   f"{base}/ietf-network/networks/network/node/termination-point/"),
+            ("nw-s-tp", f"{base}/ietf-network-state/networks/network/node/termination-point/"),
+            ("nw-node",   f"{base}/ietf-network/networks/network/node/"),
+            ("nw-s-node", f"{base}/ietf-network-state/networks/network/node/"),
+            ("nw-link",   f"{base}/ietf-network-topology/networks/network/link/"),
+            ("nw-s-link", f"{base}/ietf-network-topology-state/networks/network/link/"),
+            # Layer 2 Specific Identities/Types
+            ("l2tEvent",  f"{base}/types/ietf-l2-topology/l2-network-event-type/"),
+            # Network Types Container
+            ("nw-types", f"{base}/ietf-network/networks/network/network-types/"),
+            # Cross-Module Augmentations: L2 Topology Attributes
+            ("l2t-s-attr", f"{base}/ietf-l2-topology-state/ietf-network-state/networks/network/node/termination-point/l2-termination-point-attributes/"),
+            ("l2t-attr",   f"{base}/ietf-l2-topology/ietf-network-state/networks/network/node/termination-point/l2-termination-point-attributes/"),
+            # Cross-Module Augmentations: Inventory Mapping
+            ("nwit-s-inv", f"{base}/ietf-network-inventory-topology/ietf-network-state/networks/network/node/termination-point/inventory-mapping-attributes/"),
+            # Base Network Links
+            ("nws-link",   f"{base}/ietf-network-state/networks/network/link/"),
+            # Deep Augmentations: Inventory Port Breakouts (Config)
+            ("nwit-bo",     f"{base}/ietf-network-inventory-topology/ietf-network/networks/network/node/termination-point/inventory-mapping-attributes/port-breakout/"),
+            ("nwit-chan",   f"{base}/ietf-network-inventory-topology/ietf-network/networks/network/node/termination-point/inventory-mapping-attributes/port-breakout/breakout-channel/"),
+            # Deep Augmentations: Inventory Port Breakouts (State)
+            ("nwit-s-bo",   f"{base}/ietf-network-inventory-topology/ietf-network-state/networks/network/node/termination-point/inventory-mapping-attributes/port-breakout/"),
+            ("nwit-s-chan", f"{base}/ietf-network-inventory-topology/ietf-network-state/networks/network/node/termination-point/inventory-mapping-attributes/port-breakout/breakout-channel/"),
+            # Network Level Containers (Catches 'link', 'node', etc.)
+            ("nw-net",   f"{base}/ietf-network/networks/network/"),
+            ("nws-net",  f"{base}/ietf-network-state/networks/network/"),
+            # YANG Identity / Base Type Namespaces
+            ("l2tId",    f"{base}/identity/ietf-l2-topology/"),
+            ("ianaIfId", f"{base}/identity/iana-if-type/"),            
+            # Layer 2 Notifications / Events
+            ("l2tNotif",  f"{base}/notification/ietf-l2-topology/"),
+            ("l2tSNotif", f"{base}/notification/ietf-l2-topology-state/"),
+            # Layer 2 Specific Identities/Types
+            ("l2tDuplex", f"{base}/types/ietf-l2-topology/duplex-mode/"),
             # ── Power and Energy ──────────────────────────────────────────
             ("pae",         f"{base}/ietf-power-and-energy/energy-objects/"),
         ]

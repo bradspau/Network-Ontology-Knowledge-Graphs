@@ -2,6 +2,7 @@
 @prefix cabChild: <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/cable/child-cable/> .
 @prefix ex: <http://www.huawei.com/ontology/> .
 @prefix grpGeo: <http://www.huawei.com/ontology/grouping/ietf-geo-location/> .
+@prefix grpL2t: <http://www.huawei.com/ontology/grouping/ietf-l2-topology/> .
 @prefix grpNet: <http://www.huawei.com/ontology/grouping/ietf-network/> .
 @prefix grpNetTop: <http://www.huawei.com/ontology/grouping/ietf-network-topology/> .
 @prefix grpNiLoc: <http://www.huawei.com/ontology/grouping/ietf-ni-location/> .
@@ -22,21 +23,30 @@
 @prefix hwTypes: <http://www.huawei.com/ontology/types/ietf-hardware/> .
 @prefix hwUsageSt: <http://www.huawei.com/ontology/types/ietf-hardware/usage-state/> .
 @prefix ianaHw: <http://www.huawei.com/ontology/identity/iana-hardware/> .
+@prefix ianaIfId: <http://www.huawei.com/ontology/identity/iana-if-type/> .
 @prefix inetIpVer: <http://www.huawei.com/ontology/types/ietf-inet-types/ip-version/> .
 @prefix inetTypes: <http://www.huawei.com/ontology/types/ietf-inet-types/> .
+@prefix l2t-attr: <http://www.huawei.com/ontology/ietf-l2-topology/ietf-network-state/networks/network/node/termination-point/l2-termination-point-attributes/> .
+@prefix l2t-s-attr: <http://www.huawei.com/ontology/ietf-l2-topology-state/ietf-network-state/networks/network/node/termination-point/l2-termination-point-attributes/> .
+@prefix l2tDuplex: <http://www.huawei.com/ontology/types/ietf-l2-topology/duplex-mode/> .
+@prefix l2tEvent: <http://www.huawei.com/ontology/types/ietf-l2-topology/l2-network-event-type/> .
+@prefix l2tId: <http://www.huawei.com/ontology/identity/ietf-l2-topology/> .
+@prefix l2tNotif: <http://www.huawei.com/ontology/notification/ietf-l2-topology/> .
+@prefix l2tSNotif: <http://www.huawei.com/ontology/notification/ietf-l2-topology-state/> .
+@prefix l2tTypes: <http://www.huawei.com/ontology/types/ietf-l2-topology/> .
 @prefix net: <http://www.huawei.com/ontology/ietf-network/networks/network/> .
-@prefix netBrkChan: <http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/inventory-mapping-attributes/port-breakout/breakout-channel/> .
-@prefix netInvMap: <http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/inventory-mapping-attributes/> .
 @prefix netLink: <http://www.huawei.com/ontology/ietf-network/networks/network/link/> .
 @prefix netNetworks: <http://www.huawei.com/ontology/ietf-network/networks/> .
 @prefix netNode: <http://www.huawei.com/ontology/ietf-network/networks/network/node/> .
-@prefix netPortBrk: <http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/inventory-mapping-attributes/port-breakout/> .
 @prefix netRoot: <http://www.huawei.com/ontology/ietf-network/> .
 @prefix netSuppLink: <http://www.huawei.com/ontology/ietf-network/networks/network/link/supporting-link/> .
 @prefix netSuppNet: <http://www.huawei.com/ontology/ietf-network/networks/network/supporting-network/> .
 @prefix netSuppNode: <http://www.huawei.com/ontology/ietf-network/networks/network/node/supporting-node/> .
 @prefix netSuppTP: <http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/supporting-termination-point/> .
 @prefix netTP: <http://www.huawei.com/ontology/ietf-network/networks/network/node/termination-point/> .
+@prefix nw-s-node: <http://www.huawei.com/ontology/ietf-network-state/networks/network/node/> .
+@prefix nw-s-tp: <http://www.huawei.com/ontology/ietf-network-state/networks/network/node/termination-point/> .
+@prefix nw-types: <http://www.huawei.com/ontology/ietf-network/networks/network/network-types/> .
 @prefix nwi: <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/> .
 @prefix nwiChassis: <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/locations/racks/rack/contained-chassis/> .
 @prefix nwiComp: <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component/> .
@@ -56,6 +66,11 @@
 @prefix nwiRoot: <http://www.huawei.com/ontology/ietf-network-inventory/> .
 @prefix nwiSwRev: <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/software-rev/> .
 @prefix nwiSwRevPatch: <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/software-rev/patch/> .
+@prefix nwit-s-bo: <http://www.huawei.com/ontology/ietf-network-inventory-topology/ietf-network-state/networks/network/node/termination-point/inventory-mapping-attributes/port-breakout/> .
+@prefix nwit-s-chan: <http://www.huawei.com/ontology/ietf-network-inventory-topology/ietf-network-state/networks/network/node/termination-point/inventory-mapping-attributes/port-breakout/breakout-channel/> .
+@prefix nwit-s-inv: <http://www.huawei.com/ontology/ietf-network-inventory-topology/ietf-network-state/networks/network/node/termination-point/inventory-mapping-attributes/> .
+@prefix nws-link: <http://www.huawei.com/ontology/ietf-network-state/networks/network/link/> .
+@prefix nws-net: <http://www.huawei.com/ontology/ietf-network-state/networks/network/> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix pae: <http://www.huawei.com/ontology/ietf-power-and-energy/energy-objects/> .
 @prefix paeId: <http://www.huawei.com/ontology/identity/ietf-power-and-energy/> .
@@ -201,6 +216,26 @@ ex:attenuation a owl:DatatypeProperty ;
     rdfs:range xsd:decimal ;
     prov:wasDerivedFrom "nwi-passive:optical-cable?container/nwi-passive:attenuation?leaf" .
 
+ex:auto-nego a owl:DatatypeProperty ;
+    rdfs:label "auto-nego" ;
+    rdfs:comment """Set to true if auto-negotiation is supported.
+Set to false if auto-negotiation is not supported.""" ;
+    rdfs:domain nws-link:l2-link-attributes ;
+    rdfs:range xsd:boolean ;
+    prov:wasDerivedFrom "l2t:l2-link-attributes?container/l2t:auto-nego?leaf" .
+
+ex:bridge-id a owl:DatatypeProperty ;
+    rdfs:label "bridge-id" ;
+    rdfs:comment """This is the bridge identifier represented as a
+hexadecimal 8-octet string.  It has 4 bits of
+priority, 12 bits of Multiple Spanning Tree
+Instance Identifier (MSTI-ID), and the base bridge
+identifier.  There may be multiple for each
+spanning tree instance.""" ;
+    rdfs:domain netNode:l2-node-attributes ;
+    rdfs:range xsd:string ;
+    prov:wasDerivedFrom "l2t:l2-node-attributes?container/l2t:bridge-id?leaf-list" .
+
 ex:cable-role a owl:ObjectProperty ;
     rdfs:label "cable-role" ;
     rdfs:comment "Role of cable." ;
@@ -223,7 +258,7 @@ ex:channel-id a owl:DatatypeProperty ;
     rdfs:label "channel-id" ;
     rdfs:comment """Unique identifier for the breakout channel within the
 scope of the parent port.""" ;
-    rdfs:domain netPortBrk:breakout-channel ;
+    rdfs:domain nwit-s-bo:breakout-channel ;
     rdfs:range xsd:unsignedShort ;
     prov:wasDerivedFrom "nwit:inventory-mapping-attributes?container/nwit:port-breakout?container/nwit:breakout-channel?list/nwit:channel-id?leaf" .
 
@@ -323,6 +358,15 @@ attached to the device.""" ;
     rdfs:range xsd:string ;
     prov:wasDerivedFrom "nwi:network-inventory?container/nwi-passive:passive-device?list/nwi-passive:custom-tags?leaf-list" .
 
+ex:delay a owl:DatatypeProperty ;
+    rdfs:label "delay" ;
+    ex:unit "microseconds" ;
+    rdfs:comment """Unidirectional link delay in
+microseconds.""" ;
+    rdfs:domain nws-link:l2-link-attributes ;
+    rdfs:range xsd:unsignedInt ;
+    prov:wasDerivedFrom "l2t:l2-link-attributes?container/l2t:delay?leaf" .
+
 ex:depth a owl:DatatypeProperty ;
     rdfs:label "depth" ;
     ex:unit "millimeter" ;
@@ -403,6 +447,24 @@ ex:device-type a owl:ObjectProperty ;
     prov:wasDerivedFrom "nwi-passive:a-end?container/nwi-passive:device-type?leaf",
         "nwi-passive:z-end?container/nwi-passive:device-type?leaf",
         "nwi:network-inventory?container/nwi-passive:passive-device?list/nwi-passive:device-type?leaf" .
+
+ex:duplex a owl:DatatypeProperty,
+        owl:ObjectProperty ;
+    rdfs:label "duplex" ;
+    rdfs:comment "Exposes the duplex mode, full-duplex or half-duplex." ;
+    rdfs:domain nws-link:l2-link-attributes ;
+    rdfs:range l2tTypes:duplex-mode,
+        xsd:string ;
+    prov:wasDerivedFrom "l2t:l2-link-attributes?container/l2t:duplex?leaf" .
+
+ex:encapsulation-type a owl:ObjectProperty ;
+    rdfs:label "encapsulation-type" ;
+    rdfs:comment """Encapsulation type of this
+      termination point.""" ;
+    rdfs:domain nw-s-tp:l2-termination-point-attributes ;
+    rdfs:range <http://www.huawei.com/ontology/identity/ietf-l2-topology-state/eth-encapsulation-type>,
+        l2tId:eth-encapsulation-type ;
+    prov:wasDerivedFrom "l2t:l2-termination-point-attributes?container/l2t:encapsulation-type?leaf" .
 
 ex:eo-power a owl:DatatypeProperty ;
     rdfs:label "eo-power" ;
@@ -504,6 +566,23 @@ component.""" ;
     rdfs:range xsd:string ;
     prov:wasDerivedFrom "hw:hardware?container/hw:component?list/hw:firmware-rev?leaf" .
 
+ex:flags a owl:DatatypeProperty,
+        owl:ObjectProperty ;
+    rdfs:label "flags" ;
+    rdfs:comment """Link flags.  It can be used to indicate
+link flag attributes.""",
+        """Node flags.  It can be used to indicate
+node flag attributes.""",
+        "Topology flags." ;
+    rdfs:domain nws-link:l2-link-attributes,
+        net:l2-topology-attributes,
+        netNode:l2-node-attributes ;
+    rdfs:range l2tId:flag-identity,
+        xsd:string ;
+    prov:wasDerivedFrom "l2t:l2-link-attributes?container/l2t:flags?leaf-list",
+        "l2t:l2-node-attributes?container/l2t:flags?leaf-list",
+        "l2t:l2-topology-attributes?container/l2t:flags?leaf-list" .
+
 ex:geodetic-datum a owl:DatatypeProperty ;
     rdfs:label "geodetic-datum" ;
     rdfs:comment """A geodetic-datum defining the meaning of latitude,
@@ -581,8 +660,8 @@ ex:hasDownstreamDevice a owl:ObjectProperty ;
 
 ex:has_breakout-channel a owl:ObjectProperty ;
     rdfs:label "has breakout-channel" ;
-    rdfs:domain netInvMap:port-breakout ;
-    rdfs:range netPortBrk:breakout-channel .
+    rdfs:domain nwit-s-inv:port-breakout ;
+    rdfs:range nwit-s-bo:breakout-channel .
 
 ex:has_cable a owl:ObjectProperty ;
     rdfs:label "has cable" ;
@@ -880,6 +959,58 @@ ianaHw:unknown a owl:Class,
 to the server.""" ;
     rdfs:subClassOf yangId:hardware-class ;
     prov:wasDerivedFrom "ianahw:unknown?identity" .
+
+l2tId:ethernet a owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "ethernet" ;
+    rdfs:comment "Native Ethernet encapsulation." ;
+    rdfs:subClassOf yangId:eth-encapsulation-type ;
+    prov:wasDerivedFrom "l2t:ethernet?identity" .
+
+l2tId:pbb a owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "pbb" ;
+    rdfs:comment """Provider Backbone Bridging (PBB) encapsulation.
+The PBB functions are developed in IEEE 802.1ah.""" ;
+    rdfs:subClassOf yangId:eth-encapsulation-type ;
+    prov:wasDerivedFrom "l2t:pbb?identity" .
+
+l2tId:qinq a owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "qinq" ;
+    rdfs:comment "QinQ encapsulation." ;
+    rdfs:subClassOf yangId:eth-encapsulation-type ;
+    prov:wasDerivedFrom "l2t:qinq?identity" .
+
+l2tId:trill a owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "trill" ;
+    rdfs:comment """Transparent Interconnection of Lots of Links (TRILL)
+encapsulation.""" ;
+    rdfs:subClassOf yangId:eth-encapsulation-type ;
+    prov:wasDerivedFrom "l2t:trill?identity" .
+
+l2tId:vlan a owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "vlan" ;
+    rdfs:comment "VLAN encapsulation." ;
+    rdfs:subClassOf yangId:eth-encapsulation-type ;
+    prov:wasDerivedFrom "l2t:vlan?identity" .
+
+l2tId:vpls a owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "vpls" ;
+    rdfs:comment """Ethernet Virtual Private LAN Service (VPLS)
+interface encapsulation.""" ;
+    rdfs:subClassOf yangId:eth-encapsulation-type ;
+    prov:wasDerivedFrom "l2t:vpls?identity" .
+
+l2tId:vxlan a owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "vxlan" ;
+    rdfs:comment "VXLAN Media Access Control (MAC) in UDP encapsulation." ;
+    rdfs:subClassOf yangId:eth-encapsulation-type ;
+    prov:wasDerivedFrom "l2t:vxlan?identity" .
 
 nwiInvId:ne-physical a owl:Class,
         owl:NamedIndividual ;
@@ -1292,6 +1423,13 @@ hw:hasComponent a owl:ObjectProperty ;
     rdfs:range hw:component ;
     prov:wasDerivedFrom "hw:hardware?container/hasComponent" .
 
+nwit-s-bo:hasBreakoutChannel a owl:ObjectProperty ;
+    rdfs:label "hasBreakoutChannel" ;
+    rdfs:comment "Containment relation" ;
+    rdfs:domain nwit-s-inv:port-breakout ;
+    rdfs:range nwit-s-bo:breakout-channel ;
+    prov:wasDerivedFrom "nwit:inventory-mapping-attributes?container/nwit:port-breakout?container/hasBreakoutChannel" .
+
 cabChild:hasAEnd a owl:ObjectProperty ;
     rdfs:label "hasAEnd" ;
     rdfs:comment "Containment relation" ;
@@ -1478,12 +1616,42 @@ pdev:hasPassivePort a owl:ObjectProperty ;
     rdfs:domain nwi:passive-device ;
     rdfs:range pdev:passive-port .
 
+nws-link:hasInventoryMappingAttributes a owl:ObjectProperty ;
+    rdfs:label "hasInventoryMappingAttributes" ;
+    rdfs:comment "Containment relation" ;
+    rdfs:domain nws-net:link ;
+    rdfs:range nws-link:inventory-mapping-attributes .
+
+nws-link:hasL2LinkAttributes a owl:ObjectProperty ;
+    rdfs:label "hasL2LinkAttributes" ;
+    rdfs:comment "Containment relation" ;
+    rdfs:domain nws-net:link ;
+    rdfs:range nws-link:l2-link-attributes .
+
+nw-s-tp:hasInventoryMappingAttributes a owl:ObjectProperty ;
+    rdfs:label "hasInventoryMappingAttributes" ;
+    rdfs:comment "Containment relation" ;
+    rdfs:domain nw-s-node:termination-point ;
+    rdfs:range nw-s-tp:inventory-mapping-attributes .
+
+nw-s-tp:hasL2TerminationPointAttributes a owl:ObjectProperty ;
+    rdfs:label "hasL2TerminationPointAttributes" ;
+    rdfs:comment "Containment relation" ;
+    rdfs:domain nw-s-node:termination-point ;
+    rdfs:range nw-s-tp:l2-termination-point-attributes .
+
 netNetworks:hasNetwork a owl:ObjectProperty ;
     rdfs:label "hasNetwork" ;
     rdfs:comment "Containment relation" ;
     rdfs:domain netRoot:networks ;
     rdfs:range netNetworks:network ;
     prov:wasDerivedFrom "nw:networks?container/hasNetwork" .
+
+net:hasL2TopologyAttributes a owl:ObjectProperty ;
+    rdfs:label "hasL2TopologyAttributes" ;
+    rdfs:comment "Containment relation" ;
+    rdfs:domain netNetworks:network ;
+    rdfs:range net:l2-topology-attributes .
 
 net:hasLink a owl:ObjectProperty ;
     rdfs:label "hasLink" ;
@@ -1516,13 +1684,6 @@ netLink:hasDestination a owl:ObjectProperty ;
     rdfs:range netLink:destination ;
     prov:wasDerivedFrom "nt:link?list/hasDestination" .
 
-netLink:hasInventoryMappingAttributes a owl:ObjectProperty ;
-    rdfs:label "hasInventoryMappingAttributes" ;
-    rdfs:comment "Containment relation" ;
-    rdfs:domain net:link ;
-    rdfs:range netLink:inventory-mapping-attributes ;
-    prov:wasDerivedFrom "nt:link?list/hasInventoryMappingAttributes" .
-
 netLink:hasSource a owl:ObjectProperty ;
     rdfs:label "hasSource" ;
     rdfs:comment "Containment relation" ;
@@ -1537,11 +1698,24 @@ netLink:hasSupportingLink a owl:ObjectProperty ;
     rdfs:range netLink:supporting-link ;
     prov:wasDerivedFrom "nt:link?list/hasSupportingLink" .
 
+nw-types:hasL2Topology a owl:ObjectProperty ;
+    rdfs:label "hasL2Topology" ;
+    rdfs:comment "Containment relation" ;
+    rdfs:domain net:network-types ;
+    rdfs:range nw-types:l2-topology ;
+    prov:wasDerivedFrom "nw:networks?container/nw:network?list/nw:network-types?container/hasL2Topology" .
+
 netNode:hasInventoryMappingAttributes a owl:ObjectProperty ;
     rdfs:label "hasInventoryMappingAttributes" ;
     rdfs:comment "Containment relation" ;
     rdfs:domain net:node ;
     rdfs:range netNode:inventory-mapping-attributes .
+
+netNode:hasL2NodeAttributes a owl:ObjectProperty ;
+    rdfs:label "hasL2NodeAttributes" ;
+    rdfs:comment "Containment relation" ;
+    rdfs:domain net:node ;
+    rdfs:range netNode:l2-node-attributes .
 
 netNode:hasSupportingNode a owl:ObjectProperty ;
     rdfs:label "hasSupportingNode" ;
@@ -1555,33 +1729,12 @@ netNode:hasTerminationPoint a owl:ObjectProperty ;
     rdfs:domain net:node ;
     rdfs:range netNode:termination-point .
 
-netTP:hasInventoryMappingAttributes a owl:ObjectProperty ;
-    rdfs:label "hasInventoryMappingAttributes" ;
-    rdfs:comment "Containment relation" ;
-    rdfs:domain netNode:termination-point ;
-    rdfs:range netTP:inventory-mapping-attributes ;
-    prov:wasDerivedFrom "nt:termination-point?list/hasInventoryMappingAttributes" .
-
 netTP:hasSupportingTerminationPoint a owl:ObjectProperty ;
     rdfs:label "hasSupportingTerminationPoint" ;
     rdfs:comment "Containment relation" ;
     rdfs:domain netNode:termination-point ;
     rdfs:range netTP:supporting-termination-point ;
     prov:wasDerivedFrom "nt:termination-point?list/hasSupportingTerminationPoint" .
-
-netInvMap:hasPortBreakout a owl:ObjectProperty ;
-    rdfs:label "hasPortBreakout" ;
-    rdfs:comment "Containment relation" ;
-    rdfs:domain netTP:inventory-mapping-attributes ;
-    rdfs:range netInvMap:port-breakout ;
-    prov:wasDerivedFrom "nwit:inventory-mapping-attributes?container/hasPortBreakout" .
-
-netPortBrk:hasBreakoutChannel a owl:ObjectProperty ;
-    rdfs:label "hasBreakoutChannel" ;
-    rdfs:comment "Containment relation" ;
-    rdfs:domain netInvMap:port-breakout ;
-    rdfs:range netPortBrk:breakout-channel ;
-    prov:wasDerivedFrom "nwit:inventory-mapping-attributes?container/nwit:port-breakout?container/hasBreakoutChannel" .
 
 pae:hasPowerEntry a owl:ObjectProperty ;
     rdfs:label "hasPowerEntry" ;
@@ -1597,6 +1750,37 @@ order of the child cables.""" ;
     rdfs:domain cab:child-cable ;
     rdfs:range xsd:unsignedByte ;
     prov:wasDerivedFrom "nwi-passive:child-cable?list/nwi-passive:index?leaf" .
+
+ex:inner-tag a owl:DatatypeProperty ;
+    rdfs:label "inner-tag" ;
+    rdfs:comment """The inner VLAN tag.  It may include a list of VLAN
+Ids or nonoverlapping VLAN ranges.""" ;
+    rdfs:domain nw-s-tp:l2-termination-point-attributes ;
+    rdfs:range xsd:string ;
+    prov:wasDerivedFrom "l2t:l2-termination-point-attributes?container/l2t:inner-tag?leaf" .
+
+ex:inner-tpid a owl:DatatypeProperty ;
+    rdfs:label "inner-tpid" ;
+    rdfs:comment "Identifies a specific 802.1Q tag type of inner VLAN tag." ;
+    rdfs:domain nw-s-tp:l2-termination-point-attributes ;
+    rdfs:range xsd:string ;
+    prov:wasDerivedFrom "l2t:l2-termination-point-attributes?container/l2t:inner-tpid?leaf" .
+
+ex:interface-name a owl:DatatypeProperty ;
+    rdfs:label "interface-name" ;
+    rdfs:comment """Name of the interface.  The name can (but does not
+have to) correspond to an interface reference of a
+containing node's interface, i.e., the path name of a
+corresponding interface data node on the containing
+node is reminiscent of data type interface-ref defined
+in RFC 8343.  It should be noted that data type
+interface-ref of RFC 8343 cannot be used directly,
+as this data type is used to reference an interface
+in a datastore of a single node in the network, not
+to uniquely reference interfaces across a network.""" ;
+    rdfs:domain nw-s-tp:l2-termination-point-attributes ;
+    rdfs:range xsd:string ;
+    prov:wasDerivedFrom "l2t:l2-termination-point-attributes?container/l2t:interface-name?leaf" .
 
 ex:is-fru a owl:DatatypeProperty ;
     rdfs:label "is-fru" ;
@@ -1638,6 +1822,14 @@ which can can take or not the 'main' role
     rdfs:domain nwiComps:component ;
     rdfs:range xsd:boolean ;
     prov:wasDerivedFrom "nwi:network-inventory?container/nwi:network-elements?container/nwi:network-element?list/nwi:components?container/nwi:component?list/nwi:is-main?leaf" .
+
+ex:lag a owl:DatatypeProperty ;
+    rdfs:label "lag" ;
+    rdfs:comment """Defines whether lag is supported or not.
+When it is set to true, the lag is supported.""" ;
+    rdfs:domain nw-s-tp:l2-termination-point-attributes ;
+    rdfs:range xsd:boolean ;
+    prov:wasDerivedFrom "l2t:l2-termination-point-attributes?container/l2t:lag?leaf" .
 
 ex:last-change a owl:DatatypeProperty ;
     rdfs:label "last-change" ;
@@ -1683,7 +1875,7 @@ of this link's underlay.  Reference loops in which
 a link identifies itself as its underlay, either
 directly or transitively, are not allowed.""" ;
     rdfs:domain netLink:supporting-link ;
-    rdfs:range net:link ;
+    rdfs:range nws-net:link ;
     prov:wasDerivedFrom "nt:link?list/nt:supporting-link?list/nt:link-ref?leaf" .
 
 ex:link-type a owl:DatatypeProperty ;
@@ -1691,7 +1883,7 @@ ex:link-type a owl:DatatypeProperty ;
     rdfs:comment """Classification of the link media type at the topology
 layer. Example values include 'copper', 'fiber',
 'microwave', or 'wifi'.""" ;
-    rdfs:domain netLink:inventory-mapping-attributes ;
+    rdfs:domain nws-link:inventory-mapping-attributes ;
     rdfs:range xsd:string ;
     prov:wasDerivedFrom "nwit:inventory-mapping-attributes?container/nwit:link-type?leaf" .
 
@@ -1729,6 +1921,37 @@ indicated by the reference-frame.""" ;
     rdfs:range xsd:decimal ;
     prov:wasDerivedFrom "geo:geo-location?container/geo:longitude?leaf" .
 
+ex:mac-address a owl:DatatypeProperty ;
+    rdfs:label "mac-address" ;
+    rdfs:comment "Interface MAC address for logical link control." ;
+    rdfs:domain nw-s-tp:l2-termination-point-attributes ;
+    rdfs:range xsd:string ;
+    prov:wasDerivedFrom "l2t:l2-termination-point-attributes?container/l2t:mac-address?leaf" .
+
+ex:management-address a owl:DatatypeProperty ;
+    rdfs:label "management-address" ;
+    rdfs:comment "IP address used for management purpose." ;
+    rdfs:domain netNode:l2-node-attributes ;
+    prov:wasDerivedFrom "l2t:l2-node-attributes?container/l2t:management-address?leaf-list" .
+
+ex:management-mac a owl:DatatypeProperty ;
+    rdfs:label "management-mac" ;
+    rdfs:comment """This is a MAC address used for the bridge management.
+It can be the Bridge Base VLAN ID (VID), interface
+MAC address, or other. """ ;
+    rdfs:domain netNode:l2-node-attributes ;
+    rdfs:range xsd:string ;
+    prov:wasDerivedFrom "l2t:l2-node-attributes?container/l2t:management-mac?leaf" .
+
+ex:management-vlan a owl:DatatypeProperty ;
+    rdfs:label "management-vlan" ;
+    rdfs:comment """This is a VLAN that supports the management address.
+The actual VLAN ID type and value would be a member of
+this VLAN.""" ;
+    rdfs:domain netNode:l2-node-attributes ;
+    rdfs:range xsd:string ;
+    prov:wasDerivedFrom "l2t:l2-node-attributes?container/l2t:management-vlan?leaf" .
+
 ex:max-allocated-power a owl:DatatypeProperty ;
     rdfs:label "max-allocated-power" ;
     ex:unit "watts" ;
@@ -1744,6 +1967,15 @@ ex:max-voltage a owl:DatatypeProperty ;
     rdfs:domain nwiRacks:rack ;
     rdfs:range xsd:unsignedShort ;
     prov:wasDerivedFrom "nwi:network-inventory?container/nil:locations?container/nil:racks?container/nil:rack?list/nil:max-voltage?leaf" .
+
+ex:member-link-tp a owl:ObjectProperty ;
+    rdfs:label "member-link-tp" ;
+    ex:xpathPath "/nw:networks/nw:network/nw:node/nt:termination-point/nt:tp-id" ;
+    rdfs:comment """List of member link termination points associated with
+specific L2 termination point.""" ;
+    rdfs:domain nw-s-tp:l2-termination-point-attributes ;
+    rdfs:range nw-s-node:termination-point ;
+    prov:wasDerivedFrom "l2t:l2-termination-point-attributes?container/l2t:member-link-tp?leaf-list" .
 
 ex:mfg-date a owl:DatatypeProperty ;
     rdfs:label "mfg-date" ;
@@ -1797,7 +2029,10 @@ instantiated.""" ;
 
 ex:name a owl:DatatypeProperty ;
     rdfs:label "name" ;
-    rdfs:comment """The name assigned to this component.
+    rdfs:comment "Link name.",
+        "Name of the topology.",
+        "Node name.",
+        """The name assigned to this component.
 
 This name is not required to be the same as
 entPhysicalName.""",
@@ -1819,9 +2054,15 @@ state.""",
         nwiComp:software-rev,
         nwiNE:software-rev,
         nwi:passive-device,
-        pdev:passive-port ;
+        pdev:passive-port,
+        nws-link:l2-link-attributes,
+        net:l2-topology-attributes,
+        netNode:l2-node-attributes ;
     rdfs:range xsd:string ;
     prov:wasDerivedFrom "hw:hardware?container/hw:component?list/hw:name?leaf",
+        "l2t:l2-link-attributes?container/l2t:name?leaf",
+        "l2t:l2-node-attributes?container/l2t:name?leaf",
+        "l2t:l2-topology-attributes?container/l2t:name?leaf",
         "nwi:name?leaf",
         "nwi:software-rev?list/nwi:name?leaf" .
 
@@ -1852,8 +2093,8 @@ the chassis component.""" ;
         cabChild:z-end,
         cab:z-end,
         nwiRack:contained-chassis,
-        netNode:inventory-mapping-attributes,
-        netTP:inventory-mapping-attributes ;
+        nw-s-tp:inventory-mapping-attributes,
+        netNode:inventory-mapping-attributes ;
     rdfs:range nwiNEs:network-element,
         xsd:string ;
     prov:wasDerivedFrom "nwi-passive:a-end?container/nwi-passive:ne-ref?leaf",
@@ -1931,6 +2172,24 @@ hwNotif:hardware-state-oper-disabled a owl:Class ;
 hwNotif:hardware-state-oper-enabled a owl:Class ;
     rdfs:label "hardware-state-oper-enabled" .
 
+l2tSNotif:l2-link-event a owl:Class ;
+    rdfs:label "l2-link-event" .
+
+l2tSNotif:l2-node-event a owl:Class ;
+    rdfs:label "l2-node-event" .
+
+l2tSNotif:l2-termination-point-event a owl:Class ;
+    rdfs:label "l2-termination-point-event" .
+
+l2tNotif:l2-link-event a owl:Class ;
+    rdfs:label "l2-link-event" .
+
+l2tNotif:l2-node-event a owl:Class ;
+    rdfs:label "l2-node-event" .
+
+l2tNotif:l2-termination-point-event a owl:Class ;
+    rdfs:label "l2-termination-point-event" .
+
 ex:object-id a owl:DatatypeProperty ;
     rdfs:label "object-id" ;
     rdfs:comment """An identifier that uniquely identifies the energy object
@@ -1962,6 +2221,22 @@ ex:oper-status a owl:ObjectProperty ;
     rdfs:domain hwComp:sensor-data ;
     rdfs:range hwTypes:sensor-status ;
     prov:wasDerivedFrom "hw:hardware?container/hw:component?list/hw:sensor-data?container/hw:oper-status?leaf" .
+
+ex:outer-tag a owl:DatatypeProperty ;
+    rdfs:label "outer-tag" ;
+    rdfs:comment """The outermost VLAN tag.  It may include a list of VLAN
+Ids or nonoverlapping VLAN ranges.""" ;
+    rdfs:domain nw-s-tp:l2-termination-point-attributes ;
+    rdfs:range xsd:string ;
+    prov:wasDerivedFrom "l2t:l2-termination-point-attributes?container/l2t:outer-tag?leaf" .
+
+ex:outer-tpid a owl:DatatypeProperty ;
+    rdfs:label "outer-tpid" ;
+    rdfs:comment """Identifies a specific 802.1Q tag type of outermost VLAN
+tag.""" ;
+    rdfs:domain nw-s-tp:l2-termination-point-attributes ;
+    rdfs:range xsd:string ;
+    prov:wasDerivedFrom "l2t:l2-termination-point-attributes?container/l2t:outer-tpid?leaf" .
 
 ex:parent a owl:ObjectProperty ;
     rdfs:label "parent" ;
@@ -2048,6 +2323,14 @@ by this list entry.""" ;
     rdfs:range xsd:int ;
     prov:wasDerivedFrom "hw:hardware?container/hw:component?list/hw:physical-index?leaf" .
 
+ex:port-number a owl:DatatypeProperty ;
+    rdfs:label "port-number" ;
+    rdfs:comment """ List of port numbers of the bridge ports for which each
+ entry contains bridge management information.""" ;
+    rdfs:domain nw-s-tp:l2-termination-point-attributes ;
+    rdfs:range xsd:unsignedInt ;
+    prov:wasDerivedFrom "l2t:l2-termination-point-attributes?container/l2t:port-number?leaf-list" .
+
 ex:port-ref a owl:ObjectProperty ;
     rdfs:label "port-ref" ;
     ex:xpathPath "/nwi:network-inventory/nwi:network-elements/nwi:network-element[nwi:ne-id=current()/../ne-ref]/nwi:components/nwi:component/nwi:component-id" ;
@@ -2055,7 +2338,7 @@ ex:port-ref a owl:ObjectProperty ;
 
 Note: the class of the referenced port component MUST be
 'ianahw:port' or a derived identity.""" ;
-    rdfs:domain netTP:inventory-mapping-attributes ;
+    rdfs:domain nw-s-tp:inventory-mapping-attributes ;
     rdfs:range nwiComps:component ;
     prov:wasDerivedFrom "nwit:inventory-mapping-attributes?container/nwi:port-ref?leaf" .
 
@@ -2103,6 +2386,16 @@ ex:rack a owl:ObjectProperty ;
 ex:rank a owl:DatatypeProperty ;
     rdfs:label "rank" ;
     rdfs:range xsd:integer .
+
+ex:rate a owl:DatatypeProperty ;
+    rdfs:label "rate" ;
+    ex:unit "Kbps" ;
+    rdfs:comment """Link rate.  It specifies bandwidth requirements
+associated with the specific link.  The link
+contains a source and a destination.""" ;
+    rdfs:domain nws-link:l2-link-attributes ;
+    rdfs:range xsd:unsignedLong ;
+    prov:wasDerivedFrom "l2t:l2-link-attributes?container/l2t:rate?leaf" .
 
 ex:relative-position a owl:DatatypeProperty ;
     rdfs:label "relative-position" ;
@@ -2264,7 +2557,7 @@ ex:tp-ref a owl:ObjectProperty ;
     rdfs:comment """Reference to the underlay node (the underlay node must
 be in a different topology).""" ;
     rdfs:domain netTP:supporting-termination-point ;
-    rdfs:range netNode:termination-point ;
+    rdfs:range nw-s-node:termination-point ;
     prov:wasDerivedFrom "nt:termination-point?list/nt:supporting-termination-point?list/nt:tp-ref?leaf" .
 
 ex:type a owl:DatatypeProperty ;
@@ -2553,6 +2846,34 @@ inetIpVer:unknown a inetTypes:ip-version,
     rdfs:comment """An unknown or unspecified version of the Internet
 protocol.""" .
 
+l2tDuplex:full-duplex a l2tTypes:duplex-mode,
+        owl:NamedIndividual ;
+    rdfs:label "full-duplex" ;
+    rdfs:comment "Indicates full-duplex mode." .
+
+l2tDuplex:half-duplex a l2tTypes:duplex-mode,
+        owl:NamedIndividual ;
+    rdfs:label "half-duplex" ;
+    rdfs:comment "Indicates half-duplex mode." .
+
+l2tEvent:addition a l2tTypes:l2-network-event-type,
+        owl:NamedIndividual ;
+    rdfs:label "addition" ;
+    rdfs:comment """A Layer 2 node or link or termination-point
+has been added.""" .
+
+l2tEvent:removal a l2tTypes:l2-network-event-type,
+        owl:NamedIndividual ;
+    rdfs:label "removal" ;
+    rdfs:comment """A Layer 2 node or link or termination-point
+has been removed.""" .
+
+l2tEvent:update a l2tTypes:l2-network-event-type,
+        owl:NamedIndividual ;
+    rdfs:label "update" ;
+    rdfs:comment """A Layer 2 node or link or termination-point
+has been updated.""" .
+
 ex:units-display a owl:DatatypeProperty ;
     rdfs:label "units-display" ;
     rdfs:comment """A textual description of the data units that should be
@@ -2560,6 +2881,18 @@ used in the display of the sensor value.""" ;
     rdfs:domain hwComp:sensor-data ;
     rdfs:range xsd:string ;
     prov:wasDerivedFrom "hw:hardware?container/hw:component?list/hw:sensor-data?container/hw:units-display?leaf" .
+
+ex:unnumbered-id a owl:DatatypeProperty ;
+    rdfs:label "unnumbered-id" ;
+    rdfs:comment """List of unnumbered interface identifiers.
+The unnumbered interface identifier will correspond to
+the ifIndex value of the interface, i.e., the ifIndex
+value of the ifEntry that represents the interface in
+implementations where the Interfaces Group MIB
+(RFC 2863) is supported.""" ;
+    rdfs:domain nw-s-tp:l2-termination-point-attributes ;
+    rdfs:range xsd:unsignedInt ;
+    prov:wasDerivedFrom "l2t:l2-termination-point-attributes?container/l2t:unnumbered-id?leaf-list" .
 
 ex:uri a owl:DatatypeProperty ;
     rdfs:label "uri" ;
@@ -2722,6 +3055,15 @@ ex:viaCable a owl:ObjectProperty ;
     rdfs:label "via cable" ;
     rdfs:comment "RDF-star annotation on ex:hasUpstreamDevice: the physical cable realising this hop." .
 
+ex:vni-id a owl:DatatypeProperty ;
+    rdfs:label "vni-id" ;
+    rdfs:comment "VXLAN Network Identifier (VNI)." ;
+    rdfs:domain l2t-s-attr:vxlan,
+        l2t-attr:vxlan ;
+    rdfs:range xsd:string,
+        xsd:unsignedInt ;
+    prov:wasDerivedFrom "l2t:l2-termination-point-attributes?container/l2t:vxlan?container/l2t:vni-id?leaf" .
+
 ex:width a owl:DatatypeProperty ;
     rdfs:label "width" ;
     ex:unit "millimeter" ;
@@ -2758,6 +3100,31 @@ grpGeo:geo-location a owl:Class ;
     rdfs:label "geo-location" ;
     rdfs:comment "Grouping definition: geo-location",
         "Grouping to identify a location on an astronomical object." .
+
+grpL2t:l2-link-attributes a owl:Class ;
+    rdfs:label "l2-link-attributes" ;
+    rdfs:comment "Grouping definition: l2-link-attributes",
+        "L2 link attributes." .
+
+grpL2t:l2-network-type a owl:Class ;
+    rdfs:label "l2-network-type" ;
+    rdfs:comment "Grouping definition: l2-network-type",
+        "Indicates the topology type to be L2." .
+
+grpL2t:l2-node-attributes a owl:Class ;
+    rdfs:label "l2-node-attributes" ;
+    rdfs:comment "Grouping definition: l2-node-attributes",
+        "L2 node attributes." .
+
+grpL2t:l2-termination-point-attributes a owl:Class ;
+    rdfs:label "l2-termination-point-attributes" ;
+    rdfs:comment "Grouping definition: l2-termination-point-attributes",
+        "L2 termination point attributes." .
+
+grpL2t:l2-topology-attributes a owl:Class ;
+    rdfs:label "l2-topology-attributes" ;
+    rdfs:comment "Grouping definition: l2-topology-attributes",
+        "L2 topology scope attributes." .
 
 grpNwiTop:link-inventory-mapping-attributes a owl:Class ;
     rdfs:label "link-inventory-mapping-attributes" ;
@@ -2849,6 +3216,20 @@ ex:hasUpstreamDevice a owl:ObjectProperty ;
     rdfs:label "has upstream device" ;
     rdfs:comment "Materialised shortcut: device at Z-end of a cable -> device at A-end (upstream). Annotated via RDF-star with ex:viaCable and ex:cableRole. Enables: ?device ex:hasUpstreamDevice+ ?odf ." .
 
+l2tId:eth-encapsulation-type a owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "eth-encapsulation-type" ;
+    rdfs:comment """Base identity from which specific Ethernet
+encapsulation types are derived.""" ;
+    rdfs:subClassOf ianaIfId:iana-interface-type ;
+    prov:wasDerivedFrom "l2t:eth-encapsulation-type?identity" .
+
+l2tId:flag-identity a owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "flag-identity" ;
+    rdfs:comment "Base type for flags." ;
+    prov:wasDerivedFrom "l2t:flag-identity?identity" .
+
 nwiInvId:ne-type a owl:Class,
         owl:NamedIndividual ;
     rdfs:label "ne-type" ;
@@ -2928,12 +3309,21 @@ associated with the integer units used to measure the power or
 energy.""" ;
     prov:wasDerivedFrom "eo:unit-multiplier?identity" .
 
-net:network-types a owl:Class ;
-    rdfs:label "network-types" ;
-    rdfs:comment """Serves as an augmentation target.
-The network type is indicated through corresponding
-presence containers augmented into this container.""" ;
-    prov:wasDerivedFrom "nw:networks?container/nw:network?list/nw:network-types?container" .
+l2t-s-attr:vxlan a owl:Class ;
+    rdfs:label "vxlan" ;
+    rdfs:comment "Vxlan encapsulation type." ;
+    prov:wasDerivedFrom "l2t:l2-termination-point-attributes?container/l2t:vxlan?container" .
+
+l2t-attr:vxlan a owl:Class ;
+    rdfs:label "vxlan" ;
+    rdfs:comment "Vxlan encapsulation type." ;
+    prov:wasDerivedFrom "l2t:l2-termination-point-attributes?container/l2t:vxlan?container" .
+
+nw-types:l2-topology a owl:Class ;
+    rdfs:label "l2-topology" ;
+    rdfs:comment """The presence of the container node indicates
+L2 Network Topology.""" ;
+    prov:wasDerivedFrom "nw:networks?container/nw:network?list/nw:network-types?container/l2t:l2-topology?container" .
 
 grpNwi:ne-component-common-entity-attributes a owl:Class ;
     rdfs:label "ne-component-common-entity-attributes" ;
@@ -2952,12 +3342,17 @@ grpNwiPass:connected-device-ref a owl:Class ;
     rdfs:comment "Attributes applicable to connected devices.",
         "Grouping definition: connected-device-ref" .
 
-netRoot:networks a owl:Class ;
-    rdfs:label "networks" ;
-    rdfs:comment "Serves as a top-level container for a list of networks." ;
-    prov:wasDerivedFrom "nw:networks?container" .
+nwit-s-inv:port-breakout a owl:Class ;
+    rdfs:label "port-breakout" ;
+    ex:isStateData true ;
+    rdfs:comment """Breakout capability of the physical port represented by
+this TP. One TP maps to one physical port; channels are
+listed here. This container is present only when the
+underlying hardware supports partitioning the port into
+multiple independent channels (e.g., 400G to 4x100G).""" ;
+    prov:wasDerivedFrom "nwit:inventory-mapping-attributes?container/nwit:port-breakout?container" .
 
-netLink:inventory-mapping-attributes a owl:Class ;
+nws-link:inventory-mapping-attributes a owl:Class ;
     rdfs:label "inventory-mapping-attributes" ;
     rdfs:comment """Container for inventory-related attributes of a link.
 
@@ -2972,6 +3367,19 @@ contains detailed resource information:
   Detailed inventory references may be added in future
   modules.""" ;
     prov:wasDerivedFrom "nwit:inventory-mapping-attributes?container" .
+
+netRoot:networks a owl:Class ;
+    rdfs:label "networks" ;
+    rdfs:comment "Serves as a top-level container for a list of networks." ;
+    prov:wasDerivedFrom "nw:networks?container" .
+
+net:network-types a owl:Class ;
+    rdfs:label "network-types" ;
+    rdfs:comment """Serves as an augmentation target.
+The network type is indicated through corresponding
+presence containers augmented into this container.""" ;
+    rdfs:subClassOf grpL2t:l2-network-type ;
+    prov:wasDerivedFrom "nw:networks?container/nw:network?list/nw:network-types?container" .
 
 netNode:inventory-mapping-attributes a owl:Class ;
     rdfs:label "inventory-mapping-attributes" ;
@@ -2993,6 +3401,14 @@ datastores supported by the server.  The leaf-list 'datastore'
 for the module 'ietf-hardware' in the YANG library provides
 this information.""" ;
     prov:wasDerivedFrom "hw:hardware?container" .
+
+nwit-s-bo:breakout-channel a owl:Class ;
+    rdfs:label "breakout-channel" ;
+    rdfs:comment """List of breakout channels available on this port.
+Each entry represents an independent lane or sub-port
+that can be used for channelized interfaces.""" ;
+    owl:hasKey ( nwit-s-chan:channel-id ) ;
+    prov:wasDerivedFrom "nwit:inventory-mapping-attributes?container/nwit:port-breakout?container/nwit:breakout-channel?list" .
 
 nwiLocs:racks a owl:Class ;
     rdfs:label "racks" ;
@@ -3030,6 +3446,21 @@ the software module.""" ;
     owl:hasKey ( nwiSwRevPatch:revision ) ;
     prov:wasDerivedFrom "nwi:software-rev?list/nwi:patch?list" .
 
+nws-net:link a owl:Class ;
+    rdfs:subClassOf grpL2t:l2-link-attributes,
+        grpNwiTop:link-inventory-mapping-attributes .
+
+nw-s-tp:inventory-mapping-attributes a owl:Class ;
+    rdfs:label "inventory-mapping-attributes" ;
+    rdfs:comment "Container for inventory mapping attributes of a TP." ;
+    rdfs:subClassOf grpNwi:port-ref ;
+    prov:wasDerivedFrom "nwit:inventory-mapping-attributes?container" .
+
+net:l2-topology-attributes a owl:Class ;
+    rdfs:label "l2-topology-attributes" ;
+    rdfs:comment "Contains L2 topology attributes." ;
+    prov:wasDerivedFrom "l2t:l2-topology-attributes?container" .
+
 netLink:destination a owl:Class ;
     rdfs:label "destination" ;
     rdfs:comment """This container holds the logical destination of a
@@ -3042,26 +3473,14 @@ netLink:source a owl:Class ;
 link.""" ;
     prov:wasDerivedFrom "nt:link?list/nt:source?container" .
 
-netInvMap:port-breakout a owl:Class ;
-    rdfs:label "port-breakout" ;
-    ex:isStateData true ;
-    rdfs:comment """Breakout capability of the physical port represented by
-this TP. One TP maps to one physical port; channels are
-listed here. This container is present only when the
-underlying hardware supports partitioning the port into
-multiple independent channels (e.g., 400G to 4x100G).""" ;
-    prov:wasDerivedFrom "nwit:inventory-mapping-attributes?container/nwit:port-breakout?container" .
-
-netPortBrk:breakout-channel a owl:Class ;
-    rdfs:label "breakout-channel" ;
-    rdfs:comment """List of breakout channels available on this port.
-Each entry represents an independent lane or sub-port
-that can be used for channelized interfaces.""" ;
-    owl:hasKey ( netBrkChan:channel-id ) ;
-    prov:wasDerivedFrom "nwit:inventory-mapping-attributes?container/nwit:port-breakout?container/nwit:breakout-channel?list" .
-
 inetTypes:ip-version a owl:Class ;
     rdfs:label "ip-version" .
+
+l2tTypes:duplex-mode a owl:Class ;
+    rdfs:label "duplex-mode" .
+
+l2tTypes:l2-network-event-type a owl:Class ;
+    rdfs:label "l2-network-event-type" .
 
 grpNwiPass:connected-device-end a owl:Class ;
     rdfs:label "connected-device-end" ;
@@ -3111,17 +3530,15 @@ comprises the name of the location, row number, and
 column number.""" ;
     prov:wasDerivedFrom "nwi:network-inventory?container/nil:locations?container/nil:racks?container/nil:rack?list/nil:rack-location?container" .
 
+nw-s-node:termination-point a owl:Class ;
+    rdfs:subClassOf grpL2t:l2-termination-point-attributes,
+        grpNwiTop:tp-inventory-mapping-attributes .
+
 netLink:supporting-link a owl:Class ;
     rdfs:label "supporting-link" ;
     rdfs:comment "Identifies the link or links on which this link depends." ;
     owl:hasKey ( netSuppLink:network-ref netSuppLink:link-ref ) ;
     prov:wasDerivedFrom "nt:link?list/nt:supporting-link?list" .
-
-netTP:inventory-mapping-attributes a owl:Class ;
-    rdfs:label "inventory-mapping-attributes" ;
-    rdfs:comment "Container for inventory mapping attributes of a TP." ;
-    rdfs:subClassOf grpNwi:port-ref ;
-    prov:wasDerivedFrom "nwit:inventory-mapping-attributes?container" .
 
 net:supporting-network a owl:Class ;
     rdfs:label "supporting-network" ;
@@ -3213,6 +3630,19 @@ images intended to be running within the entity
     owl:hasKey ( nwiSwRev:name ) ;
     prov:wasDerivedFrom "nwi:software-rev?list" .
 
+net:link a owl:Class ;
+    rdfs:label "link" ;
+    rdfs:comment """A network link connects a local (source) node and
+a remote (destination) node via a set of the respective
+node's termination points.  It is possible to have several
+links between the same source and destination nodes.
+Likewise, a link could potentially be re-homed between
+termination points.  Therefore, in order to ensure that we
+would always know to distinguish between links, every link
+is identified by a dedicated link identifier.  Note that a
+link models a point-to-point link, not a multipoint link.""" ;
+    prov:wasDerivedFrom "nt:link?list" .
+
 netNode:supporting-node a owl:Class ;
     rdfs:label "supporting-node" ;
     rdfs:comment """Represents another node that is in an underlay network
@@ -3220,6 +3650,13 @@ and that supports this node.  Used to represent layering
 structure.""" ;
     owl:hasKey ( netSuppNode:network-ref netSuppNode:node-ref ) ;
     prov:wasDerivedFrom "nw:networks?container/nw:network?list/nw:node?list/nw:supporting-node?list" .
+
+netNode:termination-point a owl:Class ;
+    rdfs:label "termination-point" ;
+    rdfs:comment """A termination point can terminate a link.
+Depending on the type of topology, a termination point
+could, for example, refer to a port or an interface.""" ;
+    prov:wasDerivedFrom "nt:termination-point?list" .
 
 grpNwi:basic-common-entity-attributes a owl:Class ;
     rdfs:label "basic-common-entity-attributes" ;
@@ -3242,27 +3679,15 @@ cab:child-cable a owl:Class ;
     owl:hasKey ( cabChild:index ) ;
     prov:wasDerivedFrom "nwi-passive:child-cable?list" .
 
-net:link a owl:Class ;
-    rdfs:label "link" ;
-    rdfs:comment """A network link connects a local (source) node and
-a remote (destination) node via a set of the respective
-node's termination points.  It is possible to have several
-links between the same source and destination nodes.
-Likewise, a link could potentially be re-homed between
-termination points.  Therefore, in order to ensure that we
-would always know to distinguish between links, every link
-is identified by a dedicated link identifier.  Note that a
-link models a point-to-point link, not a multipoint link.""" ;
-    rdfs:subClassOf grpNwiTop:link-inventory-mapping-attributes ;
-    prov:wasDerivedFrom "nt:link?list" .
+nws-link:l2-link-attributes a owl:Class ;
+    rdfs:label "l2-link-attributes" ;
+    rdfs:comment "Contains L2 link attributes." ;
+    prov:wasDerivedFrom "l2t:l2-link-attributes?container" .
 
-netNode:termination-point a owl:Class ;
-    rdfs:label "termination-point" ;
-    rdfs:comment """A termination point can terminate a link.
-Depending on the type of topology, a termination point
-could, for example, refer to a port or an interface.""" ;
-    rdfs:subClassOf grpNwiTop:tp-inventory-mapping-attributes ;
-    prov:wasDerivedFrom "nt:termination-point?list" .
+netNode:l2-node-attributes a owl:Class ;
+    rdfs:label "l2-node-attributes" ;
+    rdfs:comment "Contains L2 node attributes." ;
+    prov:wasDerivedFrom "l2t:l2-node-attributes?container" .
 
 hwComp:sensor-data a owl:Class ;
     rdfs:label "sensor-data" ;
@@ -3277,22 +3702,6 @@ pdev:passive-port a owl:Class ;
     owl:hasKey ( pdevPort:id ) ;
     prov:wasDerivedFrom "nwi-passive:passive-port?list" .
 
-netNetworks:network a owl:Class ;
-    rdfs:label "network" ;
-    rdfs:comment """Describes a network.
-A network typically contains an inventory of nodes,
-topological information (augmented through the
-network-topology data model), and layering information.""" ;
-    owl:hasKey ( net:network-id ) ;
-    prov:wasDerivedFrom "nw:networks?container/nw:network?list" .
-
-net:node a owl:Class ;
-    rdfs:label "node" ;
-    rdfs:comment "The inventory of nodes of this network." ;
-    rdfs:subClassOf grpNwiTop:node-inventory-mapping-attributes ;
-    owl:hasKey ( netNode:node-id ) ;
-    prov:wasDerivedFrom "nw:networks?container/nw:network?list/nw:node?list" .
-
 pae:power-entry a owl:Class ;
     rdfs:label "power-entry" ;
     rdfs:comment """Power entry for an energy object, indexed by object id.
@@ -3306,6 +3715,29 @@ nwiLoc:geo-location a owl:Class ;
     rdfs:comment """A location on an astronomical body (e.g., 'earth')
 somewhere in a universe.""" ;
     prov:wasDerivedFrom "geo:geo-location?container" .
+
+netNetworks:network a owl:Class ;
+    rdfs:label "network" ;
+    rdfs:comment """Describes a network.
+A network typically contains an inventory of nodes,
+topological information (augmented through the
+network-topology data model), and layering information.""" ;
+    rdfs:subClassOf grpL2t:l2-topology-attributes ;
+    owl:hasKey ( net:network-id ) ;
+    prov:wasDerivedFrom "nw:networks?container/nw:network?list" .
+
+net:node a owl:Class ;
+    rdfs:label "node" ;
+    rdfs:comment "The inventory of nodes of this network." ;
+    rdfs:subClassOf grpL2t:l2-node-attributes,
+        grpNwiTop:node-inventory-mapping-attributes ;
+    owl:hasKey ( netNode:node-id ) ;
+    prov:wasDerivedFrom "nw:networks?container/nw:network?list/nw:node?list" .
+
+nw-s-tp:l2-termination-point-attributes a owl:Class ;
+    rdfs:label "l2-termination-point-attributes" ;
+    rdfs:comment "Containing L2 termination point attributes." ;
+    prov:wasDerivedFrom "l2t:l2-termination-point-attributes?container" .
 
 nwi:passive-device a owl:Class ;
     rdfs:label "passive-device" ;
