@@ -18,8 +18,9 @@
 @prefix hwSensorSt: <http://www.huawei.com/ontology/types/ietf-hardware/sensor-status/> .
 @prefix hwSensorVSc: <http://www.huawei.com/ontology/types/ietf-hardware/sensor-value-scale/> .
 @prefix hwSensorVTy: <http://www.huawei.com/ontology/types/ietf-hardware/sensor-value-type/> .
+@prefix hwStandbySt: <http://www.huawei.com/ontology/types/ietf-hardware/standby-state/> .
 @prefix hwTypes: <http://www.huawei.com/ontology/types/ietf-hardware/> .
-@prefix hwUsageSt: <http://www.huawei.com/ontology/types/ietf-hardware/standby-state/> .
+@prefix hwUsageSt: <http://www.huawei.com/ontology/types/ietf-hardware/usage-state/> .
 @prefix ianaHw: <http://www.huawei.com/ontology/identity/iana-hardware/> .
 @prefix inetIpVer: <http://www.huawei.com/ontology/types/ietf-inet-types/ip-version/> .
 @prefix inetTypes: <http://www.huawei.com/ontology/types/ietf-inet-types/> .
@@ -41,6 +42,7 @@
 @prefix nwiComp: <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component/> .
 @prefix nwiCompPatch: <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component/software-rev/patch/> .
 @prefix nwiCompSwRev: <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component/software-rev/> .
+@prefix nwiComps: <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/> .
 @prefix nwiGeo: <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/locations/location/geo-location/> .
 @prefix nwiInvId: <http://www.huawei.com/ontology/identity/ietf-network-inventory/> .
 @prefix nwiLoc: <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/locations/location/> .
@@ -127,7 +129,7 @@ name can be specified by a network operator.""" ;
         nwiLocs:location,
         nwiRacks:rack,
         nwiNEs:network-element,
-        <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component>,
+        nwiComps:component,
         nwi:passive-device,
         pdev:passive-port ;
     rdfs:range xsd:string ;
@@ -170,7 +172,7 @@ between this leaf and entPhysicalAssetID.
 The definition of such a mechanism is outside the
 scope of this document.""" ;
     rdfs:domain hw:component,
-        <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component> ;
+        nwiComps:component ;
     rdfs:range xsd:string ;
     prov:wasDerivedFrom "hw:hardware?container/hw:component?list/hw:asset-id?leaf",
         "nwi:asset-id?leaf" .
@@ -247,7 +249,7 @@ ex:class a owl:DatatypeProperty,
 component.""",
         "The type of the component." ;
     rdfs:domain hw:component,
-        <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component> ;
+        nwiComps:component ;
     rdfs:range hwId:hardware-class ;
     prov:wasDerivedFrom "hw:hardware?container/hw:component?list/hw:class?leaf",
         "nwi:class?leaf" .
@@ -264,7 +266,7 @@ ex:component-id a owl:DatatypeProperty ;
     rdfs:label "component-id" ;
     rdfs:comment """An identifier that uniquely identifies the component
 in a node.""" ;
-    rdfs:domain <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component> ;
+    rdfs:domain nwiComps:component ;
     rdfs:range xsd:string ;
     prov:wasDerivedFrom "nwi:component-id?leaf" .
 
@@ -275,7 +277,7 @@ ex:component-ref a owl:ObjectProperty ;
 e.g. port component.""",
         """The reference to the chassis component within
 the network element and contained by the rack.""" ;
-    rdfs:range <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component> ;
+    rdfs:range nwiComps:component ;
     prov:wasDerivedFrom "nwi-passive:a-end?container/nwi-passive:component-ref?leaf",
         "nwi-passive:z-end?container/nwi-passive:component-ref?leaf",
         "nwi:network-inventory?container/nil:locations?container/nil:racks?container/nil:rack?list/nil:contained-chassis?list/nil:component-ref?leaf" .
@@ -342,7 +344,7 @@ for each version or model of the component.""",
         nwiLocs:location,
         nwiRacks:rack,
         nwiNEs:network-element,
-        <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component>,
+        nwiComps:component,
         nwi:passive-device,
         pdev:passive-port ;
     rdfs:range xsd:string ;
@@ -567,7 +569,7 @@ component.  The preferred value is the hardware revision
 identifier actually printed on the component itself (if
 present).""" ;
     rdfs:domain hw:component,
-        <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component> ;
+        nwiComps:component ;
     rdfs:range xsd:string ;
     prov:wasDerivedFrom "hw:hardware?container/hw:component?list/hw:hardware-rev?leaf",
         "nwi:hardware-rev?leaf" .
@@ -597,7 +599,7 @@ ex:has_component a owl:ObjectProperty ;
     rdfs:domain hwRoot:hardware,
         nwiNE:components ;
     rdfs:range hw:component,
-        <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component> .
+        nwiComps:component .
 
 ex:has_contained-chassis a owl:ObjectProperty ;
     rdfs:label "has contained-chassis" ;
@@ -654,7 +656,7 @@ ex:has_rack a owl:ObjectProperty ;
 ex:has_software-rev a owl:ObjectProperty ;
     rdfs:label "has software-rev" ;
     rdfs:domain nwiNEs:network-element,
-        <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component> ;
+        nwiComps:component ;
     rdfs:range nwiComp:software-rev,
         nwiNE:software-rev .
 
@@ -1430,7 +1432,7 @@ nwiNEs:hasNetworkElement a owl:ObjectProperty ;
 nwiComp:hasSoftwareRev a owl:ObjectProperty ;
     rdfs:label "hasSoftwareRev" ;
     rdfs:comment "Containment relation" ;
-    rdfs:domain <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component> ;
+    rdfs:domain nwiComps:component ;
     rdfs:range nwiComp:software-rev .
 
 nwiCompSwRev:hasPatch a owl:ObjectProperty ;
@@ -1439,11 +1441,11 @@ nwiCompSwRev:hasPatch a owl:ObjectProperty ;
     rdfs:domain nwiComp:software-rev ;
     rdfs:range nwiCompSwRev:patch .
 
-<http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/hasComponent> a owl:ObjectProperty ;
+nwiComps:hasComponent a owl:ObjectProperty ;
     rdfs:label "hasComponent" ;
     rdfs:comment "Containment relation" ;
     rdfs:domain nwiNE:components ;
-    rdfs:range <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component> ;
+    rdfs:range nwiComps:component ;
     prov:wasDerivedFrom "nwi:network-inventory?container/nwi:network-elements?container/nwi:network-element?list/nwi:components?container/hasComponent" .
 
 nwiNE:hasComponents a owl:ObjectProperty ;
@@ -1614,7 +1616,7 @@ that are permanently contained within a field-replaceable
 unit, the value 'false' should be returned for this
 node.""" ;
     rdfs:domain hw:component,
-        <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component> ;
+        nwiComps:component ;
     rdfs:range xsd:boolean ;
     prov:wasDerivedFrom "hw:hardware?container/hw:component?list/hw:is-fru?leaf",
         "nwi:is-fru?leaf" .
@@ -1633,7 +1635,7 @@ It is therefore omitted in scenarios where the
 network element does not contain chassis components
 which can can take or not the 'main' role
 (e.g., single-chassis network elements).""" ;
-    rdfs:domain <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component> ;
+    rdfs:domain nwiComps:component ;
     rdfs:range xsd:boolean ;
     prov:wasDerivedFrom "nwi:network-inventory?container/nwi:network-elements?container/nwi:network-element?list/nwi:components?container/nwi:component?list/nwi:is-main?leaf" .
 
@@ -1712,6 +1714,11 @@ ex:location-ref a owl:ObjectProperty ;
     prov:wasDerivedFrom "nwi:network-inventory?container/nil:locations?container/nil:racks?container/nil:rack?list/nil:rack-location?container/nil:location-ref?leaf",
         "nwi:network-inventory?container/nwi-passive:passive-device?list/nwi-passive:location-ref?leaf" .
 
+ex:logicallyConnectedTo a owl:ObjectProperty,
+        owl:SymmetricProperty ;
+    rdfs:label "logically connected to"^^xsd:string ;
+    rdfs:comment "A direct logical relationship between an edge active element (e.g., ONT) and a core active element (e.g., OLT), bypassing physical cabling."^^xsd:string .
+
 ex:longitude a owl:DatatypeProperty ;
     rdfs:label "longitude" ;
     ex:unit "decimal degrees" ;
@@ -1744,7 +1751,7 @@ ex:mfg-date a owl:DatatypeProperty ;
     rdfs:comment "The date of manufacturing of the component.",
         "The date of manufacturing of the managed component." ;
     rdfs:domain hw:component,
-        <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component> ;
+        nwiComps:component ;
     rdfs:range xsd:dateTime ;
     prov:wasDerivedFrom "hw:hardware?container/hw:component?list/hw:mfg-date?leaf",
         "nwi:mfg-date?leaf" .
@@ -1768,7 +1775,7 @@ physical component is unknown to the server, then this
 node is not instantiated.""" ;
     rdfs:domain hw:component,
         nwiNEs:network-element,
-        <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component> ;
+        nwiComps:component ;
     rdfs:range xsd:string ;
     prov:wasDerivedFrom "hw:hardware?container/hw:component?list/hw:mfg-name?leaf",
         "nwi:mfg-name?leaf" .
@@ -1808,7 +1815,7 @@ state.""",
         nwiLocs:location,
         nwiRacks:rack,
         nwiNEs:network-element,
-        <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component>,
+        nwiComps:component,
         nwiComp:software-rev,
         nwiNE:software-rev,
         nwi:passive-device,
@@ -1982,10 +1989,10 @@ every time this node is instantiated.""",
 location.""" ;
     rdfs:domain hw:component,
         nwiLocs:location,
-        <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component> ;
+        nwiComps:component ;
     rdfs:range hw:component,
         nwiLocs:location,
-        <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component> ;
+        nwiComps:component ;
     prov:wasDerivedFrom "hw:hardware?container/hw:component?list/hw:parent?leaf",
         "nwi:network-inventory?container/nil:locations?container/nil:location?list/nil:parent?leaf",
         "nwi:network-inventory?container/nwi:network-elements?container/nwi:network-element?list/nwi:components?container/nwi:component?list/nwi:parent?leaf-list" .
@@ -2016,7 +2023,7 @@ implementation-specific. When mapping from RFC 6933,
 the entPhysicalParentRelPos integer value SHOULD be
 encoded as an integer string.""" ;
     rdfs:domain hw:component,
-        <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component> ;
+        nwiComps:component ;
     rdfs:range xsd:int,
         xsd:string ;
     prov:wasDerivedFrom "hw:hardware?container/hw:component?list/hw:parent-rel-pos?leaf",
@@ -2028,7 +2035,7 @@ ex:part-number a owl:DatatypeProperty ;
 type. It is expected that vendors assign unique part
 numbers to different component types within the
 scope of the vendor.""" ;
-    rdfs:domain <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component> ;
+    rdfs:domain nwiComps:component ;
     rdfs:range xsd:string ;
     prov:wasDerivedFrom "nwi:part-number?leaf" .
 
@@ -2049,7 +2056,7 @@ ex:port-ref a owl:ObjectProperty ;
 Note: the class of the referenced port component MUST be
 'ianahw:port' or a derived identity.""" ;
     rdfs:domain netTP:inventory-mapping-attributes ;
-    rdfs:range <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component> ;
+    rdfs:range nwiComps:component ;
     prov:wasDerivedFrom "nwit:inventory-mapping-attributes?container/nwi:port-ref?leaf" .
 
 ex:port-type a owl:ObjectProperty ;
@@ -2073,7 +2080,7 @@ describing the entity (e.g., component) type. It is expected
 that vendors assign unique product names to different entity
 (e.g., component) types within the scope of the vendor.""" ;
     rdfs:domain nwiNEs:network-element,
-        <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component> ;
+        nwiComps:component ;
     rdfs:range xsd:string ;
     prov:wasDerivedFrom "nwi:product-name?leaf" .
 
@@ -2152,7 +2159,7 @@ ex:serial-number a owl:DatatypeProperty ;
 It is expected that vendors assign unique serial numbers to
 different component instances within the scope of the
 'part-number'.""" ;
-    rdfs:domain <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component> ;
+    rdfs:domain nwiComps:component ;
     rdfs:range xsd:string ;
     prov:wasDerivedFrom "nwi:serial-number?leaf" .
 
@@ -2481,7 +2488,7 @@ hwSensorVTy:watts a hwTypes:sensor-value-type,
     rdfs:label "watts" ;
     rdfs:comment "A measure of power." .
 
-hwUsageSt:cold-standby a hwTypes:standby-state,
+hwStandbySt:cold-standby a hwTypes:standby-state,
         owl:NamedIndividual ;
     rdfs:label "cold-standby" ;
     rdfs:comment """The resource is to back up another resource, but it will
@@ -2489,7 +2496,7 @@ not be immediately able to take over the role of a
 resource to be backed up and will require some
 initialization activity.""" .
 
-hwUsageSt:hot-standby a hwTypes:standby-state,
+hwStandbySt:hot-standby a hwTypes:standby-state,
         owl:NamedIndividual ;
     rdfs:label "hot-standby" ;
     rdfs:comment """The resource is not providing service, but it will be
@@ -2498,34 +2505,34 @@ be backed up, without the need for initialization
 activity, and will contain the same information as the
 resource to be backed up.""" .
 
-hwUsageSt:providing-service a hwTypes:standby-state,
+hwStandbySt:providing-service a hwTypes:standby-state,
         owl:NamedIndividual ;
     rdfs:label "providing-service" ;
     rdfs:comment "The resource is providing service." .
 
-hwUsageSt:unknown a hwTypes:standby-state,
+hwStandbySt:unknown a hwTypes:standby-state,
         owl:NamedIndividual ;
     rdfs:label "unknown" ;
     rdfs:comment "The resource is unable to report standby state." .
 
-<http://www.huawei.com/ontology/types/ietf-hardware/usage-state/active> a hwTypes:usage-state,
+hwUsageSt:active a hwTypes:usage-state,
         owl:NamedIndividual ;
     rdfs:label "active" ;
     rdfs:comment """The resource is currently in use, and it has sufficient
 spare capacity to provide for additional users.""" .
 
-<http://www.huawei.com/ontology/types/ietf-hardware/usage-state/busy> a hwTypes:usage-state,
+hwUsageSt:busy a hwTypes:usage-state,
         owl:NamedIndividual ;
     rdfs:label "busy" ;
     rdfs:comment """The resource is currently in use, but it currently has no
 spare capacity to provide for additional users.""" .
 
-<http://www.huawei.com/ontology/types/ietf-hardware/usage-state/idle> a hwTypes:usage-state,
+hwUsageSt:idle a hwTypes:usage-state,
         owl:NamedIndividual ;
     rdfs:label "idle" ;
     rdfs:comment "The resource is servicing no users." .
 
-<http://www.huawei.com/ontology/types/ietf-hardware/usage-state/unknown> a hwTypes:usage-state,
+hwUsageSt:unknown a hwTypes:usage-state,
         owl:NamedIndividual ;
     rdfs:label "unknown" ;
     rdfs:comment "The resource is unable to report usage state." .
@@ -2561,7 +2568,7 @@ the component.""",
         """This node contains identification information about the
 component.""" ;
     rdfs:domain hw:component,
-        <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component> ;
+        nwiComps:component ;
     rdfs:range xsd:anyURI ;
     prov:wasDerivedFrom "hw:hardware?container/hw:component?list/hw:uri?leaf-list",
         "nwi:uri?leaf-list" .
@@ -2597,7 +2604,7 @@ ex:uuid a owl:DatatypeProperty ;
         nwiLocs:location,
         nwiRacks:rack,
         nwiNEs:network-element,
-        <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component>,
+        nwiComps:component,
         nwi:passive-device,
         pdev:passive-port ;
     rdfs:range xsd:string ;
@@ -3352,7 +3359,7 @@ e.g. equipment room.""" ;
 hwTypes:sensor-value-scale a owl:Class ;
     rdfs:label "sensor-value-scale" .
 
-<http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component> a owl:Class ;
+nwiComps:component a owl:Class ;
     rdfs:label "component" ;
     rdfs:comment "The list of components within a network element." ;
     rdfs:subClassOf grpNwi:basic-common-entity-attributes,

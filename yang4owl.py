@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-YANG to OWL Ontology Converter - VERSION 4.7.30 (RDF-star Connectivity)
+YANG to OWL Ontology Converter - VERSION 4.7.31 (RDF-star Connectivity)
 
 Release Note: Semantic Interoperability via OWL 2 Punning
 This update implements OWL 2 Punning to resolve "dead-end" string traversals common in standard YANG-to-OWL conversions.
@@ -46,8 +46,8 @@ ALL IMPROVEMENTS IMPLEMENTED:
     - Eliminates bounded UNION / multi-hop workarounds for graph traversal
     - Run: python yang4owl.py --abox-enrich <abox.ttl> --abox-out <enriched.ttls>
 
-Author: YANG-to-OWL Converter v4.7.30
-Date: 2026-05-19
+Author: YANG-to-OWL Converter v4.7.31
+Date: 2026-06-14
 """
 
 from os import name
@@ -711,6 +711,13 @@ class YANGToOWL:
         # ==========================================
         if not self.raw_mode:
             log.info("[Step 13] Applying custom TBox extensions for direct URIs...")
+            
+            # --- NEW ADDITION: Logical Connection Property ---
+            logically_connected = self.ex.logicallyConnectedTo
+            self.graph.add((logically_connected, RDF.type, OWL.ObjectProperty))
+            self.graph.add((logically_connected, RDFS.label, Literal("logically connected to", datatype=XSD.string)))
+            self.graph.add((logically_connected, RDFS.comment, Literal("A direct logical relationship between an edge active element (e.g., ONT) and a core active element (e.g., OLT), bypassing physical cabling.", datatype=XSD.string)))
+            self.graph.add((logically_connected, RDF.type, OWL.SymmetricProperty))
             
             rank_prop = self.ex["rank"]
             self.graph.add((rank_prop, RDF.type, OWL.DatatypeProperty))
@@ -1824,7 +1831,8 @@ SELECT $this WHERE {{
             # ── Typedef/enumeration sub-namespaces ───────────────────────
             ("hwAdminSt",   f"{base}/types/ietf-hardware/admin-state/"),
             ("hwOperSt",    f"{base}/types/ietf-hardware/oper-state/"),
-            ("hwUsageSt",   f"{base}/types/ietf-hardware/standby-state/"),
+            ("hwStandbySt", f"{base}/types/ietf-hardware/standby-state/"),
+            ("hwUsageSt",   f"{base}/types/ietf-hardware/usage-state/"),
             ("hwSensorSt",  f"{base}/types/ietf-hardware/sensor-status/"),
             ("hwSensorVSc", f"{base}/types/ietf-hardware/sensor-value-scale/"),
             ("hwSensorVTy", f"{base}/types/ietf-hardware/sensor-value-type/"),
@@ -1870,6 +1878,7 @@ SELECT $this WHERE {{
             # ── Network Inventory ─────────────────────────────────────────
             ("nwi",         f"{base}/ietf-network-inventory/network-inventory/"),
             ("nwiNE",       f"{base}/ietf-network-inventory/network-inventory/network-elements/network-element/"),
+            ("nwiComps",    f"{base}/ietf-network-inventory/network-inventory/network-elements/network-element/components/"),
             ("nwiComp",     f"{base}/ietf-network-inventory/network-inventory/network-elements/network-element/components/component/"),
             ("nwiSwRev",    f"{base}/ietf-network-inventory/network-inventory/network-elements/network-element/software-rev/"),
             ("nwiLoc",      f"{base}/ietf-network-inventory/network-inventory/locations/location/"),

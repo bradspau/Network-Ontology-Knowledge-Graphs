@@ -24,6 +24,7 @@ There are a number of issues with the existing YANG data models that inhibited b
 1. Due to modern enclosures not having in/out port definitions the modelling creates a defined cable hierarchy to be able to transit upstream.
 2. Cable role of 'internal-cable' is defined and used for ATB to NTD cables.
 3. Enclosure physical ports are modelled separately to the passive devices
+4. Given the IETF outside plant data only conveys physical topology rather than logical topology there is no mechanism available to connect active elements such as a ONT to an OLT via the cabling or topology. As a work around I created a semantic overlay Objectproperty that can be utilised for defining that a ONT is ex:logicallyConnectedTo a OLT port. It is generic so you could utilise it else where. 
 
 ---
 
