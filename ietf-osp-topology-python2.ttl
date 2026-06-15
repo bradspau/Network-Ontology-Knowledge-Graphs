@@ -32,6 +32,7 @@
 @prefix l2tEvent: <http://www.huawei.com/ontology/types/ietf-l2-topology/l2-network-event-type/> .
 @prefix l2tId: <http://www.huawei.com/ontology/identity/ietf-l2-topology/> .
 @prefix l2tNotif: <http://www.huawei.com/ontology/notification/ietf-l2-topology/> .
+@prefix l2tSId: <http://www.huawei.com/ontology/identity/ietf-l2-topology-state/> .
 @prefix l2tSNotif: <http://www.huawei.com/ontology/notification/ietf-l2-topology-state/> .
 @prefix l2tTypes: <http://www.huawei.com/ontology/types/ietf-l2-topology/> .
 @prefix net: <http://www.huawei.com/ontology/ietf-network/networks/network/> .
@@ -462,7 +463,7 @@ ex:encapsulation-type a owl:ObjectProperty ;
     rdfs:comment """Encapsulation type of this
       termination point.""" ;
     rdfs:domain nw-s-tp:l2-termination-point-attributes ;
-    rdfs:range <http://www.huawei.com/ontology/identity/ietf-l2-topology-state/eth-encapsulation-type>,
+    rdfs:range l2tSId:eth-encapsulation-type,
         l2tId:eth-encapsulation-type ;
     prov:wasDerivedFrom "l2t:l2-termination-point-attributes?container/l2t:encapsulation-type?leaf" .
 

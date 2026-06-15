@@ -77,11 +77,14 @@
 @prefix inv-geo: <http://www.huawei.com/instances/geo-location/> .
 @prefix inv-cab: <http://www.huawei.com/instances/cable/> .
 @prefix inv-dev: <http://www.huawei.com/instances/passive-device/> .
+@prefix nt-link: <http://www.huawei.com/ontology/ietf-network-topology/networks/network/link/> .
+@prefix nt-tp:   <http://www.huawei.com/ontology/ietf-network-topology/networks/network/node/termination-point/> .
+@prefix l2tSId: <http://www.huawei.com/ontology/identity/ietf-l2-topology-state/> .
 
 inv-loc:Area_1
     rdf:type nwiLocs:location ;
     ex:id "Area_1" ;
-    ex:name "Area 2ESP" .
+    ex:name "Area 1" .
 
 inv-loc:Site_1
     rdf:type nwiLocs:location ;

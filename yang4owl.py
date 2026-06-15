@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-YANG to OWL Ontology Converter - VERSION 4.7.32 (RDF-star Connectivity)
+YANG to OWL Ontology Converter - VERSION 4.7.33 (RDF-star Connectivity)
 
 Release Note: Semantic Interoperability via OWL 2 Punning
 This update implements OWL 2 Punning to resolve "dead-end" string traversals common in standard YANG-to-OWL conversions.
@@ -46,7 +46,7 @@ ALL IMPROVEMENTS IMPLEMENTED:
     - Eliminates bounded UNION / multi-hop workarounds for graph traversal
     - Run: python yang4owl.py --abox-enrich <abox.ttl> --abox-out <enriched.ttls>
 
-Author: YANG-to-OWL Converter v4.7.32
+Author: YANG-to-OWL Converter v4.7.33
 Date: 2026-06-14
 """
 
@@ -1932,12 +1932,16 @@ SELECT $this WHERE {{
             ("nws-net",  f"{base}/ietf-network-state/networks/network/"),
             # YANG Identity / Base Type Namespaces
             ("l2tId",    f"{base}/identity/ietf-l2-topology/"),
+            ("l2tSId",   f"{base}/identity/ietf-l2-topology-state/"),
             ("ianaIfId", f"{base}/identity/iana-if-type/"),            
             # Layer 2 Notifications / Events
             ("l2tNotif",  f"{base}/notification/ietf-l2-topology/"),
             ("l2tSNotif", f"{base}/notification/ietf-l2-topology-state/"),
             # Layer 2 Specific Identities/Types
             ("l2tDuplex", f"{base}/types/ietf-l2-topology/duplex-mode/"),
+            #RFC8345 base topology
+            ("nt-link",  f"{base}/ietf-network-topology/networks/network/link/"),
+            ("nt-tp",    f"{base}/ietf-network-topology/networks/network/node/termination-point/"),
             # ── Power and Energy ──────────────────────────────────────────
             ("pae",         f"{base}/ietf-power-and-energy/energy-objects/"),
         ]
