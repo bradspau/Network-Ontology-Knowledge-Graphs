@@ -1,0 +1,253 @@
+@prefix rdf:          <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:         <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:          <http://www.w3.org/2001/XMLSchema#> .
+@prefix prov:         <http://www.w3.org/ns/prov#> .
+
+# ── Inventory / Physical ─────────────────────────────────────────────────────
+@prefix ex:           <http://www.huawei.com/ontology/> .
+@prefix cab:          <http://www.huawei.com/ontology/ietf-network-inventory/network-inventory/cable/> .
+
+# ── Topology ─────────────────────────────────────────────────────────────────
+@prefix nw-node:      <http://www.huawei.com/ontology/ietf-network/networks/network/node/> .
+@prefix net:          <http://www.huawei.com/ontology/ietf-network/networks/network/> .
+@prefix nw-s-tp:      <http://www.huawei.com/ontology/ietf-network-state/networks/network/node/termination-point/> .
+
+# ── RFC 9291 L2NM — Network implementation ───────────────────────────────────
+@prefix l2nmVpns:     <http://www.huawei.com/ontology/ietf-l2vpn-ntw/l2vpn-ntw/vpn-services/> .
+@prefix l2nmVpn:      <http://www.huawei.com/ontology/ietf-l2vpn-ntw/l2vpn-ntw/vpn-services/vpn-service/> .
+@prefix l2nmNodes:    <http://www.huawei.com/ontology/ietf-l2vpn-ntw/l2vpn-ntw/vpn-services/vpn-service/vpn-nodes/> .
+
+# ── RFC 8466 L2VPN-SVC — Customer service ────────────────────────────────────
+@prefix l2svc:        <http://www.huawei.com/ontology/ietf-l2vpn-svc/> .
+@prefix l2vpSv:       <http://www.huawei.com/ontology/ietf-l2vpn-svc/l2vpn-svc/> .
+@prefix vpnSe:        <http://www.huawei.com/ontology/ietf-l2vpn-svc/l2vpn-svc/vpn-services/> .
+@prefix l2svcSites:   <http://www.huawei.com/ontology/ietf-l2vpn-svc/l2vpn-svc/sites/> .
+@prefix l2svcSite:    <http://www.huawei.com/ontology/ietf-l2vpn-svc/l2vpn-svc/sites/site/> .
+@prefix l2svcTps:     <http://www.huawei.com/ontology/ietf-l2vpn-svc/l2vpn-svc/sites/site/site-network-accesses/> .
+@prefix l2svcTp:      <http://www.huawei.com/ontology/ietf-l2vpn-svc/l2vpn-svc/sites/site/site-network-accesses/site-network-access/> .
+@prefix l2svcTpConn:  <http://www.huawei.com/ontology/ietf-l2vpn-svc/l2vpn-svc/sites/site/site-network-accesses/site-network-access/connection/> .
+@prefix cvlaIdToSvMa: <http://www.huawei.com/ontology/ietf-l2vpn-svc/l2vpn-svc/sites/site/site-network-accesses/site-network-access/connection/cvlan-id-to-svc-map/> .
+
+# ── Identities ───────────────────────────────────────────────────────────────
+@prefix l2svcId:      <http://www.huawei.com/ontology/identity/ietf-l2vpn-svc/> .
+
+# ── Instance namespaces ───────────────────────────────────────────────────────
+@prefix inv-ne:       <http://www.huawei.com/instances/network-element/> .
+
+
+# ====================================================================
+# 1. Physical Connectivity (Fibre Cables)
+# ====================================================================
+
+cab:Cable_OLT_Switch_1 a cab:optical-cable ;
+    ex:id "FIBRE-OLT-SW-001" ;
+    ex:cable-role "aggregation-cable" ;
+    cab:hasAEnd cab:Cable_OLT_Switch_1_EndA ;
+    cab:hasZEnd cab:Cable_OLT_Switch_1_EndZ .
+
+cab:Cable_OLT_Switch_1_EndA   
+    ex:ne-ref inv-ne:OLT_MF2_1_nt1_uplink_1 .
+
+cab:Cable_OLT_Switch_1_EndZ   
+    ex:ne-ref inv-ne:Switch_1_port_1 .
+
+cab:Cable_Switch_BNG_1 a cab:optical-cable ;
+    ex:id "FIBRE-SW-BNG-001" ;
+    ex:cable-role "core-cable" ;
+    cab:hasAEnd cab:Cable_Switch_BNG_1_EndA ;
+    cab:hasZEnd cab:Cable_Switch_BNG_1_EndZ .
+
+cab:Cable_Switch_BNG_1_EndA
+    ex:ne-ref inv-ne:Switch_1_port_24 .
+
+cab:Cable_Switch_BNG_1_EndZ
+    ex:ne-ref inv-ne:BNG_1_port_1 .
+
+
+# ====================================================================
+# 2. Topology Layer (RFC 8345 / ietf-l2-topology)
+#
+# Q-in-Q translation happens at the OLT:
+#   ONT sends C-TAG 100
+#   OLT PON port receives C-TAG 100
+#   OLT pushes S-TAG 1000 → uplink carries double-tagged frame
+#   Switch and BNG see only the outer S-TAG 1000
+# ====================================================================
+
+ex:TP_ONT_UNI a nw-node:termination-point ;
+    ex:tp-id "uni_1" ; 
+    nw-s-tp:hasL2TerminationPointAttributes [
+        a nw-s-tp:l2-termination-point-attributes ;
+        ex:outer-tag "100"          # C-TAG from customer CPE
+    ] .
+
+ex:TP_OLT_PON a nw-node:termination-point ;
+    ex:tp-id "lt1_pon_1" ;
+    nw-s-tp:hasL2TerminationPointAttributes [
+        a nw-s-tp:l2-termination-point-attributes ;
+        ex:outer-tag "100"          # C-TAG received from ONT
+    ] .   
+
+ex:TP_OLT_Uplink a nw-node:termination-point ;
+    ex:tp-id "nt1_uplink_1" ; 
+    nw-s-tp:hasL2TerminationPointAttributes [
+        a nw-s-tp:l2-termination-point-attributes ;
+        ex:outer-tag "1000" ;       # S-TAG pushed by OLT (Q-in-Q outer)
+        ex:inner-tag "100"          # C-TAG preserved inside (Q-in-Q inner)
+    ] .   
+
+ex:TP_SW_Port1 a nw-node:termination-point ;
+    ex:tp-id "port_1" ;
+    nw-s-tp:hasL2TerminationPointAttributes [
+        a nw-s-tp:l2-termination-point-attributes ;
+        ex:outer-tag "1000"         # Switch operates on S-TAG only
+    ] .   
+
+ex:TP_SW_Port24 a nw-node:termination-point ;
+    ex:tp-id "port_24" ;
+    nw-s-tp:hasL2TerminationPointAttributes [
+        a nw-s-tp:l2-termination-point-attributes ;
+        ex:outer-tag "1000"
+    ] .   
+
+ex:TP_BNG_1 a nw-node:termination-point ;
+    ex:tp-id "port_1" ;
+    nw-s-tp:hasL2TerminationPointAttributes [
+        a nw-s-tp:l2-termination-point-attributes ;
+        ex:outer-tag "1000"         # S-TAG received and terminated at BNG
+    ] .
+
+
+# ====================================================================
+# 3. RFC 9291 L2NM — Network Implementation
+#
+# Three services stitch together to carry the broadband traffic:
+#   ACCESS_100  :  OLT PON  ──(C-TAG 100)──► OLT Uplink
+#   ETREE_1000  :  OLT      ──(S-TAG 1000)─► Switch    (hub-spoke)
+#   ELINE_1000  :  Switch   ──(S-TAG 1000)─► BNG       (point-to-point)
+# ====================================================================
+
+# ── 3a. Access drop: OLT PON port to OLT uplink (C-TAG 100) ──────────────────
+ex:ACCESS_100_VPN a l2nmVpns:vpn-service ;
+    ex:vpn-id "ACCESS-DROP-100" ;
+    ex:vpn-service-topology l2svcId:hub-spoke ;
+    l2nmVpn:hasVpnNodes ex:ACCESS_100_Nodes .
+
+ex:ACCESS_100_Nodes a l2nmVpn:vpn-nodes ;
+    ex:has_vpn-node ex:VPN_Node_OLT_PON ,
+                    ex:VPN_Node_ONT_UNI .
+
+ex:VPN_Node_OLT_PON a l2nmNodes:vpn-node ;
+    ex:vpn-node-id "logical-olt-pon-access" ;
+    ex:source-tp ex:TP_OLT_PON .
+
+ex:VPN_Node_ONT_UNI a l2nmNodes:vpn-node ;
+    ex:vpn-node-id "logical-ont-uni-access" ;
+    ex:source-tp ex:TP_ONT_UNI .
+
+# ── 3b. Distribution E-TREE: OLT uplink to Switch (S-TAG 1000) ───────────────
+ex:ETREE_1000_VPN a l2nmVpns:vpn-service ;
+    ex:vpn-id "ETREE-DIST-1000" ;
+    ex:vpn-service-topology l2svcId:hub-spoke ;
+    l2nmVpn:hasVpnNodes ex:ETREE_1000_Nodes .
+
+ex:ETREE_1000_Nodes a l2nmVpn:vpn-nodes ;
+    ex:has_vpn-node ex:VPN_Node_SW_Downlink ,
+                    ex:VPN_Node_OLT_Uplink .
+
+ex:VPN_Node_SW_Downlink a l2nmNodes:vpn-node ;
+    ex:vpn-node-id "logical-sw-etree-hub" ;
+    ex:source-tp ex:TP_SW_Port1 .
+
+ex:VPN_Node_OLT_Uplink a l2nmNodes:vpn-node ;
+    ex:vpn-node-id "logical-olt-etree-spoke" ;
+    ex:source-tp ex:TP_OLT_Uplink .
+
+# ── 3c. Core E-LINE: Switch to BNG (S-TAG 1000) ──────────────────────────────
+ex:ELINE_1000_VPN a l2nmVpns:vpn-service ;
+    ex:vpn-id "ELINE-CORE-1000" ;
+    ex:vpn-service-topology l2svcId:any-to-any ;
+    l2nmVpn:hasVpnNodes ex:ELINE_1000_Nodes .
+
+ex:ELINE_1000_Nodes a l2nmVpn:vpn-nodes ;
+    ex:has_vpn-node ex:VPN_Node_BNG ,
+                    ex:VPN_Node_SW_Uplink .
+
+ex:VPN_Node_BNG a l2nmNodes:vpn-node ;
+    ex:vpn-node-id "logical-bng-eline" ;
+    ex:source-tp ex:TP_BNG_1 .
+
+ex:VPN_Node_SW_Uplink a l2nmNodes:vpn-node ;
+    ex:vpn-node-id "logical-sw-eline" ;
+    ex:source-tp ex:TP_SW_Port24 .
+
+
+# ====================================================================
+# 4. RFC 8466 L2VPN-SVC — Customer Service
+#
+# The customer sees a single E-LINE from ONT UNI to BNG.
+# This is realised underneath by the three RFC 9291 services above.
+# The Q-in-Q mapping (C-VLAN 100 → S-VLAN 1000) is expressed at
+# the customer UNI (ONT side) via cvlan-id-to-svc-map.
+# ====================================================================
+
+ex:BB_L2VpnSvc a l2svc:l2vpn-svc ;
+    l2vpSv:hasVpnServices ex:BB_VpnServices ;
+    l2vpSv:hasSites       ex:BB_Sites .
+
+# ── 4a. Customer VPN service (what was ordered) ───────────────────────────────
+ex:BB_VpnServices a l2vpSv:vpn-services ;
+    vpnSe:hasVpnService ex:CustomerELINE_BB_001 .
+
+ex:CustomerELINE_BB_001 a vpnSe:vpn-service ;
+    ex:vpn-id "CUSTOMER-BB-ELINE-001" ;
+    ex:vpn-svc-type l2svcId:point-to-point ;
+    prov:wasDerivedFrom ex:ACCESS_100_VPN ,
+                        ex:ETREE_1000_VPN ,
+                        ex:ELINE_1000_VPN .
+
+# ── 4b. Customer sites ────────────────────────────────────────────────────────
+ex:BB_Sites a l2vpSv:sites ;  
+    l2svcSites:hasSite ex:Site_Customer_Premises ,
+                        ex:Site_BNG .
+
+# Subscriber premises (ONT side) 
+ex:Site_Customer_Premises a l2svcSites:site ;
+    ex:site-id "site-customer-001" ;
+    l2svcSite:hasSiteNetworkAccesses ex:Site_Customer_SNAs .
+
+ex:Site_Customer_SNAs a l2svcSite:site-network-accesses ;
+    ex:has_site-network-access ex:UNI_ONT_001 .
+
+ex:UNI_ONT_001 a l2svcTps:site-network-access ;
+    ex:site-network-access-id "uni-ont-001" ;
+    ex:vpn-policy-id "CUSTOMER-BB-ELINE-001" ;
+    l2svcTp:hasConnection ex:UNI_ONT_001_Conn .
+
+ex:UNI_ONT_001_Conn a l2svcTp:connection ;
+    ex:has_cvlan-id-to-svc-map ex:QinQ_Map_ONT .
+
+ex:QinQ_Map_ONT a l2svcTpConn:cvlan-id-to-svc-map ;
+    ex:has_cvlan-id ex:QinQ_CVLAN_100 .
+
+ex:QinQ_CVLAN_100 a cvlaIdToSvMa:cvlan-id ;
+    ex:vid "100"^^xsd:unsignedShort .    # C-VLAN 100 maps to S-VLAN 1000
+
+# BNG (network PE side — where broadband service terminates)
+ex:Site_BNG a l2svcSites:site ;
+    ex:site-id "site-bng-001" ;
+    l2svcSite:hasSiteNetworkAccesses ex:Site_BNG_SNAs .
+
+ex:Site_BNG_SNAs a l2svcSite:site-network-accesses ;
+    ex:has_site-network-access ex:UNI_BNG_001 .
+
+ex:UNI_BNG_001 a l2svcTps:site-network-access ;
+    ex:site-network-access-id "uni-bng-001" ;
+    ex:vpn-policy-id "CUSTOMER-BB-ELINE-001" .
+
+
+# ── Logical link overlay (ONT UNI to OLT PON) ────────────────────────────────
+ex:Logical_Link_ONT_OLT_1 a net:link ;
+    ex:link-id "link-ont1-olt-ctag100" ;
+    ex:source-tp ex:TP_ONT_UNI ;
+    ex:dest-tp   ex:TP_OLT_PON .

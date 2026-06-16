@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-YANG to OWL Ontology Converter - VERSION 4.7.33 (RDF-star Connectivity)
+YANG to OWL Ontology Converter - VERSION 4.7.35 (Prefix Fix & Augment Provenance)
 
 Release Note: Semantic Interoperability via OWL 2 Punning
 This update implements OWL 2 Punning to resolve "dead-end" string traversals common in standard YANG-to-OWL conversions.
@@ -46,7 +46,7 @@ ALL IMPROVEMENTS IMPLEMENTED:
     - Eliminates bounded UNION / multi-hop workarounds for graph traversal
     - Run: python yang4owl.py --abox-enrich <abox.ttl> --abox-out <enriched.ttls>
 
-Author: YANG-to-OWL Converter v4.7.33
+Author: YANG-to-OWL Converter v4.7.35
 Date: 2026-06-14
 """
 
@@ -532,7 +532,8 @@ class YANGToOWL:
         self.identityref_resolved_count = 0
         self.prov_paths: Dict[str, str] = {}
         self.pending_leafrefs: List[Tuple[URIRef, Any, str, Optional[URIRef], str]] = []
-        self.deferred_augments: List[Tuple[str, Any]] = [] 
+        self.deferred_augments: List[Tuple[str, Any]] = []
+        self._used_auto_prefixes: Set[str] = set()
 
     def _get_target_module_from_prefix(self, stmt: Any, prefix: str) -> str:
         if self.current_module_name in self.module_prefixes and self.module_prefixes[self.current_module_name] == prefix:
@@ -660,7 +661,7 @@ class YANGToOWL:
     
     def convert(self, main_module: str, output_file: str) -> None:
         log.info("=" * 70)
-        log.info("YANG to OWL Converter v4.7.30 (Separate SHACL Output)")
+        log.info("YANG to OWL Converter v4.7.35 (Prefix Fix & Augment Provenance)")
         log.info("=" * 70)
 
         log.info("\n[Step 1] Loading YANG modules...")
@@ -847,10 +848,9 @@ class YANGToOWL:
         shacl_file = str(Path(output_file).with_suffix('.shacl'))
         
         self._bind_ontology_prefixes()
+        self._autobind_missing_prefixes()
         log.info(f"\n[Output] Saving Core OWL Ontology to {output_file}...")
         self.graph.serialize(destination=output_file, format='turtle')
-
-        self._bind_ontology_prefixes()
         log.info(f"[Output] Saving Validation SHACL Shapes to {shacl_file}...")
         self.shacl_graph.serialize(destination=shacl_file, format='turtle')
         
@@ -1467,14 +1467,17 @@ SELECT $this WHERE {{
         
         parent_prov = self.prov_paths.get(target_path, "")
 
+        # Snapshot subjects before processing so we can stamp new ones with provenance
+        before_subjects = set(self.graph.subjects())
+
         if hasattr(stmt, 'substmts'):
             for sub in stmt.substmts:
                 if not hasattr(sub, 'keyword'): continue
-                
+
                 keyword = sub.keyword
                 child_name = sub.arg if hasattr(sub, 'arg') else "unknown"
                 child_path = f"{target_path}/{child_name}"
-                
+
                 if keyword == 'leaf':
                     self._process_leaf(sub, child_path, target_uri, parent_prov)
                 elif keyword == 'uses':
@@ -1483,6 +1486,15 @@ SELECT $this WHERE {{
                     self._process_container(sub, child_path, target_uri, parent_prov)
                 elif keyword == 'choice':
                     self._process_choice(sub, target_path, target_uri, parent_prov)
+
+        # Stamp newly-created subjects with augmenting-module provenance
+        aug_module_uri = self.ex[f"module/{self.current_module_name}"]
+        self.graph.add((aug_module_uri, RDF.type, OWL.Ontology))
+        self.graph.add((aug_module_uri, RDFS.label, Literal(self.current_module_name)))
+        for new_uri in set(self.graph.subjects()) - before_subjects:
+            if isinstance(new_uri, URIRef):
+                self.graph.add((new_uri, RDFS.isDefinedBy, aug_module_uri))
+                self.graph.add((new_uri, PROV.wasAttributedTo, aug_module_uri))
 
     def _process_rpc(self, stmt: Any) -> None:
         if not hasattr(stmt, 'arg'): return
@@ -1800,150 +1812,304 @@ SELECT $this WHERE {{
         # Ordered from most-specific to least-specific so rdflib picks the
         # longest matching namespace when serialising.
         curated = [
-            # ── Cable sub-containers ──────────────────────────────────────
-            ("cabOptical",  f"{base}/ietf-network-inventory/network-inventory/cable/optical-cable/"),
-            ("cabAEnd",     f"{base}/ietf-network-inventory/network-inventory/cable/a-end/"),
-            ("cabZEnd",     f"{base}/ietf-network-inventory/network-inventory/cable/z-end/"),
-            ("cabChAEnd",   f"{base}/ietf-network-inventory/network-inventory/cable/child-cable/a-end/"),
-            ("cabChZEnd",   f"{base}/ietf-network-inventory/network-inventory/cable/child-cable/z-end/"),
-            # ── NWI sub-containers ────────────────────────────────────────
-            ("nwiNEs",      f"{base}/ietf-network-inventory/network-inventory/network-elements/"),
-            ("nwiCompSwRev",f"{base}/ietf-network-inventory/network-inventory/network-elements/network-element/components/component/software-rev/"),
-            ("nwiCompPatch",f"{base}/ietf-network-inventory/network-inventory/network-elements/network-element/components/component/software-rev/patch/"),
-            ("nwiSwRevPatch",f"{base}/ietf-network-inventory/network-inventory/network-elements/network-element/software-rev/patch/"),
-            ("nwiLocs",     f"{base}/ietf-network-inventory/network-inventory/locations/"),
-            ("nwiRacks",    f"{base}/ietf-network-inventory/network-inventory/locations/racks/"),
-            ("nwiChassis",  f"{base}/ietf-network-inventory/network-inventory/locations/racks/rack/contained-chassis/"),
-            ("nwiRefFrame", f"{base}/ietf-network-inventory/network-inventory/locations/location/geo-location/reference-frame/"),
-            # ── Network sub-containers ────────────────────────────────────
-            ("netNetworks", f"{base}/ietf-network/networks/"),
-            ("netSuppNet",  f"{base}/ietf-network/networks/network/supporting-network/"),
-            ("netSuppNode", f"{base}/ietf-network/networks/network/node/supporting-node/"),
-            ("netSuppLink", f"{base}/ietf-network/networks/network/link/supporting-link/"),
-            ("netSuppTP",   f"{base}/ietf-network/networks/network/node/termination-point/supporting-termination-point/"),
-            ("netBrkChan",  f"{base}/ietf-network/networks/network/node/termination-point/inventory-mapping-attributes/port-breakout/breakout-channel/"),
-            ("netPortBrk",  f"{base}/ietf-network/networks/network/node/termination-point/inventory-mapping-attributes/port-breakout/"),
-            # ── Hardware sub-containers ───────────────────────────────────
-            ("hwSensorData",f"{base}/ietf-hardware/hardware/component/sensor-data/"),
-            ("hwState",     f"{base}/ietf-hardware/hardware/component/state/"),
-            # ── Power sub-containers ──────────────────────────────────────
-            ("paePwrEntry", f"{base}/ietf-power-and-energy/energy-objects/power-entry/"),
-            # ── Typedef/enumeration sub-namespaces ───────────────────────
-            ("hwAdminSt",   f"{base}/types/ietf-hardware/admin-state/"),
-            ("hwOperSt",    f"{base}/types/ietf-hardware/oper-state/"),
-            ("hwStandbySt", f"{base}/types/ietf-hardware/standby-state/"),
-            ("hwUsageSt",   f"{base}/types/ietf-hardware/usage-state/"),
-            ("hwSensorSt",  f"{base}/types/ietf-hardware/sensor-status/"),
-            ("hwSensorVSc", f"{base}/types/ietf-hardware/sensor-value-scale/"),
-            ("hwSensorVTy", f"{base}/types/ietf-hardware/sensor-value-type/"),
-            ("inetIpVer",   f"{base}/types/ietf-inet-types/ip-version/"),
-            # ── SHACL shapes namespace ────────────────────────────────────
-            ("shapes",      f"{base}/shapes/"),
-            # ── Typedef shapes ────────────────────────────────────────────
-            ("typedef",     f"{base}/typedef/"),
+            # ── IETF/L2VPN Deep Path Mappings (QoS & Signaling)
+            ("l2nmTpQosPol", f"{base}/ietf-l2vpn-ntw/l2vpn-ntw/vpn-services/vpn-service/vpn-nodes/vpn-node/vpn-network-accesses/vpn-network-access/service/qos/qos-classification-policy/"),
+            ("l2svcSiteQos", f"{base}/ietf-l2vpn-svc/l2vpn-svc/sites/site/service/qos/"),
+            ("l2svcTpQos1",  f"{base}/ietf-l2vpn-svc/l2vpn-svc/sites/site/site-network-accesses/site-network-access/service/qos/qos-classification-policy/"),
+            ("l2nmNdSig",    f"{base}/ietf-l2vpn-ntw/l2vpn-ntw/vpn-services/vpn-service/vpn-nodes/vpn-node/signaling-option/"),
+            ("l2nmNdLdp",    f"{base}/ietf-l2vpn-ntw/l2vpn-ntw/vpn-services/vpn-service/vpn-nodes/vpn-node/signaling-option/ldp-or-l2tp/"),
+            
+            # ── Inventory & Passive Device Mappings
+            ("nwiLocs",      f"{base}/ietf-network-inventory/network-inventory/locations/"),
+            ("nwiRacks1",    f"{base}/ietf-network-inventory/network-inventory/racks/"),
+            ("l2svcTpConn",  f"{base}/ietf-l2vpn-svc/l2vpn-svc/sites/site/site-network-accesses/site-network-access/connection/"),
+            # ── L2SVC Connection / L2CP Deep Paths (RFC 8466)
+            ("l2svcTagged",  f"{base}/ietf-l2vpn-svc/l2vpn-svc/sites/site/site-network-accesses/site-network-access/connection/tagged-interface/"),
+            ("l2svcVxlan",   f"{base}/ietf-l2vpn-svc/l2vpn-svc/sites/site/site-network-accesses/site-network-access/connection/tagged-interface/vxlan/"),
 
-            # ── Top-level module roots (catch-all for module-level URIs) ──
-            ("hwRoot",      f"{base}/ietf-hardware/"),
-            ("nwiRoot",     f"{base}/ietf-network-inventory/"),
-            ("netRoot",     f"{base}/ietf-network/"),
-            ("paeRoot",     f"{base}/ietf-power-and-energy/"),
-            ("ianaHwRoot",  f"{base}/iana-hardware/"),
-            ("nwiPassRoot", f"{base}/ietf-nwi-passive-inventory/"),
-            ("niLocRoot",   f"{base}/ietf-ni-location/"),
-            # ── Identity top-level (already have sub-paths above) ─────────
-            ("idRoot",      f"{base}/identity/"),
-            # ── Notifications ─────────────────────────────────────────────
-            ("hwNotif",     f"{base}/notification/ietf-hardware/"),
-            # ── Identity hierarchies ──────────────────────────────────────
-            ("ianaHw",      f"{base}/identity/iana-hardware/"),
-            ("nwiPassId",   f"{base}/identity/ietf-nwi-passive-inventory/"),
-            ("nwiInvId",    f"{base}/identity/ietf-network-inventory/"),
-            ("hwId",        f"{base}/identity/ietf-hardware/"),
-            ("paeId",       f"{base}/identity/ietf-power-and-energy/"),
-            ("yangId",      f"{base}/identity/ietf-yang-types/"),
-            # ── Typedef / enumeration types ───────────────────────────────
-            ("hwTypes",     f"{base}/types/ietf-hardware/"),
-            ("inetTypes",   f"{base}/types/ietf-inet-types/"),
-            # ── Grouping abstract classes ─────────────────────────────────
-            ("grpGeo",      f"{base}/grouping/ietf-geo-location/"),
-            ("grpNwi",      f"{base}/grouping/ietf-network-inventory/"),
-            ("grpNwiTop",   f"{base}/grouping/ietf-network-inventory-topology/"),
-            ("grpNwiPass",  f"{base}/grouping/ietf-nwi-passive-inventory/"),
-            ("grpNet",      f"{base}/grouping/ietf-network/"),
-            ("grpNetTop",   f"{base}/grouping/ietf-network-topology/"),
-            ("grpNiLoc",    f"{base}/grouping/ietf-ni-location/"),
-            # ── Hardware ──────────────────────────────────────────────────
-            ("hw",          f"{base}/ietf-hardware/hardware/"),
-            ("hwComp",      f"{base}/ietf-hardware/hardware/component/"),
-            # ── Network Inventory ─────────────────────────────────────────
-            ("nwi",         f"{base}/ietf-network-inventory/network-inventory/"),
-            ("nwiNE",       f"{base}/ietf-network-inventory/network-inventory/network-elements/network-element/"),
-            ("nwiComps",    f"{base}/ietf-network-inventory/network-inventory/network-elements/network-element/components/"),
-            ("nwiComp",     f"{base}/ietf-network-inventory/network-inventory/network-elements/network-element/components/component/"),
-            ("nwiSwRev",    f"{base}/ietf-network-inventory/network-inventory/network-elements/network-element/software-rev/"),
-            ("nwiLoc",      f"{base}/ietf-network-inventory/network-inventory/locations/location/"),
-            ("nwiGeo",      f"{base}/ietf-network-inventory/network-inventory/locations/location/geo-location/"),
-            ("nwiRack",     f"{base}/ietf-network-inventory/network-inventory/locations/racks/rack/"),
-            ("cab",         f"{base}/ietf-network-inventory/network-inventory/cable/"),
-            ("cabChild",    f"{base}/ietf-network-inventory/network-inventory/cable/child-cable/"),
-            ("cabOptical",  f"{base}/ietf-network-inventory/network-inventory/cable/optical-cable/"),
-            ("pdev",        f"{base}/ietf-network-inventory/network-inventory/passive-device/"),
-            ("pdevPort",    f"{base}/ietf-network-inventory/network-inventory/passive-device/passive-port/"),
-            # ── Network topology ──────────────────────────────────────────
-            ("net",         f"{base}/ietf-network/networks/network/"),
-            ("netNode",     f"{base}/ietf-network/networks/network/node/"),
-            ("netLink",     f"{base}/ietf-network/networks/network/link/"),
-            ("netTP",       f"{base}/ietf-network/networks/network/node/termination-point/"),
-            ("netInvMap",   f"{base}/ietf-network/networks/network/node/termination-point/inventory-mapping-attributes/"),
-            # Layer 2 Topology (RFC 8944)
-            ("l2t",       f"{base}/ietf-l2-topology/"),
-            ("l2t-s",     f"{base}/ietf-l2-topology-state/"),
-            # Layer 2 Groupings
-            ("grpL2t",    f"{base}/grouping/ietf-l2-topology/"),
-            ("grpL2t-s",  f"{base}/grouping/ietf-l2-topology-state/"),
-            # Layer 2 Types & Identities (for VLANs, MACs, link types, etc.)
-            ("l2tTypes",  f"{base}/types/ietf-l2-topology/"),
-            # Deep Augmentation Targets (RFC 8345 base paths)
-            ("nw-tp",   f"{base}/ietf-network/networks/network/node/termination-point/"),
-            ("nw-s-tp", f"{base}/ietf-network-state/networks/network/node/termination-point/"),
-            ("nw-node",   f"{base}/ietf-network/networks/network/node/"),
-            ("nw-s-node", f"{base}/ietf-network-state/networks/network/node/"),
-            ("nw-link",   f"{base}/ietf-network-topology/networks/network/link/"),
-            ("nw-s-link", f"{base}/ietf-network-topology-state/networks/network/link/"),
-            # Layer 2 Specific Identities/Types
-            ("l2tEvent",  f"{base}/types/ietf-l2-topology/l2-network-event-type/"),
-            # Network Types Container
-            ("nw-types", f"{base}/ietf-network/networks/network/network-types/"),
-            # Cross-Module Augmentations: L2 Topology Attributes
-            ("l2t-s-attr", f"{base}/ietf-l2-topology-state/ietf-network-state/networks/network/node/termination-point/l2-termination-point-attributes/"),
-            ("l2t-attr",   f"{base}/ietf-l2-topology/ietf-network-state/networks/network/node/termination-point/l2-termination-point-attributes/"),
-            # Cross-Module Augmentations: Inventory Mapping
-            ("nwit-s-inv", f"{base}/ietf-network-inventory-topology/ietf-network-state/networks/network/node/termination-point/inventory-mapping-attributes/"),
-            # Base Network Links
-            ("nws-link",   f"{base}/ietf-network-state/networks/network/link/"),
-            # Deep Augmentations: Inventory Port Breakouts (Config)
-            ("nwit-bo",     f"{base}/ietf-network-inventory-topology/ietf-network/networks/network/node/termination-point/inventory-mapping-attributes/port-breakout/"),
-            ("nwit-chan",   f"{base}/ietf-network-inventory-topology/ietf-network/networks/network/node/termination-point/inventory-mapping-attributes/port-breakout/breakout-channel/"),
-            # Deep Augmentations: Inventory Port Breakouts (State)
-            ("nwit-s-bo",   f"{base}/ietf-network-inventory-topology/ietf-network-state/networks/network/node/termination-point/inventory-mapping-attributes/port-breakout/"),
-            ("nwit-s-chan", f"{base}/ietf-network-inventory-topology/ietf-network-state/networks/network/node/termination-point/inventory-mapping-attributes/port-breakout/breakout-channel/"),
-            # Network Level Containers (Catches 'link', 'node', etc.)
-            ("nw-net",   f"{base}/ietf-network/networks/network/"),
-            ("nws-net",  f"{base}/ietf-network-state/networks/network/"),
-            # YANG Identity / Base Type Namespaces
-            ("l2tId",    f"{base}/identity/ietf-l2-topology/"),
-            ("l2tSId",   f"{base}/identity/ietf-l2-topology-state/"),
-            ("ianaIfId", f"{base}/identity/iana-if-type/"),            
-            # Layer 2 Notifications / Events
-            ("l2tNotif",  f"{base}/notification/ietf-l2-topology/"),
-            ("l2tSNotif", f"{base}/notification/ietf-l2-topology-state/"),
-            # Layer 2 Specific Identities/Types
-            ("l2tDuplex", f"{base}/types/ietf-l2-topology/duplex-mode/"),
-            #RFC8345 base topology
-            ("nt-link",  f"{base}/ietf-network-topology/networks/network/link/"),
-            ("nt-tp",    f"{base}/ietf-network-topology/networks/network/node/termination-point/"),
-            # ── Power and Energy ──────────────────────────────────────────
-            ("pae",         f"{base}/ietf-power-and-energy/energy-objects/"),
+            # ── L2NM & L2SVC QoS / BUM Deep Paths
+            ("l2nmQosPol",   f"{base}/ietf-l2vpn-ntw/l2vpn-ntw/vpn-services/vpn-service/vpn-nodes/vpn-node/vpn-network-accesses/vpn-network-access/service/qos/qos-classification-policy/"),
+            ("l2svcQosPol",  f"{base}/ietf-l2vpn-svc/l2vpn-svc/sites/site/service/qos/qos-classification-policy/"),
+            ("l2svcTpQosPol",f"{base}/ietf-l2vpn-svc/l2vpn-svc/sites/site/site-network-accesses/site-network-access/service/qos/qos-classification-policy/"),
+
+            # ── Inventory Deep Paths
+            ("nwiRacks",     f"{base}/ietf-network-inventory/network-inventory/racks/"),
+            ("pae",          f"{base}/ietf-nwi-passive-inventory/energy-objects/power-entries/"),
+            ("paeRoot",      f"{base}/ietf-nwi-passive-inventory/"),
+
+            # ── L2SVC Site/Service Deep Mappings (RFC 8466)
+            ("l2svcSite",    f"{base}/ietf-l2vpn-svc/l2vpn-svc/sites/site/"),
+            ("l2svcQos",     f"{base}/ietf-l2vpn-svc/l2vpn-svc/sites/site/service/qos/qos-profile/"),
+            ("l2svcTpQos",   f"{base}/ietf-l2vpn-svc/l2vpn-svc/sites/site/site-network-accesses/site-network-access/service/qos/qos-profile/"),
+
+            # ── Connection & LAG Deep Paths
+            ("l2svcBum",     f"{base}/ietf-l2vpn-svc/l2vpn-svc/sites/site/broadcast-unknown-unicast-multicast/"),
+            ("l2svcTpBum",   f"{base}/ietf-l2vpn-svc/l2vpn-svc/sites/site/site-network-accesses/site-network-access/broadcast-unknown-unicast-multicast/"),
+
+            # ── Ethernet Segment (ES) Deep Paths
+            ("l2esSeg",      f"{base}/ietf-ethernet-segment/ethernet-segments/"),
+            ("l2esSegItem",  f"{base}/ietf-ethernet-segment/ethernet-segments/ethernet-segment/"),
+            ("l2esAuto",     f"{base}/ietf-ethernet-segment/ethernet-segments/ethernet-segment/esi-auto/"),
+            ("l2esDf",       f"{base}/ietf-ethernet-segment/ethernet-segments/ethernet-segment/df-election/"),
+
+            # ── L2NM Deep Path Mappings (RFC 9291)
+            ("l2nmCePeBw",   f"{base}/ietf-l2vpn-ntw/l2vpn-ntw/vpn-services/vpn-service/vpn-nodes/vpn-node/vpn-network-accesses/vpn-network-access/service/svc-ce-to-pe-bandwidth/ce-to-pe-bandwidth/"),
+            ("l2nmPeCeBw",   f"{base}/ietf-l2vpn-ntw/l2vpn-ntw/vpn-services/vpn-service/vpn-nodes/vpn-node/vpn-network-accesses/vpn-network-access/service/svc-pe-to-ce-bandwidth/pe-to-ce-bandwidth/"),
+            ("l2nmCeBwCos",  f"{base}/ietf-l2vpn-ntw/l2vpn-ntw/vpn-services/vpn-service/vpn-nodes/vpn-node/vpn-network-accesses/vpn-network-access/service/svc-ce-to-pe-bandwidth/ce-to-pe-bandwidth/cos/"),
+            ("l2nmPeBwCos",  f"{base}/ietf-l2vpn-ntw/l2vpn-ntw/vpn-services/vpn-service/vpn-nodes/vpn-node/vpn-network-accesses/vpn-network-access/service/svc-pe-to-ce-bandwidth/pe-to-ce-bandwidth/cos/"),
+            ("l2nmSvcCeBw",  f"{base}/ietf-l2vpn-ntw/l2vpn-ntw/vpn-services/vpn-service/vpn-nodes/vpn-node/vpn-network-accesses/vpn-network-access/service/svc-ce-to-pe-bandwidth/"),
+            ("l2nmSvcPeBw",  f"{base}/ietf-l2vpn-ntw/l2vpn-ntw/vpn-services/vpn-service/vpn-nodes/vpn-node/vpn-network-accesses/vpn-network-access/service/svc-pe-to-ce-bandwidth/"),
+
+            # ── L2SVC/OAM Deep Path Mappings (RFC 8466)
+            ("l2svcSvcBw",   f"{base}/ietf-l2vpn-svc/l2vpn-svc/sites/site/site-network-accesses/site-network-access/service/svc-bandwidth/"),
+            ("l2nmOam1",     f"{base}/ietf-l2vpn-ntw/l2vpn-ntw/vpn-services/vpn-service/vpn-nodes/vpn-node/vpn-network-accesses/vpn-network-access/ethernet-service-oam/cfm-802.1-ag/"),
+            ("l2svcTpOam",   f"{base}/ietf-l2vpn-svc/l2vpn-svc/sites/site/site-network-accesses/site-network-access/connection/oam/cfm-8021-ag/"),
+
+            # ── Cable sub-containers
+            ("cabOptical",   f"{base}/ietf-network-inventory/network-inventory/cable/optical-cable/"),
+            ("cabAEnd",      f"{base}/ietf-network-inventory/network-inventory/cable/a-end/"),
+            ("cabZEnd",      f"{base}/ietf-network-inventory/network-inventory/cable/z-end/"),
+            ("cabChAEnd",    f"{base}/ietf-network-inventory/network-inventory/cable/child-cable/a-end/"),
+            ("cabChZEnd",    f"{base}/ietf-network-inventory/network-inventory/cable/child-cable/z-end/"),
+
+            # ── NWI sub-containers
+            ("nwiNEs",       f"{base}/ietf-network-inventory/network-inventory/network-elements/"),
+            ("nwiCompSwRev", f"{base}/ietf-network-inventory/network-inventory/network-elements/network-element/components/component/software-rev/"),
+            ("nwiCompPatch", f"{base}/ietf-network-inventory/network-inventory/network-elements/network-element/components/component/software-rev/patch/"),
+            ("nwiSwRevPatch",f"{base}/ietf-network-inventory/network-inventory/network-elements/network-element/software-rev/patch/"),
+            ("nwiChassis",   f"{base}/ietf-network-inventory/network-inventory/locations/racks/rack/contained-chassis/"),
+            ("nwiRefFrame",  f"{base}/ietf-network-inventory/network-inventory/locations/location/geo-location/reference-frame/"),
+
+            # ── Network sub-containers
+            ("netNetworks",  f"{base}/ietf-network/networks/"),
+            ("netSuppNet",   f"{base}/ietf-network/networks/network/supporting-network/"),
+            ("netSuppNode",  f"{base}/ietf-network/networks/network/node/supporting-node/"),
+            ("netSuppLink",  f"{base}/ietf-network/networks/network/link/supporting-link/"),
+            ("netSuppTP",    f"{base}/ietf-network/networks/network/node/termination-point/supporting-termination-point/"),
+            ("netBrkChan",   f"{base}/ietf-network/networks/network/node/termination-point/inventory-mapping-attributes/port-breakout/breakout-channel/"),
+            ("netPortBrk",   f"{base}/ietf-network/networks/network/node/termination-point/inventory-mapping-attributes/port-breakout/"),
+
+            # ── Hardware sub-containers
+            ("hwSensorData", f"{base}/ietf-hardware/hardware/component/sensor-data/"),
+            ("hwState",      f"{base}/ietf-hardware/hardware/component/state/"),
+
+            # ── Power sub-containers
+            ("paePwrEntry",  f"{base}/ietf-power-and-energy/energy-objects/power-entry/"),
+            ("paeEnergy",    f"{base}/ietf-power-and-energy/energy-objects/"),
+
+            # ── Typedef/enumeration sub-namespaces
+            ("hwAdminSt",    f"{base}/types/ietf-hardware/admin-state/"),
+            ("hwOperSt",     f"{base}/types/ietf-hardware/oper-state/"),
+            ("hwStandbySt",  f"{base}/types/ietf-hardware/standby-state/"),
+            ("hwUsageSt",    f"{base}/types/ietf-hardware/usage-state/"),
+            ("hwSensorSt",   f"{base}/types/ietf-hardware/sensor-status/"),
+            ("hwSensorVSc",  f"{base}/types/ietf-hardware/sensor-value-scale/"),
+            ("hwSensorVTy",  f"{base}/types/ietf-hardware/sensor-value-type/"),
+            ("inetIpVer",    f"{base}/types/ietf-inet-types/ip-version/"),
+
+            # ── SHACL / Typedef shapes
+            ("shapes",       f"{base}/shapes/"),
+            ("typedef",      f"{base}/typedef/"),
+
+            # ── Top-level module roots
+            ("hwRoot",       f"{base}/ietf-hardware/"),
+            ("nwiRoot",      f"{base}/ietf-network-inventory/"),
+            ("paeERoot",     f"{base}/ietf-power-and-energy/"),
+            ("ianaHwRoot",   f"{base}/iana-hardware/"),
+            ("nwiPassRoot",  f"{base}/ietf-nwi-passive-inventory/"),
+            ("niLocRoot",    f"{base}/ietf-ni-location/"),
+
+            # ── NI-Location augmentation paths (ietf-ni-location augments ietf-network-inventory)
+            ("niLocLocs",    f"{base}/ietf-network-inventory/network-inventory/locations/"),
+            ("niLocLoc",     f"{base}/ietf-network-inventory/network-inventory/locations/location/"),
+            ("niLocPhys",    f"{base}/ietf-network-inventory/network-inventory/locations/location/physical-address/"),
+            ("niLocRacks",   f"{base}/ietf-network-inventory/network-inventory/locations/racks/"),
+            ("niLocRack",    f"{base}/ietf-network-inventory/network-inventory/locations/racks/rack/"),
+            ("niLocRackL",   f"{base}/ietf-network-inventory/network-inventory/locations/racks/rack/rack-location/"),
+            ("niLocRackC",   f"{base}/ietf-network-inventory/network-inventory/locations/racks/rack/contained-chassis/"),
+            ("niLocNELoc",   f"{base}/ietf-network-inventory/network-inventory/network-elements/network-element/locations/"),
+            ("niLocNELocL",  f"{base}/ietf-network-inventory/network-inventory/network-elements/network-element/locations/location/"),
+
+            # ── Identity hierarchies
+            ("idRoot",       f"{base}/identity/"),
+            ("hwNotif",      f"{base}/notification/ietf-hardware/"),
+            ("ianaHw",       f"{base}/identity/iana-hardware/"),
+            ("nwiPassId",    f"{base}/identity/ietf-nwi-passive-inventory/"),
+            ("nwiInvId",     f"{base}/identity/ietf-network-inventory/"),
+            ("hwId",         f"{base}/identity/ietf-hardware/"),
+            ("paeId",        f"{base}/identity/ietf-power-and-energy/"),
+            ("yangId",       f"{base}/identity/ietf-yang-types/"),
+
+            # ── Typedef / enumeration types
+            ("hwTypes",      f"{base}/types/ietf-hardware/"),
+            ("inetTypes",    f"{base}/types/ietf-inet-types/"),
+            ("l2tTypes",     f"{base}/types/ietf-l2-topology/"),
+            ("l2svcTypes",   f"{base}/types/ietf-l2vpn-svc/"),
+            ("vpnRole",      f"{base}/types/ietf-vpn-common/vpn-topology-role/"),
+            ("vpnTopType",   f"{base}/types/ietf-vpn-common/vpn-service-topology/"),
+            ("l2tEvent",     f"{base}/types/ietf-l2-topology/l2-network-event-type/"),
+            ("l2tDuplex",    f"{base}/types/ietf-l2-topology/duplex-mode/"),
+
+            # ── Grouping abstract classes
+            ("grpGeo",       f"{base}/grouping/ietf-geo-location/"),
+            ("grpNwi",       f"{base}/grouping/ietf-network-inventory/"),
+            ("grpNwiTop",    f"{base}/grouping/ietf-network-inventory-topology/"),
+            ("grpNwiPass",   f"{base}/grouping/ietf-nwi-passive-inventory/"),
+            ("grpNet",       f"{base}/grouping/ietf-network/"),
+            ("grpNetTop",    f"{base}/grouping/ietf-network-topology/"),
+            ("grpNiLoc",     f"{base}/grouping/ietf-ni-location/"),
+            ("grpL2t",       f"{base}/grouping/ietf-l2-topology/"),
+            ("grpL2t-s",     f"{base}/grouping/ietf-l2-topology-state/"),
+
+            # ── Hardware
+            ("hw",           f"{base}/ietf-hardware/hardware/"),
+            ("hwComp",       f"{base}/ietf-hardware/hardware/component/"),
+
+            # ── Network Inventory
+            ("nwi",          f"{base}/ietf-network-inventory/network-inventory/"),
+            ("nwiNE",        f"{base}/ietf-network-inventory/network-inventory/network-elements/network-element/"),
+            ("nwiComps",     f"{base}/ietf-network-inventory/network-inventory/network-elements/network-element/components/"),
+            ("nwiComp",      f"{base}/ietf-network-inventory/network-inventory/network-elements/network-element/components/component/"),
+            ("nwiSwRev",     f"{base}/ietf-network-inventory/network-inventory/network-elements/network-element/software-rev/"),
+            ("nwiLoc",       f"{base}/ietf-network-inventory/network-inventory/locations/location/"),
+            ("nwiGeo",       f"{base}/ietf-network-inventory/network-inventory/locations/location/geo-location/"),
+            ("nwiRack",      f"{base}/ietf-network-inventory/network-inventory/locations/racks/rack/"),
+            ("cab",          f"{base}/ietf-network-inventory/network-inventory/cable/"),
+            ("cabChild",     f"{base}/ietf-network-inventory/network-inventory/cable/child-cable/"),
+            ("pdev",         f"{base}/ietf-network-inventory/network-inventory/passive-device/"),
+            ("pdevPort",     f"{base}/ietf-network-inventory/network-inventory/passive-device/passive-port/"),
+            ("nwiPass",      f"{base}/ietf-nwi-passive-inventory/"),
+
+            # ── Network topology
+            ("net",          f"{base}/ietf-network/networks/network/"),
+            ("netLink",      f"{base}/ietf-network/networks/network/link/"),
+            ("netInvMap",    f"{base}/ietf-network/networks/network/node/termination-point/inventory-mapping-attributes/"),
+            ("nw-types",     f"{base}/ietf-network/networks/network/network-types/"),
+
+            # ── Layer 2 Topology (RFC 8944)
+            ("l2t",          f"{base}/ietf-l2-topology/"),
+            ("l2t-s",        f"{base}/ietf-l2-topology-state/"),
+            ("l2tTp",        f"{base}/ietf-l2-topology/l2-termination-point-attributes/"),
+            ("l2tLink",      f"{base}/ietf-l2-topology/l2-link-attributes/"),
+            ("l2tNode",      f"{base}/ietf-l2-topology/l2-node-attributes/"),
+
+            # ── Deep Augmentation Targets (RFC 8345 base paths)
+            ("nw-tp",        f"{base}/ietf-network/networks/network/node/termination-point/"),
+            ("nw-s-tp",      f"{base}/ietf-network-state/networks/network/node/termination-point/"),
+            ("nw-node",      f"{base}/ietf-network/networks/network/node/"),
+            ("nw-s-node",    f"{base}/ietf-network-state/networks/network/node/"),
+            ("nw-link",      f"{base}/ietf-network-topology/networks/network/link/"),
+            ("nw-s-link",    f"{base}/ietf-network-topology-state/networks/network/link/"),
+            ("nw-net",       f"{base}/ietf-network/networks/network/"),
+            ("nws-net",      f"{base}/ietf-network-state/networks/network/"),
+            ("nws-link",     f"{base}/ietf-network-state/networks/network/link/"),
+
+            # ── Cross-Module Augmentations: L2 Topology Attributes
+            ("l2t-s-attr",   f"{base}/ietf-l2-topology-state/ietf-network-state/networks/network/node/termination-point/l2-termination-point-attributes/"),
+            ("l2t-attr",     f"{base}/ietf-l2-topology/ietf-network-state/networks/network/node/termination-point/l2-termination-point-attributes/"),
+            ("nwit-s-inv",   f"{base}/ietf-network-inventory-topology/ietf-network-state/networks/network/node/termination-point/inventory-mapping-attributes/"),
+
+            # ── Deep Augmentations: Inventory Port Breakouts
+            ("nwit-bo",      f"{base}/ietf-network-inventory-topology/ietf-network/networks/network/node/termination-point/inventory-mapping-attributes/port-breakout/"),
+            ("nwit-chan",     f"{base}/ietf-network-inventory-topology/ietf-network/networks/network/node/termination-point/inventory-mapping-attributes/port-breakout/breakout-channel/"),
+            ("nwit-s-bo",    f"{base}/ietf-network-inventory-topology/ietf-network-state/networks/network/node/termination-point/inventory-mapping-attributes/port-breakout/"),
+            ("nwit-s-chan",  f"{base}/ietf-network-inventory-topology/ietf-network-state/networks/network/node/termination-point/inventory-mapping-attributes/port-breakout/breakout-channel/"),
+
+            # ── YANG Identity / Base Type Namespaces
+            ("l2tId",        f"{base}/identity/ietf-l2-topology/"),
+            ("l2tSId",       f"{base}/identity/ietf-l2-topology-state/"),
+            ("ianaIfId",     f"{base}/identity/iana-if-type/"),
+
+            # ── Layer 2 Notifications / Events
+            ("l2tNotif",     f"{base}/notification/ietf-l2-topology/"),
+            ("l2tSNotif",    f"{base}/notification/ietf-l2-topology-state/"),
+
+            # ── RFC8345 base topology
+            ("nt-tp",        f"{base}/ietf-network-topology/networks/network/node/termination-point/"),
+
+            # ── VPN Common Types & Identities
+            ("vpnCom",       f"{base}/ietf-vpn-common/"),
+
+            # ── L2VPN Network Model / L2NM (RFC 9291)
+            ("l2nm",         f"{base}/ietf-l2vpn-ntw/"),
+            ("l2nmVpns",     f"{base}/ietf-l2vpn-ntw/l2vpn-ntw/vpn-services/"),
+            ("l2nmVpn",      f"{base}/ietf-l2vpn-ntw/l2vpn-ntw/vpn-services/vpn-service/"),
+            ("l2nmNodes",    f"{base}/ietf-l2vpn-ntw/l2vpn-ntw/vpn-services/vpn-service/vpn-nodes/"),
+            ("l2nmNode",     f"{base}/ietf-l2vpn-ntw/l2vpn-ntw/vpn-services/vpn-service/vpn-nodes/vpn-node/"),
+            ("l2nmTps",      f"{base}/ietf-l2vpn-ntw/l2vpn-ntw/vpn-services/vpn-service/vpn-nodes/vpn-node/vpn-network-accesses/"),
+            ("l2nmTp",       f"{base}/ietf-l2vpn-ntw/l2vpn-ntw/vpn-services/vpn-service/vpn-nodes/vpn-node/vpn-network-accesses/vpn-network-access/"),
+            ("l2nmTpConn",   f"{base}/ietf-l2vpn-ntw/l2vpn-ntw/vpn-services/vpn-service/vpn-nodes/vpn-node/vpn-network-accesses/vpn-network-access/connection/"),
+            ("l2nmTpLag",    f"{base}/ietf-l2vpn-ntw/l2vpn-ntw/vpn-services/vpn-service/vpn-nodes/vpn-node/vpn-network-accesses/vpn-network-access/connection/lag-interface/"),
+            ("l2nmTpLacp",   f"{base}/ietf-l2vpn-ntw/l2vpn-ntw/vpn-services/vpn-service/vpn-nodes/vpn-node/vpn-network-accesses/vpn-network-access/connection/lag-interface/lacp/"),
+            ("l2nmConnEncap",f"{base}/ietf-l2vpn-ntw/l2vpn-ntw/vpn-services/vpn-service/vpn-nodes/vpn-node/vpn-network-accesses/vpn-network-access/connection/encapsulation/"),
+            ("l2nmTpSvc",    f"{base}/ietf-l2vpn-ntw/l2vpn-ntw/vpn-services/vpn-service/vpn-nodes/vpn-node/vpn-network-accesses/vpn-network-access/service/"),
+            ("l2nmTpQos",    f"{base}/ietf-l2vpn-ntw/l2vpn-ntw/vpn-services/vpn-service/vpn-nodes/vpn-node/vpn-network-accesses/vpn-network-access/service/qos/"),
+            ("l2nmTpQosRule",f"{base}/ietf-l2vpn-ntw/l2vpn-ntw/vpn-services/vpn-service/vpn-nodes/vpn-node/vpn-network-accesses/vpn-network-access/service/qos/qos-classification-policy/rule/"),
+            ("l2nmTpQosMatch",f"{base}/ietf-l2vpn-ntw/l2vpn-ntw/vpn-services/vpn-service/vpn-nodes/vpn-node/vpn-network-accesses/vpn-network-access/service/qos/qos-classification-policy/rule/match-flow/"),
+            ("l2nmQosProf",  f"{base}/ietf-l2vpn-ntw/l2vpn-ntw/vpn-services/vpn-service/vpn-nodes/vpn-node/vpn-network-accesses/vpn-network-access/service/qos/qos-profile/"),
+            ("l2nmTpMac",    f"{base}/ietf-l2vpn-ntw/l2vpn-ntw/vpn-services/vpn-service/vpn-nodes/vpn-node/vpn-network-accesses/vpn-network-access/service/mac-policies/"),
+            ("l2nmOam",      f"{base}/ietf-l2vpn-ntw/l2vpn-ntw/vpn-services/vpn-service/vpn-nodes/vpn-node/vpn-network-accesses/vpn-network-access/ethernet-service-oam/"),
+            ("l2nmOamCfm",   f"{base}/ietf-l2vpn-ntw/l2vpn-ntw/vpn-services/vpn-service/vpn-nodes/vpn-node/vpn-network-accesses/vpn-network-access/ethernet-service-oam/cfm-802.1-ag/"),
+            ("l2nmVpws",     f"{base}/ietf-l2vpn-ntw/l2vpn-ntw/vpn-services/vpn-service/vpn-nodes/vpn-node/vpn-network-accesses/vpn-network-access/vpws-service-instance/"),
+            ("l2nmVpwsLoc",  f"{base}/ietf-l2vpn-ntw/l2vpn-ntw/vpn-services/vpn-service/vpn-nodes/vpn-node/vpn-network-accesses/vpn-network-access/vpws-service-instance/local-vsi-auto/"),
+            ("l2nmVpwsRem",  f"{base}/ietf-l2vpn-ntw/l2vpn-ntw/vpn-services/vpn-service/vpn-nodes/vpn-node/vpn-network-accesses/vpn-network-access/vpws-service-instance/remote-vsi-auto/"),
+            ("l2nmGlbProf",  f"{base}/ietf-l2vpn-ntw/l2vpn-ntw/vpn-services/vpn-service/global-parameters-profiles/"),
+            ("l2nmGlbProfD", f"{base}/ietf-l2vpn-ntw/l2vpn-ntw/vpn-services/vpn-service/global-parameters-profiles/global-parameters-profile/"),
+            ("l2nmGlbMac",   f"{base}/ietf-l2vpn-ntw/l2vpn-ntw/vpn-services/vpn-service/global-parameters-profiles/global-parameters-profile/mac-policies/"),
+            ("l2nmNdProf",   f"{base}/ietf-l2vpn-ntw/l2vpn-ntw/vpn-services/vpn-service/vpn-nodes/vpn-node/active-global-parameters-profiles/"),
+            ("l2nmNdProfD",  f"{base}/ietf-l2vpn-ntw/l2vpn-ntw/vpn-services/vpn-service/vpn-nodes/vpn-node/active-global-parameters-profiles/global-parameters-profile/"),
+            ("l2nmNdMac",    f"{base}/ietf-l2vpn-ntw/l2vpn-ntw/vpn-services/vpn-service/vpn-nodes/vpn-node/active-global-parameters-profiles/global-parameters-profile/mac-policies/"),
+            ("l2nmNdEvpn",   f"{base}/ietf-l2vpn-ntw/l2vpn-ntw/vpn-services/vpn-service/vpn-nodes/vpn-node/signaling-option/evpn-policies/"),
+            ("l2nmNdEvpnArp",f"{base}/ietf-l2vpn-ntw/l2vpn-ntw/vpn-services/vpn-service/vpn-nodes/vpn-node/signaling-option/evpn-policies/arp-proxy/"),
+            ("l2nmSigQinQ",  f"{base}/ietf-l2vpn-ntw/l2vpn-ntw/vpn-services/vpn-service/vpn-nodes/vpn-node/signaling-option/ldp-or-l2tp/qinq/"),
+            ("l2nmId",       f"{base}/identity/ietf-l2vpn-ntw/"),
+
+            # ── L2VPN Service Model / L2SVC (RFC 8466)
+            ("l2svc",        f"{base}/ietf-l2vpn-svc/"),
+            ("l2svcSites",   f"{base}/ietf-l2vpn-svc/l2vpn-svc/sites/"),
+            ("l2svcDevs",    f"{base}/ietf-l2vpn-svc/l2vpn-svc/sites/site/devices/"),
+            ("l2svcDev",     f"{base}/ietf-l2vpn-svc/l2vpn-svc/sites/site/devices/device/"),
+            ("l2svcDevMgmt", f"{base}/ietf-l2vpn-svc/l2vpn-svc/sites/site/devices/device/management/"),
+            ("l2svcLocs",    f"{base}/ietf-l2vpn-svc/l2vpn-svc/sites/site/locations/"),
+            ("l2svcLoc",     f"{base}/ietf-l2vpn-svc/l2vpn-svc/sites/site/locations/location/"),
+            ("l2svcTps",     f"{base}/ietf-l2vpn-svc/l2vpn-svc/sites/site/site-network-accesses/"),
+            ("l2svcTp",      f"{base}/ietf-l2vpn-svc/l2vpn-svc/sites/site/site-network-accesses/site-network-access/"),
+            ("l2svcOam",     f"{base}/ietf-l2vpn-svc/l2vpn-svc/sites/site/site-network-accesses/site-network-access/connection/oam/"),
+            ("l2svcOamCfm",  f"{base}/ietf-l2vpn-svc/l2vpn-svc/sites/site/site-network-accesses/site-network-access/connection/oam/cfm-8021-ag/"),
+            ("l2svcLacp",    f"{base}/ietf-l2vpn-svc/l2vpn-svc/sites/site/site-network-accesses/site-network-access/connection/lag-interfaces/lag-interface/lacp/"),
+            ("l2svcTpSvc",   f"{base}/ietf-l2vpn-svc/l2vpn-svc/sites/site/site-network-accesses/site-network-access/service/"),
+            ("l2svcTpQosP",  f"{base}/ietf-l2vpn-svc/l2vpn-svc/sites/site/site-network-accesses/site-network-access/service/qos/"),
+            ("l2svcTpQosRule",f"{base}/ietf-l2vpn-svc/l2vpn-svc/sites/site/site-network-accesses/site-network-access/service/qos/qos-classification-policy/rule/"),
+            ("l2svcTpQosMatch",f"{base}/ietf-l2vpn-svc/l2vpn-svc/sites/site/site-network-accesses/site-network-access/service/qos/qos-classification-policy/rule/match-flow/"),
+            ("l2svcTpQosProf",f"{base}/ietf-l2vpn-svc/l2vpn-svc/sites/site/site-network-accesses/site-network-access/service/qos/qos-profile/"),
+            ("l2svcTpQosCls",f"{base}/ietf-l2vpn-svc/l2vpn-svc/sites/site/site-network-accesses/site-network-access/service/qos/qos-profile/classes/"),
+            ("l2svcTpBw",    f"{base}/ietf-l2vpn-svc/l2vpn-svc/sites/site/site-network-accesses/site-network-access/service/qos/qos-profile/classes/class/"),
+            ("l2svcDiv",     f"{base}/ietf-l2vpn-svc/l2vpn-svc/sites/site/site-network-accesses/site-network-access/access-diversity/"),
+            ("l2svcCons",    f"{base}/ietf-l2vpn-svc/l2vpn-svc/sites/site/site-network-accesses/site-network-access/access-diversity/constraints/"),
+            ("l2svcCon",     f"{base}/ietf-l2vpn-svc/l2vpn-svc/sites/site/site-network-accesses/site-network-access/access-diversity/constraints/constraint/"),
+            ("l2svcTgt",     f"{base}/ietf-l2vpn-svc/l2vpn-svc/sites/site/site-network-accesses/site-network-access/access-diversity/constraints/constraint/target/"),
+            ("l2svcAccessDiv",f"{base}/ietf-l2vpn-svc/l2vpn-svc/sites/site/site-network-accesses/site-network-access/access-diversity/groups/"),
+            ("l2svcAccessCons",f"{base}/ietf-l2vpn-svc/l2vpn-svc/sites/site/site-network-accesses/site-network-access/access-diversity/constraints/constraint/target/group/"),
+            ("l2svcSiteSvc", f"{base}/ietf-l2vpn-svc/l2vpn-svc/sites/site/service/"),
+            ("l2svcSiteQosP",f"{base}/ietf-l2vpn-svc/l2vpn-svc/sites/site/service/qos/"),
+            ("l2svcSiteQosRule",f"{base}/ietf-l2vpn-svc/l2vpn-svc/sites/site/service/qos/qos-classification-policy/rule/"),
+            ("l2svcSiteQosMatch",f"{base}/ietf-l2vpn-svc/l2vpn-svc/sites/site/service/qos/qos-classification-policy/rule/match-flow/"),
+            ("l2svcQosProf", f"{base}/ietf-l2vpn-svc/l2vpn-svc/sites/site/service/qos/qos-profile/"),
+            ("l2svcQosCls",  f"{base}/ietf-l2vpn-svc/l2vpn-svc/sites/site/service/qos/qos-profile/classes/"),
+            ("l2svcSiteBw",  f"{base}/ietf-l2vpn-svc/l2vpn-svc/sites/site/service/qos/qos-profile/classes/class/"),
+            ("l2svcSiteDiv", f"{base}/ietf-l2vpn-svc/l2vpn-svc/sites/site/site-diversity/groups/"),
+            ("l2svcVpnSvc",  f"{base}/ietf-l2vpn-svc/l2vpn-svc/vpn-services/vpn-service/"),
+            ("l2svcFrame",   f"{base}/ietf-l2vpn-svc/l2vpn-svc/vpn-services/vpn-service/frame-delivery/"),
+            ("l2svcBumDel",  f"{base}/ietf-l2vpn-svc/l2vpn-svc/vpn-services/vpn-service/frame-delivery/bum-deliveries/"),
+            ("l2svcCloud",   f"{base}/ietf-l2vpn-svc/l2vpn-svc/vpn-services/vpn-service/cloud-accesses/"),
+            ("l2svcVpnProfs",f"{base}/ietf-l2vpn-svc/l2vpn-svc/vpn-profiles/"),
+            ("l2svcValidProv",f"{base}/ietf-l2vpn-svc/l2vpn-svc/vpn-profiles/valid-provider-identifiers/"),
+            ("l2svcId",      f"{base}/identity/ietf-l2vpn-svc/"),
+
+            # ── Base Network & Topology (RFC 8345)
+            ("nw",           f"{base}/ietf-network/"),
+            ("ntTp",         f"{base}/ietf-network-topology/termination-point/"),
+            ("ntLink",       f"{base}/ietf-network-topology/link/"),
         ]
 
         bound = 0
@@ -1958,6 +2124,70 @@ SELECT $this WHERE {{
 
         log.info(f"  Bound {bound // 2} curated ontology namespace prefixes")
 
+    _MODULE_ABBREVS: Dict[str, str] = {
+        'ietf-network-inventory': 'nwi', 'ietf-hardware': 'hw',
+        'ietf-network': 'net', 'ietf-network-topology': 'netTopo',
+        'ietf-l2vpn-ntw': 'l2nm', 'ietf-l2vpn-svc': 'l2svc',
+        'ietf-l2-topology': 'l2t', 'ietf-l2-topology-state': 'l2ts',
+        'ietf-ethernet-segment': 'l2es', 'ietf-ni-location': 'niLoc',
+        'ietf-geo-location': 'geo', 'iana-hardware': 'ianaHw',
+        'ietf-power-and-energy': 'pae', 'ietf-nwi-passive-inventory': 'nwiPass',
+        'grouping': 'grp', 'identity': 'id_', 'types': 'ty',
+        'typedef': 'td', 'notification': 'notif', 'shapes': 'shp',
+    }
+
+    def _autobind_missing_prefixes(self) -> None:
+        """Guarantee every URI in the graph serialises as prefix:localName (no full IRIs)."""
+        registered: Dict[str, str] = {}
+        for g in (self.graph, self.shacl_graph):
+            for pfx, ns in g.namespaces():
+                registered[str(ns)] = str(pfx)
+
+        base = self.base_uri.rstrip('/') + '/'
+        added = 0
+        for g in (self.graph, self.shacl_graph):
+            terms = set(g.subjects()) | set(g.objects()) | set(g.predicates())
+            for term in terms:
+                if not isinstance(term, URIRef):
+                    continue
+                uri_str = str(term)
+                if not uri_str.startswith(base):
+                    continue
+                slash_pos = uri_str.rfind('/')
+                if slash_pos < len(base):
+                    continue
+                ns = uri_str[:slash_pos + 1]
+                if ns in registered:
+                    continue
+                prefix = self._derive_prefix(ns)
+                ns_obj = Namespace(ns)
+                for gr in (self.graph, self.shacl_graph):
+                    gr.bind(prefix, ns_obj, override=False)
+                registered[ns] = prefix
+                added += 1
+
+        log.info(f"  Auto-bound {added} missing namespace prefixes")
+
+    def _derive_prefix(self, namespace_uri: str) -> str:
+        rel = namespace_uri[len(self.base_uri):].strip('/')
+        parts = [p for p in rel.split('/') if p]
+        if not parts:
+            return self._unique_prefix('p')
+        last = parts[-1]
+        words = last.split('-')
+        abbrev = words[0][:4] + ''.join(w[:2].capitalize() for w in words[1:])
+        return self._unique_prefix(abbrev or 'p')
+
+    def _unique_prefix(self, candidate: str) -> str:
+        if candidate not in self._used_auto_prefixes:
+            self._used_auto_prefixes.add(candidate)
+            return candidate
+        i = 2
+        while f'{candidate}{i}' in self._used_auto_prefixes:
+            i += 1
+        result = f'{candidate}{i}'
+        self._used_auto_prefixes.add(result)
+        return result
 
 
 class YANGToHTML:
@@ -2072,7 +2302,7 @@ class ABoxConnectivityEnricher:
         Turtle* file to output_file.  Returns the count of links materialised.
         """
         log.info(f"\n{'='*60}")
-        log.info(f" ABoxConnectivityEnricher  v4.7.30")
+        log.info(f" ABoxConnectivityEnricher  v4.7.35")
         log.info(f" Input : {self.abox_file}")
         log.info(f" Output: {output_file}")
         log.info(f"{'='*60}")
@@ -2269,8 +2499,10 @@ def main():
     converter.convert(args.modules, output_file)
 
     if args.html_output:
+        html_path = Path(args.html_output)
+        html_path.parent.mkdir(parents=True, exist_ok=True)
         html_gen = YANGToHTML(converter.resolver.modules)
-        html_gen.generate(args.html_output)
+        html_gen.generate(str(html_path))
 
     # ── Mode C: TBox conversion + ABox enrichment in one run ─────────────────
     if args.abox_enrich:
