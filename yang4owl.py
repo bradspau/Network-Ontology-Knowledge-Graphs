@@ -607,7 +607,7 @@ class OverlayRuleEngine:
 class YANGToOWL:
     def __init__(self, yang_dir: str, base_uri: str = "http://example.org/ontology/", raw_mode: bool = False,
                  gaps_report_path: Optional[str] = None, lexicon_overlay_mode: bool = False,
-                 overlay_rules_path: str = "overlay/relations.yaml"):
+                 overlay_rules_path: str = "overlay/relations.yaml", lexicon_dir: str = "lexicon"):
         self.yang_dir = Path(yang_dir)
         self.base_uri = base_uri.rstrip('/')
         self.raw_mode = raw_mode
@@ -615,6 +615,13 @@ class YANGToOWL:
         self.gaps: List[Dict[str, Any]] = []
         self.lexicon_overlay_mode = lexicon_overlay_mode
         self.overlay_rules_path = overlay_rules_path
+        self.lexicon_dir = lexicon_dir
+        # Leafs whose name matches a "-ref" naming convention but whose
+        # resolved type is a plain scalar (not identityref/leafref/enum) --
+        # candidates for the "unpunned-reference-leaf" gap, checked after
+        # overlay processing (legacy patch or Overlay Rule Engine) has had
+        # a chance to add ObjectProperty treatment.
+        self.reference_candidate_leafs: List[Tuple[URIRef, str, str]] = []
         self.ex = Namespace(self.base_uri + '/')
         self.resolver = YANGDependencyResolver(self.yang_dir)
         self.type_resolver = YANGTypeResolver()
@@ -974,6 +981,9 @@ class YANGToOWL:
         # ==========================================
         # --- END OF CUSTOM TBOX PATCH ---
         # ==========================================
+        self._check_reference_candidates()
+        self._check_lexicon_bindings()
+
         shacl_file = str(Path(output_file).with_suffix('.shacl'))
         
         self._bind_ontology_prefixes()
@@ -1446,6 +1456,8 @@ SELECT $this WHERE {{
             range_uri = self.type_resolver.resolve_type(type_stmt, self.current_module_name, self._get_target_module_from_prefix)
             self.graph.add((uri, RDF.type, OWL.DatatypeProperty))
             self.graph.add((uri, RDFS.range, range_uri))
+            if name.lower().endswith('-ref'):
+                self.reference_candidate_leafs.append((uri, name, full_prov))
 
         self.graph.add((uri, RDFS.label, Literal(name)))
         if parent_uri: self.graph.add((uri, RDFS.domain, parent_uri))
@@ -1966,14 +1978,135 @@ SELECT $this WHERE {{
                     "reason": "leafref path could not be resolved to a known class (absolute, relative, or current() form all failed)",
                 })
 
+    def _classify_class_uri(self, uri: str) -> Optional[Tuple[str, Optional[str], str]]:
+        """Classifies a class URI into (kind, module, local_name), mirroring
+        draft_lexicon.py's classify_uri. Deliberately duplicated rather than
+        imported -- draft_lexicon.py is a separate, standalone script not
+        meant to be a runtime dependency of yang4owl.py. Keep the two in
+        sync if either changes."""
+        base = self.base_uri
+        if not uri.startswith(base):
+            return None
+        rest = uri[len(base):].strip('/')
+        if not rest:
+            return None
+        parts = rest.split('/')
+        namespaced_kinds = {"identity", "grouping", "types", "typedef", "rpc", "notification", "module"}
+        if parts[0] in namespaced_kinds:
+            kind = parts[0]
+            module = parts[1] if len(parts) > 1 else None
+            local_name = parts[-1]
+        else:
+            kind = "container-or-list"
+            module = parts[0]
+            local_name = parts[-1]
+        return kind, module, local_name
+
+    def _check_reference_candidates(self) -> None:
+        """Gap type: a leaf named like a reference ('-ref' suffix) that
+        resolved to a plain scalar (no leafref/identityref treatment from
+        the base lift) and received no ObjectProperty treatment from
+        whichever overlay path ran (legacy patch, Overlay Rule Engine, or
+        neither in --raw mode). Runs regardless of mode -- it's diagnostic,
+        not tied to the lexicon's existence."""
+        for uri, name, full_prov in self.reference_candidate_leafs:
+            if (uri, RDF.type, OWL.ObjectProperty) in self.graph:
+                continue
+            self.gaps.append({
+                "type": "unpunned-reference-leaf",
+                "property": str(uri),
+                "name": name,
+                "source_path": full_prov,
+                "reason": "leaf name matches reference-naming convention ('-ref' suffix) but resolved to a "
+                          "plain scalar type with no overlay rule adding ObjectProperty treatment -- this "
+                          "property is not traversable as currently modeled",
+            })
+
+    def _check_lexicon_bindings(self) -> None:
+        """Gap types: a structural concept (container/list/identity/
+        grouping/enum-typedef) with no matching reference-lexicon entry, or
+        one whose matching entry is flagged lex:needsCuration. Only
+        meaningful once a lexicon exists to fail to bind against, so this
+        only runs under --lexicon-overlay, consulting lexicon/<module>.lexicon.ttl
+        files already drafted by draft_lexicon.py (a separate, offline step --
+        this does not draft anything itself)."""
+        if not self.lexicon_overlay_mode:
+            return
+
+        skip_kinds = {"typedef", "rpc", "notification", "module"}
+        lexicon_dir = Path(self.lexicon_dir)
+        needs_curation_prop = URIRef(f"{self.base_uri}/lexicon-vocab#needsCuration")
+
+        bound_uris: Dict[str, bool] = {}
+        loaded_modules = set()
+        for module_name in self.resolver.modules:
+            mod = extract_module_name(module_name)
+            if mod in loaded_modules:
+                continue
+            loaded_modules.add(mod)
+            lex_path = lexicon_dir / f"{mod}.lexicon.ttl"
+            if not lex_path.exists():
+                continue
+            lex_graph = Graph()
+            try:
+                lex_graph.parse(str(lex_path), format="turtle")
+            except Exception as e:
+                log.warning(f"  Could not parse lexicon file {lex_path}: {e}")
+                continue
+            for entry, source_uri in lex_graph.subject_objects(PROV.wasDerivedFrom):
+                needs_curation = (entry, needs_curation_prop, Literal(True)) in lex_graph
+                bound_uris[str(source_uri)] = needs_curation
+
+        if not bound_uris and not any((lexicon_dir / f"{extract_module_name(m)}.lexicon.ttl").exists() for m in self.resolver.modules):
+            log.warning(f"  No lexicon files found under {lexicon_dir}/ for any processed module -- "
+                        f"skipping lexicon-binding gap checks (run draft_lexicon.py first).")
+            return
+
+        checked = 0
+        for s in self.graph.subjects(RDF.type, OWL.Class):
+            classification = self._classify_class_uri(str(s))
+            if classification is None:
+                continue
+            kind, module, local_name = classification
+            if kind in skip_kinds or module is None or module not in loaded_modules:
+                continue
+            lex_path = lexicon_dir / f"{module}.lexicon.ttl"
+            if not lex_path.exists():
+                continue
+            checked += 1
+            uri_str = str(s)
+            if uri_str not in bound_uris:
+                self.gaps.append({
+                    "type": "no-lexicon-binding",
+                    "class": uri_str,
+                    "name": local_name,
+                    "module": module,
+                    "reason": "no reference-lexicon entry found for this concept (a lexicon file exists for "
+                              "this module, but no entry's prov:wasDerivedFrom points at this class)",
+                })
+            elif bound_uris[uri_str]:
+                self.gaps.append({
+                    "type": "unreliable-lexicon-binding",
+                    "class": uri_str,
+                    "name": local_name,
+                    "module": module,
+                    "reason": "the bound lexicon entry is flagged lex:needsCuration (empty or label-restating "
+                              "definition) -- do not treat this binding as trustworthy without human review",
+                })
+        log.info(f"  Checked {checked} concept(s) against lexicon bindings "
+                 f"({sum(1 for m in loaded_modules if (lexicon_dir / f'{m}.lexicon.ttl').exists())} module lexicon file(s) found)")
+
     def _write_gaps_report(self) -> None:
         if not self.gaps_report_path:
             return
         gaps_path = Path(self.gaps_report_path)
         gaps_path.parent.mkdir(parents=True, exist_ok=True)
+        by_type: Dict[str, int] = {}
+        for gap in self.gaps:
+            by_type[gap.get("type", "unknown")] = by_type.get(gap.get("type", "unknown"), 0) + 1
         with open(gaps_path, 'w') as f:
-            json.dump({"gaps": self.gaps, "count": len(self.gaps)}, f, indent=2)
-        log.info(f"[Output] Saving unresolved-gap report to {gaps_path} ({len(self.gaps)} gap(s))...")
+            json.dump({"gaps": self.gaps, "count": len(self.gaps), "by_type": by_type}, f, indent=2)
+        log.info(f"[Output] Saving unresolved-gap report to {gaps_path} ({len(self.gaps)} gap(s): {by_type})...")
 
     def _bind_ontology_prefixes(self) -> None:
         """Bind a curated, human-readable set of prefixes derived from the
@@ -2623,6 +2756,9 @@ def main():
                              'Omitting both flags keeps existing behavior (the legacy patch runs unchanged).')
     parser.add_argument('--overlay-rules', dest='overlay_rules_path', default='overlay/relations.yaml', metavar='RULES.yaml',
                         help='Path to the overlay rule set used with --lexicon-overlay (default: overlay/relations.yaml)')
+    parser.add_argument('--lexicon-dir',  dest='lexicon_dir', default='lexicon', metavar='DIR',
+                        help='Directory of <module>.lexicon.ttl files (from draft_lexicon.py) consulted for '
+                             'lexicon-binding gap checks under --lexicon-overlay (default: lexicon)')
     parser.add_argument('--html',         dest='html_output', default=None,
                         help='Optional: output path for HTML parse-tree visualisation')
     parser.add_argument('--gaps-report',  dest='gaps_report_path', default=None, metavar='GAPS.json',
@@ -2681,7 +2817,8 @@ def main():
     log.info("")
 
     converter = YANGToOWL(yang_dir, args.base_uri, raw_mode=args.raw_mode, gaps_report_path=args.gaps_report_path,
-                          lexicon_overlay_mode=args.lexicon_overlay_mode, overlay_rules_path=args.overlay_rules_path)
+                          lexicon_overlay_mode=args.lexicon_overlay_mode, overlay_rules_path=args.overlay_rules_path,
+                          lexicon_dir=args.lexicon_dir)
     converter.convert(args.modules, output_file)
 
     if args.html_output:

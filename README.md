@@ -349,6 +349,31 @@ to eventually consult by reference identity rather than hardcoded YANG paths; th
 initial rule set instead ports the existing hardcoded overlay verbatim, as a
 correctness baseline.
 
+### Unresolved-gap reporting
+
+`--gaps-report GAPS.json` writes a structured report of things the conversion couldn't
+resolve or bridge, instead of silently dropping them:
+
+- `unresolved-leafref` -- a `leafref` whose target path couldn't be resolved to a known
+  class. Always checked, regardless of mode.
+- `unpunned-reference-leaf` -- a leaf named like a reference (`-ref` suffix) that resolved
+  to a plain scalar type, with no overlay rule (legacy patch or `--lexicon-overlay`) adding
+  `ObjectProperty` treatment -- i.e. it looks like it should be traversable but isn't.
+  Always checked, regardless of mode.
+- `no-lexicon-binding` -- a structural concept (container/list/identity/grouping/
+  enumeration-typedef) with no matching entry in `lexicon/<module>.lexicon.ttl`. Only
+  checked under `--lexicon-overlay` (a lexicon must exist to fail to bind against); the
+  directory is configurable via `--lexicon-dir` (default `lexicon`).
+- `unreliable-lexicon-binding` -- the concept has a matching lexicon entry, but that entry
+  is flagged `lex:needsCuration` (see `lexicon/README.md`) and shouldn't be trusted as-is.
+  Also only checked under `--lexicon-overlay`.
+
+```bash
+python3 yang4owl.py --yang-dir ./yang_models --modules ietf-ni-location.yang \
+    --base-uri http://www.huawei.com/ontology --output ietf-model.ttl \
+    --lexicon-overlay --gaps-report gaps.json
+```
+
 ---
 
 ## The Traversal Problem: Direct YANG→OWL vs YANG
