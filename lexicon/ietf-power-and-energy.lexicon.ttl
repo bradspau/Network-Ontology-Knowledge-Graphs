@@ -1,0 +1,188 @@
+@prefix lex: <http://example.org/ontology/lexicon-vocab#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+# Reference lexicon for module: ietf-power-and-energy
+# Auto-drafted by draft_lexicon.py from yang4owl.py output. Do not hand-edit
+# without removing lex:needsCuration once an entry has been reviewed --
+# it exists so curated and uncurated entries stay distinguishable.
+#
+# Entries flagged lex:needsCuration true have an empty or label-restating
+# definition and/or a placeholder canonical example -- see
+# docs/reference-lexicons.md recommendation #2 before relying on them.
+
+lex:ietf-power-and-energy-accuracy-estimated
+    a lex:ReferenceEntry ;
+    skos:prefLabel "accuracy-estimated" ;
+    skos:definition "The power data is estimated, perhaps based on a model,\nhistory or calculation rather than a direct measurement." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/ietf-power-and-energy/accuracy-estimated> .
+
+lex:ietf-power-and-energy-accuracy-historic
+    a lex:ReferenceEntry ;
+    skos:prefLabel "accuracy-historic" ;
+    skos:definition "The power data is based on an historic measurement data\nfor this specific system and usage pattern." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/ietf-power-and-energy/accuracy-historic> .
+
+lex:ietf-power-and-energy-accuracy-learned
+    a lex:ReferenceEntry ;
+    skos:prefLabel "accuracy-learned" ;
+    skos:definition "The power data is based on an machine learning\nmodel prediction." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/ietf-power-and-energy/accuracy-learned> .
+
+lex:ietf-power-and-energy-accuracy-measured
+    a lex:ReferenceEntry ;
+    skos:prefLabel "accuracy-measured" ;
+    skos:definition "The power data is a direct, real-time measurement\nfrom a sensor." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/ietf-power-and-energy/accuracy-measured> .
+
+lex:ietf-power-and-energy-accuracy-measured-bronze
+    a lex:ReferenceEntry ;
+    skos:prefLabel "accuracy-measured-bronze" ;
+    skos:definition "The power data is a direct, real-time measurement\nfrom a sensor with +/- 30% accuracy for typical values." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/ietf-power-and-energy/accuracy-measured-bronze> .
+
+lex:ietf-power-and-energy-accuracy-measured-gold
+    a lex:ReferenceEntry ;
+    skos:prefLabel "accuracy-measured-gold" ;
+    skos:definition "The power data is a direct, real-time measurement\nfrom a sensor with +/- 5% accuracy for typical values." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/ietf-power-and-energy/accuracy-measured-gold> .
+
+lex:ietf-power-and-energy-accuracy-measured-ones
+    a lex:ReferenceEntry ;
+    skos:prefLabel "accuracy-measured-ones" ;
+    skos:definition "The power data is a direct, real-time measurement\nfrom a sensor with all non-zero digits valid." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/ietf-power-and-energy/accuracy-measured-ones> .
+
+lex:ietf-power-and-energy-accuracy-measured-red
+    a lex:ReferenceEntry ;
+    skos:prefLabel "accuracy-measured-red" ;
+    skos:definition "The power data is a direct, real-time measurement\nfrom a sensor with +/- 2% accuracy for typical values." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/ietf-power-and-energy/accuracy-measured-red> .
+
+lex:ietf-power-and-energy-accuracy-measured-silver
+    a lex:ReferenceEntry ;
+    skos:prefLabel "accuracy-measured-silver" ;
+    skos:definition "The power data is a direct, real-time measurement\nfrom a sensor with +/- 10% accuracy for typical values." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/ietf-power-and-energy/accuracy-measured-silver> .
+
+lex:ietf-power-and-energy-accuracy-static
+    a lex:ReferenceEntry ;
+    skos:prefLabel "accuracy-static" ;
+    skos:definition "The power data is based on static data, such as\nmanufacturer specifications, datasheet of typical power values\nor nameplate ratings, rather than real-time measurements." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/ietf-power-and-energy/accuracy-static> .
+
+lex:ietf-power-and-energy-accuracy-unavailable
+    a lex:ReferenceEntry ;
+    skos:prefLabel "accuracy-unavailable" ;
+    skos:definition "A power data is not available for some reason, such\nas a sensor failure or a component being powered off." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/ietf-power-and-energy/accuracy-unavailable> .
+
+lex:ietf-power-and-energy-accuracy-unknown
+    a lex:ReferenceEntry ;
+    skos:prefLabel "accuracy-unknown" ;
+    skos:definition "The accuracy of the power data is unknown." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/ietf-power-and-energy/accuracy-unknown> .
+
+lex:ietf-power-and-energy-data-source-accuracy
+    a lex:ReferenceEntry ;
+    skos:prefLabel "data-source-accuracy" ;
+    skos:definition "Base identity for all possible data accuracy types.\nThis identity serves as the root for a hierarchy of accuracy\ntypes, allowing for extensibility while maintaining alignment\nwith current and future industry standards.\n\nThe hierarchy, as defined in this YANG module, is as follows.\nOther modules may extend this hierarchy with additional\naccuracy base- and sub-types as needed.\n\ndata-source-accuracy\n ├── accuracy-unknown\n │    └── accuracy-unavailable\n ├── accuracy-estimated\n │    ├── accuracy-static\n │    ├── accuracy-historic\n │    └── accuracy-learned\n └── accuracy-measured\n      ├── accuracy-measured-bronze\n      ├── accuracy-measured-silver\n      ├── accuracy-measured-gold\n      ├── accuracy-measured-red\n      └── accuracy-measured-ones\n" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/ietf-power-and-energy/data-source-accuracy> .
+
+lex:ietf-power-and-energy-energy-objects
+    a lex:ReferenceEntry ;
+    skos:prefLabel "energy-objects" ;
+    skos:definition "Energy objects container for power attributes." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:StructuralKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/ietf-power-and-energy/energy-objects> .
+
+lex:ietf-power-and-energy-multiplier-giga
+    a lex:ReferenceEntry ;
+    skos:prefLabel "multiplier-giga" ;
+    skos:definition "Represents a multiplier of 10^9 (1,000,000,000) associated\nwith the integer units used to measure the power or energy." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/ietf-power-and-energy/multiplier-giga> .
+
+lex:ietf-power-and-energy-multiplier-kilo
+    a lex:ReferenceEntry ;
+    skos:prefLabel "multiplier-kilo" ;
+    skos:definition "Represents a multiplier of 10^3 (1,000) associated with the\ninteger units used to measure the power or energy." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/ietf-power-and-energy/multiplier-kilo> .
+
+lex:ietf-power-and-energy-multiplier-mega
+    a lex:ReferenceEntry ;
+    skos:prefLabel "multiplier-mega" ;
+    skos:definition "Represents a multiplier of 10^6 (1,000,000) associated with\nthe integer units used to measure the power or energy." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/ietf-power-and-energy/multiplier-mega> .
+
+lex:ietf-power-and-energy-multiplier-milli
+    a lex:ReferenceEntry ;
+    skos:prefLabel "multiplier-milli" ;
+    skos:definition "Represents a multiplier of 10^-3 (0.001) associated with the\ninteger units used to measure the power or energy." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/ietf-power-and-energy/multiplier-milli> .
+
+lex:ietf-power-and-energy-multiplier-none
+    a lex:ReferenceEntry ;
+    skos:prefLabel "multiplier-none" ;
+    skos:definition "Represents a multiplier of 10^0 (1) associated with\nthe integer units used to measure the power or energy." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/ietf-power-and-energy/multiplier-none> .
+
+lex:ietf-power-and-energy-power-entry
+    a lex:ReferenceEntry ;
+    skos:prefLabel "power-entry" ;
+    skos:definition "Power entry for an energy object, indexed by object id.\nEach entry contains the complete set of power attributes\nfor a specific physical component." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:StructuralKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/ietf-power-and-energy/energy-objects/power-entry> .
+
+lex:ietf-power-and-energy-power-state
+    a lex:ReferenceEntry ;
+    skos:prefLabel "power-state" ;
+    skos:definition "Base identity for all possible power states. This identity\nserves as the root for a hierarchy of power states, allowing\nfor extensibility while maintaining alignment with the IANA\nPower State Set Registry." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/ietf-power-and-energy/power-state> .
+
+lex:ietf-power-and-energy-unit-multiplier
+    a lex:ReferenceEntry ;
+    skos:prefLabel "unit-multiplier" ;
+    skos:definition "Base identity for unit multipliers as defined in IEC 61850-7-3\nAnnex A. These represent exponents of 10 for scaling units\nassociated with the integer units used to measure the power or\nenergy." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/ietf-power-and-energy/unit-multiplier> .

@@ -1,0 +1,48 @@
+@prefix lex: <http://example.org/ontology/lexicon-vocab#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+# Reference lexicon for module: ietf-ni-location-txt
+# Auto-drafted by draft_lexicon.py from yang4owl.py output. Do not hand-edit
+# without removing lex:needsCuration once an entry has been reviewed --
+# it exists so curated and uncurated entries stay distinguishable.
+#
+# Entries flagged lex:needsCuration true have an empty or label-restating
+# definition and/or a placeholder canonical example -- see
+# docs/reference-lexicons.md recommendation #2 before relying on them.
+
+lex:ietf-ni-location-txt-locations
+    a lex:ReferenceEntry ;
+    skos:prefLabel "locations" ;
+    skos:definition "Grouping definition: locations" ;
+    skos:scopeNote "The grouping of the locations." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/ietf-ni-location-txt/locations> .
+
+lex:ietf-ni-location-txt-locations-ref
+    a lex:ReferenceEntry ;
+    skos:prefLabel "locations-ref" ;
+    skos:definition "Grouping definition: locations-ref" ;
+    skos:scopeNote "The attributes of the locations." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/ietf-ni-location-txt/locations-ref> .
+
+lex:ietf-ni-location-txt-physical-address
+    a lex:ReferenceEntry ;
+    skos:prefLabel "physical-address" ;
+    skos:definition "Grouping definition: physical-address" ;
+    skos:scopeNote "The grouping of the physical address." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/ietf-ni-location-txt/physical-address> .
+
+lex:ietf-ni-location-txt-racks
+    a lex:ReferenceEntry ;
+    skos:prefLabel "racks" ;
+    skos:definition "Grouping definition: racks" ;
+    skos:scopeNote "The attributes of the rack." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/ietf-ni-location-txt/racks> .

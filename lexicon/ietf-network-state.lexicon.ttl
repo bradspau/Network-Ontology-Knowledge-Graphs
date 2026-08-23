@@ -1,0 +1,124 @@
+@prefix lex: <http://example.org/ontology/lexicon-vocab#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+# Reference lexicon for module: ietf-network-state
+# Auto-drafted by draft_lexicon.py from yang4owl.py output. Do not hand-edit
+# without removing lex:needsCuration once an entry has been reviewed --
+# it exists so curated and uncurated entries stay distinguishable.
+#
+# Entries flagged lex:needsCuration true have an empty or label-restating
+# definition and/or a placeholder canonical example -- see
+# docs/reference-lexicons.md recommendation #2 before relying on them.
+
+lex:ietf-network-state-inventory-mapping-attributes
+    a lex:ReferenceEntry ;
+    skos:prefLabel "inventory-mapping-attributes" ;
+    skos:definition "Container for inventory-related attributes of a link.\n\nThis container provides lightweight media classification.\nThe link-type indicates which specialized inventory model\ncontains detailed resource information:\n\n- Wired media (fiber, copper): passive network inventory\n- Wireless media (microwave, Wi-Fi): wireless-specific\n  inventory\n\n  Detailed inventory references may be added in future\n  modules." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:StructuralKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/ietf-network-state/networks/network/link/inventory-mapping-attributes> .
+
+lex:ietf-network-state-inventory-mapping-attributes-node
+    a lex:ReferenceEntry ;
+    skos:prefLabel "inventory-mapping-attributes" ;
+    skos:definition "Container for inventory mapping attributes of a node." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:StructuralKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/ietf-network-state/networks/network/node/inventory-mapping-attributes> .
+
+lex:ietf-network-state-inventory-mapping-attributes-termination-point
+    a lex:ReferenceEntry ;
+    skos:prefLabel "inventory-mapping-attributes" ;
+    skos:definition "Container for inventory mapping attributes of a TP." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:StructuralKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/ietf-network-state/networks/network/node/termination-point/inventory-mapping-attributes> .
+
+lex:ietf-network-state-l2-link-attributes
+    a lex:ReferenceEntry ;
+    skos:prefLabel "l2-link-attributes" ;
+    skos:definition "Contains L2 link attributes." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:StructuralKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/ietf-network-state/networks/network/link/l2-link-attributes> .
+
+lex:ietf-network-state-l2-node-attributes
+    a lex:ReferenceEntry ;
+    skos:prefLabel "l2-node-attributes" ;
+    skos:definition "Contains L2 node attributes." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:StructuralKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/ietf-network-state/networks/network/node/l2-node-attributes> .
+
+lex:ietf-network-state-l2-termination-point-attributes
+    a lex:ReferenceEntry ;
+    skos:prefLabel "l2-termination-point-attributes" ;
+    skos:definition "Containing L2 termination point attributes." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:StructuralKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/ietf-network-state/networks/network/node/termination-point/l2-termination-point-attributes> .
+
+lex:ietf-network-state-l2-topology
+    a lex:ReferenceEntry ;
+    skos:prefLabel "l2-topology" ;
+    skos:definition "The presence of the container node indicates\nL2 Network Topology." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:StructuralKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/ietf-network-state/networks/network/network-types/l2-topology> .
+
+lex:ietf-network-state-l2-topology-attributes
+    a lex:ReferenceEntry ;
+    skos:prefLabel "l2-topology-attributes" ;
+    skos:definition "Contains L2 topology attributes." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:StructuralKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/ietf-network-state/networks/network/l2-topology-attributes> .
+
+lex:ietf-network-state-link
+    a lex:ReferenceEntry ;
+    skos:prefLabel "link" ;
+    skos:definition "A network link connects a local (source) node and\na remote (destination) node via a set of the respective\nnode's termination points.  It is possible to have several\nlinks between the same source and destination nodes.\nLikewise, a link could potentially be re-homed between\ntermination points.  Therefore, in order to ensure that we\nwould always know to distinguish between links, every link\nis identified by a dedicated link identifier.  Note that a\nlink models a point-to-point link, not a multipoint link." ;
+    skos:scopeNote "Augments L2 topology link information." ;
+    skos:scopeNote "Augments the network topology link with inventory-related\nattributes." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:StructuralKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/ietf-network-state/networks/network/link> .
+
+lex:ietf-network-state-network
+    a lex:ReferenceEntry ;
+    skos:prefLabel "network" ;
+    skos:definition "Add links to the network data model." ;
+    skos:scopeNote "Configuration parameters for the L2 network\nas a whole." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:StructuralKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/ietf-network-state/networks/network> .
+
+lex:ietf-network-state-network-types
+    a lex:ReferenceEntry ;
+    skos:prefLabel "network-types" ;
+    skos:definition "Introduces a new network type for L2 topology." ;
+    skos:scopeNote "Introduces new network type for L2 topology." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:StructuralKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/ietf-network-state/networks/network/network-types> .
+
+lex:ietf-network-state-node
+    a lex:ReferenceEntry ;
+    skos:prefLabel "node" ;
+    skos:definition "Augments termination points that terminate links.\nTermination points can ultimately be mapped to interfaces." ;
+    skos:scopeNote "Augments the network topology node with inventory mapping\nattributes. This enables correlation between the logical node\nand its physical network element." ;
+    skos:scopeNote "Configuration parameters for L2 at the node\nlevel." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:StructuralKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/ietf-network-state/networks/network/node> .
+
+lex:ietf-network-state-termination-point
+    a lex:ReferenceEntry ;
+    skos:prefLabel "termination-point" ;
+    skos:definition "A termination point can terminate a link.\nDepending on the type of topology, a termination point\ncould, for example, refer to a port or an interface." ;
+    skos:scopeNote "Augments L2 topology termination point information." ;
+    skos:scopeNote "Augments the TP with inventory mapping attributes for\nphysical port correlation and breakout capability reporting." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:StructuralKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/ietf-network-state/networks/network/node/termination-point> .

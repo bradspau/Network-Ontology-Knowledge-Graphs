@@ -1,0 +1,20 @@
+@prefix lex: <http://example.org/ontology/lexicon-vocab#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+# Reference lexicon for module: ietf-l2-topology-state
+# Auto-drafted by draft_lexicon.py from yang4owl.py output. Do not hand-edit
+# without removing lex:needsCuration once an entry has been reviewed --
+# it exists so curated and uncurated entries stay distinguishable.
+#
+# Entries flagged lex:needsCuration true have an empty or label-restating
+# definition and/or a placeholder canonical example -- see
+# docs/reference-lexicons.md recommendation #2 before relying on them.
+
+lex:ietf-l2-topology-state-vxlan
+    a lex:ReferenceEntry ;
+    skos:prefLabel "vxlan" ;
+    skos:definition "Vxlan encapsulation type." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:StructuralKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/ietf-l2-topology-state/ietf-network-state/networks/network/node/termination-point/l2-termination-point-attributes/vxlan> .

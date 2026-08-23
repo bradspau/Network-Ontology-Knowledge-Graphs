@@ -1,0 +1,402 @@
+@prefix lex: <http://example.org/ontology/lexicon-vocab#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+# Reference lexicon for module: ietf-nwi-passive-inventory
+# Auto-drafted by draft_lexicon.py from yang4owl.py output. Do not hand-edit
+# without removing lex:needsCuration once an entry has been reviewed --
+# it exists so curated and uncurated entries stay distinguishable.
+#
+# Entries flagged lex:needsCuration true have an empty or label-restating
+# definition and/or a placeholder canonical example -- see
+# docs/reference-lexicons.md recommendation #2 before relying on them.
+
+lex:ietf-nwi-passive-inventory-access
+    a lex:ReferenceEntry ;
+    skos:prefLabel "access" ;
+    skos:definition "Access cable." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/ietf-nwi-passive-inventory/access> .
+
+lex:ietf-nwi-passive-inventory-active-device
+    a lex:ReferenceEntry ;
+    skos:prefLabel "active-device" ;
+    skos:definition "Active device, e.g. network element." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/ietf-nwi-passive-inventory/active-device> .
+
+lex:ietf-nwi-passive-inventory-aggregation
+    a lex:ReferenceEntry ;
+    skos:prefLabel "aggregation" ;
+    skos:definition "Aggregation cable." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/ietf-nwi-passive-inventory/aggregation> .
+
+lex:ietf-nwi-passive-inventory-atb
+    a lex:ReferenceEntry ;
+    skos:prefLabel "ATB" ;
+    skos:definition "Access Terminal Box." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/ietf-nwi-passive-inventory/ATB> .
+
+lex:ietf-nwi-passive-inventory-backbone
+    a lex:ReferenceEntry ;
+    skos:prefLabel "backbone" ;
+    skos:definition "Backbone cable." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/ietf-nwi-passive-inventory/backbone> .
+
+lex:ietf-nwi-passive-inventory-branch
+    a lex:ReferenceEntry ;
+    skos:prefLabel "branch" ;
+    skos:definition "Branch cable." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/ietf-nwi-passive-inventory/branch> .
+
+lex:ietf-nwi-passive-inventory-cable-attributes
+    a lex:ReferenceEntry ;
+    skos:prefLabel "cable-attributes" ;
+    skos:definition "Attributes of cables." ;
+    skos:scopeNote "Grouping definition: cable-attributes" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/ietf-nwi-passive-inventory/cable-attributes> .
+
+lex:ietf-nwi-passive-inventory-cable-role
+    a lex:ReferenceEntry ;
+    skos:prefLabel "cable-role" ;
+    skos:definition "Base identity for cable roles." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/ietf-nwi-passive-inventory/cable-role> .
+
+lex:ietf-nwi-passive-inventory-cable-type
+    a lex:ReferenceEntry ;
+    skos:prefLabel "cable-type" ;
+    skos:definition "Base identity for cable types." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/ietf-nwi-passive-inventory/cable-type> .
+
+lex:ietf-nwi-passive-inventory-cables
+    a lex:ReferenceEntry ;
+    skos:prefLabel "cables" ;
+    skos:definition "Attributes applicable to cables." ;
+    skos:scopeNote "Grouping definition: cables" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/ietf-nwi-passive-inventory/cables> .
+
+lex:ietf-nwi-passive-inventory-child-cables
+    a lex:ReferenceEntry ;
+    skos:prefLabel "child-cables" ;
+    skos:definition "Attributes applicable to child cables that are concatnated\nto form the cable." ;
+    skos:scopeNote "Grouping definition: child-cables" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/ietf-nwi-passive-inventory/child-cables> .
+
+lex:ietf-nwi-passive-inventory-coaxial-cable
+    a lex:ReferenceEntry ;
+    skos:prefLabel "coaxial-cable" ;
+    skos:definition "Coaxial cable." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/ietf-nwi-passive-inventory/coaxial-cable> .
+
+lex:ietf-nwi-passive-inventory-common-cable-attributes
+    a lex:ReferenceEntry ;
+    skos:prefLabel "common-cable-attributes" ;
+    skos:definition "Common attributes of cables applicable to the cable\nand its child cables." ;
+    skos:scopeNote "Grouping definition: common-cable-attributes" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/ietf-nwi-passive-inventory/common-cable-attributes> .
+
+lex:ietf-nwi-passive-inventory-connected-device-end
+    a lex:ReferenceEntry ;
+    skos:prefLabel "connected-device-end" ;
+    skos:definition "Attributes applicable to connected device end." ;
+    skos:scopeNote "Grouping definition: connected-device-end" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/ietf-nwi-passive-inventory/connected-device-end> .
+
+lex:ietf-nwi-passive-inventory-connected-device-ref
+    a lex:ReferenceEntry ;
+    skos:prefLabel "connected-device-ref" ;
+    skos:definition "Attributes applicable to connected devices." ;
+    skos:scopeNote "Grouping definition: connected-device-ref" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/ietf-nwi-passive-inventory/connected-device-ref> .
+
+lex:ietf-nwi-passive-inventory-connected-device-type
+    a lex:ReferenceEntry ;
+    skos:prefLabel "connected-device-type" ;
+    skos:definition "Base identity for connected device types." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/ietf-nwi-passive-inventory/connected-device-type> .
+
+lex:ietf-nwi-passive-inventory-distribution
+    a lex:ReferenceEntry ;
+    skos:prefLabel "distribution" ;
+    skos:definition "Distribution cable." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/ietf-nwi-passive-inventory/distribution> .
+
+lex:ietf-nwi-passive-inventory-electrical-cable
+    a lex:ReferenceEntry ;
+    skos:prefLabel "electrical-cable" ;
+    skos:definition "Electrical cable." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/ietf-nwi-passive-inventory/electrical-cable> .
+
+lex:ietf-nwi-passive-inventory-fat
+    a lex:ReferenceEntry ;
+    skos:prefLabel "FAT" ;
+    skos:definition "Fiber Access Terminal." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/ietf-nwi-passive-inventory/FAT> .
+
+lex:ietf-nwi-passive-inventory-fdt
+    a lex:ReferenceEntry ;
+    skos:prefLabel "FDT" ;
+    skos:definition "Fiber Distribution Terminal." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/ietf-nwi-passive-inventory/FDT> .
+
+lex:ietf-nwi-passive-inventory-fiber-type
+    a lex:ReferenceEntry ;
+    skos:prefLabel "fiber-type" ;
+    skos:definition "Base identity for fiber types." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/ietf-nwi-passive-inventory/fiber-type> .
+
+lex:ietf-nwi-passive-inventory-g652a
+    a lex:ReferenceEntry ;
+    skos:prefLabel "G652A" ;
+    skos:definition "ITU-T G.652A fiber." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/ietf-nwi-passive-inventory/G652A> .
+
+lex:ietf-nwi-passive-inventory-g652b
+    a lex:ReferenceEntry ;
+    skos:prefLabel "G652B" ;
+    skos:definition "ITU-T G.652B fiber." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/ietf-nwi-passive-inventory/G652B> .
+
+lex:ietf-nwi-passive-inventory-g652c
+    a lex:ReferenceEntry ;
+    skos:prefLabel "G652C" ;
+    skos:definition "ITU-T G.652C fiber." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/ietf-nwi-passive-inventory/G652C> .
+
+lex:ietf-nwi-passive-inventory-g652d
+    a lex:ReferenceEntry ;
+    skos:prefLabel "G652D" ;
+    skos:definition "ITU-T G.652D fiber." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/ietf-nwi-passive-inventory/G652D> .
+
+lex:ietf-nwi-passive-inventory-g653
+    a lex:ReferenceEntry ;
+    skos:prefLabel "G653" ;
+    skos:definition "ITU-T G.653 fiber." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/ietf-nwi-passive-inventory/G653> .
+
+lex:ietf-nwi-passive-inventory-g654
+    a lex:ReferenceEntry ;
+    skos:prefLabel "G654" ;
+    skos:definition "ITU-T G.654 fiber." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/ietf-nwi-passive-inventory/G654> .
+
+lex:ietf-nwi-passive-inventory-g655
+    a lex:ReferenceEntry ;
+    skos:prefLabel "G655" ;
+    skos:definition "ITU-T G.655 fiber." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/ietf-nwi-passive-inventory/G655> .
+
+lex:ietf-nwi-passive-inventory-g656
+    a lex:ReferenceEntry ;
+    skos:prefLabel "G656" ;
+    skos:definition "ITU-T G.656 fiber." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/ietf-nwi-passive-inventory/G656> .
+
+lex:ietf-nwi-passive-inventory-g657a1
+    a lex:ReferenceEntry ;
+    skos:prefLabel "G657A1" ;
+    skos:definition "ITU-T G.657A1 fiber." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/ietf-nwi-passive-inventory/G657A1> .
+
+lex:ietf-nwi-passive-inventory-g657a2
+    a lex:ReferenceEntry ;
+    skos:prefLabel "G657A2" ;
+    skos:definition "ITU-T G.657A2 fiber." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/ietf-nwi-passive-inventory/G657A2> .
+
+lex:ietf-nwi-passive-inventory-g657b
+    a lex:ReferenceEntry ;
+    skos:prefLabel "G657B" ;
+    skos:definition "ITU-T G.657B fiber." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/ietf-nwi-passive-inventory/G657B> .
+
+lex:ietf-nwi-passive-inventory-input-port
+    a lex:ReferenceEntry ;
+    skos:prefLabel "input-port" ;
+    skos:definition "Input port." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/ietf-nwi-passive-inventory/input-port> .
+
+lex:ietf-nwi-passive-inventory-odf
+    a lex:ReferenceEntry ;
+    skos:prefLabel "ODF" ;
+    skos:definition "Optical Distribution Frame." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/ietf-nwi-passive-inventory/ODF> .
+
+lex:ietf-nwi-passive-inventory-optical-cable-attributes
+    a lex:ReferenceEntry ;
+    skos:prefLabel "optical-cable-attributes" ;
+    skos:definition "Attributes applicable to fiber optic cables." ;
+    skos:scopeNote "Grouping definition: optical-cable-attributes" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/ietf-nwi-passive-inventory/optical-cable-attributes> .
+
+lex:ietf-nwi-passive-inventory-optical-fiber
+    a lex:ReferenceEntry ;
+    skos:prefLabel "optical-fiber" ;
+    skos:definition "Fiber optic cable." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/ietf-nwi-passive-inventory/optical-fiber> .
+
+lex:ietf-nwi-passive-inventory-other
+    a lex:ReferenceEntry ;
+    skos:prefLabel "other" ;
+    skos:definition "Other type of fiber." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/ietf-nwi-passive-inventory/other> .
+
+lex:ietf-nwi-passive-inventory-output-port
+    a lex:ReferenceEntry ;
+    skos:prefLabel "output-port" ;
+    skos:definition "Output port." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/ietf-nwi-passive-inventory/output-port> .
+
+lex:ietf-nwi-passive-inventory-p2mp-port
+    a lex:ReferenceEntry ;
+    skos:prefLabel "p2mp-port" ;
+    skos:definition "Input port." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/ietf-nwi-passive-inventory/p2mp-port> .
+
+lex:ietf-nwi-passive-inventory-passive-device
+    a lex:ReferenceEntry ;
+    skos:prefLabel "passive-device" ;
+    skos:definition "Passive/unmanaged device." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/ietf-nwi-passive-inventory/passive-device> .
+
+lex:ietf-nwi-passive-inventory-passive-device-ports
+    a lex:ReferenceEntry ;
+    skos:prefLabel "passive-device-ports" ;
+    skos:definition "Attributes applicable to passive device ports." ;
+    skos:scopeNote "Grouping definition: passive-device-ports" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/ietf-nwi-passive-inventory/passive-device-ports> .
+
+lex:ietf-nwi-passive-inventory-passive-device-type
+    a lex:ReferenceEntry ;
+    skos:prefLabel "passive-device-type" ;
+    skos:definition "Base identity for passive device types." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/ietf-nwi-passive-inventory/passive-device-type> .
+
+lex:ietf-nwi-passive-inventory-passive-devices
+    a lex:ReferenceEntry ;
+    skos:prefLabel "passive-devices" ;
+    skos:definition "Attributes applicable to passive devices." ;
+    skos:scopeNote "Grouping definition: passive-devices" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/ietf-nwi-passive-inventory/passive-devices> .
+
+lex:ietf-nwi-passive-inventory-passive-port-type
+    a lex:ReferenceEntry ;
+    skos:prefLabel "passive-port-type" ;
+    skos:definition "Base identity for passive port types." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/ietf-nwi-passive-inventory/passive-port-type> .
+
+lex:ietf-nwi-passive-inventory-service-port
+    a lex:ReferenceEntry ;
+    skos:prefLabel "service-port" ;
+    skos:definition "Service port." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/ietf-nwi-passive-inventory/service-port> .
+
+lex:ietf-nwi-passive-inventory-trunk
+    a lex:ReferenceEntry ;
+    skos:prefLabel "trunk" ;
+    skos:definition "Trunk cable." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/ietf-nwi-passive-inventory/trunk> .
+
+lex:ietf-nwi-passive-inventory-wdm
+    a lex:ReferenceEntry ;
+    skos:prefLabel "WDM" ;
+    skos:definition "Wavelength Division Multiplexer." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/ietf-nwi-passive-inventory/WDM> .

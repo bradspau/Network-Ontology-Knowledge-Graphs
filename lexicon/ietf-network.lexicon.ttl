@@ -1,0 +1,164 @@
+@prefix lex: <http://example.org/ontology/lexicon-vocab#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+# Reference lexicon for module: ietf-network
+# Auto-drafted by draft_lexicon.py from yang4owl.py output. Do not hand-edit
+# without removing lex:needsCuration once an entry has been reviewed --
+# it exists so curated and uncurated entries stay distinguishable.
+#
+# Entries flagged lex:needsCuration true have an empty or label-restating
+# definition and/or a placeholder canonical example -- see
+# docs/reference-lexicons.md recommendation #2 before relying on them.
+
+lex:ietf-network-destination
+    a lex:ReferenceEntry ;
+    skos:prefLabel "destination" ;
+    skos:definition "This container holds the logical destination of a\nparticular link." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:StructuralKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/ietf-network/networks/network/link/destination> .
+
+lex:ietf-network-link
+    a lex:ReferenceEntry ;
+    skos:prefLabel "link" ;
+    skos:definition "A network link connects a local (source) node and\na remote (destination) node via a set of the respective\nnode's termination points.  It is possible to have several\nlinks between the same source and destination nodes.\nLikewise, a link could potentially be re-homed between\ntermination points.  Therefore, in order to ensure that we\nwould always know to distinguish between links, every link\nis identified by a dedicated link identifier.  Note that a\nlink models a point-to-point link, not a multipoint link." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:StructuralKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/ietf-network/networks/network/link> .
+
+lex:ietf-network-linked-node
+    a lex:ReferenceEntry ;
+    skos:prefLabel "linked-node" ;
+    skos:definition "TODO: no YANG description was available to seed this definition." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:StructuralKind ;
+    lex:needsCuration true ;
+    prov:wasDerivedFrom <http://example.org/ontology/ietf-network/networks/network/node/linked-node> .
+
+lex:ietf-network-linked-termination-point
+    a lex:ReferenceEntry ;
+    skos:prefLabel "linked-termination-point" ;
+    skos:definition "TODO: no YANG description was available to seed this definition." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:StructuralKind ;
+    lex:needsCuration true ;
+    prov:wasDerivedFrom <http://example.org/ontology/ietf-network/networks/network/node/termination-point/linked-termination-point> .
+
+lex:ietf-network-network
+    a lex:ReferenceEntry ;
+    skos:prefLabel "network" ;
+    skos:definition "Add links to the network data model." ;
+    skos:scopeNote "Describes a network.\nA network typically contains an inventory of nodes,\ntopological information (augmented through the\nnetwork-topology data model), and layering information." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:StructuralKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/ietf-network/networks/network> .
+
+lex:ietf-network-network-ref
+    a lex:ReferenceEntry ;
+    skos:prefLabel "network-ref" ;
+    skos:definition "Contains the information necessary to reference a network --\nfor example, an underlay network." ;
+    skos:scopeNote "Grouping definition: network-ref" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/ietf-network/network-ref> .
+
+lex:ietf-network-network-types
+    a lex:ReferenceEntry ;
+    skos:prefLabel "network-types" ;
+    skos:definition "Serves as an augmentation target.\nThe network type is indicated through corresponding\npresence containers augmented into this container." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:StructuralKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/ietf-network/networks/network/network-types> .
+
+lex:ietf-network-networks
+    a lex:ReferenceEntry ;
+    skos:prefLabel "networks" ;
+    skos:definition "Serves as a top-level container for a list of networks." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:StructuralKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/ietf-network/networks> .
+
+lex:ietf-network-node
+    a lex:ReferenceEntry ;
+    skos:prefLabel "node" ;
+    skos:definition "Augments termination points that terminate links.\nTermination points can ultimately be mapped to interfaces." ;
+    skos:scopeNote "The inventory of nodes of this network." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:StructuralKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/ietf-network/networks/network/node> .
+
+lex:ietf-network-node-ref
+    a lex:ReferenceEntry ;
+    skos:prefLabel "node-ref" ;
+    skos:definition "Contains the information necessary to reference a node." ;
+    skos:scopeNote "Grouping definition: node-ref" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/ietf-network/node-ref> .
+
+lex:ietf-network-source
+    a lex:ReferenceEntry ;
+    skos:prefLabel "source" ;
+    skos:definition "This container holds the logical source of a particular\nlink." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:StructuralKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/ietf-network/networks/network/link/source> .
+
+lex:ietf-network-subnetwork
+    a lex:ReferenceEntry ;
+    skos:prefLabel "subnetwork" ;
+    skos:definition "TODO: no YANG description was available to seed this definition." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:StructuralKind ;
+    lex:needsCuration true ;
+    prov:wasDerivedFrom <http://example.org/ontology/ietf-network/networks/network/subnetwork> .
+
+lex:ietf-network-supporting-link
+    a lex:ReferenceEntry ;
+    skos:prefLabel "supporting-link" ;
+    skos:definition "Identifies the link or links on which this link depends." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:StructuralKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/ietf-network/networks/network/link/supporting-link> .
+
+lex:ietf-network-supporting-network
+    a lex:ReferenceEntry ;
+    skos:prefLabel "supporting-network" ;
+    skos:definition "An underlay network, used to represent layered network\ntopologies." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:StructuralKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/ietf-network/networks/network/supporting-network> .
+
+lex:ietf-network-supporting-node
+    a lex:ReferenceEntry ;
+    skos:prefLabel "supporting-node" ;
+    skos:definition "Represents another node that is in an underlay network\nand that supports this node.  Used to represent layering\nstructure." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:StructuralKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/ietf-network/networks/network/node/supporting-node> .
+
+lex:ietf-network-supporting-termination-point
+    a lex:ReferenceEntry ;
+    skos:prefLabel "supporting-termination-point" ;
+    skos:definition "This list identifies any termination points on which a\ngiven termination point depends or onto which it maps.\nThose termination points will themselves be contained\nin a supporting node.  This dependency information can be\ninferred from the dependencies between links.  Therefore,\nthis item is not separately configurable.  Hence, no\ncorresponding constraint needs to be articulated.\nThe corresponding information is simply provided by the\nimplementing system." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:StructuralKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/ietf-network/networks/network/node/termination-point/supporting-termination-point> .
+
+lex:ietf-network-termination-point
+    a lex:ReferenceEntry ;
+    skos:prefLabel "termination-point" ;
+    skos:definition "A termination point can terminate a link.\nDepending on the type of topology, a termination point\ncould, for example, refer to a port or an interface." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:StructuralKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/ietf-network/networks/network/node/termination-point> .
+
+lex:ietf-network-tp
+    a lex:ReferenceEntry ;
+    skos:prefLabel "tp" ;
+    skos:definition "TODO: no YANG description was available to seed this definition." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:StructuralKind ;
+    lex:needsCuration true ;
+    prov:wasDerivedFrom <http://example.org/ontology/ietf-network/networks/network/link/tp> .

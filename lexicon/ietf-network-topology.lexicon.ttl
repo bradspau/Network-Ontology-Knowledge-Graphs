@@ -1,0 +1,62 @@
+@prefix lex: <http://example.org/ontology/lexicon-vocab#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+# Reference lexicon for module: ietf-network-topology
+# Auto-drafted by draft_lexicon.py from yang4owl.py output. Do not hand-edit
+# without removing lex:needsCuration once an entry has been reviewed --
+# it exists so curated and uncurated entries stay distinguishable.
+#
+# Entries flagged lex:needsCuration true have an empty or label-restating
+# definition and/or a placeholder canonical example -- see
+# docs/reference-lexicons.md recommendation #2 before relying on them.
+
+lex:ietf-network-topology-destination
+    a lex:ReferenceEntry ;
+    skos:prefLabel "destination" ;
+    skos:definition "This container holds the logical destination of a\nparticular link." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:StructuralKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/ietf-network-topology/ietf-network-state/networks/network/link/destination> .
+
+lex:ietf-network-topology-link-ref
+    a lex:ReferenceEntry ;
+    skos:prefLabel "link-ref" ;
+    skos:definition "Grouping definition: link-ref" ;
+    skos:scopeNote "This grouping can be used to reference a link in a specific\nnetwork.  Although it is not used in this module, it is\ndefined here for the convenience of augmenting modules." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/ietf-network-topology/link-ref> .
+
+lex:ietf-network-topology-source
+    a lex:ReferenceEntry ;
+    skos:prefLabel "source" ;
+    skos:definition "This container holds the logical source of a particular\nlink." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:StructuralKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/ietf-network-topology/ietf-network-state/networks/network/link/source> .
+
+lex:ietf-network-topology-supporting-link
+    a lex:ReferenceEntry ;
+    skos:prefLabel "supporting-link" ;
+    skos:definition "Identifies the link or links on which this link depends." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:StructuralKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/ietf-network-topology/ietf-network-state/networks/network/link/supporting-link> .
+
+lex:ietf-network-topology-supporting-termination-point
+    a lex:ReferenceEntry ;
+    skos:prefLabel "supporting-termination-point" ;
+    skos:definition "This list identifies any termination points on which a\ngiven termination point depends or onto which it maps.\nThose termination points will themselves be contained\nin a supporting node.  This dependency information can be\ninferred from the dependencies between links.  Therefore,\nthis item is not separately configurable.  Hence, no\ncorresponding constraint needs to be articulated.\nThe corresponding information is simply provided by the\nimplementing system." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:StructuralKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/ietf-network-topology/ietf-network-state/networks/network/node/termination-point/supporting-termination-point> .
+
+lex:ietf-network-topology-tp-ref
+    a lex:ReferenceEntry ;
+    skos:prefLabel "tp-ref" ;
+    skos:definition "Grouping definition: tp-ref" ;
+    skos:scopeNote "This grouping can be used to reference a termination point\nin a specific node.  Although it is not used in this module,\nit is defined here for the convenience of augmenting\nmodules." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/ietf-network-topology/tp-ref> .
