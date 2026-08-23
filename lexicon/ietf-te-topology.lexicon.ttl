@@ -1,0 +1,326 @@
+@prefix lex: <http://example.org/ontology/lexicon-vocab#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+# Reference lexicon for module: ietf-te-topology
+# Auto-drafted by draft_lexicon.py from yang4owl.py output. Do not hand-edit
+# without removing lex:needsCuration once an entry has been reviewed --
+# it exists so curated and uncurated entries stay distinguishable.
+#
+# Entries flagged lex:needsCuration true have an empty or label-restating
+# definition and/or a placeholder canonical example -- see
+# docs/reference-lexicons.md recommendation #2 before relying on them.
+
+lex:ietf-te-topology-connectivity-matrix-entry-path-attributes
+    a lex:ReferenceEntry ;
+    skos:prefLabel "connectivity-matrix-entry-path-attributes" ;
+    skos:definition "Attributes of a connectivity matrix entry." ;
+    skos:scopeNote "Grouping definition: connectivity-matrix-entry-path-attributes" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/ietf-te-topology/connectivity-matrix-entry-path-attributes> .
+
+lex:ietf-te-topology-geolocation-container
+    a lex:ReferenceEntry ;
+    skos:prefLabel "geolocation-container" ;
+    skos:definition "Contains a GPS location." ;
+    skos:scopeNote "Grouping definition: geolocation-container" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/ietf-te-topology/geolocation-container> .
+
+lex:ietf-te-topology-information-source-per-link-attributes
+    a lex:ReferenceEntry ;
+    skos:prefLabel "information-source-per-link-attributes" ;
+    skos:definition "Grouping definition: information-source-per-link-attributes" ;
+    skos:scopeNote "Per-node container of the attributes identifying the source\nthat has provided the related information, and the source's\ncredibility." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/ietf-te-topology/information-source-per-link-attributes> .
+
+lex:ietf-te-topology-information-source-per-node-attributes
+    a lex:ReferenceEntry ;
+    skos:prefLabel "information-source-per-node-attributes" ;
+    skos:definition "Grouping definition: information-source-per-node-attributes" ;
+    skos:scopeNote "Per-node container of the attributes identifying the source\nthat has provided the related information, and the source's\ncredibility." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/ietf-te-topology/information-source-per-node-attributes> .
+
+lex:ietf-te-topology-information-source-state-attributes
+    a lex:ReferenceEntry ;
+    skos:prefLabel "information-source-state-attributes" ;
+    skos:definition "Grouping definition: information-source-state-attributes" ;
+    skos:scopeNote "The attributes identifying the source that has provided the\nrelated information, and the source's credibility." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/ietf-te-topology/information-source-state-attributes> .
+
+lex:ietf-te-topology-interface-switching-capability-list
+    a lex:ReferenceEntry ;
+    skos:prefLabel "interface-switching-capability-list" ;
+    skos:definition "Grouping definition: interface-switching-capability-list" ;
+    skos:scopeNote "List of Interface Switching Capability Descriptors (ISCDs)." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/ietf-te-topology/interface-switching-capability-list> .
+
+lex:ietf-te-topology-statistics-per-link
+    a lex:ReferenceEntry ;
+    skos:prefLabel "statistics-per-link" ;
+    skos:definition "Grouping definition: statistics-per-link" ;
+    skos:scopeNote "Statistics attributes per TE link." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/ietf-te-topology/statistics-per-link> .
+
+lex:ietf-te-topology-statistics-per-node
+    a lex:ReferenceEntry ;
+    skos:prefLabel "statistics-per-node" ;
+    skos:definition "Grouping definition: statistics-per-node" ;
+    skos:scopeNote "Statistics attributes per TE node." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/ietf-te-topology/statistics-per-node> .
+
+lex:ietf-te-topology-statistics-per-ttp
+    a lex:ReferenceEntry ;
+    skos:prefLabel "statistics-per-ttp" ;
+    skos:definition "Grouping definition: statistics-per-ttp" ;
+    skos:scopeNote "Statistics attributes per TE TTP (Tunnel Termination Point)." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/ietf-te-topology/statistics-per-ttp> .
+
+lex:ietf-te-topology-te-info-source
+    a lex:ReferenceEntry ;
+    skos:prefLabel "te-info-source" ;
+    skos:definition "Describes the type of source that has provided the\nrelated information, and the source's credibility." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:EnumeratedKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/types/ietf-te-topology/te-info-source> .
+
+lex:ietf-te-topology-te-link-augment
+    a lex:ReferenceEntry ;
+    skos:prefLabel "te-link-augment" ;
+    skos:definition "Augmentation for a TE link." ;
+    skos:scopeNote "Grouping definition: te-link-augment" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/ietf-te-topology/te-link-augment> .
+
+lex:ietf-te-topology-te-link-config
+    a lex:ReferenceEntry ;
+    skos:prefLabel "te-link-config" ;
+    skos:definition "Grouping definition: te-link-config" ;
+    skos:scopeNote "TE link configuration grouping." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/ietf-te-topology/te-link-config> .
+
+lex:ietf-te-topology-te-link-config-attributes
+    a lex:ReferenceEntry ;
+    skos:prefLabel "te-link-config-attributes" ;
+    skos:definition "Grouping definition: te-link-config-attributes" ;
+    skos:scopeNote "Link configuration attributes in a TE topology." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/ietf-te-topology/te-link-config-attributes> .
+
+lex:ietf-te-topology-te-link-info-attributes
+    a lex:ReferenceEntry ;
+    skos:prefLabel "te-link-info-attributes" ;
+    skos:definition "Advertised TE information attributes." ;
+    skos:scopeNote "Grouping definition: te-link-info-attributes" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/ietf-te-topology/te-link-info-attributes> .
+
+lex:ietf-te-topology-te-link-iscd-attributes
+    a lex:ReferenceEntry ;
+    skos:prefLabel "te-link-iscd-attributes" ;
+    skos:definition "Grouping definition: te-link-iscd-attributes" ;
+    skos:scopeNote "TE link ISCD attributes." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/ietf-te-topology/te-link-iscd-attributes> .
+
+lex:ietf-te-topology-te-link-state-derived
+    a lex:ReferenceEntry ;
+    skos:prefLabel "te-link-state-derived" ;
+    skos:definition "Grouping definition: te-link-state-derived" ;
+    skos:scopeNote "Link state attributes in a TE topology." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/ietf-te-topology/te-link-state-derived> .
+
+lex:ietf-te-topology-te-link-underlay-attributes
+    a lex:ReferenceEntry ;
+    skos:prefLabel "te-link-underlay-attributes" ;
+    skos:definition "Attributes for the TE link underlay." ;
+    skos:scopeNote "Grouping definition: te-link-underlay-attributes" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/ietf-te-topology/te-link-underlay-attributes> .
+
+lex:ietf-te-topology-te-node-augment
+    a lex:ReferenceEntry ;
+    skos:prefLabel "te-node-augment" ;
+    skos:definition "Augmentation for a TE node." ;
+    skos:scopeNote "Grouping definition: te-node-augment" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/ietf-te-topology/te-node-augment> .
+
+lex:ietf-te-topology-te-node-config
+    a lex:ReferenceEntry ;
+    skos:prefLabel "te-node-config" ;
+    skos:definition "Grouping definition: te-node-config" ;
+    skos:scopeNote "TE node configuration grouping." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/ietf-te-topology/te-node-config> .
+
+lex:ietf-te-topology-te-node-config-attributes
+    a lex:ReferenceEntry ;
+    skos:prefLabel "te-node-config-attributes" ;
+    skos:definition "Configuration node attributes in a TE topology." ;
+    skos:scopeNote "Grouping definition: te-node-config-attributes" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/ietf-te-topology/te-node-config-attributes> .
+
+lex:ietf-te-topology-te-node-config-attributes-template
+    a lex:ReferenceEntry ;
+    skos:prefLabel "te-node-config-attributes-template" ;
+    skos:definition "Configuration node attributes for a template in a TE\ntopology." ;
+    skos:scopeNote "Grouping definition: te-node-config-attributes-template" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/ietf-te-topology/te-node-config-attributes-template> .
+
+lex:ietf-te-topology-te-node-connectivity-matrices
+    a lex:ReferenceEntry ;
+    skos:prefLabel "te-node-connectivity-matrices" ;
+    skos:definition "Connectivity matrix on a TE node." ;
+    skos:scopeNote "Grouping definition: te-node-connectivity-matrices" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/ietf-te-topology/te-node-connectivity-matrices> .
+
+lex:ietf-te-topology-te-node-connectivity-matrix-attributes
+    a lex:ReferenceEntry ;
+    skos:prefLabel "te-node-connectivity-matrix-attributes" ;
+    skos:definition "Grouping definition: te-node-connectivity-matrix-attributes" ;
+    skos:scopeNote "Termination point references of a connectivity matrix entry." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/ietf-te-topology/te-node-connectivity-matrix-attributes> .
+
+lex:ietf-te-topology-te-node-info-attributes
+    a lex:ReferenceEntry ;
+    skos:prefLabel "te-node-info-attributes" ;
+    skos:definition "Advertised TE information attributes." ;
+    skos:scopeNote "Grouping definition: te-node-info-attributes" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/ietf-te-topology/te-node-info-attributes> .
+
+lex:ietf-te-topology-te-node-state-derived
+    a lex:ReferenceEntry ;
+    skos:prefLabel "te-node-state-derived" ;
+    skos:definition "Grouping definition: te-node-state-derived" ;
+    skos:scopeNote "Node state attributes in a TE topology." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/ietf-te-topology/te-node-state-derived> .
+
+lex:ietf-te-topology-te-node-tunnel-termination-point-config
+    a lex:ReferenceEntry ;
+    skos:prefLabel "te-node-tunnel-termination-point-config" ;
+    skos:definition "Grouping definition: te-node-tunnel-termination-point-config" ;
+    skos:scopeNote "Termination capability of a TTP on a TE node." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/ietf-te-topology/te-node-tunnel-termination-point-config> .
+
+lex:ietf-te-topology-te-node-tunnel-termination-point-config-attributes
+    a lex:ReferenceEntry ;
+    skos:prefLabel "te-node-tunnel-termination-point-config-attributes" ;
+    skos:definition "Configuration attributes of a TTP on a TE node." ;
+    skos:scopeNote "Grouping definition: te-node-tunnel-termination-point-config-attributes" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/ietf-te-topology/te-node-tunnel-termination-point-config-attributes> .
+
+lex:ietf-te-topology-te-node-tunnel-termination-point-llc-list
+    a lex:ReferenceEntry ;
+    skos:prefLabel "te-node-tunnel-termination-point-llc-list" ;
+    skos:definition "Grouping definition: te-node-tunnel-termination-point-llc-list" ;
+    skos:scopeNote "LLCL of a TTP on a TE node." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/ietf-te-topology/te-node-tunnel-termination-point-llc-list> .
+
+lex:ietf-te-topology-te-path-element
+    a lex:ReferenceEntry ;
+    skos:prefLabel "te-path-element" ;
+    skos:definition "A group of attributes defining an element in a TE path,\nsuch as a TE node, TE link, TE atomic resource, or label." ;
+    skos:scopeNote "Grouping definition: te-path-element" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/ietf-te-topology/te-path-element> .
+
+lex:ietf-te-topology-te-termination-point-augment
+    a lex:ReferenceEntry ;
+    skos:prefLabel "te-termination-point-augment" ;
+    skos:definition "Augmentation for a TE termination point." ;
+    skos:scopeNote "Grouping definition: te-termination-point-augment" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/ietf-te-topology/te-termination-point-augment> .
+
+lex:ietf-te-topology-te-termination-point-config
+    a lex:ReferenceEntry ;
+    skos:prefLabel "te-termination-point-config" ;
+    skos:definition "Grouping definition: te-termination-point-config" ;
+    skos:scopeNote "TE termination point configuration grouping." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/ietf-te-topology/te-termination-point-config> .
+
+lex:ietf-te-topology-te-topologies-augment
+    a lex:ReferenceEntry ;
+    skos:prefLabel "te-topologies-augment" ;
+    skos:definition "Augmentation for TE topologies." ;
+    skos:scopeNote "Grouping definition: te-topologies-augment" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/ietf-te-topology/te-topologies-augment> .
+
+lex:ietf-te-topology-te-topology-augment
+    a lex:ReferenceEntry ;
+    skos:prefLabel "te-topology-augment" ;
+    skos:definition "Augmentation for a TE topology." ;
+    skos:scopeNote "Grouping definition: te-topology-augment" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/ietf-te-topology/te-topology-augment> .
+
+lex:ietf-te-topology-te-topology-config
+    a lex:ReferenceEntry ;
+    skos:prefLabel "te-topology-config" ;
+    skos:definition "Grouping definition: te-topology-config" ;
+    skos:scopeNote "TE topology configuration grouping." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/ietf-te-topology/te-topology-config> .
+
+lex:ietf-te-topology-template-attributes
+    a lex:ReferenceEntry ;
+    skos:prefLabel "template-attributes" ;
+    skos:definition "Common attributes for all templates." ;
+    skos:scopeNote "Grouping definition: template-attributes" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/ietf-te-topology/template-attributes> .

@@ -11,6 +11,46 @@
 # definition and/or a placeholder canonical example -- see
 # docs/reference-lexicons.md recommendation #2 before relying on them.
 
+lex:ietf-network-state-bundled-link
+    a lex:ReferenceEntry ;
+    skos:prefLabel "bundled-link" ;
+    skos:definition "Augmentation for a TE bundled link." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:StructuralKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/ietf-network-state/networks/network/link/te/bundle-stack-level/bundle/bundled-links/bundled-link> .
+
+lex:ietf-network-state-connectivity-matrix
+    a lex:ReferenceEntry ;
+    skos:prefLabel "connectivity-matrix" ;
+    skos:definition "Augmentation for the TE node connectivity matrix." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:StructuralKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/ietf-network-state/networks/network/node/te/information-source-entry/connectivity-matrices/connectivity-matrix> .
+
+lex:ietf-network-state-connectivity-matrix-connectivity-matrices
+    a lex:ReferenceEntry ;
+    skos:prefLabel "connectivity-matrix" ;
+    skos:definition "Augmentation for the TE node connectivity matrix." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:StructuralKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/ietf-network-state/networks/network/node/te/te-node-attributes/connectivity-matrices/connectivity-matrix> .
+
+lex:ietf-network-state-from
+    a lex:ReferenceEntry ;
+    skos:prefLabel "from" ;
+    skos:definition "Reference to a source Link Termination Point (LTP)." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:StructuralKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/ietf-network-state/networks/network/node/te/information-source-entry/connectivity-matrices/connectivity-matrix/from> .
+
+lex:ietf-network-state-from-connectivity-matrix
+    a lex:ReferenceEntry ;
+    skos:prefLabel "from" ;
+    skos:definition "Reference to a source Link Termination Point (LTP)." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:StructuralKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/ietf-network-state/networks/network/node/te/te-node-attributes/connectivity-matrices/connectivity-matrix/from> .
+
 lex:ietf-network-state-inventory-mapping-attributes
     a lex:ReferenceEntry ;
     skos:prefLabel "inventory-mapping-attributes" ;
@@ -75,6 +115,46 @@ lex:ietf-network-state-l2-topology-attributes
     lex:entityClass lex:StructuralKind ;
     prov:wasDerivedFrom <http://example.org/ontology/ietf-network-state/networks/network/l2-topology-attributes> .
 
+lex:ietf-network-state-label-restrictions
+    a lex:ReferenceEntry ;
+    skos:prefLabel "label-restrictions" ;
+    skos:definition "The label restrictions container." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:StructuralKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/ietf-network-state/networks/network/node/te/information-source-entry/connectivity-matrices/connectivity-matrix/from/label-restrictions> .
+
+lex:ietf-network-state-label-restrictions-from
+    a lex:ReferenceEntry ;
+    skos:prefLabel "label-restrictions" ;
+    skos:definition "The label restrictions container." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:StructuralKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/ietf-network-state/networks/network/node/te/te-node-attributes/connectivity-matrices/connectivity-matrix/from/label-restrictions> .
+
+lex:ietf-network-state-label-restrictions-local-link-connectivity
+    a lex:ReferenceEntry ;
+    skos:prefLabel "label-restrictions" ;
+    skos:definition "The label restrictions container." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:StructuralKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/ietf-network-state/networks/network/node/te/tunnel-termination-point/local-link-connectivities/local-link-connectivity/label-restrictions> .
+
+lex:ietf-network-state-label-restrictions-to
+    a lex:ReferenceEntry ;
+    skos:prefLabel "label-restrictions" ;
+    skos:definition "The label restrictions container." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:StructuralKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/ietf-network-state/networks/network/node/te/information-source-entry/connectivity-matrices/connectivity-matrix/to/label-restrictions> .
+
+lex:ietf-network-state-label-restrictions-to
+    a lex:ReferenceEntry ;
+    skos:prefLabel "label-restrictions" ;
+    skos:definition "The label restrictions container." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:StructuralKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/ietf-network-state/networks/network/node/te/te-node-attributes/connectivity-matrices/connectivity-matrix/to/label-restrictions> .
+
 lex:ietf-network-state-link
     a lex:ReferenceEntry ;
     skos:prefLabel "link" ;
@@ -84,6 +164,22 @@ lex:ietf-network-state-link
     lex:canonicalExample "" ;
     lex:entityClass lex:StructuralKind ;
     prov:wasDerivedFrom <http://example.org/ontology/ietf-network-state/networks/network/link> .
+
+lex:ietf-network-state-local-link-connectivities
+    a lex:ReferenceEntry ;
+    skos:prefLabel "local-link-connectivities" ;
+    skos:definition "Augmentation for TE node TTP LLCs (Local Link\nConnectivities)." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:StructuralKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/ietf-network-state/networks/network/node/te/tunnel-termination-point/local-link-connectivities> .
+
+lex:ietf-network-state-local-link-connectivity
+    a lex:ReferenceEntry ;
+    skos:prefLabel "local-link-connectivity" ;
+    skos:definition "The termination capabilities between the TTP and the LTP.\nThis capability information can be used to compute\nthe tunnel path.\nThe Interface Adjustment Capability Descriptors (IACDs)\n(defined in RFC 6001) on each LTP can be derived from\nthis list." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:StructuralKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/ietf-network-state/networks/network/node/te/tunnel-termination-point/local-link-connectivities/local-link-connectivity> .
 
 lex:ietf-network-state-network
     a lex:ReferenceEntry ;
@@ -113,6 +209,78 @@ lex:ietf-network-state-node
     lex:entityClass lex:StructuralKind ;
     prov:wasDerivedFrom <http://example.org/ontology/ietf-network-state/networks/network/node> .
 
+lex:ietf-network-state-optimizations
+    a lex:ReferenceEntry ;
+    skos:prefLabel "optimizations" ;
+    skos:definition "The objective function container that includes\nattributes to impose when computing a TE path." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:StructuralKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/ietf-network-state/networks/network/node/te/information-source-entry/connectivity-matrices/connectivity-matrix/optimizations> .
+
+lex:ietf-network-state-optimizations-connectivity-matrix
+    a lex:ReferenceEntry ;
+    skos:prefLabel "optimizations" ;
+    skos:definition "The objective function container that includes\nattributes to impose when computing a TE path." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:StructuralKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/ietf-network-state/networks/network/node/te/te-node-attributes/connectivity-matrices/connectivity-matrix/optimizations> .
+
+lex:ietf-network-state-optimizations-local-link-connectivity
+    a lex:ReferenceEntry ;
+    skos:prefLabel "optimizations" ;
+    skos:definition "The objective function container that includes\nattributes to impose when computing a TE path." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:StructuralKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/ietf-network-state/networks/network/node/te/tunnel-termination-point/local-link-connectivities/local-link-connectivity/optimizations> .
+
+lex:ietf-network-state-path-constraints
+    a lex:ReferenceEntry ;
+    skos:prefLabel "path-constraints" ;
+    skos:definition "TE named path constraints container." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:StructuralKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/ietf-network-state/networks/network/node/te/information-source-entry/connectivity-matrices/connectivity-matrix/path-constraints> .
+
+lex:ietf-network-state-path-constraints-connectivity-matrix
+    a lex:ReferenceEntry ;
+    skos:prefLabel "path-constraints" ;
+    skos:definition "TE named path constraints container." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:StructuralKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/ietf-network-state/networks/network/node/te/te-node-attributes/connectivity-matrices/connectivity-matrix/path-constraints> .
+
+lex:ietf-network-state-path-constraints-local-link-connectivity
+    a lex:ReferenceEntry ;
+    skos:prefLabel "path-constraints" ;
+    skos:definition "TE named path constraints container." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:StructuralKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/ietf-network-state/networks/network/node/te/tunnel-termination-point/local-link-connectivities/local-link-connectivity/path-constraints> .
+
+lex:ietf-network-state-path-properties
+    a lex:ReferenceEntry ;
+    skos:prefLabel "path-properties" ;
+    skos:definition "The TE path properties." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:StructuralKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/ietf-network-state/networks/network/node/te/information-source-entry/connectivity-matrices/connectivity-matrix/path-properties> .
+
+lex:ietf-network-state-path-properties-connectivity-matrix
+    a lex:ReferenceEntry ;
+    skos:prefLabel "path-properties" ;
+    skos:definition "The TE path properties." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:StructuralKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/ietf-network-state/networks/network/node/te/te-node-attributes/connectivity-matrices/connectivity-matrix/path-properties> .
+
+lex:ietf-network-state-path-properties-local-link-connectivity
+    a lex:ReferenceEntry ;
+    skos:prefLabel "path-properties" ;
+    skos:definition "The TE path properties." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:StructuralKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/ietf-network-state/networks/network/node/te/tunnel-termination-point/local-link-connectivities/local-link-connectivity/path-properties> .
+
 lex:ietf-network-state-termination-point
     a lex:ReferenceEntry ;
     skos:prefLabel "termination-point" ;
@@ -122,3 +290,43 @@ lex:ietf-network-state-termination-point
     lex:canonicalExample "" ;
     lex:entityClass lex:StructuralKind ;
     prov:wasDerivedFrom <http://example.org/ontology/ietf-network-state/networks/network/node/termination-point> .
+
+lex:ietf-network-state-to
+    a lex:ReferenceEntry ;
+    skos:prefLabel "to" ;
+    skos:definition "Reference to a destination LTP." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:StructuralKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/ietf-network-state/networks/network/node/te/information-source-entry/connectivity-matrices/connectivity-matrix/to> .
+
+lex:ietf-network-state-to-connectivity-matrix
+    a lex:ReferenceEntry ;
+    skos:prefLabel "to" ;
+    skos:definition "Reference to a destination LTP." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:StructuralKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/ietf-network-state/networks/network/node/te/te-node-attributes/connectivity-matrices/connectivity-matrix/to> .
+
+lex:ietf-network-state-underlay
+    a lex:ReferenceEntry ;
+    skos:prefLabel "underlay" ;
+    skos:definition "Attributes of the TE link underlay." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:StructuralKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/ietf-network-state/networks/network/node/te/information-source-entry/connectivity-matrices/connectivity-matrix/underlay> .
+
+lex:ietf-network-state-underlay-connectivity-matrix
+    a lex:ReferenceEntry ;
+    skos:prefLabel "underlay" ;
+    skos:definition "Attributes of the TE link underlay." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:StructuralKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/ietf-network-state/networks/network/node/te/te-node-attributes/connectivity-matrices/connectivity-matrix/underlay> .
+
+lex:ietf-network-state-underlay-local-link-connectivity
+    a lex:ReferenceEntry ;
+    skos:prefLabel "underlay" ;
+    skos:definition "Attributes of the TE link underlay." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:StructuralKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/ietf-network-state/networks/network/node/te/tunnel-termination-point/local-link-connectivities/local-link-connectivity/underlay> .

@@ -25,6 +25,24 @@ Multiple ontology `.ttl` files (e.g. one per source tree) can be passed to
 a single `draft_lexicon.py` invocation; entries are grouped by the module
 segment of each class's own URI, not by which file they came from.
 
+**Warning -- always pass every source tree together, every time.**
+`draft_lexicon.py` writes one file per module, unconditionally overwriting
+whatever's already at `lexicon/<module>.lexicon.ttl`. It does not merge with
+an existing file. Two different source trees can both contribute entries to
+the *same* module file (e.g. `ietf-network.lexicon.ttl` gets entries from
+plain RFC 8345 usage in `simap-yang`/`yang-ivy` **and** from RFC 8795's deep
+augmentation of `ietf-network`'s `node` in `ietf-teas-yang`) -- if you run
+the tool against only one source tree, its output for that shared module
+*replaces* the other tree's entries rather than adding to them. Hit this
+for real while drafting the `ietf-teas-yang` lexicon: running
+`draft_lexicon.py` against only the new TEAS ontology briefly clobbered
+`ietf-network.lexicon.ttl` and `ietf-network-topology.lexicon.ttl` down to
+just the TEAS-only view before it was caught via `git diff` and fixed by
+re-running against all source trees' ontology files together. Tracked as
+`lexicon-69m.11` for hardening `draft_lexicon.py` itself (merge-aware
+writes, or at least a warning) so this doesn't rely on remembering to
+check `git diff` every time.
+
 ## `lex:needsCuration true`
 
 An entry is flagged when its definition is empty (no YANG `description`
