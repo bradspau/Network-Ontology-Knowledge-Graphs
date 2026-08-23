@@ -1486,6 +1486,11 @@ SELECT $this WHERE {{
                     self._process_container(sub, child_path, target_uri, parent_prov)
                 elif keyword == 'choice':
                     self._process_choice(sub, target_path, target_uri, parent_prov)
+                elif keyword == 'description' and hasattr(sub, 'arg'):
+                    # The augment statement's own rationale, distinct from the target
+                    # class's base description; kept as an additional comment rather
+                    # than replacing it, since rdfs:comment is not functional.
+                    self.graph.add((target_uri, RDFS.comment, Literal(sub.arg)))
 
         # Stamp newly-created subjects with augmenting-module provenance
         aug_module_uri = self.ex[f"module/{self.current_module_name}"]
@@ -1503,6 +1508,10 @@ SELECT $this WHERE {{
         self.graph.add((uri, RDF.type, OWL.Class))
         self.graph.add((uri, RDFS.label, Literal(name)))
         self.rpc_classes[name] = uri
+        if hasattr(stmt, 'substmts'):
+            for sub in stmt.substmts:
+                if hasattr(sub, 'keyword') and sub.keyword == 'description' and hasattr(sub, 'arg'):
+                    self.graph.add((uri, RDFS.comment, Literal(sub.arg)))
 
     def _process_notification(self, stmt: Any) -> None:
         if not hasattr(stmt, 'arg'): return
@@ -1510,6 +1519,10 @@ SELECT $this WHERE {{
         uri = self.ex[f"notification/{self.current_module_name}/{name}"]
         self.graph.add((uri, RDF.type, OWL.Class))
         self.graph.add((uri, RDFS.label, Literal(name)))
+        if hasattr(stmt, 'substmts'):
+            for sub in stmt.substmts:
+                if hasattr(sub, 'keyword') and sub.keyword == 'description' and hasattr(sub, 'arg'):
+                    self.graph.add((uri, RDFS.comment, Literal(sub.arg)))
 
     def _process_uses_in_container(self, uses_stmt: Any, target_path: str, target_uri: URIRef) -> None:
         """
@@ -1691,7 +1704,12 @@ SELECT $this WHERE {{
                     shape_uri = self.ex[f"typedef/{self.current_module_name}/{typedef_name}"]
                     self.shacl_graph.add((shape_uri, RDF.type, SH.NodeShape))
                     self.shacl_graph.add((shape_uri, RDFS.label, Literal(typedef_name)))
-                    
+
+                    if hasattr(stmt, 'substmts'):
+                        for sub in stmt.substmts:
+                            if hasattr(sub, 'keyword') and sub.keyword == 'description' and hasattr(sub, 'arg'):
+                                self.shacl_graph.add((shape_uri, RDFS.comment, Literal(sub.arg)))
+
                     base_type = XSD.string
                     if hasattr(stmt, 'substmts'):
                         for sub in stmt.substmts:
@@ -1729,18 +1747,25 @@ SELECT $this WHERE {{
                 if not hasattr(stmt, 'keyword'): continue
                 if stmt.keyword == 'typedef' and hasattr(stmt, 'arg'):
                     typedef_name = stmt.arg
+                    typedef_description = None
+                    if hasattr(stmt, 'substmts'):
+                        for sub in stmt.substmts:
+                            if hasattr(sub, 'keyword') and sub.keyword == 'description' and hasattr(sub, 'arg'):
+                                typedef_description = sub.arg
                     if hasattr(stmt, 'substmts'):
                         for sub in stmt.substmts:
                             if hasattr(sub, 'keyword') and sub.keyword == 'type':
                                 if self._is_enumeration_type(sub):
-                                    self._create_enumeration_class(typedef_name, sub, self.current_module_name)
+                                    self._create_enumeration_class(typedef_name, sub, self.current_module_name, typedef_description)
                                 break
 
-    def _create_enumeration_class(self, enum_type_name: str, type_stmt: Any, module_name: str) -> int:
+    def _create_enumeration_class(self, enum_type_name: str, type_stmt: Any, module_name: str, description: Optional[str] = None) -> int:
         enum_count = 0
         enum_type_uri = self.ex[f"types/{module_name}/{enum_type_name}"]
         self.graph.add((enum_type_uri, RDF.type, OWL.Class))
         self.graph.add((enum_type_uri, RDFS.label, Literal(enum_type_name)))
+        if description:
+            self.graph.add((enum_type_uri, RDFS.comment, Literal(description)))
 
         if hasattr(type_stmt, 'substmts'):
             for enum_sub in type_stmt.substmts:
