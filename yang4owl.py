@@ -53,6 +53,7 @@ Date: 2026-06-14
 from os import name
 import sys
 import argparse
+import json
 from pathlib import Path
 from typing import Dict, List, Optional, Any, Set, Tuple
 import logging
@@ -485,10 +486,13 @@ class GroupingContextTracker:
         return any(name == grouping_name for name, _ in self.uses_stack)
 
 class YANGToOWL:
-    def __init__(self, yang_dir: str, base_uri: str = "http://example.org/ontology/", raw_mode: bool = False):
+    def __init__(self, yang_dir: str, base_uri: str = "http://example.org/ontology/", raw_mode: bool = False,
+                 gaps_report_path: Optional[str] = None):
         self.yang_dir = Path(yang_dir)
         self.base_uri = base_uri.rstrip('/')
         self.raw_mode = raw_mode
+        self.gaps_report_path = gaps_report_path
+        self.gaps: List[Dict[str, Any]] = []
         self.ex = Namespace(self.base_uri + '/')
         self.resolver = YANGDependencyResolver(self.yang_dir)
         self.type_resolver = YANGTypeResolver()
@@ -864,7 +868,10 @@ class YANGToOWL:
         log.info(f"✓ Leafref resolved: {self.leafref_resolved_count}")
         log.info(f"✓ Leafref unresolved: {self.leafref_unresolved_count}")
         log.info(f"✓ Identityref resolved as ObjectProperties: {self.identityref_resolved_count}")
+        log.info(f"✓ Unresolved gaps recorded: {len(self.gaps)}")
         log.info("=" * 59 + "\n")
+
+        self._write_gaps_report()
 
     def _register_module_namespaces(self) -> None:
         for module_name, module in self.resolver.modules.items():
@@ -1825,7 +1832,24 @@ SELECT $this WHERE {{
                 self.leafref_resolved_count += 1
             else:
                 self.leafref_unresolved_count += 1
-    
+                self.gaps.append({
+                    "type": "unresolved-leafref",
+                    "property": str(uri),
+                    "name": name,
+                    "source_path": full_prov or context_path,
+                    "target_xpath": self.leafref_resolver.extract_xpath_path(leafref_type),
+                    "reason": "leafref path could not be resolved to a known class (absolute, relative, or current() form all failed)",
+                })
+
+    def _write_gaps_report(self) -> None:
+        if not self.gaps_report_path:
+            return
+        gaps_path = Path(self.gaps_report_path)
+        gaps_path.parent.mkdir(parents=True, exist_ok=True)
+        with open(gaps_path, 'w') as f:
+            json.dump({"gaps": self.gaps, "count": len(self.gaps)}, f, indent=2)
+        log.info(f"[Output] Saving unresolved-gap report to {gaps_path} ({len(self.gaps)} gap(s))...")
+
     def _bind_ontology_prefixes(self) -> None:
         """Bind a curated, human-readable set of prefixes derived from the
         logical structure of the ontology URI space. Groups related sub-paths
@@ -2468,6 +2492,8 @@ def main():
     parser.add_argument('--raw',          action='store_true', dest='raw_mode', help='Skip custom TBox semantic overlays for a raw YANG-to-OWL conversion')
     parser.add_argument('--html',         dest='html_output', default=None,
                         help='Optional: output path for HTML parse-tree visualisation')
+    parser.add_argument('--gaps-report',  dest='gaps_report_path', default=None, metavar='GAPS.json',
+                        help='Optional: write unresolved-gap report (currently: unresolved leafrefs) to this JSON path')
 
     # ── ABox RDF-star enrichment (standalone pass) ────────────────────────────
     abox_grp = parser.add_argument_group(
@@ -2520,7 +2546,7 @@ def main():
     log.info(f" Raw Mode       : {args.raw_mode}")
     log.info("")
 
-    converter = YANGToOWL(yang_dir, args.base_uri)
+    converter = YANGToOWL(yang_dir, args.base_uri, raw_mode=args.raw_mode, gaps_report_path=args.gaps_report_path)
     converter.convert(args.modules, output_file)
 
     if args.html_output:
