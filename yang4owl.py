@@ -622,6 +622,11 @@ class YANGToOWL:
         # overlay processing (legacy patch or Overlay Rule Engine) has had
         # a chance to add ObjectProperty treatment.
         self.reference_candidate_leafs: List[Tuple[URIRef, str, str]] = []
+        # (leaf property shape URI, "module:typedef_name" key) pairs recorded
+        # during leaf processing (step 5), resolved against
+        # self.typedef_restrictions once it's fully populated (step 10) --
+        # see _link_leaf_shapes_to_typedef_shapes.
+        self.pending_typedef_shape_links: List[Tuple[URIRef, str]] = []
         self.ex = Namespace(self.base_uri + '/')
         self.resolver = YANGDependencyResolver(self.yang_dir)
         self.type_resolver = YANGTypeResolver()
@@ -833,6 +838,7 @@ class YANGToOWL:
 
         log.info("[Step 10] Creating SHACL Shapes for Typedefs...")
         self._create_shacl_typedef_shapes()
+        self._link_leaf_shapes_to_typedef_shapes()
 
         log.info("[Step 11] Processing Enumeration Types...")
         self._process_enumerations()
@@ -1539,7 +1545,14 @@ SELECT $this WHERE {{
             shape_uri = self.ex[f"shapes/{name}"]
             self.shacl_graph.add((shape_uri, RDF.type, SH.PropertyShape))
             self.shacl_graph.add((shape_uri, SH.path, uri))
-            
+
+            if typedef_stmt is not None:
+                # Resolved through a named typedef -- link to that typedef's
+                # own shape once _create_shacl_typedef_shapes has run (step
+                # 10, after all leafs are processed), so the shared shape
+                # isn't an orphan only the summary count refers to.
+                self.pending_typedef_shape_links.append((shape_uri, typedef_key))
+
             # SAFE Datatype, Class Range, or UNION mapped to SHACL
             if isinstance(range_uri, tuple) and range_uri[0] == 'union':
                 self._add_shacl_or_list(shape_uri, range_uri[1])
@@ -1903,7 +1916,31 @@ SELECT $this WHERE {{
                                 r = constraints['range']
                                 if 'min' in r: self.shacl_graph.add((shape_uri, SH.minInclusive, Literal(r['min'])))
                                 if 'max' in r: self.shacl_graph.add((shape_uri, SH.maxInclusive, Literal(r['max'])))
-                    self.typedef_restrictions[typedef_name] = shape_uri
+                    # Keyed as "module:typedef_name" (matching the typedef_key
+                    # convention used when leafs resolve a named typedef, e.g.
+                    # in _process_leaf) rather than bare typedef_name, since
+                    # two different modules can each define a typedef with the
+                    # same local name -- a bare-name key would let one shadow
+                    # the other in this dict, silently mis-linking sh:node
+                    # references from leafs in a different module.
+                    self.typedef_restrictions[f"{self.current_module_name}:{typedef_name}"] = shape_uri
+
+    def _link_leaf_shapes_to_typedef_shapes(self) -> None:
+        """Adds sh:node from each leaf's own property shape to the shared
+        named-typedef shape it resolves to, so typedef-level shapes
+        (previously populated into self.typedef_restrictions but never read
+        back) are actually referenced from the leafs using that type,
+        instead of being a standalone artifact only the summary count
+        refers to. Existing inline constraints on the leaf's own shape are
+        left in place -- this is additive, not a replacement, so it can't
+        change what earlier validation already accepted or rejected."""
+        linked = 0
+        for shape_uri, typedef_key in self.pending_typedef_shape_links:
+            typedef_shape_uri = self.typedef_restrictions.get(typedef_key)
+            if typedef_shape_uri is not None:
+                self.shacl_graph.add((shape_uri, SH.node, typedef_shape_uri))
+                linked += 1
+        log.info(f"  ✓ Linked {linked} leaf property shape(s) to shared typedef shapes via sh:node")
 
     def _process_enumerations(self) -> None:
         for module_name, module in self.resolver.modules.items():
