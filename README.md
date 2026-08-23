@@ -331,6 +331,24 @@ python3 yang4owl.py --yang-dir ./yang_models --modules ietf-ni-location.yang \
     --base-uri http://www.huawei.com/ontology --output ietf-model-python2.ttl --raw
 ```
 
+To use the declarative, rule-file-driven overlay engine instead of the hardcoded
+semantic-overlay code path (mutually exclusive with `--raw`; omitting both flags keeps
+the existing hardcoded overlay as the default):
+
+```bash
+python3 yang4owl.py --yang-dir ./yang_models --modules ietf-ni-location.yang \
+    --base-uri http://www.huawei.com/ontology --output ietf-model-python2.ttl \
+    --lexicon-overlay --overlay-rules overlay/relations.yaml
+```
+
+Rules are read from `overlay/relations.yaml` (or the path given via `--overlay-rules`).
+See that file for the rule schema (`declare-property`, `pun-property`,
+`annotate-individuals`) and comments on what each rule replicates. `lexicon/` contains
+draft reference-lexicon entries (see `lexicon/README.md`) that this engine is intended
+to eventually consult by reference identity rather than hardcoded YANG paths; the
+initial rule set instead ports the existing hardcoded overlay verbatim, as a
+correctness baseline.
+
 ---
 
 ## The Traversal Problem: Direct YANG→OWL vs YANG
@@ -684,6 +702,8 @@ owl4yang/
 python3 -m venv .venv
 source .venv/bin/activate
 pip install pyang rdflib
+# pyyaml is only needed if you use --lexicon-overlay (see below):
+pip install pyyaml
 ```
 
 ### 1. Generate the TBox

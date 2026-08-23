@@ -485,14 +485,136 @@ class GroupingContextTracker:
     def is_circular_reference(self, grouping_name: str) -> bool:
         return any(name == grouping_name for name, _ in self.uses_stack)
 
+
+class OverlayRuleEngine:
+    """Applies a declarative overlay rule set (overlay/relations.yaml) to
+    the TBox graph, as a generic, data-driven alternative to the hardcoded
+    custom TBox patch. Selected via --lexicon-overlay; the legacy patch is
+    left completely untouched and remains the default whenever neither
+    --raw nor --lexicon-overlay is passed.
+
+    Supported rule actions:
+      declare-property     -- declare a new property (type, label,
+                               comment, range, symmetric, inverse_of).
+      pun-property         -- add an additional rdf:type to an existing
+                               property from the base lift, plus optional
+                               range/domain (domain_override wipes any
+                               domain the base lift inferred first).
+      annotate-individuals -- attach a literal value to each of a set of
+                               named individuals under an identity base,
+                               from a name->value lookup table.
+
+    Chain-walking / traversal materialization over instance data is
+    deliberately out of scope here -- that remains ABoxConnectivityEnricher's
+    job. This engine only declares TBox-level properties.
+    """
+
+    PROPERTY_TYPES = {
+        "ObjectProperty": OWL.ObjectProperty,
+        "DatatypeProperty": OWL.DatatypeProperty,
+    }
+
+    def __init__(self, graph: Graph, base_uri: str, ex_namespace: Namespace, rules_path: str):
+        self.graph = graph
+        self.base_uri = base_uri.rstrip("/")
+        self.ex = ex_namespace
+        self.rules_path = rules_path
+
+    def _resolve_ref(self, ref: str) -> URIRef:
+        ref = ref.replace("{base}", self.base_uri)
+        if ref.startswith("ex:"):
+            return self.ex[ref[3:]]
+        return URIRef(ref)
+
+    def _resolve_type(self, name: str) -> URIRef:
+        if name not in self.PROPERTY_TYPES:
+            raise ValueError(f"Unknown property_type/add_type '{name}' in overlay rule")
+        return self.PROPERTY_TYPES[name]
+
+    def apply(self) -> int:
+        rules_file = Path(self.rules_path)
+        if not rules_file.exists():
+            log.warning(f"  Overlay rules file not found: {self.rules_path} -- no overlay rules applied.")
+            return 0
+
+        import yaml
+        with open(rules_file) as f:
+            spec = yaml.safe_load(f) or {}
+        rules = spec.get("rules", [])
+
+        applied = 0
+        for rule in rules:
+            action = rule.get("action")
+            handler = {
+                "declare-property": self._apply_declare_property,
+                "pun-property": self._apply_pun_property,
+                "annotate-individuals": self._apply_annotate_individuals,
+            }.get(action)
+            if handler is None:
+                log.warning(f"  Unknown overlay rule action '{action}' (rule id: {rule.get('id')}) -- skipped.")
+                continue
+            handler(rule)
+            applied += 1
+        log.info(f"  Applied {applied} overlay rule(s) from {self.rules_path}")
+        return applied
+
+    def _apply_declare_property(self, rule: Dict[str, Any]) -> None:
+        prop = self._resolve_ref(rule["property"])
+        ptype = self._resolve_type(rule["property_type"])
+        self.graph.add((prop, RDF.type, ptype))
+        # string_typed replicates the legacy patch's (inconsistent) explicit
+        # datatype=XSD.string on exactly one property's label/comment -- kept
+        # rule-driven rather than "fixed" so the ported rule set is a faithful
+        # match, not a silent behavior change.
+        literal = (lambda v: Literal(v, datatype=XSD.string)) if rule.get("string_typed") else Literal
+        if "label" in rule:
+            self.graph.add((prop, RDFS.label, literal(rule["label"])))
+        if "comment" in rule:
+            self.graph.add((prop, RDFS.comment, literal(rule["comment"])))
+        if rule.get("symmetric"):
+            self.graph.add((prop, RDF.type, OWL.SymmetricProperty))
+        if "range" in rule:
+            self.graph.add((prop, RDFS.range, self._resolve_ref(rule["range"])))
+        if "inverse_of" in rule:
+            self.graph.add((prop, OWL.inverseOf, self._resolve_ref(rule["inverse_of"])))
+
+    def _apply_pun_property(self, rule: Dict[str, Any]) -> None:
+        prop = self._resolve_ref(rule["property"])
+        add_type = self._resolve_type(rule["add_type"])
+        self.graph.add((prop, RDF.type, add_type))
+        if "label" in rule:
+            self.graph.add((prop, RDFS.label, Literal(rule["label"])))
+        if "comment" in rule:
+            self.graph.add((prop, RDFS.comment, Literal(rule["comment"])))
+        if "range" in rule:
+            self.graph.add((prop, RDFS.range, self._resolve_ref(rule["range"])))
+        if rule.get("domain_override"):
+            self.graph.remove((prop, RDFS.domain, None))
+        for dom in rule.get("domain", []):
+            self.graph.add((prop, RDFS.domain, self._resolve_ref(dom)))
+
+    def _apply_annotate_individuals(self, rule: Dict[str, Any]) -> None:
+        base_ns = Namespace(self._resolve_ref(rule["identity_base"]))
+        prop = self._resolve_ref(rule["property"])
+        count = 0
+        for name, value in rule.get("values", {}).items():
+            uri = base_ns[name]
+            self.graph.add((uri, prop, Literal(value, datatype=XSD.integer)))
+            count += 1
+        log.info(f"  ✓ Annotated {count} individual(s) via rule '{rule.get('id')}'")
+
+
 class YANGToOWL:
     def __init__(self, yang_dir: str, base_uri: str = "http://example.org/ontology/", raw_mode: bool = False,
-                 gaps_report_path: Optional[str] = None):
+                 gaps_report_path: Optional[str] = None, lexicon_overlay_mode: bool = False,
+                 overlay_rules_path: str = "overlay/relations.yaml"):
         self.yang_dir = Path(yang_dir)
         self.base_uri = base_uri.rstrip('/')
         self.raw_mode = raw_mode
         self.gaps_report_path = gaps_report_path
         self.gaps: List[Dict[str, Any]] = []
+        self.lexicon_overlay_mode = lexicon_overlay_mode
+        self.overlay_rules_path = overlay_rules_path
         self.ex = Namespace(self.base_uri + '/')
         self.resolver = YANGDependencyResolver(self.yang_dir)
         self.type_resolver = YANGTypeResolver()
@@ -714,9 +836,12 @@ class YANGToOWL:
         # ==========================================
         # --- START OF CUSTOM TBOX PATCH --- for leafref that are strings but we want to link to deicces
         # ==========================================
-        if not self.raw_mode:
+        if self.lexicon_overlay_mode:
+            log.info("[Step 13] Applying lexicon-driven Overlay Rule Engine...")
+            OverlayRuleEngine(self.graph, self.base_uri, self.ex, self.overlay_rules_path).apply()
+        elif not self.raw_mode:
             log.info("[Step 13] Applying custom TBox extensions for direct URIs...")
-            
+
             # --- NEW ADDITION: Logical Connection Property ---
             logically_connected = self.ex.logicallyConnectedTo
             self.graph.add((logically_connected, RDF.type, OWL.ObjectProperty))
@@ -2489,7 +2614,15 @@ def main():
     parser.add_argument('--modules',      default='simap-yang.yang', help='Main YANG module to process')
     parser.add_argument('--base-uri',     default='http://www.huawei.com/ontology', help='Base URI for ontology')
     parser.add_argument('--verbose',      action='store_true', help='Enable verbose debug logging')
-    parser.add_argument('--raw',          action='store_true', dest='raw_mode', help='Skip custom TBox semantic overlays for a raw YANG-to-OWL conversion')
+    overlay_grp = parser.add_mutually_exclusive_group()
+    overlay_grp.add_argument('--raw',             action='store_true', dest='raw_mode',
+                        help='Skip all TBox semantic overlays for a raw YANG-to-OWL conversion')
+    overlay_grp.add_argument('--lexicon-overlay', action='store_true', dest='lexicon_overlay_mode',
+                        help='Use the declarative, lexicon-driven Overlay Rule Engine (overlay/relations.yaml) '
+                             'instead of the legacy hardcoded custom TBox patch. Mutually exclusive with --raw. '
+                             'Omitting both flags keeps existing behavior (the legacy patch runs unchanged).')
+    parser.add_argument('--overlay-rules', dest='overlay_rules_path', default='overlay/relations.yaml', metavar='RULES.yaml',
+                        help='Path to the overlay rule set used with --lexicon-overlay (default: overlay/relations.yaml)')
     parser.add_argument('--html',         dest='html_output', default=None,
                         help='Optional: output path for HTML parse-tree visualisation')
     parser.add_argument('--gaps-report',  dest='gaps_report_path', default=None, metavar='GAPS.json',
@@ -2544,9 +2677,11 @@ def main():
     log.info(f" Main module    : {args.modules}")
     log.info(f" Base URI       : {args.base_uri}")
     log.info(f" Raw Mode       : {args.raw_mode}")
+    log.info(f" Lexicon Overlay: {args.lexicon_overlay_mode}")
     log.info("")
 
-    converter = YANGToOWL(yang_dir, args.base_uri, raw_mode=args.raw_mode, gaps_report_path=args.gaps_report_path)
+    converter = YANGToOWL(yang_dir, args.base_uri, raw_mode=args.raw_mode, gaps_report_path=args.gaps_report_path,
+                          lexicon_overlay_mode=args.lexicon_overlay_mode, overlay_rules_path=args.overlay_rules_path)
     converter.convert(args.modules, output_file)
 
     if args.html_output:

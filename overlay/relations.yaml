@@ -1,0 +1,151 @@
+# Declarative overlay rule set for the Overlay Rule Engine (--lexicon-overlay).
+#
+# This is a faithful re-expression of the legacy hardcoded "custom TBox
+# patch" (yang4owl.py, the block between "START OF CUSTOM TBOX PATCH" and
+# "END OF CUSTOM TBOX PATCH", applied when neither --raw nor
+# --lexicon-overlay is passed). It exists to prove the Overlay Rule Engine
+# can reproduce the legacy patch's output before any *new* rules are added
+# for other YANG modules -- see docs/lexicon-overlay-design.md section 5
+# (phase 2) in the companion lexicon-design project.
+#
+# {base} is substituted with the run's --base-uri. "ex:foo" resolves to
+# {base}/foo, matching yang4owl.py's own self.ex namespace.
+#
+# Rule actions:
+#   declare-property     -- declare a new property outright (type, label,
+#                            comment, range, symmetric, inverse_of).
+#   pun-property         -- add an additional rdf:type to an EXISTING
+#                            property emitted by the base lift (so it's
+#                            simultaneously e.g. a DatatypeProperty from a
+#                            plain YANG leaf AND an ObjectProperty pointing
+#                            at a resolved target), plus optional
+#                            range/domain. domain_override wipes any
+#                            domain triples the base lift inferred before
+#                            adding the new ones.
+#   annotate-individuals -- attach a literal value to each of a set of
+#                            named individuals under an identity base,
+#                            from a name->value lookup table.
+#
+# Chain-walking / traversal materialization (e.g. resolving an actual
+# upstream-device path through cable/port instances) is deliberately NOT
+# a TBox-time concern and does not belong here -- that happens over ABox
+# (instance) data in ABoxConnectivityEnricher, a separate mechanism. This
+# rule set only declares the TBox-level properties those shortcuts use.
+
+rules:
+  - id: logically-connected-to
+    action: declare-property
+    property: "ex:logicallyConnectedTo"
+    property_type: ObjectProperty
+    symmetric: true
+    # The legacy patch explicitly datatypes this property's label/comment as
+    # xsd:string (unlike every other property it declares) -- replicated
+    # here verbatim for output equivalence, not because it's meaningful.
+    string_typed: true
+    label: "logically connected to"
+    comment: >-
+      A direct logical relationship between an edge active element (e.g.,
+      ONT) and a core active element (e.g., OLT), bypassing physical
+      cabling.
+
+  - id: rank
+    action: declare-property
+    property: "ex:rank"
+    property_type: DatatypeProperty
+    range: "http://www.w3.org/2001/XMLSchema#integer"
+    label: "rank"
+
+  - id: device-ref-punning
+    action: pun-property
+    property: "ex:device-ref"
+    add_type: ObjectProperty
+    label: "device-ref"
+    comment: "Reference to a passive device (e.g. ATB or Enclosure)."
+    range: "{base}/ietf-network-inventory/network-inventory/passive-device"
+    domain:
+      - "{base}/ietf-network-inventory/network-inventory/cable/a-end"
+      - "{base}/ietf-network-inventory/network-inventory/cable/z-end"
+      - "{base}/ietf-network-inventory/network-inventory/cable/child-cable/a-end"
+      - "{base}/ietf-network-inventory/network-inventory/cable/child-cable/z-end"
+
+  - id: ne-ref-punning
+    action: pun-property
+    property: "ex:ne-ref"
+    add_type: ObjectProperty
+    label: "ne-ref"
+    range: "{base}/ietf-network-inventory/network-inventory/network-elements/network-element"
+    domain:
+      - "{base}/ietf-network-inventory/network-inventory/cable/a-end"
+      - "{base}/ietf-network-inventory/network-inventory/cable/z-end"
+      - "{base}/ietf-network-inventory/network-inventory/cable/child-cable/a-end"
+      - "{base}/ietf-network-inventory/network-inventory/cable/child-cable/z-end"
+
+  - id: component-ref-punning
+    action: pun-property
+    property: "ex:component-ref"
+    add_type: ObjectProperty
+    label: "component-ref"
+    range: "{base}/ietf-network-inventory/network-inventory/network-elements/network-element/components/component"
+    domain_override: true
+    domain: []
+
+  - id: has-upstream-device
+    action: declare-property
+    property: "ex:hasUpstreamDevice"
+    property_type: ObjectProperty
+    label: "has upstream device"
+    comment: >-
+      Materialised shortcut: device at Z-end of a cable -> device at
+      A-end (upstream). Annotated via RDF-star with ex:viaCable and
+      ex:cableRole. Enables: ?device ex:hasUpstreamDevice+ ?odf .
+
+  - id: has-downstream-device
+    action: declare-property
+    property: "ex:hasDownstreamDevice"
+    property_type: ObjectProperty
+    label: "has downstream device"
+    comment: "Inverse of ex:hasUpstreamDevice."
+    inverse_of: "ex:hasUpstreamDevice"
+
+  - id: via-cable
+    action: declare-property
+    property: "ex:viaCable"
+    property_type: ObjectProperty
+    label: "via cable"
+    comment: >-
+      RDF-star annotation on ex:hasUpstreamDevice: the physical cable
+      realising this hop.
+
+  - id: cable-role
+    action: declare-property
+    property: "ex:cableRole"
+    property_type: ObjectProperty
+    label: "cable role"
+    comment: >-
+      RDF-star annotation on ex:hasUpstreamDevice: role/tier of the
+      cable. Priority ascending: internal=0, drop=1, access=2, branch=3,
+      aggregation=4, distribution=5, trunk=6.
+
+  - id: role-priority
+    action: declare-property
+    property: "ex:rolePriority"
+    property_type: DatatypeProperty
+    range: "http://www.w3.org/2001/XMLSchema#integer"
+    label: "role priority"
+    comment: >-
+      Numeric priority for cable role used in upstream-ascending
+      traversal filter. Matches CABLE_RANK_MAP: internal=0, drop=1,
+      access=2, branch=3, aggregation=4, distribution=5, trunk=6.
+
+  - id: cable-role-priority-annotations
+    action: annotate-individuals
+    identity_base: "{base}/identity/ietf-nwi-passive-inventory/"
+    property: "ex:rolePriority"
+    values:
+      internal-cable: 0
+      drop-cable: 1
+      access-cable: 2
+      branch-cable: 3
+      aggregation-cable: 4
+      distribution-cable: 5
+      trunk-cable: 6
