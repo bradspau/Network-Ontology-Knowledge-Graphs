@@ -1348,6 +1348,64 @@ SELECT $this WHERE {{
                 message=f"Duplicate key combination in list {name}"
             )
 
+    def _extract_union_members(self, union_type_stmt: Any) -> List[Tuple[str, URIRef]]:
+        """Walks a 'type union { ... }' statement's members, resolving each
+        to (kind, uri) where kind is 'class' (identityref base, or any
+        non-datatype/non-literal resolution), 'datatype' (XSD type), or
+        'literal' (rdfs:Literal fallback). Shared by leaf-level union
+        handling and typedef-level union shape generation so both produce
+        identical SHACL sh:or member shapes for the same union definition."""
+        union_members: List[Tuple[str, URIRef]] = []
+        if not hasattr(union_type_stmt, 'substmts'):
+            return union_members
+        for union_sub in union_type_stmt.substmts:
+            if not (hasattr(union_sub, 'keyword') and union_sub.keyword == 'type'):
+                continue
+            if union_sub.arg == 'identityref':
+                base_id = None
+                for sub in union_sub.substmts:
+                    if sub.keyword == 'base':
+                        base_id = sub.arg.split(':')[-1]
+                        break
+                if base_id:
+                    union_members.append(('class', self._get_identity_uri(union_sub, base_id)))
+            else:
+                member_uri = self.type_resolver.resolve_type(union_sub, self.current_module_name, self._get_target_module_from_prefix)
+                if "www.w3.org/2001/XMLSchema#" in str(member_uri):
+                    union_members.append(('datatype', member_uri))
+                elif member_uri == RDFS.Literal:
+                    union_members.append(('literal', member_uri))
+                else:
+                    union_members.append(('class', member_uri))
+        return union_members
+
+    def _add_shacl_or_list(self, shape_uri: URIRef, union_members: List[Tuple[str, URIRef]]) -> None:
+        """Adds an sh:or RDF-list of member shapes to shape_uri, one per
+        union member. Shared by leaf-level property shapes and typedef-level
+        node shapes for union types."""
+        if not union_members:
+            return
+        or_list_node = BNode()
+        self.shacl_graph.add((shape_uri, SH['or'], or_list_node))
+
+        current_node = or_list_node
+        for i, (m_type, m_uri) in enumerate(union_members):
+            member_shape = BNode()
+            if m_type == 'datatype':
+                self.shacl_graph.add((member_shape, SH.datatype, m_uri))
+            elif m_type == 'literal':
+                self.shacl_graph.add((member_shape, SH.nodeKind, SH.Literal))
+            else:
+                self.shacl_graph.add((member_shape, SH['class'], m_uri))
+                self.shacl_graph.add((member_shape, SH.nodeKind, SH.IRI))
+
+            self.shacl_graph.add((current_node, RDF.first, member_shape))
+            if i < len(union_members) - 1:
+                next_node = BNode()
+                self.shacl_graph.add((current_node, RDF.rest, next_node))
+                current_node = next_node
+            else:
+                self.shacl_graph.add((current_node, RDF.rest, RDF.nil))
 
     def _process_leaf(self, stmt: Any, path: str, parent_uri: Optional[URIRef] = None, parent_prov: str = "", is_leaf_list: bool = False) -> None:
         if not hasattr(stmt, 'arg'): return
@@ -1416,30 +1474,10 @@ SELECT $this WHERE {{
             range_uri = None 
 
         elif is_union:
-            # Stardog lacks support for union axioms. We bypass OWL ranges 
+            # Stardog lacks support for union axioms. We bypass OWL ranges
             # and rely entirely on SHACL sh:or lists for validation.
             self.graph.add((uri, RDF.type, OWL.DatatypeProperty))
-            
-            union_members = []
-            if hasattr(resolved_type_stmt, 'substmts'):
-                for union_sub in resolved_type_stmt.substmts:
-                    if hasattr(union_sub, 'keyword') and union_sub.keyword == 'type':
-                        if union_sub.arg == 'identityref':
-                            base_id = None
-                            for sub in union_sub.substmts:
-                                if sub.keyword == 'base':
-                                    base_id = sub.arg.split(':')[-1]
-                                    break
-                            if base_id:
-                                union_members.append(('class', self._get_identity_uri(union_sub, base_id)))
-                        else:
-                            member_uri = self.type_resolver.resolve_type(union_sub, self.current_module_name, self._get_target_module_from_prefix)
-                            if "www.w3.org/2001/XMLSchema#" in str(member_uri):
-                                union_members.append(('datatype', member_uri))
-                            elif member_uri == RDFS.Literal:
-                                union_members.append(('literal', member_uri))
-                            else:
-                                union_members.append(('class', member_uri))
+            union_members = self._extract_union_members(resolved_type_stmt)
             range_uri = ('union', union_members)
 
         elif hasattr(resolved_type_stmt, 'arg') and resolved_type_stmt.arg == 'instance-identifier':
@@ -1504,30 +1542,7 @@ SELECT $this WHERE {{
             
             # SAFE Datatype, Class Range, or UNION mapped to SHACL
             if isinstance(range_uri, tuple) and range_uri[0] == 'union':
-                union_members = range_uri[1]
-                if union_members:
-                    or_list_node = BNode()
-                    self.shacl_graph.add((shape_uri, SH['or'], or_list_node))
-                    
-                    # Convert to SHACL RDF List
-                    current_node = or_list_node
-                    for i, (m_type, m_uri) in enumerate(union_members):
-                        member_shape = BNode()
-                        if m_type == 'datatype':
-                            self.shacl_graph.add((member_shape, SH.datatype, m_uri))
-                        elif m_type == 'literal':
-                            self.shacl_graph.add((member_shape, SH.nodeKind, SH.Literal))
-                        else:
-                            self.shacl_graph.add((member_shape, SH['class'], m_uri))
-                            self.shacl_graph.add((member_shape, SH.nodeKind, SH.IRI))
-                        
-                        self.shacl_graph.add((current_node, RDF.first, member_shape))
-                        if i < len(union_members) - 1:
-                            next_node = BNode()
-                            self.shacl_graph.add((current_node, RDF.rest, next_node))
-                            current_node = next_node
-                        else:
-                            self.shacl_graph.add((current_node, RDF.rest, RDF.nil))
+                self._add_shacl_or_list(shape_uri, range_uri[1])
 
             elif range_uri:
                 if "http://www.w3.org/2001/XMLSchema#" in str(range_uri):
@@ -1831,18 +1846,17 @@ SELECT $this WHERE {{
                 if stmt.keyword == 'typedef' and hasattr(stmt, 'arg'):
                     typedef_name = stmt.arg
                     is_enum = False
-                    if hasattr(stmt, 'substmts'):
-                        for sub in stmt.substmts:
-                            if sub.keyword == 'type' and self._is_enumeration_type(sub):
-                                is_enum = True
-                    if is_enum: continue
-                    
                     is_union_typedef = False
+                    type_substmt = None
                     if hasattr(stmt, 'substmts'):
                         for sub in stmt.substmts:
-                            if sub.keyword == 'type' and hasattr(sub, 'arg') and sub.arg == 'union':
-                                is_union_typedef = True
-                    if is_union_typedef: continue
+                            if sub.keyword == 'type':
+                                type_substmt = sub
+                                if self._is_enumeration_type(sub):
+                                    is_enum = True
+                                elif hasattr(sub, 'arg') and sub.arg == 'union':
+                                    is_union_typedef = True
+                    if is_enum: continue  # handled separately by _create_enumeration_class
 
                     constraints = constraint_extractor.extract_constraints(stmt)
                     shape_uri = self.ex[f"typedef/{self.current_module_name}/{typedef_name}"]
@@ -1854,33 +1868,41 @@ SELECT $this WHERE {{
                             if hasattr(sub, 'keyword') and sub.keyword == 'description' and hasattr(sub, 'arg'):
                                 self.shacl_graph.add((shape_uri, RDFS.comment, Literal(sub.arg)))
 
-                    base_type = XSD.string
-                    if hasattr(stmt, 'substmts'):
-                        for sub in stmt.substmts:
-                            if sub.keyword == 'type':
-                                base_type = self.type_resolver.resolve_type(sub, self.current_module_name, self._get_target_module_from_prefix)
-                    
-                    # SAFE SHACL DATATYPE BINDING
-                    if "http://www.w3.org/2001/XMLSchema#" in str(base_type):
-                        self.shacl_graph.add((shape_uri, SH.datatype, base_type))
-                    elif base_type == RDFS.Literal:
-                        self.shacl_graph.add((shape_uri, SH.nodeKind, SH.Literal))
+                    if is_union_typedef:
+                        # Named union typedefs previously got no shape at all here (skipped
+                        # outright) -- they still get one now, with the same sh:or member
+                        # list a leaf using this typedef directly would produce, so the
+                        # named type has a stable, describable identity of its own.
+                        union_members = self._extract_union_members(type_substmt)
+                        self._add_shacl_or_list(shape_uri, union_members)
                     else:
-                        self.shacl_graph.add((shape_uri, SH['class'], base_type))
-                        self.shacl_graph.add((shape_uri, SH.nodeKind, SH.IRI))
+                        base_type = XSD.string
+                        if hasattr(stmt, 'substmts'):
+                            for sub in stmt.substmts:
+                                if sub.keyword == 'type':
+                                    base_type = self.type_resolver.resolve_type(sub, self.current_module_name, self._get_target_module_from_prefix)
 
-                    if constraints:
-                        if 'patterns' in constraints:
-                            for pattern in constraints['patterns']:
-                                self.shacl_graph.add((shape_uri, SH.pattern, Literal(pattern)))
-                        if 'length' in constraints:
-                            l = constraints['length']
-                            if 'minLength' in l: self.shacl_graph.add((shape_uri, SH.minLength, Literal(l['minLength'])))
-                            if 'maxLength' in l: self.shacl_graph.add((shape_uri, SH.maxLength, Literal(l['maxLength'])))
-                        if 'range' in constraints:
-                            r = constraints['range']
-                            if 'min' in r: self.shacl_graph.add((shape_uri, SH.minInclusive, Literal(r['min'])))
-                            if 'max' in r: self.shacl_graph.add((shape_uri, SH.maxInclusive, Literal(r['max'])))
+                        # SAFE SHACL DATATYPE BINDING
+                        if "http://www.w3.org/2001/XMLSchema#" in str(base_type):
+                            self.shacl_graph.add((shape_uri, SH.datatype, base_type))
+                        elif base_type == RDFS.Literal:
+                            self.shacl_graph.add((shape_uri, SH.nodeKind, SH.Literal))
+                        else:
+                            self.shacl_graph.add((shape_uri, SH['class'], base_type))
+                            self.shacl_graph.add((shape_uri, SH.nodeKind, SH.IRI))
+
+                        if constraints:
+                            if 'patterns' in constraints:
+                                for pattern in constraints['patterns']:
+                                    self.shacl_graph.add((shape_uri, SH.pattern, Literal(pattern)))
+                            if 'length' in constraints:
+                                l = constraints['length']
+                                if 'minLength' in l: self.shacl_graph.add((shape_uri, SH.minLength, Literal(l['minLength'])))
+                                if 'maxLength' in l: self.shacl_graph.add((shape_uri, SH.maxLength, Literal(l['maxLength'])))
+                            if 'range' in constraints:
+                                r = constraints['range']
+                                if 'min' in r: self.shacl_graph.add((shape_uri, SH.minInclusive, Literal(r['min'])))
+                                if 'max' in r: self.shacl_graph.add((shape_uri, SH.maxInclusive, Literal(r['max'])))
                     self.typedef_restrictions[typedef_name] = shape_uri
 
     def _process_enumerations(self) -> None:
