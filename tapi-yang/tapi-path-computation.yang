@@ -1,0 +1,827 @@
+module tapi-path-computation {
+    yang-version "1.1";
+    namespace "urn:onf:otcc:yang:tapi-path-computation";
+    prefix tapi-path-computation;
+    import tapi-topology {
+        prefix tapi-topology;
+    }
+    import tapi-common {
+        prefix tapi-common;
+    }
+    import tapi-notification {
+        prefix tapi-notification;
+    }
+    import tapi-streaming {
+        prefix tapi-streaming;
+    }
+    organization "Linux Foundation ONMI (Open Network Modeling and Interfaces) Project";
+    contact "
+         Project Web: <https://github.com/Open-Network-Models-and-Interfaces-ONMI/onmi-home/wiki>
+         Project List: <mailto:onmi-tapi@googlegroups.com>
+         Editor: Nigel Davis <mailto:ndavis@ciena.com>
+         Arturo Mayoral <mailto:amayoral@telecominfraproject.com>
+         Ramon Casellas <mailto:ramon.casellas@cttc.es>";
+    description "
+        This module contains TAPI Path Computation Model definitions.
+        Source: TapiPathComputation.uml
+        - The TAPI YANG models included in this TAPI release are a *normative* part of the TAPI SDK.
+        - The YANG specifications have been generated from the corresponding UML model using the [EAGLE UML2YANG mapping tool]
+        <https://github.com/Open-Network-Models-and-Interfaces-ONMI/onmi-iisomi-uml-yang>
+        and further edited manually to comply with the [ONMI IISOMI UML2YANG mapping guidelines]
+        <https://github.com/Open-Network-Models-and-Interfaces-ONMI/onmi-iisomi-home>
+	with further details available at <https://github.com/Open-Network-Models-and-Interfaces-ONMI/TAPI-Documentation/tree/v2.6.0/ToolingGuidelines>
+        - Status of YANG model artifacts can be determined by referring to the corresponding UML artifacts.
+        As described in the UML models, some artifacts are considered *experimental*, and thus the corresponding YANG artifacts.
+        - The LF ONMI TAPI release process does not guarantee backward compatibility of YANG models across major versions of TAPI releases.
+        The YANG model backward compatibility criteria are outlined in section 11 of <https://tools.ietf.org/html/rfc7950>.
+        YANG models included in this release may not be backward compatible with some previous TAPI releases.
+        - Previous revisions can now be found at https://github.com/Open-Network-Models-and-Interfaces-ONMI/TAPI under the 
+        appropriate tag and, where relevant, fixes to those revisions can be found under the corresponding branches. The documentation for
+        each significant revision is found at https://github.com/Open-Network-Models-and-Interfaces-ONMI/TAPI-Documentation under the
+        appropriate tag and, where relevant, fixes to those revisions can be found under the corresponding branches.
+        License: This module is distributed under the Apache License 2.0.";
+    revision 2025-03-31 {
+        description "LF ONMI Transport API version 2.6.0.
+                   Changes included in this TAPI release (v2.6.0) are listed in
+                   <https://github.com/Open-Network-Models-and-Interfaces-ONMI/TAPI-Documentation/tree/v2.6.0/DeltaDocument>";
+        reference "ONF-TR-527, ONF-TR-512, ONF-TR-531, RFC 7950, RFC 6087 and LF ONMI TAPI UML model
+                  <https://github.com/Open-Network-Models-and-Interfaces-ONMI/TAPI/tree/v2.6.0/UML>";
+    }
+    revision 2023-10-10 {
+        description "ONF Transport API version 2.5.0.
+                   Changes included in this TAPI release (v2.5.0) are listed in
+                   <https://github.com/Open-Network-Models-and-Interfaces-ONMI/TAPI-Documentation/tree/v2.5.0/DeltaDocument>";
+        reference "ONF-TR-527, ONF-TR-512, ONF-TR-531, RFC 7950, RFC 6087 and ONF TAPI UML model
+                  <https://github.com/Open-Network-Models-and-Interfaces-ONMI/TAPI/tree/v2.5.0/UML>";
+    }
+    revision 2023-03-21 {
+        description "ONF Transport API version 2.4.1.
+                   Changes included in this TAPI release (v2.4.1) are listed in
+                   <https://github.com/Open-Network-Models-and-Interfaces-ONMI/TAPI-Documentation/tree/v2.4.1/DeltaDocument>";
+        reference "ONF-TR-527, ONF-TR-512, ONF-TR-531, RFC 7950, RFC 6087 and ONF TAPI UML model
+                  <https://github.com/Open-Network-Models-and-Interfaces-ONMI/TAPI/tree/v2.4.1/UML>";
+    }
+    revision 2022-12-22 {
+        description "ONF Transport API version 2.4.0.
+                   Changes included in this TAPI release (v2.4.0) are listed in
+                   <https://github.com/Open-Network-Models-and-Interfaces-ONMI/TAPI-Documentation/tree/v2.4.0/DeltaDocument>";
+        reference "ONF-TR-527, ONF-TR-512, ONF-TR-531, RFC 7950, RFC 6087 and ONF TAPI UML model
+                  <https://github.com/Open-Network-Models-and-Interfaces-ONMI/TAPI/tree/v2.4.0/UML>";
+    }
+    revision 2020-04-23 {
+        description "ONF Transport API version 2.1.3";
+        reference "ONF-TR-527, ONF-TR-512, ONF-TR-531, RFC 7950, RFC 6087 and ONF TAPI UML model
+                  <https://github.com/Open-Network-Models-and-Interfaces-ONMI/TAPI/tree/v2.1.3/UML>";
+    }
+    augment "/tapi-common:context" {
+        container path-computation-context {
+            uses path-computation-context;
+            description "Augments the base TAPI Context with PathComputationContext model.";
+        }
+        description "Augments the base TAPI Context with PathComputationContext model.";
+    }
+    augment "/tapi-streaming:stream-record/tapi-streaming:log-record/tapi-streaming:log-record-body" {
+        when 'derived-from-or-self(tapi-streaming:record-content, "PATH_COMPUTATION_OBJECT_TYPE_PATH")';
+        container path {
+            uses path;
+            description "none";
+        }
+        description "none";
+    }
+    augment "/tapi-streaming:stream-record/tapi-streaming:log-record/tapi-streaming:log-record-body" {
+        when 'derived-from-or-self(tapi-streaming:record-content, "PATH_COMPUTATION_OBJECT_TYPE_PATH_COMPUTATION_SERVICE")';
+        container path-computation-service {
+            uses path-computation-service;
+            description "none";
+        }
+        description "none";
+    }
+    augment "/tapi-streaming:stream-record/tapi-streaming:log-record/tapi-streaming:log-record-body" {
+        when 'derived-from-or-self(tapi-streaming:record-content, "PATH_COMPUTATION_OBJECT_TYPE_PATH_COMP_PATH_SERVICE_END_POINT")';
+        container path-service-end-point {
+            uses path-service-end-point;
+            description "none";
+        }
+        description "none";
+    }
+    augment "/tapi-streaming:stream-record/tapi-streaming:log-record/tapi-streaming:log-record-body" {
+        when 'derived-from-or-self(tapi-streaming:record-content, "PATH_COMPUTATION_OBJECT_TYPE_PATH_OPTIMIZATION_CONSTRAINT")';
+        container path-optimization-constraint {
+            uses path-optimization-constraint;
+            description "none";
+        }
+        description "none";
+    }
+    augment "/tapi-streaming:stream-record/tapi-streaming:log-record/tapi-streaming:log-record-body" {
+        when 'derived-from-or-self(tapi-streaming:record-content, "PATH_COMPUTATION_OBJECT_TYPE_PATH_OBJECTIVE_FUNCTION")';
+        container path-objective-function {
+            uses path-objective-function;
+            description "none";
+        }
+        description "none";
+    }
+    augment "/tapi-common:context/tapi-notification:notification-context/tapi-notification:event-notification" {
+        when 'derived-from-or-self(tapi-notification:target-object-type, "PATH_COMPUTATION_OBJECT_TYPE_PATH_COMPUTATION_SERVICE")';
+        container path-computation-service {
+            uses path-computation-service;
+            description "none";
+        }
+        description "none";
+    }
+    augment "/tapi-common:context/tapi-notification:notification-context/tapi-notification:event-notification" {
+        when 'derived-from-or-self(tapi-notification:target-object-type, "PATH_COMPUTATION_OBJECT_TYPE_PATH_COMP_PATH_SERVICE_END_POINT")';
+        container path-service-end-point {
+            uses path-service-end-point;
+            description "none";
+        }
+        description "none";
+    }
+    augment "/tapi-common:context/tapi-notification:notification-context/tapi-notification:event-notification" {
+        when 'derived-from-or-self(tapi-notification:target-object-type, "PATH_COMPUTATION_OBJECT_TYPE_PATH")';
+        container path {
+            uses path;
+            description "none";
+        }
+        description "none";
+    }
+    augment "/tapi-common:context/tapi-notification:notification-context/tapi-notification:event-notification" {
+        when 'derived-from-or-self(tapi-notification:target-object-type, "PATH_COMPUTATION_OBJECT_TYPE_PATH_OPTIMIZATION_CONSTRAINT")';
+        container path-optimization-constraint {
+            uses path-optimization-constraint;
+            description "none";
+        }
+        description "none";
+    }
+    augment "/tapi-common:context/tapi-notification:notification-context/tapi-notification:event-notification" {
+        when 'derived-from-or-self(tapi-notification:target-object-type, "PATH_COMPUTATION_OBJECT_TYPE_PATH_OBJECTIVE_FUNCTION")';
+        container path-objective-function {
+            uses path-objective-function;
+            description "none";
+        }
+        description "none";
+    }
+    augment "/tapi-notification:event-notification" {
+        when 'derived-from-or-self(tapi-notification:target-object-type, "PATH_COMPUTATION_OBJECT_TYPE_PATH_COMPUTATION_SERVICE")';
+        container path-computation-service {
+            uses path-computation-service;
+            description "none";
+        }
+        description "none";
+    }
+    augment "/tapi-notification:event-notification" {
+        when 'derived-from-or-self(tapi-notification:target-object-type, "PATH_COMPUTATION_OBJECT_TYPE_PATH_COMP_PATH_SERVICE_END_POINT")';
+        container path-service-end-point {
+            uses path-service-end-point;
+            description "none";
+        }
+        description "none";
+    }
+    augment "/tapi-notification:event-notification" {
+        when 'derived-from-or-self(tapi-notification:target-object-type, "PATH_COMPUTATION_OBJECT_TYPE_PATH")';
+        container path {
+            uses path;
+            description "none";
+        }
+        description "none";
+    }
+    augment "/tapi-notification:event-notification" {
+        when 'derived-from-or-self(tapi-notification:target-object-type, "PATH_COMPUTATION_OBJECT_TYPE_PATH_OPTIMIZATION_CONSTRAINT")';
+        container path-optimization-constraint {
+            uses path-optimization-constraint;
+            description "none";
+        }
+        description "none";
+    }
+    augment "/tapi-notification:event-notification" {
+        when 'derived-from-or-self(tapi-notification:target-object-type, "PATH_COMPUTATION_OBJECT_TYPE_PATH_OBJECTIVE_FUNCTION")';
+        container path-objective-function {
+            uses path-objective-function;
+            description "none";
+        }
+        description "none";
+    }
+    /**************************
+    * definitions of references
+    **************************/
+    grouping path-ref {
+        leaf path-uuid {
+            type leafref {
+                path '/tapi-common:context/tapi-path-computation:path-computation-context/tapi-path-computation:path/tapi-path-computation:uuid';
+				require-instance false;
+            }
+            description "The require-instance statement is used as a workaround to enable write operation on a data node that refers to a read only list item.
+                Furthermore a referenced instance of a Path may be deleted by the TAPI Server, leaving a dangling reference. Implementations shall deal with this case.";
+        }
+        description "none";
+    }
+    grouping path-set-ref {
+        leaf path-set-uuid {
+            type leafref {
+                path '/tapi-common:context/tapi-path-computation:path-computation-context/tapi-path-computation:path-set/tapi-path-computation:uuid';
+				require-instance false;
+            }
+            description "The require-instance statement is used as a workaround to enable write operation on a data node that refers to a read only list item.";
+        }
+        description "none";
+    }
+    
+    /**************************
+    * package object-classes
+    **************************/ 
+    grouping path {
+        leaf layer-protocol-name {
+            type tapi-common:layer-protocol-name;
+            config false;
+            description "The layer protocol of the Path.";
+        }
+        leaf direction {
+            type tapi-common:forwarding-direction;
+            config false;
+            description "The forwarding direction of the Path.";
+        }
+        list link {
+            uses tapi-topology:link-ref;
+            key 'topology-uuid link-uuid';
+            config false;
+            min-elements 1;
+            description "The list of Link instances composing the Path instance.";
+        }
+        list node-edge-point {
+            uses tapi-topology:node-edge-point-ref;
+            key 'topology-uuid node-uuid node-edge-point-uuid';
+            config false;
+            description "none";
+        }
+        container routing-constraint {
+            config false;
+            uses routing-constraint;
+            description "The associated routing constraints.";
+        }
+        uses tapi-common:global-class;
+        description "The Path is described by an ordered list of (TE) Links. A (TE) Link is conceptually defined by a pair of Node/NodeEdgePoint IDs.
+            A Connection is realized by concatenating link resources (associated with a Link) and the lower-level Connections (e.g. cross-connections) in the different Nodes.";
+    }
+    grouping path-service-end-point {
+        leaf layer-protocol-name {
+            type tapi-common:layer-protocol-name;
+            description "The layer protocol of the PathServiceEndPoint (PSEP).";
+        }
+        leaf layer-protocol-qualifier {
+            type tapi-common:layer-protocol-qualifier;
+            description "The layer protocol qualifier of the PathServiceEndPoint (PSEP).";
+        }
+        container capacity {
+            uses tapi-common:capacity;
+            description "The PathServiceEndPoint (PSEP) capacity.";
+        }
+        leaf role {
+            type tapi-common:port-role;
+            description "The role of the (conceptual) port of the associated PathComputationService.";
+        }
+        leaf direction {
+            type tapi-common:direction;
+            description "The direction of the end point.";
+        }
+        container service-interface-point {
+            uses tapi-common:service-interface-point-ref;
+            description "The supporting ServiceInterfacePoint (SIP) instance.";
+        }
+        container node-edge-point {
+            uses tapi-topology:node-edge-point-ref;
+            description "none";
+        }
+        uses tapi-common:local-class;
+        description "The PathServiceEndPoint (PSEP) encapsulates information related to a PathComputationService at the ingress/egress points of that PathComputationService.";
+    }
+    grouping path-computation-service {
+        leaf layer-protocol-name {
+            type tapi-common:layer-protocol-name;
+            description "The layer protocol of the PathComputationService.";
+        }
+        leaf direction {
+            type tapi-common:forwarding-direction;
+            description "The forwarding direction of the PathComputationService.";
+        }
+        list path {
+            uses path-ref;
+            key 'path-uuid';
+            config false;
+            min-elements 1;
+            description "The Path instance(s) tracking the state of the identified resources for the support of the PathComputationService.";
+        }
+        list end-point {
+            key 'local-id';
+            min-elements 2;
+            max-elements 2;
+            uses path-service-end-point;
+            description "The PathServiceEndPoint (PSEP) instances of the PathComputationService.";
+        }
+        container routing-constraint {
+            uses routing-constraint;
+            description "The associated routing constraints.";
+        }
+        list topology-constraint {
+            key 'local-id';
+            uses topology-constraint;
+            description "The associated topology constraints. Different instances of TopologyConstraints may be used to specify constraints at different layer networks.";
+        }
+        container objective-function {
+            uses path-objective-function;
+            description "The associated objective functions.";
+        }
+        container optimization-constraint {
+            uses path-optimization-constraint;
+            description "The associated optimization constraints.";
+        }
+        list path-set {
+            uses path-set-ref;
+            key 'path-set-uuid';
+            description "none";
+        }
+        container path-set-constraint {
+            uses path-set-constraint;
+            description "none";
+        }
+        container adopt-orphan-path {
+            uses adopt-orphan-path;
+            description "none";
+        }
+        uses tapi-common:global-class;
+        description "A PathComputationService represents an 'intent-like' request for connectivity between two or more PathServiceEndPoint (PSEP) instances. The PathComputationService is a container for connectivity request details and is distinct from the Path(s) that realize the request.";
+    }
+    grouping path-objective-function {
+        leaf bandwidth-optimization {
+            type tapi-common:directive-value;
+            config false;
+            description "The directive types regarding bandwidth optimization.";
+        }
+        leaf concurrent-paths {
+            type tapi-common:directive-value;
+            config false;
+            description "The directive types regarding concurrent paths.";
+        }
+        leaf cost-optimization {
+            type tapi-common:directive-value;
+            config false;
+            description "The directive types regarding cost optimization.";
+        }
+        leaf link-utilization {
+            type tapi-common:directive-value;
+            config false;
+            description "The directive types regarding link utilization.";
+        }
+        leaf resource-sharing {
+            type tapi-common:directive-value;
+            config false;
+            description "The directive types regarding resource sharing.";
+        }
+        uses tapi-common:local-class;
+        description "The parameters defining the objective functions.";
+    }
+    grouping path-optimization-constraint {
+        leaf traffic-interruption {
+            type tapi-common:directive-value;
+            config false;
+            description "The directive types regarding traffic interruption.";
+        }
+        uses tapi-common:local-class;
+        description "The parameters defining the optimization constraints.";
+    }
+    grouping routing-constraint {
+        list cost-characteristic {
+            key 'cost-name';
+            uses tapi-topology:cost-characteristic;
+            description "The list of costs where each cost relates to some aspect of a topological entity.";
+        }
+        list latency-characteristic {
+            key 'traffic-property-name';
+            uses tapi-topology:latency-characteristic;
+            description "The effect on the latency of a queuing process. This only has significant effect for packet based systems and has a complex characteristic.";
+        }
+        list risk-diversity-characteristic {
+            key 'risk-characteristic-name';
+            uses tapi-topology:risk-characteristic;
+            description "The diversity risk characteristics.";
+        }
+        leaf diversity-policy {
+            type diversity-policy;
+            description "The diversity policies.";
+        }
+        leaf route-objective-function {
+            type route-objective-function;
+            description "The route objective functions.";
+        }
+        leaf is-exclusive {
+            type boolean;
+            default "true";
+            description "To distinguish if the resources are to be exclusive to the service.
+                This attribute is not applicable when used for Path computation.";
+        }
+        leaf tolerable-impact {
+            type grades-of-impact;
+            description "Grades of maximum tolerable disruption to traffic.";
+        }
+        container max-allowed-cost {
+            uses value-or-priority;
+            description "The specification of the maximum allowed cost.";
+        }
+        container max-allowed-hops {
+            uses value-or-priority;
+            description "The specification of the maximum allowed hops.";
+        }
+        container max-allowed-delay {
+            uses value-or-priority;
+            description "The specification of the maximum allowed delay, value in microseconds.";
+        }
+        description "The parameters of the routing constraints.";
+    }
+    grouping path-computation-context {
+        list path-comp-service {
+            key 'uuid';
+            uses path-computation-service;
+            description "The included PathComputationService instances.";
+        }
+        list path {
+            key 'uuid';
+            config false;
+            uses path;
+            description "The included Path instances.";
+        }
+        list path-set {
+            key 'uuid';
+            uses path-set;
+            description "none";
+        }
+        description "This object class represents the scope of control that a particular SDN controller has with respect to a particular network, specifically regarding the path computation description.
+            An instance of this class includes its PathComputationService and Path object instances.";
+    }
+    grouping topology-constraint {
+        leaf explicit-route {
+            type boolean;
+			default "false";
+            description "If true, indicates that the route constraints are specified with full detail, i.e. no need for further route computation.";
+        }
+        leaf preferred-transport-layer {
+            type tapi-common:layer-protocol-name;
+            description "Soft constraint requested by client to indicate the layer of transport connection that it prefers to carry the service. This could be same as the service layer or one of the supported server layers.";
+        }
+        leaf constraint-weight {
+            type uint64;
+            description "Zero and positive values: zero means 'strongly required to be included', +1 means 'less strongly required to be included', etc.
+                For example the work/intended route will be calculated considering the topologies which weights are lowest (but not negative).
+                Negative values: -1 means 'strongly required to be excluded', -2 means 'less strongly required to be excluded', etc.";
+        }
+        list include-topology {
+            uses tapi-topology:topology-ref;
+            key 'topology-uuid';
+            description "The Topology instance to be included in the connectivity route.";
+        }
+        list exclude-topology {
+            uses tapi-topology:topology-ref;
+            key 'topology-uuid';
+            description "The Topology instance to be excluded from the connectivity route.";
+        }
+        list include-path {
+            uses path-ref;
+            key 'path-uuid';
+            description "The Path instance to be followed by the connectivity route.";
+        }
+        list exclude-path {
+            uses path-ref;
+            key 'path-uuid';
+            description "The Path instance to be excluded from the connectivity route.";
+        }
+        list include-link {
+            uses tapi-topology:link-ref;
+            key 'topology-uuid link-uuid';
+            description "The Link instance to be included in the connectivity route.";
+        }
+        list exclude-link {
+            uses tapi-topology:link-ref;
+            key 'topology-uuid link-uuid';
+            description "The Link instance to be excluded from the connectivity route.";
+        }
+        list include-link-and-partition {
+            key 'index';
+            uses link-and-partition;
+            description "none";
+        }
+        list exclude-link-and-partition {
+            key 'index';
+            uses link-and-partition;
+            description "none";
+        }
+        list include-node {
+            uses tapi-topology:node-ref;
+            key 'topology-uuid node-uuid';
+            description "The Node instance to be included in the connectivity route.";
+        }
+        list exclude-node {
+            uses tapi-topology:node-ref;
+            key 'topology-uuid node-uuid';
+            description "The Node instance to be excluded from the connectivity route.";
+        }
+        list include-node-edge-point {
+            uses tapi-topology:node-edge-point-ref;
+            key 'topology-uuid node-uuid node-edge-point-uuid';
+            description "The NodeEdgePoint (NEP) instance to be included in the connectivity route.";
+        }
+        list exclude-node-edge-point {
+            uses tapi-topology:node-edge-point-ref;
+            key 'topology-uuid node-uuid node-edge-point-uuid';
+            description "The NodeEdgePoint (NEP) instance to be excluded from the connectivity route.";
+        }
+        list include-nep-and-partition {
+            key 'index';
+            uses nep-and-partition;
+            description "none";
+        }
+        list exclude-nep-and-partition {
+            key 'index';
+            uses nep-and-partition;
+            description "none";
+        }
+        uses tapi-common:local-class;
+        description "The TopologyConstraint class allows to specify topology entities in order to impose specific constraints (as denoted by the attribute name) on ConnectivityService/PathComputationService realization.
+            The topology entities are specified by their instance UUID rather than using references/path (to allow for mapping to Yang 1.0).
+            This loose typing and reference necessitates that implementations validate not only the presence of the instance, but also that it is of the correct type as implied by the attribute name.
+            If this validation fails, then the implementation is expected to return an error.
+            ";
+    }
+    grouping path-set {
+        list path {
+            uses path-ref;
+            key 'path-uuid';
+            config false;
+            description "none";
+        }
+        uses tapi-common:global-class;
+        description "none";
+    }
+    grouping path-set-constraint {
+        leaf corouting-policy {
+            type corouting-policy;
+            description "none";
+        }
+        leaf diversity-policy {
+            type diversity-policy;
+            description "The diversity policies.";
+        }
+        list path-constraint {
+            key 'local-id';
+            uses path-constraint;
+            description "none";
+        }
+        description "none";
+    }
+    grouping path-constraint {
+        leaf priority {
+            type uint64;
+            description "none";
+        }
+        container routing-constraint {
+            uses routing-constraint;
+            description "none";
+        }
+        container topology-constraint {
+            uses topology-constraint;
+            description "none";
+        }
+        container path-optimization-constraint {
+            uses path-optimization-constraint;
+            description "none";
+        }
+        container path-objective-function {
+            uses path-objective-function;
+            description "none";
+        }
+        container path-as-constraint {
+            uses path-as-constraint;
+            description "none";
+        }
+        list path-service-end-point {
+            key 'local-id';
+            min-elements 2;
+            max-elements 2;
+            uses path-service-end-point;
+            description "none";
+        }
+        uses tapi-common:local-class;
+        description "none";
+    }
+    grouping link-and-partition {
+        leaf index {
+            type uint64;
+            description "none";
+        }
+        leaf partition-type {
+            type partition-type;
+            description "none";
+        }
+        container link {
+           uses tapi-topology:link-ref;
+              description "none";
+        }
+        description "none";
+    }
+    grouping nep-and-partition {
+        leaf index {
+            type uint64;
+            description "none";
+        }
+        leaf partition-type {
+            type partition-type;
+            description "none";
+        }
+        container node-edge-point {
+            uses tapi-topology:node-edge-point-ref;
+            description "none";
+        }
+        description "none";
+    }
+    grouping path-as-constraint {
+        list include-orphan-path {
+          uses path-ref;
+          key 'path-uuid';
+          description "The Path instance to be followed by the connectivity route.
+                The type is generic UUID given read/write constraints, the Path is a readonly node.";
+        }
+        list exclude-path {
+          uses path-ref;
+          key 'path-uuid';
+          description "The Path instance to be excluded from the connectivity route.
+                The type is generic UUID given read/write constraints, the Path is a readonly node.";
+        }
+        description "none";
+    }
+    grouping adopt-orphan-path {
+        list path {
+          uses path-ref;
+          key 'path-uuid';
+          description "none";
+        }
+        description "none";
+    }
+
+    /**************************
+    * package type-definitions
+    **************************/ 
+    identity GRADES_OF_IMPACT {
+        description "none";
+    }
+    identity GRADES_OF_IMPACT_HITLESS {
+        base GRADES_OF_IMPACT;
+        description "No impact on traffic.";
+    }
+    identity GRADES_OF_IMPACT_MINOR_IMPACT {
+        base GRADES_OF_IMPACT;
+        description "Impact less or equal to 50ms.";
+    }
+    identity GRADES_OF_IMPACT_MAJOR_IMPACT {
+        base GRADES_OF_IMPACT;
+        description "Impact order of magnitude: several seconds to minutes.";
+    }
+    identity GRADES_OF_IMPACT_LONG_IMPACT {
+        base GRADES_OF_IMPACT;
+        description "Impact order of magnitude: several minutes to hours.";
+    }
+    identity PATH_COMPUTATION_OBJECT_TYPE {
+    	base tapi-common:OBJECT_TYPE;
+        description "none";
+    }
+    identity PATH_COMPUTATION_OBJECT_TYPE_PATH_COMPUTATION_SERVICE {
+        base PATH_COMPUTATION_OBJECT_TYPE;
+        description "The PathComputationService class.";
+    }
+    identity PATH_COMPUTATION_OBJECT_TYPE_PATH_COMP_PATH_SERVICE_END_POINT {
+        base PATH_COMPUTATION_OBJECT_TYPE;
+        description "The PathServiceEndPoint (PSEP) class.";
+    }
+    identity PATH_COMPUTATION_OBJECT_TYPE_PATH {
+        base PATH_COMPUTATION_OBJECT_TYPE;
+        description "The Path class.";
+    }
+    identity PATH_COMPUTATION_OBJECT_TYPE_TOPOLOGY_CONSTRAINT {
+        base PATH_COMPUTATION_OBJECT_TYPE;
+        description "The TopologyConstraint class.";
+    }
+    identity PATH_COMPUTATION_OBJECT_TYPE_PATH_OPTIMIZATION_CONSTRAINT {
+        base PATH_COMPUTATION_OBJECT_TYPE;
+        description "The PathOptimizationConstraint class.";
+    }
+    identity PATH_COMPUTATION_OBJECT_TYPE_PATH_OBJECTIVE_FUNCTION {
+        base PATH_COMPUTATION_OBJECT_TYPE;
+        description "The PathObjectiveFunction class.";
+    }
+    identity PARTITION_TYPE {
+        description "none";
+    }
+    identity PARTITION_TYPE_LABEL_VLAN_ID {
+        base PARTITION_TYPE;
+        description "none";
+    }
+    identity PARTITION_TYPE_TIME_SLOT {
+        base PARTITION_TYPE;
+        description "none";
+    }
+    identity PARTITION_TYPE_FREQUENCY_SPECTRUM {
+        base PARTITION_TYPE;
+        description "none";
+    }
+    identity COROUTING_POLICY {
+        description "none";
+    }
+    identity COROUTING_POLICY_NODE {
+        base COROUTING_POLICY;
+        description "none";
+    }
+    identity COROUTING_POLICY_SRG {
+        base COROUTING_POLICY;
+        description "none";
+    }
+    typedef route-objective-function {
+        type enumeration {
+            enum MIN_WORK_ROUTE_HOP {
+                description "Minimize the number of hops in the working/preferred/intended route.";
+            }
+            enum MIN_WORK_ROUTE_COST {
+                description "Minimize the routing cost in the working/preferred/intended route.";
+            }
+            enum MIN_WORK_ROUTE_LATENCY {
+                description "Minimize the latency in the working/preferred/intended route.";
+            }
+            enum MIN_SUM_OF_WORK_AND_PROTECTION_ROUTE_HOP {
+                description "Minimize the total number of hops of the working/preferred/intended and spare/protection routes.";
+            }
+            enum MIN_SUM_OF_WORK_AND_PROTECTION_ROUTE_COST {
+                description "Minimize the total cost of the working/preferred/intended and spare/protection routes.";
+            }
+            enum MIN_SUM_OF_WORK_AND_PROTECTION_ROUTE_LATENCY {
+                description "Minimize the total latency of the working/preferred/intended and spare/protection routes.";
+            }
+            enum LOAD_BALANCE_MAX_UNUSED_CAPACITY {
+                description "Balance the unused capacity of the working/preferred/intended and spare/protection routes.";
+            }
+        }
+        description "The types of route objective function.";
+    }
+    typedef diversity-policy {
+        type enumeration {
+            enum LINK {
+                description "Diversity with respect to involved Link instances.";
+            }
+            enum NODE {
+                description "Diversity with respect to involved Node instances.";
+            }
+            enum SNG {
+                description "Shared Node Group.";
+            }
+            enum SRLG {
+                description "Shared Risk Link Group.";
+            }
+            enum SRNG {
+                description "Shared Risk Node Group.";
+            }
+        }
+        description "The types of routing diversity policies.";
+    }
+    typedef grades-of-impact {
+        type identityref {
+            base GRADES_OF_IMPACT;
+        }
+        description "The grades of impact on traffic.";
+    }
+    typedef path-computation-object-type {
+        type identityref {
+            base PATH_COMPUTATION_OBJECT_TYPE;
+        }
+        description "The list of TAPI Path Computation Global Object Class types on which Notification signals can be raised.";
+    }
+    grouping value-or-priority {
+        leaf value {
+            type uint64;
+			default 0;
+            description "The specified value.";
+        }
+        leaf priority {
+            type uint64;
+			default 0;
+            description "The specified priority.";
+        }
+        description "Quantitative target: when a value is specified it is intended as mandatory for fulfilment. If value is specified, priority is not considered.
+            Qualitative target: when priority is specified. Zero means 'unspecified', 1 is highest priority, then 2 has lower priority than 1, 3 has lower priority than 2, etc.";
+    }
+    typedef partition-type {
+        type identityref {
+            base PARTITION_TYPE;
+        }
+        description "none";
+    }
+    typedef corouting-policy {
+        type identityref {
+            base COROUTING_POLICY;
+        }
+        description "none";
+    }
+
+}

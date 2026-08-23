@@ -1,0 +1,1605 @@
+module tapi-common {
+    yang-version "1.1";
+    namespace "urn:onf:otcc:yang:tapi-common";
+    prefix tapi-common;
+    organization "Linux Foundation ONMI (Open Network Modeling and Interfaces) Project";
+    contact "
+         Project Web: <https://github.com/Open-Network-Models-and-Interfaces-ONMI/onmi-home/wiki>
+         Project List: <mailto:onmi-tapi@googlegroups.com>
+         Editor: Nigel Davis <mailto:ndavis@ciena.com>
+         Arturo Mayoral <mailto:amayoral@telecominfraproject.com>
+         Ramon Casellas <mailto:ramon.casellas@cttc.es>";
+    description "
+        This module contains TAPI Common Model definitions.
+        Source: TapiCommon.uml
+        - The TAPI YANG models included in this TAPI release are a *normative* part of the TAPI SDK.
+        - The YANG specifications have been generated from the corresponding UML model using the [EAGLE UML2YANG mapping tool]
+        <https://github.com/Open-Network-Models-and-Interfaces-ONMI/onmi-iisomi-uml-yang>
+        and further edited manually to comply with the [ONMI IISOMI UML2YANG mapping guidelines]
+        <https://github.com/Open-Network-Models-and-Interfaces-ONMI/onmi-iisomi-home>
+	with further details available at <https://github.com/Open-Network-Models-and-Interfaces-ONMI/TAPI-Documentation/tree/v2.6.0/ToolingGuidelines>
+        - Status of YANG model artifacts can be determined by referring to the corresponding UML artifacts.
+        As described in the UML models, some artifacts are considered *experimental*, and thus the corresponding YANG artifacts.
+        - The LF ONMI TAPI release process does not guarantee backward compatibility of YANG models across major versions of TAPI releases.
+        The YANG model backward compatibility criteria are outlined in section 11 of <https://tools.ietf.org/html/rfc7950>.
+        YANG models included in this release may not be backward compatible with some previous TAPI releases.
+        - Previous revisions can now be found at https://github.com/Open-Network-Models-and-Interfaces-ONMI/TAPI under the 
+        appropriate tag and, where relevant, fixes to those revisions can be found under the corresponding branches. The documentation for
+        each significant revision is found at https://github.com/Open-Network-Models-and-Interfaces-ONMI/TAPI-Documentation under the
+        appropriate tag and, where relevant, fixes to those revisions can be found under the corresponding branches.
+        License: This module is distributed under the Apache License 2.0.";
+    revision 2025-03-31 {
+        description "LF ONMI Transport API version 2.6.0.
+                   Changes included in this TAPI release (v2.6.0) are listed in
+                   <https://github.com/Open-Network-Models-and-Interfaces-ONMI/TAPI-Documentation/tree/v2.6.0/DeltaDocument>";
+        reference "ONF-TR-527, ONF-TR-512, ONF-TR-531, RFC 7950, RFC 6087 and LF ONMI TAPI UML model
+                  <https://github.com/Open-Network-Models-and-Interfaces-ONMI/TAPI/tree/v2.6.0/UML>";
+    }
+    revision 2023-10-10 {
+        description "ONF Transport API version 2.5.0.
+                   Changes included in this TAPI release (v2.5.0) are listed in
+                   <https://github.com/Open-Network-Models-and-Interfaces-ONMI/TAPI-Documentation/tree/v2.5.0/DeltaDocument>";
+        reference "ONF-TR-527, ONF-TR-512, ONF-TR-531, RFC 7950, RFC 6087 and ONF TAPI UML model
+                  <https://github.com/Open-Network-Models-and-Interfaces-ONMI/TAPI/tree/v2.5.0/UML>";
+    }
+    revision 2023-03-21 {
+        description "ONF Transport API version 2.4.1.
+                   Changes included in this TAPI release (v2.4.1) are listed in
+                   <https://github.com/Open-Network-Models-and-Interfaces-ONMI/TAPI-Documentation/tree/v2.4.1/DeltaDocument>";
+        reference "ONF-TR-527, ONF-TR-512, ONF-TR-531, RFC 7950, RFC 6087 and ONF TAPI UML model
+                  <https://github.com/Open-Network-Models-and-Interfaces-ONMI/TAPI/tree/v2.4.1/UML>";
+    }
+    revision 2022-12-22 {
+        description "ONF Transport API version 2.4.0.
+                   Changes included in this TAPI release (v2.4.0) are listed in
+                   <https://github.com/Open-Network-Models-and-Interfaces-ONMI/TAPI-Documentation/tree/v2.4.0/DeltaDocument>";
+        reference "ONF-TR-527, ONF-TR-512, ONF-TR-531, RFC 7950, RFC 6087 and ONF TAPI UML model
+                  <https://github.com/Open-Network-Models-and-Interfaces-ONMI/TAPI/tree/v2.4.0/UML>";
+    }
+    revision 2020-04-23 {
+        description "ONF Transport API version 2.1.3";
+        reference "ONF-TR-527, ONF-TR-512, ONF-TR-531, RFC 7950, RFC 6087 and ONF TAPI UML model
+                  <https://github.com/Open-Network-Models-and-Interfaces-ONMI/TAPI/tree/v2.1.3/UML>";
+    }
+    augment "/tapi-common:context/tapi-common:profile" {
+        container transmission-capability-profile {
+            uses transmission-capability-profile;
+            description "none";
+        }
+        description "none";
+    }
+    /**************************
+    * definitions of references
+    **************************/
+    grouping service-interface-point-ref {
+        leaf service-interface-point-uuid {
+            type leafref {
+                path '/tapi-common:context/tapi-common:service-interface-point/tapi-common:uuid';
+            }
+            description "none";
+        }
+        description "none";
+    }
+    grouping profile-ref {
+        leaf profile-uuid {
+            type leafref {
+                path '/tapi-common:context/tapi-common:profile/tapi-common:uuid';
+            }
+            description "none";
+        }
+        description "none";
+    }
+    
+    /**************************
+    * package object-classes
+    **************************/ 
+    grouping admin-state-pac {
+        leaf administrative-state {
+            type administrative-state;
+            description "The administration of managed objects operates independently of the operability and usage of managed objects and is described by the administrative state attribute. The administrative state is used by the operator to make a resource available for service, or to remove a resource from service.";
+        }
+        leaf operational-state {
+            type operational-state;
+            config false;
+            description "The operational state gives the information about the real capability of a resource to provide or not provide service.";
+        }
+        leaf lifecycle-state {
+            type lifecycle-state;
+            config false;
+            description "Used to track the planned deployment, allocation to clients and withdrawal of resources.";
+        }
+        description "Provides state attributes that are applicable to an entity that can be administered. Such an entity also has operational and lifecycle aspects.";
+    }
+    grouping global-class {
+        leaf uuid {
+            type uuid;
+            description "UUID: An identifier that is universally unique within an identifier space, where the identifier space is itself globally unique, and immutable.
+                An UUID carries no semantics with respect to the purpose or state of the entity.
+                UUID here uses string representation as defined in RFC 4122.  The canonical representation uses lowercase characters.
+                Pattern: [0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-' + '[0-9a-fA-F]{4}-[0-9a-fA-F]{12} 
+                Example of a UUID in string representation: f81d4fae-7dec-11d0-a765-00a0c91e6bf6";
+        }
+        list name {
+            key 'value-name';
+            uses name-and-value;
+            description "List of names. This value is unique in some namespace but may change during the life of the entity.
+                A name carries no semantics with respect to the purpose of the entity.";
+        }
+        description "This class serves as the super class for all TAPI entities that can be directly retrieved by their ID. As such, these are first class entities and their ID is expected to be globally unique. ";
+    }
+    grouping lifecycle-state-pac {
+        leaf lifecycle-state {
+            type lifecycle-state;
+            config false;
+            description "Used to track the planned deployment, allocation to clients and withdrawal of resources.";
+        }
+        description "Provides state attributes for an entity that has lifecycle aspects only.";
+    }
+    grouping local-class {
+        leaf local-id {
+            type string;
+            description "An identifier that is unique in the context of the GlobalClass from which it is inseparable.";
+        }
+        list name {
+            key 'value-name';
+            uses name-and-value;
+            description "List of names. This value is unique in some namespace but may change during the life of the entity.
+                A name carries no semantics with respect to the purpose of the entity.";
+        }
+        description "This class serves as the super class for all TAPI entities that are ancillary of first class entities, i.e. their ID is not expected to be globally unique. ";
+    }
+    grouping operational-state-pac {
+        leaf operational-state {
+            type operational-state;
+            config false;
+            description "The operational state gives the information about the real capability of a resource to provide or not provide service.";
+        }
+        leaf lifecycle-state {
+            type lifecycle-state;
+            config false;
+            description "Used to track the planned deployment, allocation to clients and withdrawal of resources.";
+        }
+        description "Provides state attributes that are applicable to an entity that reflects operational aspects. Such an entity is expected to also have lifecycle aspects.";
+    }
+    container context {
+        uses tapi-context;
+/*        presence "Root container for all TAPI interaction";*/
+        description "none";
+    }
+    grouping tapi-context {
+        list service-interface-point {
+            key 'uuid';
+            config false;
+            uses service-interface-point;
+            description "The ServiceInterfacePoint (SIP) instances belonging to this context.";
+        }
+        list profile {
+            key 'uuid';
+            config false;
+            uses profile;
+            description "none";
+        }
+        uses global-class;
+        description "This object class represents the scope of control that a particular SDN controller has with respect to a particular network, (i.e., encompassing a designated set of interconnected (virtual) network elements).
+            This class includes the list of Service Interface Points.
+            This class can be augmented by specific contexts, e.g. topology context.";
+    }
+    grouping service-interface-point {
+        leaf layer-protocol-name {
+            type layer-protocol-name;
+            config false;
+            description "The layer protocol of the ServiceInterfacePoint (SIP).
+                Usage of layerProtocolName [>1]  in the ServiceInterfacePoint should be considered experimental.";
+        }
+        leaf direction {
+            type direction;
+            default "UNDEFINED_OR_UNKNOWN";
+            config false;
+            description "The SIP direction. It is intended the 'internal viewpoint', i.e. the source SIP is sending to the network, the sink SIP is sending from the network.
+                If direction attribute is missing the ServiceInterfacePoint (SIP) instance is to be intended as 'BIDIRECTIONAL'.";
+        }
+        list supported-cep-layer-protocol-qualifier-instances {
+            config false;
+            uses supported-layer-protocol-qualifier;
+            description "The supported sub-layer(s) or rate(s) of Layer Protocol.";
+        }
+        list available-cep-layer-protocol-qualifier-instances {
+            config false;
+            uses supported-layer-protocol-qualifier;
+            description "none";
+        }
+        list supported-payload-structure {
+            config false;
+            uses payload-structure;
+            description "none";
+        }
+        list available-payload-structure {
+            config false;
+            uses payload-structure;
+            description "none";
+        }
+        list profile {
+            uses profile-ref;
+            key 'profile-uuid';
+            config false;
+            description "none";
+        }
+        list sink-profile {
+            uses profile-ref;
+            key 'profile-uuid';
+            config false;
+            description "none";
+        }
+        list source-profile {
+            uses profile-ref;
+            key 'profile-uuid';
+            config false;
+            description "none";
+        }
+        uses global-class;
+        uses admin-state-pac;
+        uses capacity-pac;
+        description "A Service Interface Point represents the network-interface-facing aspects of the edge-port functions that access the forwarding capabilities provided by the Node. Hence it provides a limited, simplified view of interest to external clients (e.g. shared addressing, capacity, resource availability, etc.), that enable the clients to request connectivity without the need to understand the provider network internals.";
+    }
+    grouping capacity-pac {
+        container total-potential-capacity {
+            config false;
+            uses capacity;
+            description "An optimistic view of the capacity of the entity assuming that any shared capacity is available to be taken.";
+        }
+        container available-capacity {
+            config false;
+            uses capacity;
+            description "Capacity available to be assigned.";
+        }
+        description "Provides capacity related attributes.";
+    }
+    grouping profile {
+        leaf profile-type {
+            type profile-type;
+            config false;
+            description "none";
+        }
+        list grouped-profiles {
+            uses profile-ref;
+            key 'profile-uuid';
+            config false;
+            description "This recursive relationship allows to group together the references to other profiles, avoiding possible repetitions and providing a better organization of the centralized info.";
+        }
+        uses global-class;
+        description "none";
+    }
+    grouping transmission-capability-profile {
+        list supported-payload-structure {
+            config false;
+            uses payload-structure;
+            description "Description of (potential) capability.";
+        }
+        description "none";
+    }
+
+    /**************************
+    * package type-definitions
+    **************************/ 
+    identity CAPACITY_UNIT {
+        description "none";
+    }
+    identity CAPACITY_UNIT_TB {
+        base CAPACITY_UNIT;
+        description "Indicates that the integer CapacityValue is in TeraBytes";
+    }
+    identity CAPACITY_UNIT_TBPS {
+        base CAPACITY_UNIT;
+        description "Indicates that the integer CapacityValue is in Terabit-per-second";
+    }
+    identity CAPACITY_UNIT_GB {
+        base CAPACITY_UNIT;
+        description "Indicates that the integer CapacityValue is in GigaBytes";
+    }
+    identity CAPACITY_UNIT_GBPS {
+        base CAPACITY_UNIT;
+        description "Indicates that the integer CapacityValue is in Gigabit-per-second";
+    }
+    identity CAPACITY_UNIT_MB {
+        base CAPACITY_UNIT;
+        description "Indicates that the integer CapacityValue is in MegaBytes";
+    }
+    identity CAPACITY_UNIT_MBPS {
+        base CAPACITY_UNIT;
+        description "Indicates that the integer CapacityValue is in Megabit-per-second";
+    }
+    identity CAPACITY_UNIT_KB {
+        base CAPACITY_UNIT;
+        description "Indicates that the integer CapacityValue is in KiloBytes";
+    }
+    identity CAPACITY_UNIT_KBPS {
+        base CAPACITY_UNIT;
+        description "Indicates that the integer CapacityValue is in Kilobit-per-second";
+    }
+    identity CAPACITY_UNIT_GHz {
+        base CAPACITY_UNIT;
+        description "Indicates that the integer CapacityValue is in gigahertz (spectrum)";
+    }
+    identity CAPACITY_UNIT_MHz {
+        base CAPACITY_UNIT;
+        description "Indicates that the integer CapacityValue is in megahertz (spectrum)";
+    }
+    identity CAPACITY_UNIT_THz {
+        base CAPACITY_UNIT;
+        description "Indicates that the integer CapacityValue is in terahertz (spectrum)";
+    }
+    identity CAPACITY_UNIT_Hz {
+        base CAPACITY_UNIT;
+        description "Indicates that the integer CapacityValue is in Hertz (spectrum)";
+    }
+    identity CAPACITY_UNIT_B {
+        base CAPACITY_UNIT;
+        description "Indicates that the integer CapacityValue is in bits";
+    }
+    identity CAPACITY_UNIT_KHz {
+        base CAPACITY_UNIT;
+        description "Indicates that the integer CapacityValue is in kilohertz (spectrum)";
+    }
+    identity CAPACITY_UNIT_BPS {
+        base CAPACITY_UNIT;
+        description "Indicates that the integer CapacityValue is in bit-per-second";
+    }
+    identity LAYER_PROTOCOL_QUALIFIER {
+        description "none";
+    }
+    identity LAYER_PROTOCOL_QUALIFIER_UNSPECIFIED {
+        base LAYER_PROTOCOL_QUALIFIER;
+        description "No sub-layer is specified.";
+    }
+    identity OBJECT_TYPE {
+        description "none";
+    }
+    identity OBJECT_TYPE_SERVICE_INTERFACE_POINT {
+        base OBJECT_TYPE;
+        description "The ServiceInterfacePoint (SIP) class.";
+    }
+    identity OBJECT_TYPE_TAPI_CONTEXT {
+        base OBJECT_TYPE;
+        description "The TapiContext class.";
+    }
+    identity OBJECT_TYPE_PROFILE {
+        base OBJECT_TYPE;
+        description "none";
+    }
+    identity PROFILE_TYPE {
+        description "none";
+    }
+    identity METRIC_VALUE_TYPE {
+        description "none";
+    }
+    identity METRIC_VALUE_TYPE_AVERAGE {
+        base METRIC_VALUE_TYPE;
+        description "none";
+    }
+    identity METRIC_VALUE_TYPE_MIN {
+        base METRIC_VALUE_TYPE;
+        description "none";
+    }
+    identity METRIC_VALUE_TYPE_MAX {
+        base METRIC_VALUE_TYPE;
+        description "none";
+    }
+    identity METRIC_VALUE_TYPE_MIN_TIME {
+        base METRIC_VALUE_TYPE;
+        description "none";
+    }
+    identity METRIC_VALUE_TYPE_MAX_TIME {
+        base METRIC_VALUE_TYPE;
+        description "none";
+    }
+    identity ALR {
+        base DC;
+        description "none";
+    }
+    identity ALR_AIRCOND {
+        base ALR;
+        description "none";
+    }
+    identity ALR_AIRDRYR {
+        base ALR;
+        description "none";
+    }
+    identity ALR_BATTERY {
+        base ALR;
+        description "none";
+    }
+    identity ALR_BDI {
+        base ALR;
+        description "G.798: Backward defect indication.";
+    }
+    identity ALR_BDI_O {
+        base ALR;
+        description "G.798: Backward defect indication overhead.";
+    }
+    identity ALR_BDI_P {
+        base ALR;
+        description "G.798: Backward defect indication payload.";
+    }
+    identity ALR_BEFFEC_EXC {
+        base ALR;
+        description "none";
+    }
+    identity ALR_CFG_DATASAVE_FAIL {
+        base ALR;
+        description "none";
+    }
+    identity ALR_CLFAN {
+        base ALR;
+        description "none";
+    }
+    identity ALR_COMM_FAIL {
+        base ALR;
+        description "none";
+    }
+    identity ALR_COMMIT_FAIL {
+        base ALR;
+        description "none";
+    }
+    identity ALR_COMMIT_TIMEOUT {
+        base ALR;
+        description "none";
+    }
+    identity ALR_CSACM {
+        base ALR;
+        description "G.798: Calendar Slot Availability Count Mismatch.";
+    }
+    identity ALR_CSF {
+        base ALR;
+        description "G.798: Client signal fail.";
+    }
+    identity ALR_CSUM {
+        base ALR;
+        description "none";
+    }
+    identity ALR_DB_ERR {
+        base ALR;
+        description "none";
+    }
+    identity ALR_DB_RESTORE_FAIL {
+        base ALR;
+        description "none";
+    }
+    identity ALR_DB_SYNC_FAIL {
+        base ALR;
+        description "none";
+    }
+    identity ALR_DBMS_DELETE {
+        base ALR;
+        description "none";
+    }
+    identity ALR_DEG {
+        base ALR;
+        description "G.798, G.806: Signal degrade.";
+    }
+    identity ALR_EQPT_MISMATCH {
+        base ALR;
+        description "none";
+    }
+    identity ALR_EQPT_MT {
+        base ALR;
+        description "none";
+    }
+    identity ALR_EQPT_TEMP_HI {
+        base ALR;
+        description "none";
+    }
+    identity ALR_EQPT_TEMP_LOW {
+        base ALR;
+        description "none";
+    }
+    identity ALR_EXM {
+        base ALR;
+        description "GFP extension header mismatch.
+            G.806 - Common GFP sink processes: GFP extension header mismatch (dEXM) is raised when the accepted EXI (AcEXI) is different from the expected EXI.
+            dEXM is cleared when AcEXI matches the expected EXI or GFP_SF is active.";
+    }
+    identity ALR_FAN_FAIL {
+        base ALR;
+        description "none";
+    }
+    identity ALR_FCS_ERR_EXC {
+        base ALR;
+        description "none";
+    }
+    identity ALR_FIRE {
+        base ALR;
+        description "none";
+    }
+    identity ALR_FMM {
+        base ALR;
+        description "G.798: FlexO/FlexE Map Mismatch.";
+    }
+    identity ALR_FOP_NR {
+        base ALR;
+        description "G.798: ODU linear protection failure of protocol no response.";
+    }
+    identity ALR_FOP_PM {
+        base ALR;
+        description "G.798: ODU linear protection failure of protocol provisioning mismatch.";
+    }
+    identity ALR_GAIN_HIGH {
+        base ALR;
+        description "none";
+    }
+    identity ALR_GAIN_LOW {
+        base ALR;
+        description "none";
+    }
+    identity ALR_GIDM {
+        base ALR;
+        description "G.798: Group ID Mismatch.";
+    }
+    identity ALR_HIHUM {
+        base ALR;
+        description "none";
+    }
+    identity ALR_HITEMP {
+        base ALR;
+        description "none";
+    }
+    identity ALR_IN_PWR_HIGH {
+        base ALR;
+        description "none";
+    }
+    identity ALR_IN_PWR_LOW {
+        base ALR;
+        description "none";
+    }
+    identity ALR_INTRUSION {
+        base ALR;
+        description "none";
+    }
+    identity ALR_LASER_SHUT_DOWN {
+        base ALR;
+        description "none";
+    }
+    identity ALR_LCK {
+        base ALR;
+        description "G.798: Locked.";
+    }
+    identity ALR_LCS {
+        base ALR;
+        description "G.798, IEEE 802.3, G.709: Loss of character synchronization.";
+    }
+    identity ALR_LCS_EXPIRED {
+        base ALR;
+        description "none";
+    }
+    identity ALR_LCS_LOST {
+        base ALR;
+        description "none";
+    }
+    identity ALR_LFA {
+        base ALR;
+        description "G.798: Loss of FEC word alignment.";
+    }
+    identity ALR_LFD {
+        base ALR;
+        description "GFP loss of frame delineation.
+            G.806 - Server layer-specific GFP sink processes: GFP loss of frame delineation (dLFD) is raised when the frame delineation process (clause 6.3.1 of [ITU-T G.7041]) is not in the 'SYNC' state.
+            dLFD is cleared when the frame delineation process is in the 'SYNC' state.";
+    }
+    identity ALR_LOF {
+        base ALR;
+        description "G.798, G.783: Loss Of Frame.";
+    }
+    identity ALR_LOFLOM {
+        base ALR;
+        description "G.798: Loss of frame and multiframe - tributary port #p";
+    }
+    identity ALR_LOL {
+        base ALR;
+        description "G.798: Loss of lane alignment.";
+    }
+    identity ALR_LOM {
+        base ALR;
+        description "G.798: Loss of multiframe.
+            Loss of the interleaved FlexESG multi-frame.";
+    }
+    identity ALR_LOOMFI {
+        base ALR;
+        description "G.798: OPU multiframe (OMFI) reception for OPUk with k = 4";
+    }
+    identity ALR_LOS {
+        base ALR;
+        description "G.783: Loss Of Signal.";
+    }
+    identity ALR_LOS_O {
+        base ALR;
+        description "G.798: Loss of signal overhead.";
+    }
+    identity ALR_LOS_P {
+        base ALR;
+        description "G.798: Loss of signal information from the media element.
+            Loss of optical signal.";
+    }
+    identity ALR_LOSS_OF_GFP_SYNC {
+        base ALR;
+        description "none";
+    }
+    identity ALR_LOWBAT {
+        base ALR;
+        description "none";
+    }
+    identity ALR_LPBKFACILITY {
+        base ALR;
+        description "none";
+    }
+    identity ALR_LPBKTERM {
+        base ALR;
+        description "none";
+    }
+    identity ALR_LRC {
+        base ALR;
+        description "G.798: Loss of Rate Compensation blocks.";
+    }
+    identity ALR_LSS {
+        base ALR;
+        description "G.798, O.151: Loss of PRBS lock.";
+    }
+    identity ALR_LTC {
+        base ALR;
+        description "G.798: Loss of tandem connection.";
+    }
+    identity ALR_MOD_CC_HIGH {
+        base ALR;
+        description "none";
+    }
+    identity ALR_MOD_CC_LOW {
+        base ALR;
+        description "none";
+    }
+    identity ALR_MOD_TEMP_HIGH {
+        base ALR;
+        description "none";
+    }
+    identity ALR_MOD_TEMP_LOW {
+        base ALR;
+        description "none";
+    }
+    identity ALR_MSIM {
+        base ALR;
+        description "G.798: Multiplex structure identifier mismatch supervision -  tributary port #p";
+    }
+    identity ALR_NTP_SYNC_FAIL {
+        base ALR;
+        description "none";
+    }
+    identity ALR_OCI {
+        base ALR;
+        description "G.798: Open connection indication.";
+    }
+    identity ALR_OPENDR {
+        base ALR;
+        description "none";
+    }
+    identity ALR_OUT_PWR_HIGH {
+        base ALR;
+        description "none";
+    }
+    identity ALR_OUT_PWR_LOW {
+        base ALR;
+        description "none";
+    }
+    identity ALR_PLM {
+        base ALR;
+        description "Payload mismatch supervision.
+            G.806: The payload label mismatch defect (dPLM) shall be detected if the 'accepted TSL' code does not match the 'expected TSL' code. If the 'accepted TSL' is 'equipped non-specific', the mismatch is not detected (TSL: Trail Signal Label).
+            Payload type supervision checks that compatible adaptation functions are used at the source and the sink.
+            This is normally done by adding a signal type identifier at the source adaptation function and comparing it with the expected identifier at the sink.
+            If they do not match, a payload mismatch is detected.
+            G.798 - dPLM at the ODUP layer: dPLM shall be declared if the accepted payload type (AcPT) is not equal to the expected payload type(s) as defined by the specific adaptation function.";
+    }
+    identity ALR_PLUGM_RMV {
+        base ALR;
+        description "none";
+    }
+    identity ALR_PMI {
+        base ALR;
+        description "none";
+    }
+    identity ALR_POWER_OUTAGE {
+        base ALR;
+        description "none";
+    }
+    identity ALR_PSU_FAIL {
+        base ALR;
+        description "none";
+    }
+    identity ALR_RAI {
+        base ALR;
+        description "none";
+    }
+    identity ALR_RCOHM {
+        base ALR;
+        description "G.798: Resize Control Overhead Mismatch.";
+    }
+    identity ALR_REM_CLIENT_SF {
+        base ALR;
+        description "none";
+    }
+    identity ALR_SERVCAP_EXCEED {
+        base ALR;
+        description "none";
+    }
+    identity ALR_SHELF_ID_CONFLICT {
+        base ALR;
+        description "none";
+    }
+    identity ALR_SHELF_ID_MISMATCH {
+        base ALR;
+        description "none";
+    }
+    identity ALR_SHELF_TYPE_MISMATCH {
+        base ALR;
+        description "none";
+    }
+    identity ALR_SSF {
+        base ALR;
+        description "Server Signal Fail.";
+    }
+    identity ALR_SSF_O {
+        base ALR;
+        description "Server Signal Fail Overhead.";
+    }
+    identity ALR_SSF_P {
+        base ALR;
+        description "Server Signal Fail Payload.";
+    }
+    identity ALR_SWDL_BD_NOT_MATCH {
+        base ALR;
+        description "none";
+    }
+    identity ALR_TIM {
+        base ALR;
+        description "G.798: Connectivity supervision/trail trace identifier mismatch.";
+    }
+    identity ALR_UPM {
+        base ALR;
+        description "GFP user payload mismatch.
+            G.806 - Client-specific GFP-F (Frame) and GFP-T (Transparent) sink processes: GFP user payload mismatch (dUPM) is raised when the accepted UPI (AcUPI) is different from the expected UPI.
+            dUPM is cleared when AcUPI matches the expected UPI or GFP_SF is active.";
+    }
+    identity DC {
+        description "none";
+    }
+    identity DC_NATIVE {
+        base DC;
+        description "This value indicates an Alarm Condition not standardized by this model and specified only in native info attribute.";
+    }
+    identity PM {
+        base DC;
+        description "none";
+    }
+    identity PM_BBE {
+        base PM;
+        description "none";
+    }
+    identity PM_CHROM_DISP {
+        base PM;
+        description "Chromatic Dispersion";
+    }
+    identity PM_DELAY_FRAME_COUNT {
+        base PM;
+        description "none";
+    }
+    identity PM_DIFF_GROUP_DELAY {
+        base PM;
+        description "Differential Group Delay";
+    }
+    identity PM_FEC_CORRECTABLE_BLOCKS {
+        base PM;
+        description "FEC Correctable Blocks.
+            Reference: OpenROADM.";
+    }
+    identity PM_FEC_CORRECTED_BITS {
+        base PM;
+        description "The number of bits that were corrected by the FEC.
+            Reference: OpenConfig.";
+    }
+    identity PM_FEC_CORRECTED_BYTES {
+        base PM;
+        description "Bytes corrected between those that were received corrupted.
+            Reference: OpenConfig.";
+    }
+    identity PM_FEC_CORRECTED_CODEWORDS {
+        base PM;
+        description "FEC Corrected Codewords Counter.
+            References:
+            - OpenROADM
+            - 100 GE: IEEE802.3-2018 sections 91.6.9 (FEC_corrected_cw_counter), 45.2.1.112 (MDIO)
+            - 400 GE: IEEE802.3-2018 sections 119.3.1 (FEC_corrected_cw_counter), 45.2.3.61 (MDIO)";
+    }
+    identity PM_FEC_CORRECTED_ERRORS {
+        base PM;
+        description "ITU-T G798: The number of bits corrected by the FEC are counted over one second and reported to the MI at the end of the second. For the application of this filter, see the specific atomic functions.
+            During signal fail conditions of the data signal, no corrected bits shall be counted. For details on the signal fail conditions, see the specific atomic functions.
+            Other reference: OpenROADM.";
+    }
+    identity PM_FEC_POST_FEC_BER {
+        base PM;
+        description "Bit error rate after correction by FEC.
+            Reference: OpenConfig.";
+    }
+    identity PM_FEC_PRE_FEC_BER {
+        base PM;
+        description "Bit error rate before correction by FEC.
+            References:
+            - OpenConfig
+            - OpenROADM";
+    }
+    identity PM_FEC_SYMBOL_ERRORS {
+        base PM;
+        description "FEC Symbol Error Counter.
+            references:
+            - OpenROADM
+            - 100 GE: IEEE802.3-2018 sections 91.6.12 (FEC_symbol_error_counter_i), 45.2.1.115/116 (MDIO)
+            - 400 GE: IEEE802.3-2018 sections 119.3.1 (FEC_symbol_error_counter_i), 45.2.3.57/58 (MDIO)";
+    }
+    identity PM_FEC_UNCORRECTABLE_BITS {
+        base PM;
+        description "Bits that could not be corrected by FEC.";
+    }
+    identity PM_FEC_UNCORRECTABLE_BLOCKS {
+        base PM;
+        description "FEC Uncorrectable Blocks.
+            References:
+            - OpenConfig
+            - OpenROADM";
+    }
+    identity PM_FEC_UNCORRECTABLE_BYTES {
+        base PM;
+        description "Bytes that could not be corrected by FEC.";
+    }
+    identity PM_FEC_UNCORRECTABLE_WORDS {
+        base PM;
+        description "The number of words that were uncorrectable by the FEC.
+            Reference: OpenConfig.";
+    }
+    identity PM_FEC_UNCORRECTED_CODEWORDS {
+        base PM;
+        description "FEC Uncorrected Codewords Counter.
+            references:
+            - OpenROADM
+            - 100 GE: IEEE802.3-2018 sections 91.6.10 (FEC_uncorrected_cw_counter), 45.2.1.113 (MDIO)
+            - 400 GE: IEEE802.3-2018 sections 119.3.1 (FEC_uncorrected_cw_counter), 45.2.3.62 (MDIO)";
+    }
+    identity PM_FREQ_OFFS {
+        base PM;
+        description "Frequency Offset";
+    }
+    identity PM_OPT_GAIN {
+        base PM;
+        description "none";
+    }
+    identity PM_OPT_PWR_SPECTR_DENS_INPUT {
+        base PM;
+        description "none";
+    }
+    identity PM_OPT_PWR_SPECTR_DENS_OUTPUT {
+        base PM;
+        description "none";
+    }
+    identity PM_OPT_TOTAL_PWR_INPUT {
+        base PM;
+        description "none";
+    }
+    identity PM_OPT_TOTAL_PWR_OUTPUT {
+        base PM;
+        description "none";
+    }
+    identity PM_OPT_TILT {
+        base PM;
+        description "none";
+    }
+    identity PM_POL_MODE_DISP {
+        base PM;
+        description "Polarization Mode Dispersion";
+    }
+    identity PM_SES {
+        base PM;
+        description "none";
+    }
+    identity PM_UAS {
+        base PM;
+        description "none";
+    }
+    identity PM_VOA_INPUT {
+        base PM;
+        description "none";
+    }
+    identity PM_VOA_OUTPUT {
+        base PM;
+        description "none";
+    }
+    identity ETH_ALARM_CONDITION_NAME {
+        description "none";
+    }
+    identity ETH_ALARM_CONDITION_NAME_LOSS_OF_CONTINUITY {
+        base ETH_ALARM_CONDITION_NAME;
+        description "G.8021: The loss of continuity defect is calculated at the ETH layer. It monitors the presence of continuity in ETH trails.";
+    }
+    identity ETH_ALARM_CONDITION_NAME_UNEXPECTED_MEL {
+        base ETH_ALARM_CONDITION_NAME;
+        description "G.8021: Reception of a CCM frame with an invalid MEL value.
+            Monitoring of the connectivity in a maintenance entity group.";
+    }
+    identity ETH_ALARM_CONDITION_NAME_UNEXPECTED_MEP {
+        base ETH_ALARM_CONDITION_NAME;
+        description "G.8021: Reception of a CCM frame with an invalid MEP value, but with valid MEL and MEG values.
+            Monitoring of the connectivity in a maintenance entity group.
+            ";
+    }
+    identity ETH_ALARM_CONDITION_NAME_MISMERGE_UNEXPECTED_MEG {
+        base ETH_ALARM_CONDITION_NAME;
+        description "G.8021: Reception of a CCM frame with an invalid MEG value, but with a valid MEL value.
+            Monitoring of the connectivity in a maintenance entity group.
+            ";
+    }
+    identity ETH_ALARM_CONDITION_NAME_UNEXPECTED_PERIODICITY {
+        base ETH_ALARM_CONDITION_NAME;
+        description "G.8021: Reception of a CCM frame with an invalid periodicity value, but with valid MEL, MEG and MEP values.
+            It detects the configuration of different periodicities at different MEPs belonging to the same MEG.
+            ";
+    }
+    identity ETH_ALARM_CONDITION_NAME_UNEXPECTED_PRIORITY {
+        base ETH_ALARM_CONDITION_NAME;
+        description "G.8021: Reception of a CCM frame with an invalid priority value, but with valid MEL, MEG, MEP and periodicity values.
+            It detects the configuration of different priorities for CCM at different MEPs belonging to the same MEG.
+            ";
+    }
+    identity ETH_ALARM_CONDITION_NAME_LOCKED {
+        base ETH_ALARM_CONDITION_NAME;
+        description "G.8021: Reception of a LCK frame.";
+    }
+    identity ETH_ALARM_CONDITION_NAME_AIS {
+        base ETH_ALARM_CONDITION_NAME;
+        description "G.8021: Reception of an AIS frame.";
+    }
+    identity ETH_ALARM_CONDITION_NAME_DEGRADED {
+        base ETH_ALARM_CONDITION_NAME;
+        description "G.8021: The defect is detected if there are MI_LM_DEGM (lmDegm of EthMepSink) consecutive bad seconds and cleared if there are MI_LM_M (lmM of EthMepSink) consecutive good seconds. 
+            In order to declare a bad second the number of transmitted frames must exceed a threshold (MI_LM_TFMIN, lmTfMin of EthMepSink).
+            Furthermore, if the frame loss ratio (lost frames/transmitted frames) is greater than MI_LM_DEGTHR (lmDegThr of EthMepSink), a bad second is declared.
+            This defect is only defined for point-to-point ETH connections. It monitors the connectivity of an ETH trail.
+            ";
+    }
+    identity ETH_ALARM_CONDITION_NAME_RDI {
+        base ETH_ALARM_CONDITION_NAME;
+        description "G.8021: Remote defect indicator defect, reception by an MEP (indexed by 'i', this index not included in the 'cause' cRDI) of a CCM frame with valid MEL, MEG, MEP and periodicity values and the RDI flag set to x; where x=0 (remote defect clear) and x=1 (remote defect set).";
+    }
+    identity ETH_ALARM_CONDITION_NAME_CSF {
+        base ETH_ALARM_CONDITION_NAME;
+        description "G.8021 - ETH layer: Reception of a CSF frame that indicates a client loss of signal (dCSF-LOS) or a client forward defect indication (dCSF-FDI) or a client reverse defect indication (dCSF-RDI).
+            The CSF (CSF-LOS, CSF-FDI, and CSF-RDI) defect is calculated at the ETH layer. It monitors the presence of a CSF maintenance signal.
+            G.8021 - GFP: dCSF is Client-specific GFP-F and GFP-T (resp. Frame and Transparent) sink processes.
+            dCSF-RDI: GFP client signal fail-remote defect indication is raised when a GFP client management frame with the RDI UPI (as defined in Table 6-4 of [ITU-T G.7041]) is received.
+            dCSF-RDI is cleared when no such GFP client management frame is received in N x 1000 ms (a value of 3 is suggested for N), a valid GFP client data frame is received, or a GFP client management frame with the DCI UPI is received.
+            dCSF-FDI: GFP client signal fail-forward defect indication is raised when a GFP client management frame with the FDI UPI (as defined in Table 6-4 of [ITU-T G.7041]) is received.
+            dCSF-FDI is cleared when no such GFP client management frame is received in N x 1000 ms (a value of 3 is suggested for N), a valid GFP client data frame is received, or a GFP client management frame with the DCI UPI is received.
+            dCSF-LOS: GFP client signal fail-loss of signal is raised when a GFP client management frame with the LOS UPI (as defined in Table 6-4 of [ITU-T G.7041]) is received.
+            dCSF-LOS is cleared when no such GFP client management frame is received in N x 1000 ms (a value of 3 is suggested for N), a valid GFP client data frame is received, or a GFP client management frame with the DCI UPI is received.";
+    }
+    identity ETH_ALARM_CONDITION_NAME_TOTAL_LINK_LOSS {
+        base ETH_ALARM_CONDITION_NAME;
+        description "G.8021: LAG - fault cause will be raised if no ports are active for an aggregator.";
+    }
+    identity ETH_ALARM_CONDITION_NAME_PARTIAL_LINK_LOSS {
+        base ETH_ALARM_CONDITION_NAME;
+        description "G.8021: LAG - fault cause shall be raised if the number of active ports is less than the provisioned threshold.";
+    }
+    identity ETH_ALARM_CONDITION_NAME_PLM {
+        base ETH_ALARM_CONDITION_NAME;
+        description "G.806: The payload label mismatch defect (dPLM) shall be detected if the 'accepted TSL' code does not match the 'expected TSL' code. If the 'accepted TSL' is 'equipped non-specific', the mismatch is not detected (TSL: Trail Signal Label).
+            Payload type supervision checks that compatible adaptation functions are used at the source and the sink.
+            This is normally done by adding a signal type identifier at the source adaptation function and comparing it with the expected identifier at the sink.
+            If they do not match, a payload mismatch is detected.";
+    }
+    identity ETH_ALARM_CONDITION_NAME_LFD {
+        base ETH_ALARM_CONDITION_NAME;
+        description "G.806 - Server layer-specific GFP sink processes: GFP loss of frame delineation (dLFD) is raised when the frame delineation process (clause 6.3.1 of [ITU-T G.7041]) is not in the 'SYNC' state.
+            dLFD is cleared when the frame delineation process is in the 'SYNC' state.";
+    }
+    identity ETH_ALARM_CONDITION_NAME_EXM {
+        base ETH_ALARM_CONDITION_NAME;
+        description "G.806 - Common GFP sink processes: GFP extension header mismatch (dEXM) is raised when the accepted EXI (AcEXI) is different from the expected EXI.
+            dEXM is cleared when AcEXI matches the expected EXI or GFP_SF is active.";
+    }
+    identity ETH_ALARM_CONDITION_NAME_UPM {
+        base ETH_ALARM_CONDITION_NAME;
+        description "G.806 - Client-specific GFP-F (Frame) and GFP-T (Transparent) sink processes: GFP user payload mismatch (dUPM) is raised when the accepted UPI (AcUPI) is different from the expected UPI.
+            dUPM is cleared when AcUPI matches the expected UPI or GFP_SF is active.";
+    }
+    identity ETH_PM_PARAMETER_NAME {
+        description "none";
+    }
+    identity ETH_PM_PARAMETER_NAME_MINIMUM_FRAME_DELAY {
+        base ETH_PM_PARAMETER_NAME;
+        description "none";
+    }
+    identity ETH_PM_PARAMETER_NAME_MAXIMUM_FRAME_DELAY {
+        base ETH_PM_PARAMETER_NAME;
+        description "none";
+    }
+    identity ETH_PM_PARAMETER_NAME_AVERAGE_FRAME_DELAY {
+        base ETH_PM_PARAMETER_NAME;
+        description "none";
+    }
+    identity ETH_PM_PARAMETER_NAME_MINIMUM_FRAME_DELAY_VARIATION {
+        base ETH_PM_PARAMETER_NAME;
+        description "This attribute contains the minimum frame delay variation measured in units of ns (nano second, 1x10e-9 seconds).
+            Y.1563:
+            The 2-point frame delay variation (vk) for an Ethernet frame k between SRC and DST is the difference between the absolute Ethernet frame transfer delay (xk) of frame k and a defined reference Ethernet frame transfer delay, d1,2, between those same MPs:  vk = xk – d1,2.";
+    }
+    identity ETH_PM_PARAMETER_NAME_MAXIMUM_FRAME_DELAY_VARIATION {
+        base ETH_PM_PARAMETER_NAME;
+        description "This attribute contains the maximum frame delay variation measured in units of ns (nano second, 1x10e-9 seconds).
+            Y.1563:
+            The 2-point frame delay variation (vk) for an Ethernet frame k between SRC and DST is the difference between the absolute Ethernet frame transfer delay (xk) of frame k and a defined reference Ethernet frame transfer delay, d1,2, between those same MPs:  vk = xk – d1,2.";
+    }
+    identity ETH_PM_PARAMETER_NAME_AVERAGE_FRAME_DELAY_VARIATION {
+        base ETH_PM_PARAMETER_NAME;
+        description "This attribute contains the average frame delay variation measured in units of ns (nano second, 1x10e-9 seconds).
+            Y.1563:
+            The 2-point frame delay variation (vk) for an Ethernet frame k between SRC and DST is the difference between the absolute Ethernet frame transfer delay (xk) of frame k and a defined reference Ethernet frame transfer delay, d1,2, between those same MPs:  vk = xk – d1,2.";
+    }
+    identity ETH_PM_PARAMETER_NAME_MINIMUM_INTER_FRAME_DELAY_VARIATION {
+        base ETH_PM_PARAMETER_NAME;
+        description "This attribute contains the minimum frame delay variation measured in units of ns (nano second, 1x10e-9 seconds).
+            G.8013/Y.1731:
+            Frame delay variation is a measure of the variations in the frame delay between a pair of service frames";
+    }
+    identity ETH_PM_PARAMETER_NAME_MAXIMUM_INTER_FRAME_DELAY_VARIATION {
+        base ETH_PM_PARAMETER_NAME;
+        description "This attribute contains the maximum frame delay variation measured in units of ns (nano second, 1x10e-9 seconds).
+            G.8013/Y.1731:
+            Frame delay variation is a measure of the variations in the frame delay between a pair of service frames";
+    }
+    identity ETH_PM_PARAMETER_NAME_AVERAGE_INTER_FRAME_DELAY_VARIATION {
+        base ETH_PM_PARAMETER_NAME;
+        description "This attribute contains the average frame delay variation measured in units of ns (nano second, 1x10e-9 seconds).
+            G.8013/Y.1731:
+            Frame delay variation is a measure of the variations in the frame delay between a pair of service frames";
+    }
+    identity ETH_PM_PARAMETER_NAME_MINIMUM_FRAME_LOSS_RATIO {
+        base ETH_PM_PARAMETER_NAME;
+        description "none";
+    }
+    identity ETH_PM_PARAMETER_NAME_MAXIMUM_FRAME_LOSS_RATIO {
+        base ETH_PM_PARAMETER_NAME;
+        description "none";
+    }
+    identity ETH_PM_PARAMETER_NAME_AVERAGE_FRAME_LOSS_RATIO {
+        base ETH_PM_PARAMETER_NAME;
+        description "none";
+    }
+    identity ETH_PM_PARAMETER_NAME_HIGH_LOSS_INTERVALS {
+        base ETH_PM_PARAMETER_NAME;
+        description "none";
+    }
+    identity ETH_PM_PARAMETER_NAME_UNAVAILABLE_INTERVALS {
+        base ETH_PM_PARAMETER_NAME;
+        description "none";
+    }
+    typedef administrative-state {
+        type enumeration {
+            enum LOCKED {
+                description "Users are administratively prohibited from making use of the resource.";
+            }
+            enum UNLOCKED {
+                description "Users are allowed to use the resource.";
+            }
+        }
+        description "The possible values of the administrativeState.";
+    }
+    typedef date-and-time {
+        type string;
+        description "This primitive type defines the date and time according to ISO 8601 with the following structure:
+            yyyyMMddhhmmss.s[Z|{+|-}HHMm] where:
+            yyyy    0000..9999    year
+            MM    01..12            month
+            dd        01..31            day
+            hh        00..23            hour
+            mm    00..59            minute
+            ss        00..60            second (60 for leap seconds)
+            s        .0...9            tenth of second (set to .0 if EMS or NE cannot support this granularity)
+            Z        Z                indicates UTC (rather than local time)
+            {+|-}    + or -            delta from UTC
+            HH        00..23            time zone difference in hours
+            Mm    00..59            time zone difference in minutes.";
+    }
+    typedef directive-value {
+        type enumeration {
+            enum MINIMIZE {
+                description "Directive to minimize.";
+            }
+            enum MAXIMIZE {
+                description "Directive to maximize.";
+            }
+            enum ALLOW {
+                description "Directive to allow.";
+            }
+            enum DISALLOW {
+                description "Directive to disallow";
+            }
+            enum DONT_CARE {
+                description "Directive is do not care.";
+            }
+        }
+        description "Types of directives.";
+    }
+    typedef forwarding-direction {
+        type enumeration {
+            enum BIDIRECTIONAL {
+                description "The fowarding entity supports BIDIRECTIONAL flows at all its (conceptual) ports (i.e. all ports have both an INPUT flow and an OUTPUT flow defined).";
+            }
+            enum UNIDIRECTIONAL {
+                description "The forwarding entity has (conceptual) ports that are either INPUT or OUTPUT. It has no BIDIRECTIONAL (conceptual) ports.";
+            }
+            enum UNDEFINED_OR_UNKNOWN {
+                description "Not a normal state. The system is unable to determine the correct value.";
+            }
+        }
+        description "The directionality of a forwarding entity, e.g. Link, ConnectivityService, Connection, PathComputationService, Path.";
+    }
+    typedef layer-protocol-name {
+        type enumeration {
+            enum ODU {
+                description "Models the ODU layer as per ITU-T G.872";
+            }
+            enum ETH {
+                description "Models the ETH layer as per ITU-T G.8010";
+            }
+            enum DSR {
+                description "Models a Digital Signal of an unspecified rate (Layer 1 coding functions). This value can be used when the intent is to represent a generic digital layer signal without making any statement on its format or overhead (processing) capabilities.";
+            }
+            enum PHOTONIC_MEDIA {
+                description "Models the optical signal and media channel layer as per ITU-T G.807";
+            }
+            enum DIGITAL_OTN {
+                description "Models the OTU/ODU OTN digital layers as per ITU-T G.872";
+            }
+        }
+        description "Provides a controlled list of layer protocol names and indicates the naming authority.
+            Note that it is expected that attributes will be added to this structure to convey the naming authority name, the name of the layer protocol using a human readable string and any particular standard reference.
+            ";
+    }
+    typedef lifecycle-state {
+        type enumeration {
+            enum PLANNED {
+                description "The resource is planned but is not present in the network.";
+            }
+            enum POTENTIAL_AVAILABLE {
+                description "The supporting resources are present in the network but are shared with other clients; or require further configuration before they can be used; or both.
+                    When a potential resource is configured and allocated to a client it is moved to the INSTALLED state for that client.
+                    If the potential resource has been consumed (e.g. allocated to another client) it is moved to the POTENTIAL_BUSY state for all other clients.";
+            }
+            enum POTENTIAL_BUSY {
+                description "The supporting resources are present in the network but have been allocated to other clients.";
+            }
+            enum INSTALLED {
+                description "The resource is present in the network and is capable of providing the service expected.";
+            }
+            enum PENDING_REMOVAL {
+                description "The resource has been marked for removal.";
+            }
+        }
+        description "The possible values of the lifecycleState.";
+    }
+    grouping name-and-value {
+        leaf value-name {
+            type string;
+            description "The name of the value. Optional, the value need not to have a name.";
+        }
+        leaf value {
+            type string;
+            description "The specific value.";
+        }
+        description "A scoped name-value pair.";
+    }
+    typedef operational-state {
+        type enumeration {
+            enum DISABLED {
+                description "The resource is unable to meet the SLA of the user of the resource. If no (explicit) SLA is defined the resource is disabled if it is totally inoperable and unable to provide service to the user.";
+            }
+            enum ENABLED {
+                description "The resource is partially or fully operable and available for use.";
+            }
+        }
+        description "The possible values of the operationalState.";
+    }
+    typedef port-role {
+        type enumeration {
+            enum SYMMETRIC {
+                description "A port that can exchange flows (e.g. distinct packet flows) with any other port(s) in a forwarding entity.
+                    The SYMMETRIC role applies to point to point and multipoint to multipoint connection schemes.";
+            }
+            enum ROOT {
+                description "A port that can exchange flows (e.g. distinct packet flows) with any other port(s) in a forwarding entity.
+                    The ROOT role is unique to the Rooted Multipoint connection scheme.";
+            }
+            enum LEAF {
+                description "A port that can only exchange flows (e.g. distinct packet flows) with any other ROOT or TRUNK port(s) in a forwarding entity.
+                    The LEAF role is unique to the Rooted Multipoint connection scheme.";
+            }
+            enum TRUNK {
+                description "The TRUNK role is unique to the ENNI involved in a Rooted Multipoint connection scheme. It provides a way to extend the concept of ROOT and LEAF bidirectionally across the ENNI without having to create multiple ports (Leaves and Roots) and hairpinning from one to the other.";
+            }
+            enum UNKNOWN {
+                description "Not a normal state. The system is unable to determine the correct value.";
+            }
+        }
+        description "The role of a (conceptual) port of a forwarding entity, e.g. Link, ConnectivityService, Connection, PathComputationService, Path, VirtualNetworkService.";
+    }
+    typedef direction {
+        type enumeration {
+            enum BIDIRECTIONAL {
+                description "A termination entity with both SINK and SOURCE flows.";
+            }
+            enum SINK {
+                description "The flow is up the layer stack from the server side to the client side.";
+            }
+            enum SOURCE {
+                description "The flow is down the layer stack from the client side to the server side.";
+            }
+            enum UNDEFINED_OR_UNKNOWN {
+                description "Not a normal state. The system is unable to determine the correct value.";
+            }
+        }
+        description "The directionality of an entity, e.g. CSEP, CEP, NEP.";
+    }
+    typedef termination-state {
+        type enumeration {
+            enum CAN_NEVER_TERMINATE {
+                description "A non-flexible case that can never be terminated.";
+            }
+            enum NOT_TERMINATED {
+                description "A flexible termination that can terminate but is currently not terminated.";
+            }
+            enum TERMINATED_SERVER_TO_CLIENT_FLOW {
+                description "A flexible termination that is currently terminated for server to client flow only.";
+            }
+            enum TERMINATED_CLIENT_TO_SERVER_FLOW {
+                description "A flexible termination that is currently terminated for client to server flow only.";
+            }
+            enum TERMINATED_BIDIRECTIONAL {
+                description "A flexible termination that is currently terminated in both directions of flow.";
+            }
+            enum PERMANENTLY_TERMINATED {
+                description "A non-flexible termination that is always terminated (in both directions of flow for a bidirectional case and in the one direction of flow for both unidirectional cases).";
+            }
+            enum TERMINATION_STATE_UNKNOWN {
+                description "Not a normal state. The system is unable to determine the correct value.";
+            }
+        }
+        description "Provides support for the range of behaviours and specific states that the termination function of a termination entity can take with respect to the termination of the signal.";
+    }
+    typedef uuid {
+        type string;
+        description "The univeral ID value where the mechanism for generation is defined by some authority not directly referenced in the structure.
+            UUID here uses string representation as defined in RFC 4122.  The canonical representation uses lowercase characters.
+            Pattern: [0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-' + '[0-9a-fA-F]{4}-[0-9a-fA-F]{12} 
+            Example of a UUID in string representation: f81d4fae-7dec-11d0-a765-00a0c91e6bf6";
+    }
+    grouping capacity {
+        container total-size {
+            uses capacity-value;
+            description "Total capacity of the entity. In case of bandwidthProfile, this is expected to be the same as the committedInformationRate.";
+        }
+        description "Information on capacity of a particular entity.";
+    }
+    grouping capacity-value {
+        leaf value {
+            type decimal64 {
+                fraction-digits 7;
+            }
+            description "The specific value of the capacity.";
+        }
+        leaf unit {
+            type capacity-unit;
+            description "The specific unit of measurement of the capacity.";
+        }
+        description "The Capacity (Bandwidth) values that are applicable for digital layers.";
+    }
+    typedef capacity-unit {
+        type identityref {
+            base CAPACITY_UNIT;
+        }
+        description "Units of measurement of the capacity.";
+    }
+    grouping time-range {
+        leaf start-time {
+            type date-and-time;
+            description "Date and time of the range start.";
+        }
+        leaf end-time {
+            type date-and-time;
+            description "Date and time of the range end.";
+        }
+        description "Range of time.";
+    }
+    grouping time-period {
+        leaf value {
+            type uint64;
+            description "The specific value of the time period.";
+        }
+        leaf unit {
+            type time-unit;
+            description "The unit of measurement of the time period.";
+        }
+        description "Period of time.";
+    }
+    typedef time-unit {
+        type enumeration {
+            enum YEARS {
+                description "none";
+            }
+            enum MONTHS {
+                description "none";
+            }
+            enum DAYS {
+                description "none";
+            }
+            enum HOURS {
+                description "none";
+            }
+            enum MINUTES {
+                description "none";
+            }
+            enum SECONDS {
+                description "none";
+            }
+            enum MILLISECONDS {
+                description "none";
+            }
+            enum MICROSECONDS {
+                description "none";
+            }
+            enum NANOSECONDS {
+                description "none";
+            }
+            enum PICOSECONDS {
+                description "none";
+            }
+        }
+        description "Units of measurement of the time.";
+    }
+    grouping time-interval {
+        list period {
+            key 'unit';
+            uses time-period;
+            description "The specific interval of time. Each TimePeriod occurrence specifies a duration in years, months, days, hours, minutes etc. 
+                The 1..5 occurrences complies with Q.821.
+                ITU-T Q.821 (02/2000):
+                TimeInterval ::= SEQUENCE {
+                day [0] INTEGER (0..31) DEFAULT 0,
+                hour [1] INTEGER (0..23) DEFAULT 0,
+                minute [2] INTEGER (0..59) DEFAULT 0,
+                second [3] INTEGER (0..59) DEFAULT 0,
+                msec [4] INTEGER (0..999) DEFAULT 0 }
+                Examples: 
+                A duration of 1 hour, 15 minutes and 30 seconds should be coded as 3 occurrences of TimePeriod:
+                - HOURS; 1
+                - MINUTES; 15
+                - SECONDS; 30
+                A duration of 1550 milliseconds as two occurrences of TimePeriod:
+                - SECONDS; 1
+                - MILLISECONDS: 550";
+        }
+        description "Interval of time, duration.
+            Q.821: The Interval attribute type indicates the time between occurrences of a given activity described by an instance of the Management Operations Schedule object class.
+            The interval can be specified in seconds, minutes, hours, or days.
+            ";
+    }
+    typedef layer-protocol-qualifier {
+        type identityref {
+            base LAYER_PROTOCOL_QUALIFIER;
+        }
+        description "This enumeration is used to qualify the sub-layers (if applicable) for a specific LayerProtocol.
+            This extensible enumeration can be augmented with layer-specific values in the respective technology-specific modules.";
+    }
+    typedef mac-address {
+        type string;
+        description "Pattern: '[0-9a-fA-F]{2}(-[0-9a-fA-F]{2}){5}'
+            Description: 'The mac-address type represents a MAC address in the canonical format and hexadecimal format specified by IEEE Std 802. The canonical representation uses lowercase characters. The hexadecimal representation uses uppercase characters.'";
+    }
+    typedef binary-type {
+        type string;
+        description "Represents any binary data, i.e., a sequence of octets.
+            A binary type can be restricted by a length which defines the number of octets it contains.";
+    }
+    typedef timeticks {
+        type string;
+        description "Type uint32.
+            This type represents a non-negative integer that represents the time, modulo 2^32 (4294967296 decimal), in hundredths of a second between two epochs.";
+    }
+    typedef object-type {
+        type identityref {
+            base OBJECT_TYPE;
+        }
+        description "The list of TAPI Global Object Class types on which Notification signals can be raised.
+            This extensible enumeration can be augmented with specific object types/classes in the other modules.";
+    }
+    grouping pm-parameter-value {
+        leaf pm-parameter-value {
+            type decimal64 {
+                fraction-digits 7;
+            }
+            description "The PM Parameter value. The type Real allows the representation of e.g. either gauges or counters.";
+        }
+        leaf pm-parameter-unit {
+            type string;
+            description "The PM Parameter unit.";
+        }
+        leaf pm-parameter-value-type {
+            type metric-value-type;
+            description "none";
+        }
+        description "PM metric value.";
+    }
+    grouping pm-parameter {
+        leaf pm-parameter-name {
+            type pm;
+            description "The name of the PM metric. Technology specific modules may define specific PM metrics.";
+        }
+        list pm-parameter-value {
+            key 'pm-parameter-value-type';
+            uses pm-parameter-value;
+            description "The value of the PM metric.";
+        }
+        description "PM metric name and value.";
+    }
+    typedef any-type {
+        type string;
+        description "This primitive represents the 'any data' mechanism.";
+    }
+    grouping payload-structure {
+        leaf-list multiplexing-sequence {
+            type layer-protocol-qualifier;
+            description "List of layer protocol qualifiers composing the multiplexing sequence.";
+        }
+        leaf number-of-cep-instances {
+            type uint64;
+            description "The maximum number of uppermost client CEPs (non-terminated). This relates to the first entry of the mux sequence.";
+        }
+        container capacity {
+            uses capacity-value;
+            description "The maximum capacity of the multiplexing sequence. E.g. in case of ODUFlex.";
+        }
+        list potential-cep-instance-capability {
+            key 'potential-cep-instance-identifier';
+            uses potential-cep-instance-capability;
+            description "Capability of supportable potential CEP instances.";
+        }
+        list potential-cep-instance-capability-range {
+            key 'range-identifier';
+            uses potential-cep-instance-capability-range;
+            description "none";
+        }
+        description "The supported multiplexing sequences, e.g.
+            - ODU0; ODU1; ODU2; ODU4 : 80
+            - ODU0; ODU1; ODU2; ODU3; ODU4 : 64
+            - ODUflex; ODU2; ODU3; ODU4 : 64 [64/ts] : 10G
+            - ODUflex; ODU2; ODU4: 80 [80/ts] : 10G
+            - ODU1; ODU2; ODU3; ODUCn : 40 [mult. for n]
+            - ODU2; ODU4; ODUCn: 10 [mult. for n]
+            - ODU2; ODU3: ODU4; ODUCn: 8 [mult. for n]
+            - ODU3; ODU4; ODUCn: 2 [mult. for n]
+            - OTSiMC; MC; OMS; OTS : 80 : 50G
+            - ODUCn; OTSiMC : 2 : 200G
+            - ODUCn; OTSiMC : 1 : 400G
+            In each sequence, the first entry indicates the upper most client (non-terminated) CEP, the rest of entries indicate the server terminated CEPs (forming the mux path).";
+    }
+    grouping supported-layer-protocol-qualifier {
+        leaf layer-protocol-qualifier {
+            type layer-protocol-qualifier;
+            description "none";
+        }
+        leaf number-of-cep-instances {
+            type uint64;
+            description "Number of CEP instances at the layer protocol qualifier.";
+        }
+        description "none";
+    }
+    typedef profile-type {
+        type identityref {
+            base PROFILE_TYPE;
+        }
+        description "none";
+    }
+    grouping potential-cep-instance-capability {
+        leaf potential-cep-instance-identifier {
+            type string;
+            description "Identifier of the potential CEP instance.";
+        }
+        leaf-list potentially-supported-position-or-label {
+            type position-or-label;
+            description "Information related to the signal property in terms of position in the bandwidth.
+                Technology specific example are time-slot, frequency/slot, packet label.";
+        }
+        description "none";
+    }
+    typedef position-or-label {
+        type string;
+        description "none";
+    }
+    grouping potential-cep-instance-capability-range {
+        leaf range-identifier {
+            type string;
+            description "none";
+        }
+        list potentially-supported-position-or-label-range {
+            uses position-or-label-range;
+            description "none";
+        }
+        description "none";
+    }
+    grouping position-or-label-range {
+        list position-or-label-range {
+            uses range;
+            description "none";
+        }
+        description "none";
+    }
+    grouping range {
+        leaf upper {
+            type string;
+            description "none";
+        }
+        leaf lower {
+            type string;
+            description "none";
+        }
+        description "none";
+    }
+    grouping metric-values {
+        list metric-values {
+            key 'pm-parameter-value-type';
+            uses pm-parameter-value;
+            description "none";
+        }
+        description "none";
+    }
+    typedef metric-value-type {
+        type identityref {
+            base METRIC_VALUE_TYPE;
+        }
+        description "none";
+    }
+    typedef alr {
+        type identityref {
+            base ALR;
+        }
+        description "none";
+    }
+    typedef dc {
+        type identityref {
+            base DC;
+        }
+        description "none";
+    }
+    typedef pm {
+        type identityref {
+            base PM;
+        }
+        description "none";
+    }
+    typedef eth-alarm-condition-name {
+        type identityref {
+            base ETH_ALARM_CONDITION_NAME;
+        }
+        description "none";
+    }
+    typedef eth-pm-parameter-name {
+        type identityref {
+            base ETH_PM_PARAMETER_NAME;
+        }
+        description "none";
+    }
+
+}

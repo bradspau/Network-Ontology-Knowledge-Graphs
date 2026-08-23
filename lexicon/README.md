@@ -49,3 +49,20 @@ Currently just the structural origin of the entry (`StructuralKind`,
 classification (node-like, termination-point-like, link, service, ...).
 Refining this into genuinely useful shallow classes is itself a curation
 task, not something the drafting tool should guess at.
+
+## Known limitation: one entry per URI path, not per concept
+
+`draft_lexicon.py` makes one entry per unique container/list *path*, not one
+per underlying *concept*. On flatter corpora (the IETF modules this was
+originally drafted against) that distinction rarely matters. It matters a
+lot on `tapi-*`: TAPI roots nearly everything under one `context` container
+and reuses common local names (e.g. `access-port`) at many different
+nesting depths, each carrying its own genuinely distinct YANG description.
+The result is `tapi-common.lexicon.ttl` alone holding **2,571** entries --
+not fabricated, not identical duplicates (verified: 7 separate
+`access-port` entries, each with different real description text), but
+7 different *relationships to* what a reference lexicon should probably
+treat as one *concept*, per the reference-lexicons draft's identity-first
+framing. Left as-is deliberately for now (correct but verbose) rather than
+guessing at a deduplication heuristic; revisit if/when this actually blocks
+binding or alignment work (`lexicon-69m.5`).

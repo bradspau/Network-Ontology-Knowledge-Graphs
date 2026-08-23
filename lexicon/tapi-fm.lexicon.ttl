@@ -1,0 +1,324 @@
+@prefix lex: <http://example.org/ontology/lexicon-vocab#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+# Reference lexicon for module: tapi-fm
+# Auto-drafted by draft_lexicon.py from yang4owl.py output. Do not hand-edit
+# without removing lex:needsCuration once an entry has been reviewed --
+# it exists so curated and uncurated entries stay distinguishable.
+#
+# Entries flagged lex:needsCuration true have an empty or label-restating
+# definition and/or a placeholder canonical example -- see
+# docs/reference-lexicons.md recommendation #2 before relying on them.
+
+lex:tapi-fm-active-condition
+    a lex:ReferenceEntry ;
+    skos:prefLabel "active-condition" ;
+    skos:definition "Grouping definition: active-condition" ;
+    skos:scopeNote "This object describes the current active condition (alarm or TCA) of the target object." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-fm/active-condition> .
+
+lex:tapi-fm-alarm-category
+    a lex:ReferenceEntry ;
+    skos:prefLabel "ALARM_CATEGORY" ;
+    skos:definition "none" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-fm/ALARM_CATEGORY> .
+
+lex:tapi-fm-alarm-category-connectivity
+    a lex:ReferenceEntry ;
+    skos:prefLabel "ALARM_CATEGORY_CONNECTIVITY" ;
+    skos:definition "none" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-fm/ALARM_CATEGORY_CONNECTIVITY> .
+
+lex:tapi-fm-alarm-category-environment
+    a lex:ReferenceEntry ;
+    skos:prefLabel "ALARM_CATEGORY_ENVIRONMENT" ;
+    skos:definition "none" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-fm/ALARM_CATEGORY_ENVIRONMENT> .
+
+lex:tapi-fm-alarm-category-equipment
+    a lex:ReferenceEntry ;
+    skos:prefLabel "ALARM_CATEGORY_EQUIPMENT" ;
+    skos:definition "none" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-fm/ALARM_CATEGORY_EQUIPMENT> .
+
+lex:tapi-fm-alarm-category-processing
+    a lex:ReferenceEntry ;
+    skos:prefLabel "ALARM_CATEGORY_PROCESSING" ;
+    skos:definition "none" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-fm/ALARM_CATEGORY_PROCESSING> .
+
+lex:tapi-fm-alarm-category-security
+    a lex:ReferenceEntry ;
+    skos:prefLabel "ALARM_CATEGORY_SECURITY" ;
+    skos:definition "none" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-fm/ALARM_CATEGORY_SECURITY> .
+
+lex:tapi-fm-alarm-info
+    a lex:ReferenceEntry ;
+    skos:prefLabel "alarm-info" ;
+    skos:definition "Grouping definition: alarm-info" ;
+    skos:scopeNote "This class augments the Notification class with alarm related parameters.\nThis class is deprecated in favor of DetectedCondition class, which unifies alarm and TCA related parameters." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-fm/alarm-info> .
+
+lex:tapi-fm-condition-type
+    a lex:ReferenceEntry ;
+    skos:prefLabel "CONDITION_TYPE" ;
+    skos:definition "none" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-fm/CONDITION_TYPE> .
+
+lex:tapi-fm-condition-type-alarm
+    a lex:ReferenceEntry ;
+    skos:prefLabel "CONDITION_TYPE_ALARM" ;
+    skos:definition "none" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-fm/CONDITION_TYPE_ALARM> .
+
+lex:tapi-fm-condition-type-tca
+    a lex:ReferenceEntry ;
+    skos:prefLabel "CONDITION_TYPE_TCA" ;
+    skos:definition "Threshold Crossing Alert" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-fm/CONDITION_TYPE_TCA> .
+
+lex:tapi-fm-detected-condition
+    a lex:ReferenceEntry ;
+    skos:prefLabel "detected-condition" ;
+    skos:definition "A record of the state of a Detector where that Detector has two underling states that are of asymmetric importance.\nFor example, an alarm or a threshold crossing alert detected on a given resource.\nA Condition Detector represents any monitoring component that assesses properties of something and determines from those properties what conditions are associated with the thing.\nFor example, a thing might be 'too hot' or might be 'unreliable'." ;
+    skos:scopeNote "Grouping definition: detected-condition" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-fm/detected-condition> .
+
+lex:tapi-fm-detector-category
+    a lex:ReferenceEntry ;
+    skos:prefLabel "DETECTOR_CATEGORY" ;
+    skos:definition "none" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-fm/DETECTOR_CATEGORY> .
+
+lex:tapi-fm-detector-category-connectivity
+    a lex:ReferenceEntry ;
+    skos:prefLabel "DETECTOR_CATEGORY_CONNECTIVITY" ;
+    skos:definition "none" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-fm/DETECTOR_CATEGORY_CONNECTIVITY> .
+
+lex:tapi-fm-detector-category-environment
+    a lex:ReferenceEntry ;
+    skos:prefLabel "DETECTOR_CATEGORY_ENVIRONMENT" ;
+    skos:definition "none" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-fm/DETECTOR_CATEGORY_ENVIRONMENT> .
+
+lex:tapi-fm-detector-category-equipment
+    a lex:ReferenceEntry ;
+    skos:prefLabel "DETECTOR_CATEGORY_EQUIPMENT" ;
+    skos:definition "none" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-fm/DETECTOR_CATEGORY_EQUIPMENT> .
+
+lex:tapi-fm-detector-category-processing
+    a lex:ReferenceEntry ;
+    skos:prefLabel "DETECTOR_CATEGORY_PROCESSING" ;
+    skos:definition "none" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-fm/DETECTOR_CATEGORY_PROCESSING> .
+
+lex:tapi-fm-detector-category-security
+    a lex:ReferenceEntry ;
+    skos:prefLabel "DETECTOR_CATEGORY_SECURITY" ;
+    skos:definition "none" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-fm/DETECTOR_CATEGORY_SECURITY> .
+
+lex:tapi-fm-detector-category-undefined
+    a lex:ReferenceEntry ;
+    skos:prefLabel "DETECTOR_CATEGORY_UNDEFINED" ;
+    skos:definition "none" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-fm/DETECTOR_CATEGORY_UNDEFINED> .
+
+lex:tapi-fm-detector-info
+    a lex:ReferenceEntry ;
+    skos:prefLabel "detector-info" ;
+    skos:definition "(Legacy) information associated to a Condition (alarm)." ;
+    skos:scopeNote "Grouping definition: detector-info" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-fm/detector-info> .
+
+lex:tapi-fm-fault-management-context
+    a lex:ReferenceEntry ;
+    skos:prefLabel "fault-management-context" ;
+    skos:definition "Grouping definition: fault-management-context" ;
+    skos:scopeNote "This object class represents the scope of control that a particular SDN controller has with respect to a particular network, specifically regarding the fault management description.\nAn instance of this class includes its ActiveCondition instances." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-fm/fault-management-context> .
+
+lex:tapi-fm-fm
+    a lex:ReferenceEntry ;
+    skos:prefLabel "FM" ;
+    skos:definition "none" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-fm/FM> .
+
+lex:tapi-fm-fm-alarm-event
+    a lex:ReferenceEntry ;
+    skos:prefLabel "FM_ALARM_EVENT" ;
+    skos:definition "The notification of a detected condition event, specifically an alarm detected on a given resource." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-fm/FM_ALARM_EVENT> .
+
+lex:tapi-fm-fm-threshold-crossing-alert
+    a lex:ReferenceEntry ;
+    skos:prefLabel "FM_THRESHOLD_CROSSING_ALERT" ;
+    skos:definition "The notification of a detected condition event, specifically a threshold crossing alert detected on a given resource." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-fm/FM_THRESHOLD_CROSSING_ALERT> .
+
+lex:tapi-fm-perceived-severity-type
+    a lex:ReferenceEntry ;
+    skos:prefLabel "perceived-severity-type" ;
+    skos:definition "The types of perceived severity.\nITU-T G.7710: Failures may have been categorized to indicate the severity or urgency of the fault." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:EnumeratedKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/types/tapi-fm/perceived-severity-type> .
+
+lex:tapi-fm-perceived-tca-severity
+    a lex:ReferenceEntry ;
+    skos:prefLabel "PERCEIVED_TCA_SEVERITY" ;
+    skos:definition "none" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-fm/PERCEIVED_TCA_SEVERITY> .
+
+lex:tapi-fm-perceived-tca-severity-clear
+    a lex:ReferenceEntry ;
+    skos:prefLabel "PERCEIVED_TCA_SEVERITY_CLEAR" ;
+    skos:definition "Included only for some possible backward compatibility purpose. It should not be used to assign a severity to a failure.\nITU-T G.7710: The severities 'cleared' and 'indeterminate' defined by [ITU-T X.733] are not included in Table 2, as it is assumed that these are not to be used to assign a failure." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-fm/PERCEIVED_TCA_SEVERITY_CLEAR> .
+
+lex:tapi-fm-perceived-tca-severity-warning
+    a lex:ReferenceEntry ;
+    skos:prefLabel "PERCEIVED_TCA_SEVERITY_WARNING" ;
+    skos:definition "ITU-T G.7710/X.733/M.3100: Indication for a potential or impending service-affecting fault. Further diagnosis should be made." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-fm/PERCEIVED_TCA_SEVERITY_WARNING> .
+
+lex:tapi-fm-pm-metric-info
+    a lex:ReferenceEntry ;
+    skos:prefLabel "pm-metric-info" ;
+    skos:definition "Grouping definition: pm-metric-info" ;
+    skos:scopeNote "Information associated to a Threshold Crossing Alert." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-fm/pm-metric-info> .
+
+lex:tapi-fm-service-affecting
+    a lex:ReferenceEntry ;
+    skos:prefLabel "service-affecting" ;
+    skos:definition "The possible impact on the service." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:EnumeratedKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/types/tapi-fm/service-affecting> .
+
+lex:tapi-fm-simple-detector
+    a lex:ReferenceEntry ;
+    skos:prefLabel "simple-detector" ;
+    skos:definition "Grouping definition: simple-detector" ;
+    skos:scopeNote "Information regarding the (simple) state of the Detector." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-fm/simple-detector> .
+
+lex:tapi-fm-simple-detector-state
+    a lex:ReferenceEntry ;
+    skos:prefLabel "SIMPLE_DETECTOR_STATE" ;
+    skos:definition "none" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-fm/SIMPLE_DETECTOR_STATE> .
+
+lex:tapi-fm-simple-detector-state-active
+    a lex:ReferenceEntry ;
+    skos:prefLabel "SIMPLE_DETECTOR_STATE_ACTIVE" ;
+    skos:definition "The detector is indicating the operation of the monitored entity is not within acceptable bounds with respect to the specific condition measured.\nIf INTERMITTENT is supported there may be a requirement for persisted unacceptable operation after a problem occurs before ACTIVE is declared. An alternative may be to declare INTERMITTENT.\nWhere INTERMITTENT is supported, ACTIVE indicates the stable presence of a problem." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-fm/SIMPLE_DETECTOR_STATE_ACTIVE> .
+
+lex:tapi-fm-simple-detector-state-active-no-explicit-clear
+    a lex:ReferenceEntry ;
+    skos:prefLabel "SIMPLE_DETECTOR_STATE_ACTIVE_NO_EXPLICIT_CLEAR" ;
+    skos:definition "Same as Active, but an explicit transition to Clear is not foreseen.\nThis e.g. applies to PM metrics which can only increase (counters), hence the 'clear' criteria is conventionally the end of a measurement period." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-fm/SIMPLE_DETECTOR_STATE_ACTIVE_NO_EXPLICIT_CLEAR> .
+
+lex:tapi-fm-simple-detector-state-clear
+    a lex:ReferenceEntry ;
+    skos:prefLabel "SIMPLE_DETECTOR_STATE_CLEAR" ;
+    skos:definition "The detector is indicating the operation of the monitored entity is within acceptable bounds with respect to the specific condition measured." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-fm/SIMPLE_DETECTOR_STATE_CLEAR> .
+
+lex:tapi-fm-simple-detector-state-fleeting
+    a lex:ReferenceEntry ;
+    skos:prefLabel "SIMPLE_DETECTOR_STATE_FLEETING" ;
+    skos:definition "Event has a very short life (Active-Clear), hence is notified/streamed after its occurrence." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-fm/SIMPLE_DETECTOR_STATE_FLEETING> .
+
+lex:tapi-fm-simple-detector-state-intermittent
+    a lex:ReferenceEntry ;
+    skos:prefLabel "SIMPLE_DETECTOR_STATE_INTERMITTENT" ;
+    skos:definition "The detector is indicating the operation of the monitored entity is intermittently not within acceptable bounds with respect to the specific condition measured.\nINTERMITTENT support is optional. Where it is supported there may be a requirement for persisted unacceptable operation after a problem occurs before ACTIVE or INTERMITTENT is declared." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-fm/SIMPLE_DETECTOR_STATE_INTERMITTENT> .
+
+lex:tapi-fm-tca-info
+    a lex:ReferenceEntry ;
+    skos:prefLabel "tca-info" ;
+    skos:definition "Grouping definition: tca-info" ;
+    skos:scopeNote "This class augments the Notification class with threshold crossing alert related parameters.\nThis class is deprecated in favor of DetectedCondition class, which unifies alarm and TCA related parameters." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-fm/tca-info> .

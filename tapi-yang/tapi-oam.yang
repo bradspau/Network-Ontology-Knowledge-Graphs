@@ -1,0 +1,1508 @@
+module tapi-oam {
+    yang-version "1.1";
+    namespace "urn:onf:otcc:yang:tapi-oam";
+    prefix tapi-oam;
+    import tapi-common {
+        prefix tapi-common;
+    }
+    import tapi-connectivity {
+        prefix tapi-connectivity;
+    }
+    import tapi-topology {
+        prefix tapi-topology;
+    }
+    import tapi-notification {
+        prefix tapi-notification;
+    }
+    import tapi-streaming {
+        prefix tapi-streaming;
+    }
+    organization "Linux Foundation ONMI (Open Network Modeling and Interfaces) Project";
+    contact "
+         Project Web: <https://github.com/Open-Network-Models-and-Interfaces-ONMI/onmi-home/wiki>
+         Project List: <mailto:onmi-tapi@googlegroups.com>
+         Editor: Nigel Davis <mailto:ndavis@ciena.com>
+         Arturo Mayoral <mailto:amayoral@telecominfraproject.com>
+         Ramon Casellas <mailto:ramon.casellas@cttc.es>";
+    description "
+        This module contains TAPI OAM Model definitions.
+        Source: TapiOam.uml
+        - The TAPI YANG models included in this TAPI release are a *normative* part of the TAPI SDK.
+        - The YANG specifications have been generated from the corresponding UML model using the [EAGLE UML2YANG mapping tool]
+        <https://github.com/Open-Network-Models-and-Interfaces-ONMI/onmi-iisomi-uml-yang>
+        and further edited manually to comply with the [ONMI IISOMI UML2YANG mapping guidelines]
+        <https://github.com/Open-Network-Models-and-Interfaces-ONMI/onmi-iisomi-home>
+	with further details available at <https://github.com/Open-Network-Models-and-Interfaces-ONMI/TAPI-Documentation/tree/v2.6.0/ToolingGuidelines>
+        - Status of YANG model artifacts can be determined by referring to the corresponding UML artifacts.
+        As described in the UML models, some artifacts are considered *experimental*, and thus the corresponding YANG artifacts.
+        - The LF ONMI TAPI release process does not guarantee backward compatibility of YANG models across major versions of TAPI releases.
+        The YANG model backward compatibility criteria are outlined in section 11 of <https://tools.ietf.org/html/rfc7950>.
+        YANG models included in this release may not be backward compatible with some previous TAPI releases.
+        - Previous revisions can now be found at https://github.com/Open-Network-Models-and-Interfaces-ONMI/TAPI under the 
+        appropriate tag and, where relevant, fixes to those revisions can be found under the corresponding branches. The documentation for
+        each significant revision is found at https://github.com/Open-Network-Models-and-Interfaces-ONMI/TAPI-Documentation under the
+        appropriate tag and, where relevant, fixes to those revisions can be found under the corresponding branches.
+        License: This module is distributed under the Apache License 2.0.";
+    revision 2025-03-31 {
+        description "LF ONMI Transport API version 2.6.0.
+                   Changes included in this TAPI release (v2.6.0) are listed in
+                   <https://github.com/Open-Network-Models-and-Interfaces-ONMI/TAPI-Documentation/tree/v2.6.0/DeltaDocument>";
+        reference "ONF-TR-527, ONF-TR-512, ONF-TR-531, RFC 7950, RFC 6087 and LF ONMI TAPI UML model
+                  <https://github.com/Open-Network-Models-and-Interfaces-ONMI/TAPI/tree/v2.6.0/UML>";
+    }
+    revision 2023-10-10 {
+        description "ONF Transport API version 2.5.0.
+                   Changes included in this TAPI release (v2.5.0) are listed in
+                   <https://github.com/Open-Network-Models-and-Interfaces-ONMI/TAPI-Documentation/tree/v2.5.0/DeltaDocument>";
+        reference "ONF-TR-527, ONF-TR-512, ONF-TR-531, RFC 7950, RFC 6087 and ONF TAPI UML model
+                  <https://github.com/Open-Network-Models-and-Interfaces-ONMI/TAPI/tree/v2.5.0/UML>";
+    }
+    revision 2023-03-21 {
+        description "ONF Transport API version 2.4.1.
+                   Changes included in this TAPI release (v2.4.1) are listed in
+                   <https://github.com/Open-Network-Models-and-Interfaces-ONMI/TAPI-Documentation/tree/v2.4.1/DeltaDocument>";
+        reference "ONF-TR-527, ONF-TR-512, ONF-TR-531, RFC 7950, RFC 6087 and ONF TAPI UML model
+                  <https://github.com/Open-Network-Models-and-Interfaces-ONMI/TAPI/tree/v2.4.1/UML>";
+    }
+    revision 2022-12-22 {
+        description "ONF Transport API version 2.4.0.
+                   Changes included in this TAPI release (v2.4.0) are listed in
+                   <https://github.com/Open-Network-Models-and-Interfaces-ONMI/TAPI-Documentation/tree/v2.4.0/DeltaDocument>";
+        reference "ONF-TR-527, ONF-TR-512, ONF-TR-531, RFC 7950, RFC 6087 and ONF TAPI UML model
+                  <https://github.com/Open-Network-Models-and-Interfaces-ONMI/TAPI/tree/v2.4.0/UML>";
+    }
+    revision 2020-04-23 {
+        description "ONF Transport API version 2.1.3";
+        reference "ONF-TR-527, ONF-TR-512, ONF-TR-531, RFC 7950, RFC 6087 and ONF TAPI UML model
+                  <https://github.com/Open-Network-Models-and-Interfaces-ONMI/TAPI/tree/v2.1.3/UML>";
+    }
+    augment "/tapi-streaming:stream-record/tapi-streaming:log-record/tapi-streaming:log-record-body" {
+        when 'derived-from-or-self(tapi-streaming:record-content, "OAM_OBJECT_TYPE_MEP_PM_DATA")';
+        container mep-pm-data {
+            uses mep-pm-data;
+            description "none";
+        }
+        description "none";
+    }
+    augment "/tapi-common:context" {
+        container oam-context {
+            uses oam-context;
+            description "Augments the base TAPI Context with OamContext model.";
+        }
+        description "Augments the base TAPI Context with OamContext model.";
+    }
+    augment "/tapi-common:context/tapi-topology:topology-context/tapi-topology:topology/tapi-topology:node/tapi-topology:owned-node-edge-point/tapi-connectivity:cep-list/tapi-connectivity:connection-end-point" {
+        container mep-mip-list {
+            uses mep-mip-list;
+            description "This augment allows CEP to refer to its MEPs/MIPs despite TapiOam model does not import TapiConnectivity model.";
+        }
+        description "This augment allows CEP to refer to its MEPs/MIPs despite TapiOam model does not import TapiConnectivity model.";
+    }
+    augment "/tapi-streaming:stream-record/tapi-streaming:log-record/tapi-streaming:log-record-body" {
+        when 'derived-from-or-self(tapi-streaming:record-content, "OAM_OBJECT_TYPE_MEP")';
+        container mep {
+            uses mep;
+            description "none";
+        }
+        description "none";
+    }
+    augment "/tapi-streaming:stream-record/tapi-streaming:log-record/tapi-streaming:log-record-body" {
+        when 'derived-from-or-self(tapi-streaming:record-content, "OAM_OBJECT_TYPE_OAM_JOB")';
+        container oam-job {
+            uses oam-job;
+            description "none";
+        }
+        description "none";
+    }
+    augment "/tapi-streaming:stream-record/tapi-streaming:log-record/tapi-streaming:log-record-body" {
+        when 'derived-from-or-self(tapi-streaming:record-content, "OAM_OBJECT_TYPE_MEG")';
+        container meg {
+            uses meg;
+            description "none";
+        }
+        description "none";
+    }
+    augment "/tapi-streaming:stream-record/tapi-streaming:log-record/tapi-streaming:log-record-body" {
+        when 'derived-from-or-self(tapi-streaming:record-content, "OAM_OBJECT_TYPE_MIP")';
+        container mip {
+            uses mip;
+            description "none";
+        }
+        description "none";
+    }
+    augment "/tapi-streaming:stream-record/tapi-streaming:log-record/tapi-streaming:log-record-body" {
+        when 'derived-from-or-self(tapi-streaming:record-content, "OAM_OBJECT_TYPE_OAM_SERVICE")';
+        container oam-service {
+            uses oam-service;
+            description "none";
+        }
+        description "none";
+    }
+    augment "/tapi-streaming:stream-record/tapi-streaming:log-record/tapi-streaming:log-record-body" {
+        when 'derived-from-or-self(tapi-streaming:record-content, "OAM_OBJECT_TYPE_OAM_SERVICE_POINT")';
+        container oam-service-point {
+            uses oam-service-point;
+            description "none";
+        }
+        description "none";
+    }
+    augment "/tapi-streaming:stream-record/tapi-streaming:log-record/tapi-streaming:log-record-body" {
+        when 'derived-from-or-self(tapi-streaming:record-content, "OAM_OBJECT_TYPE_CURRENT_DATA")';
+        container current-data {
+            uses current-data;
+            description "none";
+        }
+        description "none";
+    }
+    augment "/tapi-streaming:stream-record/tapi-streaming:log-record/tapi-streaming:log-record-body" {
+        when 'derived-from-or-self(tapi-streaming:record-content, "OAM_OBJECT_TYPE_HISTORY_DATA")';
+        container history-data {
+            uses history-data;
+            description "none";
+        }
+        description "none";
+    }
+    augment "/tapi-streaming:stream-record/tapi-streaming:log-record/tapi-streaming:log-record-body" {
+        when 'derived-from-or-self(tapi-streaming:record-content, "OAM_OBJECT_TYPE_PM_DATA")';
+        container pm-data {
+            uses pm-data;
+            description "none";
+        }
+        description "none";
+    }
+    augment "/tapi-common:context/tapi-topology:topology-context/tapi-topology:topology/tapi-topology:node/tapi-topology:owned-node-edge-point" {
+        container mep-mip-list {
+            uses mep-mip-list;
+            description "This augment allows NEP to refer to its MEPs/MIPs despite TapiOam model does not import TapiTopology model.";
+        }
+        description "This augment allows NEP to refer to its MEPs/MIPs despite TapiOam model does not import TapiTopology model.";
+    }
+    augment "/tapi-common:context/tapi-notification:notification-context/tapi-notification:event-notification" {
+        when 'derived-from-or-self(tapi-notification:target-object-type, "OAM_OBJECT_TYPE_OAM_JOB")';
+        container oam-job {
+            uses oam-job;
+            description "none";
+        }
+        description "none";
+    }
+    augment "/tapi-common:context/tapi-notification:notification-context/tapi-notification:event-notification" {
+        when 'derived-from-or-self(tapi-notification:target-object-type, "OAM_OBJECT_TYPE_MEG")';
+        container meg {
+            uses meg;
+            description "none";
+        }
+        description "none";
+    }
+    augment "/tapi-common:context/tapi-notification:notification-context/tapi-notification:event-notification" {
+        when 'derived-from-or-self(tapi-notification:target-object-type, "OAM_OBJECT_TYPE_MIP")';
+        container mip {
+            uses mip;
+            description "none";
+        }
+        description "none";
+    }
+    augment "/tapi-common:context/tapi-notification:notification-context/tapi-notification:event-notification" {
+        when 'derived-from-or-self(tapi-notification:target-object-type, "OAM_OBJECT_TYPE_OAM_SERVICE")';
+        container oam-service {
+            uses oam-service;
+            description "none";
+        }
+        description "none";
+    }
+    augment "/tapi-common:context/tapi-notification:notification-context/tapi-notification:event-notification" {
+        when 'derived-from-or-self(tapi-notification:target-object-type, "OAM_OBJECT_TYPE_OAM_SERVICE_POINT")';
+        container oam-service-point {
+            uses oam-service-point;
+            description "none";
+        }
+        description "none";
+    }
+    augment "/tapi-common:context/tapi-notification:notification-context/tapi-notification:event-notification" {
+        when 'derived-from-or-self(tapi-notification:target-object-type, "OAM_OBJECT_TYPE_CURRENT_DATA")';
+        container current-data {
+            uses current-data;
+            description "none";
+        }
+        description "none";
+    }
+    augment "/tapi-common:context/tapi-notification:notification-context/tapi-notification:event-notification" {
+        when 'derived-from-or-self(tapi-notification:target-object-type, "OAM_OBJECT_TYPE_HISTORY_DATA")';
+        container history-data {
+            uses history-data;
+            description "none";
+        }
+        description "none";
+    }
+    augment "/tapi-common:context/tapi-common:profile" {
+        when 'derived-from-or-self(tapi-common:profile-type, "OAM_PROFILE_TYPE")';
+        container oam-profile {
+/*            presence "if oam profile";*/
+            uses oam-profile;
+            description "none";
+        }
+        description "none";
+    }
+    augment "/tapi-notification:event-notification" {
+        when 'derived-from-or-self(tapi-notification:target-object-type, "OAM_OBJECT_TYPE_MEP")';
+        container mep {
+            uses mep;
+            description "none";
+        }
+        description "none";
+    }
+    augment "/tapi-notification:event-notification" {
+        when 'derived-from-or-self(tapi-notification:target-object-type, "OAM_OBJECT_TYPE_OAM_JOB")';
+        container oam-job {
+            uses oam-job;
+            description "none";
+        }
+        description "none";
+    }
+    augment "/tapi-notification:event-notification" {
+        when 'derived-from-or-self(tapi-notification:target-object-type, "OAM_OBJECT_TYPE_MEG")';
+        container meg {
+            uses meg;
+            description "none";
+        }
+        description "none";
+    }
+    augment "/tapi-notification:event-notification" {
+        when 'derived-from-or-self(tapi-notification:target-object-type, "OAM_OBJECT_TYPE_MIP")';
+        container mip {
+            uses mip;
+            description "none";
+        }
+        description "none";
+    }
+    augment "/tapi-notification:event-notification" {
+        when 'derived-from-or-self(tapi-notification:target-object-type, "OAM_OBJECT_TYPE_OAM_SERVICE")';
+        container oam-service {
+            uses oam-service;
+            description "none";
+        }
+        description "none";
+    }
+    augment "/tapi-notification:event-notification" {
+        when 'derived-from-or-self(tapi-notification:target-object-type, "OAM_OBJECT_TYPE_OAM_SERVICE_POINT")';
+        container oam-service-point {
+            uses oam-service-point;
+            description "none";
+        }
+        description "none";
+    }
+    augment "/tapi-notification:event-notification" {
+        when 'derived-from-or-self(tapi-notification:target-object-type, "OAM_OBJECT_TYPE_CURRENT_DATA")';
+        container current-data {
+            uses current-data;
+            description "none";
+        }
+        description "none";
+    }
+    augment "/tapi-notification:event-notification" {
+        when 'derived-from-or-self(tapi-notification:target-object-type, "OAM_OBJECT_TYPE_HISTORY_DATA")';
+        container history-data {
+            uses history-data;
+            description "none";
+        }
+        description "none";
+    }
+    augment "/tapi-notification:event-notification" {
+        when 'derived-from-or-self(tapi-notification:target-object-type, "OAM_OBJECT_TYPE_PM_DATA")';
+        container pm-data {
+            uses pm-data;
+            description "none";
+        }
+        description "none";
+    }
+    augment "/tapi-common:context/tapi-notification:notification-context/tapi-notification:event-notification" {
+        when 'derived-from-or-self(tapi-notification:target-object-type, "OAM_OBJECT_TYPE_PM_DATA")';
+        container pm-data {
+            uses pm-data;
+            description "none";
+        }
+        description "none";
+    }
+    augment "/tapi-common:context/tapi-notification:notification-context/tapi-notification:event-notification" {
+        when 'derived-from-or-self(tapi-notification:target-object-type, "OAM_OBJECT_TYPE_MEP")';
+        container mep {
+            uses mep;
+            description "none";
+        }
+        description "none";
+    }
+    augment "/tapi-common:context/tapi-topology:topology-context/tapi-topology:topology/tapi-topology:node/tapi-topology:owned-node-edge-point/tapi-connectivity:cep-list/tapi-connectivity:connection-end-point" {
+        container oam-pm-data {
+            uses oam-pm-data;
+            description "none";
+        }
+        description "none";
+    }
+    augment "/tapi-common:context/tapi-connectivity:connectivity-context/tapi-connectivity:connectivity-service" {
+        container connectivity-oam-service {
+            uses connectivity-oam-service;
+            description "none";
+        }
+        description "none";
+    }
+    augment "/tapi-common:context/tapi-connectivity:connectivity-context/tapi-connectivity:connectivity-service" {
+        container connectivity-oam-job-service {
+            uses connectivity-oam-job-service;
+            description "none";
+        }
+        description "none";
+    }
+    augment "/tapi-streaming:stream-record/tapi-streaming:log-record/tapi-streaming:log-record-body" {
+        when 'derived-from-or-self(tapi-streaming:record-content, "OAM_OBJECT_TYPE_OAM_JOB_SERVICE")';
+        container oam-job-service {
+            uses oam-job-service;
+            description "none";
+        }
+        description "none";
+    }
+    augment "/tapi-streaming:stream-record/tapi-streaming:log-record/tapi-streaming:log-record-body" {
+        when 'derived-from-or-self(tapi-streaming:record-content, "OAM_OBJECT_TYPE_OAM_JOB_DESCRIPTOR")';
+        container oam-job-descriptor {
+            uses oam-job-descriptor;
+            description "none";
+        }
+        description "none";
+    }
+    augment "/tapi-streaming:stream-record/tapi-streaming:log-record/tapi-streaming:log-record-body" {
+        when 'derived-from-or-self(tapi-streaming:record-content, "OAM_OBJECT_TYPE_PM_PARAMETER_CONFIG")';
+        container pm-parameter-config {
+            uses pm-parameter-config;
+            description "none";
+        }
+        description "none";
+    }
+    augment "/tapi-streaming:stream-record/tapi-streaming:log-record/tapi-streaming:log-record-body" {
+        when 'derived-from-or-self(tapi-streaming:record-content, "OAM_OBJECT_TYPE_OAM_PM_DATA")';
+        container oam-pm-data {
+            uses oam-pm-data;
+            description "none";
+        }
+        description "none";
+    }
+    augment "/tapi-streaming:stream-record/tapi-streaming:log-record/tapi-streaming:log-record-body" {
+        when 'derived-from-or-self(tapi-streaming:record-content, "OAM_OBJECT_TYPE_CEP_PM_DATA")';
+        container cep-pm-data {
+            uses cep-pm-data;
+            description "none";
+        }
+        description "none";
+    }
+    augment "/tapi-streaming:stream-record/tapi-streaming:log-record/tapi-streaming:log-record-body" {
+        when 'derived-from-or-self(tapi-streaming:record-content, "OAM_OBJECT_TYPE_MIP_PM_DATA")';
+        container mip-pm-data {
+            uses mip-pm-data;
+            description "none";
+        }
+        description "none";
+    }
+    augment "/tapi-common:context/tapi-notification:notification-context/tapi-notification:event-notification" {
+        when 'derived-from-or-self(tapi-notification:target-object-type, "OAM_OBJECT_TYPE_OAM_JOB_SERVICE")';
+        container oam-job-service {
+            uses oam-job-service;
+            description "none";
+        }
+        description "none";
+    }
+    augment "/tapi-common:context/tapi-notification:notification-context/tapi-notification:event-notification" {
+        when 'derived-from-or-self(tapi-notification:target-object-type, "OAM_OBJECT_TYPE_OAM_JOB_DESCRIPTOR")';
+        container oam-job-descriptor {
+            uses oam-job-descriptor;
+            description "none";
+        }
+        description "none";
+    }
+    augment "/tapi-common:context/tapi-notification:notification-context/tapi-notification:event-notification" {
+        when 'derived-from-or-self(tapi-notification:target-object-type, "OAM_OBJECT_TYPE_PM_PARAMETER_CONFIG")';
+        container pm-parameter-config {
+            uses pm-parameter-config;
+            description "none";
+        }
+        description "none";
+    }
+    augment "/tapi-common:context/tapi-notification:notification-context/tapi-notification:event-notification" {
+        when 'derived-from-or-self(tapi-notification:target-object-type, "OAM_OBJECT_TYPE_OAM_PM_DATA")';
+        container oam-pm-data {
+            uses oam-pm-data;
+            description "none";
+        }
+        description "none";
+    }
+    augment "/tapi-common:context/tapi-notification:notification-context/tapi-notification:event-notification" {
+        when 'derived-from-or-self(tapi-notification:target-object-type, "OAM_OBJECT_TYPE_CEP_PM_DATA")';
+        container cep-pm-data {
+            uses cep-pm-data;
+            description "none";
+        }
+        description "none";
+    }
+    augment "/tapi-common:context/tapi-notification:notification-context/tapi-notification:event-notification" {
+        when 'derived-from-or-self(tapi-notification:target-object-type, "OAM_OBJECT_TYPE_MEP_PM_DATA")';
+        container mep-pm-data {
+            uses mep-pm-data;
+            description "none";
+        }
+        description "none";
+    }
+    augment "/tapi-common:context/tapi-notification:notification-context/tapi-notification:event-notification" {
+        when 'derived-from-or-self(tapi-notification:target-object-type, "OAM_OBJECT_TYPE_MIP_PM_DATA")';
+        container mip-pm-data {
+            uses mip-pm-data;
+            description "none";
+        }
+        description "none";
+    }
+    augment "/tapi-notification:event-notification" {
+        when 'derived-from-or-self(tapi-notification:target-object-type, "OAM_OBJECT_TYPE_OAM_JOB_SERVICE")';
+        container oam-job-service {
+            uses oam-job-service;
+            description "none";
+        }
+        description "none";
+    }
+    augment "/tapi-notification:event-notification" {
+        when 'derived-from-or-self(tapi-notification:target-object-type, "OAM_OBJECT_TYPE_OAM_JOB_DESCRIPTOR")';
+        container oam-job-descriptor {
+            uses oam-job-descriptor;
+            description "none";
+        }
+        description "none";
+    }
+    augment "/tapi-notification:event-notification" {
+        when 'derived-from-or-self(tapi-notification:target-object-type, "OAM_OBJECT_TYPE_PM_PARAMETER_CONFIG")';
+        container pm-parameter-config {
+            uses pm-parameter-config;
+            description "none";
+        }
+        description "none";
+    }
+    augment "/tapi-notification:event-notification" {
+        when 'derived-from-or-self(tapi-notification:target-object-type, "OAM_OBJECT_TYPE_OAM_PM_DATA")';
+        container oam-pm-data {
+            uses oam-pm-data;
+            description "none";
+        }
+        description "none";
+    }
+    augment "/tapi-notification:event-notification" {
+        when 'derived-from-or-self(tapi-notification:target-object-type, "OAM_OBJECT_TYPE_CEP_PM_DATA")';
+        container cep-pm-data {
+            uses cep-pm-data;
+            description "none";
+        }
+        description "none";
+    }
+    augment "/tapi-notification:event-notification" {
+        when 'derived-from-or-self(tapi-notification:target-object-type, "OAM_OBJECT_TYPE_MEP_PM_DATA")';
+        container mep-pm-data {
+            uses mep-pm-data;
+            description "none";
+        }
+        description "none";
+    }
+    augment "/tapi-notification:event-notification" {
+        when 'derived-from-or-self(tapi-notification:target-object-type, "OAM_OBJECT_TYPE_MIP_PM_DATA")';
+        container mip-pm-data {
+            uses mip-pm-data;
+            description "none";
+        }
+        description "none";
+    }
+    /**************************
+    * definitions of references
+    **************************/
+    grouping oam-service-ref {
+        leaf oam-service-uuid {
+            type leafref {
+                path '/tapi-common:context/tapi-oam:oam-context/tapi-oam:oam-service/tapi-oam:uuid';
+            }
+            description "none";
+        }
+        description "none";
+    }
+    grouping oam-service-point-ref {
+        uses oam-service-ref;
+        leaf oam-service-point-local-id {
+            type leafref {
+                path '/tapi-common:context/tapi-oam:oam-context/tapi-oam:oam-service/tapi-oam:oam-service-point/tapi-oam:local-id';
+            }
+            description "none";
+        }
+        description "none";
+    }
+    grouping meg-ref {
+        leaf meg-uuid {
+            type leafref {
+                path '/tapi-common:context/tapi-oam:oam-context/tapi-oam:meg/tapi-oam:uuid';
+            }
+            description "none";
+        }
+        description "none";
+    }
+    grouping mep-ref {
+        uses meg-ref;
+        leaf mep-local-id {
+            type leafref {
+                path '/tapi-common:context/tapi-oam:oam-context/tapi-oam:meg/tapi-oam:mep/tapi-oam:local-id';
+            }
+            description "none";
+        }
+        description "none";
+    }
+    grouping mip-ref {
+        uses meg-ref;
+        leaf mip-local-id {
+            type leafref {
+                path '/tapi-common:context/tapi-oam:oam-context/tapi-oam:meg/tapi-oam:mip/tapi-oam:local-id';
+            }
+            description "none";
+        }
+        description "none";
+    }
+    grouping oam-job-ref {
+        leaf oam-job-uuid {
+            type leafref {
+                path '/tapi-common:context/tapi-oam:oam-context/tapi-oam:oam-job/tapi-oam:uuid';
+            }
+            description "none";
+        }
+        description "none";
+    }
+    grouping current-data-ref {
+        uses oam-job-ref;
+        leaf current-data-local-id {
+            type leafref {
+                path '/tapi-common:context/tapi-oam:oam-context/tapi-oam:oam-job/tapi-oam:current-data/tapi-oam:local-id';
+            }
+            description "none";
+        }
+        description "none";
+    }
+    grouping history-data-ref {
+        uses current-data-ref;
+        leaf history-data-local-id {
+            type leafref {
+                path '/tapi-common:context/tapi-oam:oam-context/tapi-oam:oam-job/tapi-oam:current-data/tapi-oam:history-data/tapi-oam:local-id';
+            }
+            description "none";
+        }
+        description "none";
+    }
+    grouping oam-profile-ref {
+        leaf oam-profile-uuid {
+            type leafref {
+                path '/tapi-common:context/tapi-oam:oam-context/tapi-oam:oam-profile/tapi-oam:uuid';
+            }
+            description "none";
+        }
+        description "none";
+    }
+    grouping pm-threshold-data-ref {
+        uses oam-profile-ref;
+        leaf pm-threshold-data-local-id {
+            type leafref {
+                path '/tapi-common:context/tapi-oam:oam-context/tapi-oam:oam-profile/tapi-oam:pm-threshold-data/tapi-oam:local-id';
+            }
+            description "none";
+        }
+        description "none";
+    }
+    grouping cep-pm-data-ref {
+        leaf cep-pm-data-uuid {
+            type leafref {
+                path '/tapi-common:context/tapi-oam:oam-context/tapi-oam:cep-pm-data/tapi-oam:uuid';
+            }
+            description "none";
+        }
+        description "none";
+    }
+    grouping mep-pm-data-ref {
+        leaf mep-pm-data-uuid {
+            type leafref {
+                path '/tapi-common:context/tapi-oam:oam-context/tapi-oam:mep-pm-data/tapi-oam:uuid';
+            }
+            description "none";
+        }
+        description "none";
+    }
+    grouping mip-pm-data-ref {
+        leaf mip-pm-data-uuid {
+            type leafref {
+                path '/tapi-common:context/tapi-oam:oam-context/tapi-oam:mip-pm-data/tapi-oam:uuid';
+            }
+            description "none";
+        }
+        description "none";
+    }
+    grouping oam-job-descriptor-ref {
+        leaf oam-job-descriptor-uuid {
+            type leafref {
+                path '/tapi-common:context/tapi-oam:oam-context/tapi-oam:oam-job-descriptor/tapi-oam:uuid';
+            }
+            description "none";
+        }
+        description "none";
+    }
+    /**************************
+    * package object-classes
+    **************************/ 
+    grouping mep {
+        leaf layer-protocol-name {
+            type tapi-common:layer-protocol-name;
+            config false;
+            description "The Mep layer protocol.";
+        }
+        leaf layer-protocol-qualifier {
+            type tapi-common:layer-protocol-qualifier;
+            config false;
+            description "none";
+        }
+        uses tapi-common:local-class;
+        uses tapi-common:operational-state-pac;
+        description "The Maintenance Entity group end Point.
+            ITU-T G.8001: maintenance entity group end point compound sink function: A compound transport processing function that accepts the characteristic information of the layer network at its input,
+            extracts and processes the OAM information related to the monitoring of the maintenance entity group, filters the OAM information from within to the maintenance entity group,
+            adapts the information and presents it as the characteristic information of the layer or a client layer at its output, potentially as a (client) layer maintenance signal (e.g., AIS).
+            ITU-T G.8001: maintenance entity group end point compound source function: A compound transport processing function that accepts the characteristic information of the layer or a client layer network at its input,
+            adapts that information, filters it for OAM information interfering with its own OAM information, adds OAM information to allow the maintenance entity group to be monitored and presents the resulting information at its output.";
+    }
+    grouping oam-job {
+        leaf oam-job-type {
+            type oam-job-type;
+            description "The OamJob type.";
+        }
+        leaf oam-job-state {
+            type oam-job-state;
+            config false;
+            description "none";
+        }
+        leaf creation-time {
+            type tapi-common:date-and-time;
+            config false;
+            description "The OamJob creation time.";
+        }
+        container schedule {
+            uses tapi-common:time-range;
+            description "The OamJob schedule.";
+        }
+        leaf results {
+            type string;
+            config false;
+            description "Information allowing to retrieve the OAM job results by other means., e.g. file name.";
+        }
+        list oam-service-point {
+            uses oam-service-point-ref;
+            key 'oam-service-uuid oam-service-point-local-id';
+            description "The OamServicePoint (OSP) instances involved in the OamJob.";
+        }
+        list connection-end-point {
+            uses tapi-connectivity:connection-end-point-ref;
+            key 'topology-uuid node-uuid node-edge-point-uuid connection-end-point-uuid';
+            description "The ConnectionEndPoint (CEP) instances involved in the OamJob.";
+        }
+        container connectivity-service-end-point {
+            uses tapi-connectivity:connectivity-service-end-point-ref;
+            description "In case the OamJob instance is not related to any OamService/Point but created together with ConnectivityService through ConnectivityOamJob augment.";
+        }
+        container profile {
+            uses  tapi-common:profile-ref;
+            description "The (Oam)Profile instance referred by the OamJob.";
+        }
+        list pm-data {
+            key 'local-id';
+            uses pm-data;
+            description "none";
+        }
+        list current-data {
+            key 'local-id';
+            config false;
+            uses current-data;
+            description "The CurrentData instances in the scope of the OamJob.";
+        }
+        uses tapi-common:global-class;
+        uses tapi-common:admin-state-pac;
+        description "This class allows the provisioning of performance monitoring functions on specified resources.";
+    }
+    grouping meg {
+        list mep {
+            key 'local-id';
+            config false;
+            uses mep;
+            description "The maintenance entity group consists of one or more maintenance entities. There are the following cases:
+                1. A maintenance entity may have 0 MEPs (case of transit domains where at least 1 MIP is present).
+                2. A maintenance entity may have 1 MEP (case of edge domains, where the peer MEP is ouside the managed domain).
+                3. A maintenance entity may have 2 MEPs.";
+        }
+        list mip {
+            key 'local-id';
+            config false;
+            uses mip;
+            description "The maintenance entity group may have 0, 1, or more MIPs.";
+        }
+        uses tapi-common:global-class;
+        uses tapi-common:operational-state-pac;
+        description "The Maintenance Entity Group.
+            ITU-T G.8001: A group defined, for the purpose of fragment or connection monitoring, between a set of flow or connection points within a fragment/connection.
+            This set of flow or connection points may be located at the boundary of one administrative domain or a protection domain, or at the boundaries of two adjacent administrative domains.
+            The maintenance entity group consists of one or more maintenance entities (the entity between two of the flow/connection points in a maintenance entity group).";
+    }
+    grouping mip {
+        leaf layer-protocol-name {
+            type tapi-common:layer-protocol-name;
+            config false;
+            description "The Mip layer protocol.";
+        }
+        leaf layer-protocol-qualifier {
+            type tapi-common:layer-protocol-qualifier;
+            config false;
+            description "none";
+        }
+        uses tapi-common:local-class;
+        uses tapi-common:operational-state-pac;
+        description "The Maintenance entity group Intermediate Point.
+            ITU-T G.8001: maintenance entity group intermediate point compound function: A compound transport processing function that accepts the characteristic information of the layer network at its input,
+            reacts to OAM information related to on-demand monitoring of a maintenance entity group and presents the characteristic information without the OAM to which it reacted at its output.";
+    }
+    grouping oam-service {
+        leaf layer-protocol-name {
+            type tapi-common:layer-protocol-name;
+            description "none";
+        }
+        leaf layer-protocol-qualifier {
+            type tapi-common:layer-protocol-qualifier;
+            description "none";
+        }
+        list oam-service-point {
+            key 'local-id';
+            uses oam-service-point;
+            description "The OamServicePoint (OSP) instances of the OamService.";
+        }
+        container meg {
+            uses meg-ref;
+            config false;
+            description "The Meg instance tracking the state of the allocated resources for the support of the OamService.";
+        }
+        uses tapi-common:global-class;
+        uses tapi-common:admin-state-pac;
+        description "An OamService represents an 'intent-like' request for OAM functions between two or more OamServicePoint (OSP) instances. The OamService is a container for OAM request details and is distinct from the Meg that realize the request.";
+    }
+    grouping oam-context {
+        list oam-service {
+            key 'uuid';
+            uses oam-service;
+            description "The included OamService instances.";
+        }
+        list meg {
+            key 'uuid';
+            config false;
+            uses meg;
+            description "The included Meg instances.";
+        }
+        list oam-job-service {
+            key 'uuid';
+            uses oam-job-service;
+            description "none";
+        }
+        list oam-job-descriptor {
+            key 'uuid';
+            uses oam-job-descriptor;
+            description "none";
+        }
+        list oam-job {
+            key 'uuid';
+            uses oam-job;
+            description "The included OamJob instances.";
+        }
+        list mep-pm-data {
+            key 'uuid';
+            config false;
+            uses mep-pm-data;
+            description "none";
+        }
+        list mip-pm-data {
+            key 'uuid';
+            config false;
+            uses mip-pm-data;
+            description "none";
+        }
+        list cep-pm-data {
+            key 'uuid';
+            config false;
+            uses cep-pm-data;
+            description "none";
+        }
+        list fm-data-of-monitored-point {
+            key 'uuid';
+            config false;
+            uses cep-fm-data;
+            description "none";
+        }
+        description "This object class represents the scope of control that a particular SDN controller has with respect to a particular network, specifically regarding the OAM description.
+            An instance of this class includes its OamService, OamJob and Meg object instances.";
+    }
+    grouping oam-service-point {
+        leaf is-mip {
+            type boolean;
+            description "If true, the object is related to a MIP.
+                If false, the object is related to a MEP.";
+        }
+        leaf layer-protocol-name {
+            type tapi-common:layer-protocol-name;
+            description "The OamServicePoint (OSP) layer protocol.";
+        }
+        leaf layer-protocol-qualifier {
+            type tapi-common:layer-protocol-qualifier;
+            description "none";
+        }
+        container service-interface-point {
+            uses tapi-common:service-interface-point-ref;
+            description "The supporting ServiceInterfacePoint (SIP) instance.
+                If neither ConnectivityServiceEndPoint (CSEP) nor ConnectionEndPoint (CEP) are specified, the OamServicePoint (OSP) is intended for SIP monitoring.";
+        }
+        container connectivity-service-end-point {
+            uses tapi-connectivity:connectivity-service-end-point-ref;
+            description "The ConnectivityServiceEndPoint (CSEP) instance monitored by the OamServicePoint (OSP).
+                If not specified (and neither CEP is specified), the OamServicePoint (OSP) is intended for SIP monitoring.";
+        }
+        container connection-end-point {
+            uses tapi-connectivity:connection-end-point-ref;
+            description "The ConnectionEndPoint (CEP) instance monitored by the OamServicePoint (OSP).
+                If not specified (and neither CSEP is specified), the OamServicePoint (OSP) is intended for SIP monitoring.";
+        }
+        container mep {
+            uses mep-ref;
+            config false;
+            description "The associated Mep instance, mutually exclusive wrt Mip instance.";
+        }
+        container mip {
+            uses mip-ref;
+            config false;
+            description "The associated Mip instance, mutually exclusive wrt Mep instance.";
+        }
+        uses tapi-common:local-class;
+        uses tapi-common:admin-state-pac;
+        description "The OamServicePoint (OSP) is a container for OAM request details and is distinct from the Mep and/or Mip instances that realize the request.";
+    }
+    grouping mep-mip-list {
+        list mep {
+            uses mep-ref;
+            key 'meg-uuid mep-local-id';
+            description "The list of associated Mep instances.";
+        }
+        list mip {
+            uses mip-ref;
+            key 'meg-uuid mip-local-id';
+            description "The list of associated Mip instances.";
+        }
+        description "This augment allows CEP and NEP to refer to their MEPs/MIPs despite TapiOam model does not import resp. TapiConnectivity and TapiTopology models.";
+    }
+    grouping current-data {
+        leaf period-start-time {
+            type tapi-common:date-and-time;
+            config false;
+            description "This attribute indicates the start time of the current monitoring interval / granularity period.
+                The value is bound to the quarter of an hour in case of a 15 minute interval and bound to the hour in case of a 24 hour interval.";
+        }
+        container elapsed-time {
+            config false;
+            uses tapi-common:time-interval;
+            description "Q822: This attribute represents the difference between the current time and the start of the present interval.";
+        }
+        container pm-data-pac {
+            config false;
+            uses pm-data-pac;
+            description "Parameters specific to Performance Monitoring functions.";
+        }
+        container mep {
+            uses mep-ref;
+            config false;
+            description "The MEP to which the measurements refer to.
+                At least and exclusively one of CurrentDataOfCep, CurrentDataOfMep, CurrentDataOfMip must be referred by the CurrentData instance. ";
+        }
+        container mip {
+            uses mip-ref;
+            config false;
+            description "The MIP to which the measurements refer to.
+                At least and exclusively one of CurrentDataOfCep, CurrentDataOfMep, CurrentDataOfMip must be referred by the CurrentData instance. ";
+        }
+        container connection-end-point {
+            uses tapi-connectivity:connection-end-point-ref;
+            config false;
+            description "The CEP to which the measurements refer to.
+                At least and exclusively one of CurrentDataOfCep, CurrentDataOfMep, CurrentDataOfMip must be referred by the CurrentData instance. ";
+        }
+        list history-data {
+            key 'local-id';
+            config false;
+            uses history-data;
+            description "The associated HistoryData instances.
+                In case of 24hr CurrentData, at least 1 HistoryData instance shall be maintained.
+                In case of 15min CurrentData, at least 16 HistoryData instances shall be maintained.
+                In case of <15min, the number of HistoryData instances shall be able to cover a span of 4 hours.";
+        }
+        uses tapi-common:local-class;
+        description "The CurrentData class. The PM metrics/types can be specified in technology specific augmentations of this class.
+            ITU-T Q.822: This object contains the measurements for the resource being monitored for a specified time interval (measurement interval time / granularity period).";
+    }
+    grouping history-data {
+        leaf period-start-time {
+            type tapi-common:date-and-time;
+            config false;
+            description "This attribute indicates the start time of the monitoring interval / granularity period.
+                The value is bound to the quarter of an hour in case of a 15 minute interval and bound to the hour in case of a 24 hour interval.";
+        }
+        leaf period-end-time {
+            type tapi-common:date-and-time;
+            config false;
+            description "This attribute indicates the end time of the monitoring interval / granularity period.
+                The value is bound to the quarter of an hour in case of a 15 minute interval and bound to the hour in case of a 24 hour interval.";
+        }
+        container pm-data-pac {
+            config false;
+            uses pm-data-pac;
+            description "Parameters specific to Performance Monitoring functions.";
+        }
+        uses tapi-common:local-class;
+        description "The HistoryData class. The PM metrics/types can be specified in technology specific augmentations of this class.
+            ITU-T Q.822: This object will contain a copy of the performance management and other selected attributes that are present in the CurrentData object at the end of the current interval (measurement interval time / granularity period).
+            A new instance of this object class is created at the end of each interval.";
+    }
+    grouping oam-profile {
+        list pm-parameter-config {
+            key 'local-id';
+            uses pm-parameter-config;
+            description "The PM threshold information associated to the OamProfile.";
+        }
+        description "The OamProfile allows centralization of OAM provisioning aspects, e.g. the PM parameters and their threshold values.";
+    }
+    grouping pm-data {
+        leaf-list applicable-job-type {
+            type oam-job-type;
+            description "This attribute allows an PmThresholdData instance to be constrained to specific job types. If a PmThresholdData instance is so configured to be applicable to more than one job type (worst case ALL), only the parameters relevant for the job instance will be used (non-applicable profile parameters will be ignored).";
+        }
+        container granularity-period {
+            uses tapi-common:time-period;
+            description "The granularity period or measurement interval time. In case of instantaneous measurement this parameter is omitted (e.g. ODU Delay measurement).";
+        }
+        leaf time-of-the-day-alignment {
+            type boolean;
+            default "true";
+            description "none";
+        }
+        leaf is-transient {
+            type boolean;
+            description "A threshold crossing alert (TCA) is transient when stateless, i.e. an explicit alarm clear notification is not foreseen.
+                MEF 35.1: Thresholds and associated TCAs are specific to a particular performance metric in a given PM Session (or OAM job).
+                There are two types of TCA reporting: stateless and stateful.
+                With stateless reporting, a TCA is generated in each Measurement Interval in which the threshold is crossed.
+                With stateful reporting, a SET TCA is generated in the first Measurement Interval in which the threshold is crossed,
+                and a CLEAR TCA is subsequently generated at the end of the first Measurement Interval in which the threshold is not crossed.
+                Note: In ITU-T G.7710 terminology, stateless TCA reporting corresponds to a transient condition, and stateful TCA reporting corresponds to a standing condition.
+                Note that threshold management for gauges may be more complex (e.g. out of range function for gauge overflow/underflow detection).";
+        }
+        leaf codirectional {
+            type boolean;
+            description "Applicable in case of embedded provisioning through ConnectivityOamJob. 
+                In this case two MIPs on the same CEP can be involved in the same OamJob, hence may be necessary to set different thresholds for codirectional and contradirectional PM Parameters.";
+        }
+        list pm-parameter {
+            key 'pm-parameter-name';
+            uses pm-parameter;
+            description "The PM metrics and their threshold values.";
+        }
+        uses tapi-common:local-class;
+        description "The PM threshold information associated to an OamProfile instance.
+            It defines a set of PM metrics, their threshold values, the granularity period or measurement interval time for these PM metrics, the stateful or stateless types of related threshold crossing alert (TCA) reporting.";
+    }
+    grouping pm-data-pac {
+        container granularity-period {
+            config false;
+            uses tapi-common:time-interval;
+            description "The granularity period or measurement interval time.";
+        }
+        leaf suspect-interval-flag {
+            type boolean;
+			default "false";
+            config false;
+            description "This attribute is used to indicate that the performance data for the current period may not be reliable. Some reasons for this to occur are:
+                - Suspect data were detected by the actual resource doing data collection.
+                - Transition of the administrativeState attribute to/from the 'lock' state.
+                - Transition of the operationalState to/from the 'disabled' state.
+                - Scheduler setting that inhibits the collection function.
+                - The performance counters were reset during the interval.
+                - The currentData (or subclass) object instance was created during the monitoring period.";
+        }
+        description "Parameters specific to Performance Monitoring functions.";
+    }
+    grouping connectivity-oam-job-service {
+        list oam-job-service {
+            key 'uuid';
+            uses oam-job-service;
+            description "none";
+        }
+        description "This class augments the ConnectivityService class to associate OAM job provisioning to ConnectivityService provisioning.";
+    }
+    grouping cep-fm-data {
+        uses tapi-common:global-class;
+        description "none";
+    }
+    grouping oam-pm-data {
+        container cep-pm-data {
+            uses cep-pm-data-ref;
+            config false;
+            description "none";
+        }
+        list mep-pm-data {
+            uses mep-pm-data-ref;
+            config false;
+            description "none";
+        }
+        list mip-pm-data {
+            uses mip-pm-data-ref;
+            config false;
+            description "none";
+        }
+        description "none";
+    }
+    grouping pm-parameter-config {
+        leaf-list applicable-job-type {
+            type oam-job-type;
+            description "This attribute allows an PmThresholdData instance to be constrained to specific job types. If a PmThresholdData instance is so configured to be applicable to more than one job type (worst case ALL), only the parameters relevant for the job instance will be used (non-applicable profile parameters will be ignored).";
+        }
+        container granularity-period {
+            uses tapi-common:time-period;
+            description "The granularity period or measurement interval time. In case of instantaneous measurement this parameter is omitted (e.g. ODU Delay measurement).";
+        }
+        leaf time-of-the-day-alignment {
+            type boolean;
+            default "true";
+            description "none";
+        }
+        leaf is-transient {
+            type boolean;
+            description "A threshold crossing alert (TCA) is transient when stateless, i.e. an explicit alarm clear notification is not foreseen.
+                MEF 35.1: Thresholds and associated TCAs are specific to a particular performance metric in a given PM Session (or OAM job).
+                There are two types of TCA reporting: stateless and stateful.
+                With stateless reporting, a TCA is generated in each Measurement Interval in which the threshold is crossed.
+                With stateful reporting, a SET TCA is generated in the first Measurement Interval in which the threshold is crossed,
+                and a CLEAR TCA is subsequently generated at the end of the first Measurement Interval in which the threshold is not crossed.
+                Note: In ITU-T G.7710 terminology, stateless TCA reporting corresponds to a transient condition, and stateful TCA reporting corresponds to a standing condition.
+                Note that threshold management for gauges may be more complex (e.g. out of range function for gauge overflow/underflow detection).";
+        }
+        leaf layer-protocol-name {
+            type tapi-common:layer-protocol-name;
+            description "none";
+        }
+        leaf layer-protocol-qualifier {
+            type tapi-common:layer-protocol-qualifier;
+            description "none";
+        }
+        leaf codirectional {
+            type boolean;
+            description "In case two MIPs (or TCM MEPs, or TCM MIPs) on the same CEP can be involved in the same OamJob, hence may be necessary to set different thresholds for codirectional and contradirectional PM Parameters.";
+        }
+        list pm-parameter {
+            key 'pm-parameter-name';
+            uses pm-parameter;
+            description "The PM metrics and their threshold values.";
+        }
+        uses tapi-common:local-class;
+        description "Two PmParameterConfig instances with same granularityPeriod and isTransient and codirectional attribute values must not list the same pmParameter-name more than once.";
+    }
+    grouping cep-pm-data {
+        container connection-end-point {
+            uses tapi-connectivity:connection-end-point-ref;
+            config false;
+            description "none";
+        }
+        list history-data {
+            key 'local-id';
+            config false;
+            uses history-data;
+            description "none";
+        }
+        container oam-job-descriptor {
+            uses oam-job-descriptor-ref;
+            config false;
+            description "none";
+        }
+        uses tapi-common:global-class;
+        description "none";
+    }
+    grouping mep-pm-data {
+        container mep {
+            uses mep-ref;
+            config false;
+            description "none";
+        }
+        list history-data {
+            key 'local-id';
+            config false;
+            uses history-data;
+            description "none";
+        }
+        container oam-job-descriptor {
+            uses oam-job-descriptor-ref;
+            config false;
+            description "none";
+        }
+        uses tapi-common:global-class;
+        description "none";
+    }
+    grouping mip-pm-data {
+        list history-data {
+            key 'local-id';
+            config false;
+            uses history-data;
+            description "none";
+        }
+        container mip {
+            uses mip-ref;
+            config false;
+            description "none";
+        }
+        container oam-job-descriptor {
+            uses oam-job-descriptor-ref;
+            config false;
+            description "none";
+        }
+        uses tapi-common:global-class;
+        description "none";
+    }
+    grouping oam-job-service {
+        leaf oam-job-type {
+            type oam-job-type;
+            description "The OamJob type.";
+        }
+        container schedule {
+            uses tapi-common:time-range;
+            description "The OamJob schedule.";
+        }
+        list pm-parameter-config {
+            key 'local-id';
+            uses pm-parameter-config;
+            description "none";
+        }
+        container profile {
+            uses  tapi-common:profile-ref;
+            description "The (Oam)Profile instance referred by the OamJobService.";
+        }
+        container oam-service {
+            uses oam-service-ref;
+            description "none";
+        }
+        list oam-service-point {
+          	key 'local-id';
+            uses oam-service-point;
+            description "none";
+        }
+        list connection {
+            uses tapi-connectivity:connection-ref;
+            key 'connection-uuid';
+            description "none";
+        }
+        list connection-end-point {
+            uses tapi-connectivity:connection-end-point-ref;
+            key 'topology-uuid node-uuid node-edge-point-uuid connection-end-point-uuid';
+            description "none";
+        }
+        container oam-job-descriptor {
+            uses oam-job-descriptor-ref;
+            description "none";
+        }
+        uses tapi-common:global-class;
+        description "none";
+    }
+    grouping oam-job-descriptor {
+        leaf oam-job-type {
+            type oam-job-type;
+            config false;
+            description "The OamJob type.";
+        }
+        leaf oam-job-state {
+            type oam-job-state;
+            config false;
+            description "none";
+        }
+        leaf creation-time {
+            type tapi-common:date-and-time;
+            config false;
+            description "The OamJob creation time.";
+        }
+        container schedule {
+            config false;
+            uses tapi-common:time-range;
+            description "The OamJob schedule.";
+        }
+        leaf results {
+            type string;
+            config false;
+            description "Information allowing to retrieve the OAM job results by other means., e.g. file name.";
+        }
+        list cep-pm-data {
+            uses cep-pm-data-ref;
+            config false;
+            description "none";
+        }
+        list mep-pm-data {
+            uses mep-pm-data-ref;
+            config false;
+            description "none";
+        }
+        list mip-pm-data {
+            uses mip-pm-data-ref;
+            config false;
+            description "none";
+        }
+        uses tapi-common:global-class;
+        description "none";
+    }
+    grouping connectivity-oam-service {
+        list oam-service {
+            key 'uuid';
+            uses oam-service;
+            description "none";
+        }
+        description "none";
+    }
+
+    /**************************
+    * package type-definitions
+    **************************/ 
+    identity OAM_JOB_TYPE {
+        description "none";
+    }
+    identity OAM_JOB_TYPE_LOOPBACK_FACILITY {
+        base OAM_JOB_TYPE;
+        description "External / Line Loopback.";
+    }
+    identity OAM_JOB_TYPE_LOOPBACK_TERMINAL {
+        base OAM_JOB_TYPE;
+        description "Internal / Device Loopback.";
+    }
+    identity OAM_OBJECT_TYPE {
+    	base tapi-common:OBJECT_TYPE;
+        description "none";
+    }
+    identity OAM_OBJECT_TYPE_OAM_SERVICE {
+        base OAM_OBJECT_TYPE;
+        description "The OamService class.";
+    }
+    identity OAM_OBJECT_TYPE_OAM_SERVICE_POINT {
+        base OAM_OBJECT_TYPE;
+        description "The OamServicePoint (OSP) class.";
+    }
+    identity OAM_OBJECT_TYPE_MEG {
+        base OAM_OBJECT_TYPE;
+        description "The Meg class.";
+    }
+    identity OAM_OBJECT_TYPE_MEP {
+        base OAM_OBJECT_TYPE;
+        description "The Mep class.";
+    }
+    identity OAM_OBJECT_TYPE_MIP {
+        base OAM_OBJECT_TYPE;
+        description "The Mip class.";
+    }
+    identity OAM_OBJECT_TYPE_OAM_JOB {
+        base OAM_OBJECT_TYPE;
+        description "The OamJob class.";
+    }
+    identity OAM_OBJECT_TYPE_OAM_PROFILE {
+        base OAM_OBJECT_TYPE;
+        description "The OamProfile class.";
+    }
+    identity OAM_OBJECT_TYPE_CURRENT_DATA {
+        base OAM_OBJECT_TYPE;
+        description "The CurrentData class.";
+    }
+    identity OAM_OBJECT_TYPE_HISTORY_DATA {
+        base OAM_OBJECT_TYPE;
+        description "The HistoryData class.";
+    }
+    identity OAM_OBJECT_TYPE_PM_DATA {
+        base OAM_OBJECT_TYPE;
+        description "The PmThresholdData class.";
+    }
+    identity OAM_OBJECT_TYPE_OAM_JOB_SERVICE {
+        base OAM_OBJECT_TYPE;
+        description "none";
+    }
+    identity OAM_OBJECT_TYPE_OAM_JOB_DESCRIPTOR {
+        base OAM_OBJECT_TYPE;
+        description "none";
+    }
+    identity OAM_OBJECT_TYPE_PM_PARAMETER_CONFIG {
+        base OAM_OBJECT_TYPE;
+        description "none";
+    }
+    identity OAM_OBJECT_TYPE_CEP_PM_DATA {
+        base OAM_OBJECT_TYPE;
+        description "none";
+    }
+    identity OAM_OBJECT_TYPE_MEP_PM_DATA {
+        base OAM_OBJECT_TYPE;
+        description "none";
+    }
+    identity OAM_OBJECT_TYPE_MIP_PM_DATA {
+        base OAM_OBJECT_TYPE;
+        description "none";
+    }
+    identity OAM_OBJECT_TYPE_OAM_PM_DATA {
+        base OAM_OBJECT_TYPE;
+        description "none";
+    }
+    identity THRESHOLD_TYPE {
+        description "none";
+    }
+    identity THRESHOLD_TYPE_UPPER {
+        base THRESHOLD_TYPE;
+        description "none";
+    }
+    identity THRESHOLD_TYPE_LOWER {
+        base THRESHOLD_TYPE;
+        description "none";
+    }
+    identity THRESHOLD_TYPE_TIDEMARK {
+        base THRESHOLD_TYPE;
+        description "none";
+    }
+    identity THRESHOLD_TYPE_POSITIVE_DELTA {
+        base THRESHOLD_TYPE;
+        description "none";
+    }
+    identity THRESHOLD_TYPE_NEGATIVE_DELTA {
+        base THRESHOLD_TYPE;
+        description "none";
+    }
+    identity OAM_JOB_STATE {
+        description "none";
+    }
+    identity OAM_JOB_STATE_ACTIVE {
+        base OAM_JOB_STATE;
+        description "none";
+    }
+    identity OAM_JOB_STATE_CONCLUDED {
+        base OAM_JOB_STATE;
+        description "none";
+    }
+    identity OAM_JOB_STATE_NOT_ACTIVE {
+        base OAM_JOB_STATE;
+        description "none";
+    }
+    identity THRS_ADD_QUALIF {
+        description "none";
+    }
+    identity OAM_PROFILE_TYPE {
+    	base tapi-common:PROFILE_TYPE;
+        description "none";
+    }
+    identity OAM_PROFILE_TYPE_OAM {
+        base OAM_PROFILE_TYPE;
+        description "none";
+    }
+    typedef oam-job-type {
+        type identityref {
+            base OAM_JOB_TYPE;
+        }
+        description "The OAM job types.
+            This extensible enumeration can be augmented with specific OAM job types in the other modules.";
+    }
+    grouping pm-parameter {
+        leaf pm-parameter-name {
+            type tapi-common:pm;
+            description "PM metric name.";
+        }
+        list threshold-config {
+            key 'threshold-location threshold-type clear-threshold';
+            uses threshold-config;
+            description "PM metric location.";
+        }
+        description "PM metrics, their locations and threshold values.";
+    }
+    typedef threshold-crossing-qualifier {
+        type enumeration {
+            enum NOT_APPLICABLE {
+                description "Location or qualifier not applicable.";
+            }
+            enum NEAR_END {
+                description "Near End detection.";
+            }
+            enum FAR_END {
+                description "Far end detection.";
+            }
+            enum BIDIRECTIONAL {
+                description "Composition of near and far end detections.";
+            }
+            enum FORWARD {
+                description "MEF 35.1: The direction of performance measurements from the Controller MEP towards the Responder or Sink MEP, when One-way measurements are taken using a Single-Ended or Dual-Ended PM Function.
+                    MEF 83: In Single-Ended measurements, it is assumed that the the FORWARD and FAR_END qualifiers are equivalent.
+                    In Dual-Ended measurements (and in case of TX counters), it is assumed that the FORWARD and NEAR_END qualifiers are equivalent.";
+            }
+            enum BACKWARD {
+                description "MEF 35.1: The direction of performance measurements from the Responder MEP towards the Controller MEP, when One-way measurements are taken using a Single-Ended PM Function.
+                    Note: this term is not applicable when Dual-Ended PM Functions are used.
+                    MEF 83: In Single-Ended measurements, it is assumed that the BACKWARD and NEAR_END qualifiers are equivalent.
+                    In Dual-Ended measurements (and in case of TX counters), it is assumed that the BACKWARD and FAR_END qualifiers are equivalent.";
+            }
+        }
+        description "Threshold crossing location or qualifier.";
+    }
+    typedef oam-object-type {
+        type identityref {
+            base OAM_OBJECT_TYPE;
+        }
+        description "The list of TAPI OAM Global Object Class types on which Notification signals can be raised.";
+    }
+    grouping threshold-config {
+        leaf threshold-location {
+            type threshold-crossing-qualifier;
+            description "none";
+        }
+        leaf threshold-type {
+            type threshold-type;
+            description "none";
+        }
+        container pm-parameter-value {
+            uses tapi-common:pm-parameter-value;
+            description "none";
+        }
+        leaf clear-threshold {
+            type boolean;
+            description "none";
+        }
+        leaf thrs-additional-qualifier {
+            type thrs-add-qualif;
+            description "none";
+        }
+        description "none";
+    }
+    typedef threshold-type {
+        type identityref {
+            base THRESHOLD_TYPE;
+        }
+        description "none";
+    }
+    typedef oam-job-state {
+        type identityref {
+            base OAM_JOB_STATE;
+        }
+        description "none";
+    }
+    typedef thrs-add-qualif {
+        type identityref {
+            base THRS_ADD_QUALIF;
+        }
+        description "Useful in case the monitored entity incapsulates more monitoring functions (e.g. OMS and Amplification).";
+    }
+    typedef oam-profile-type {
+        type identityref {
+            base OAM_PROFILE_TYPE;
+        }
+        description "none";
+    }
+
+}

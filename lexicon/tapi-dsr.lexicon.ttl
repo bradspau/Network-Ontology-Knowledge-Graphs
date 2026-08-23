@@ -1,0 +1,332 @@
+@prefix lex: <http://example.org/ontology/lexicon-vocab#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+# Reference lexicon for module: tapi-dsr
+# Auto-drafted by draft_lexicon.py from yang4owl.py output. Do not hand-edit
+# without removing lex:needsCuration once an entry has been reviewed --
+# it exists so curated and uncurated entries stay distinguishable.
+#
+# Entries flagged lex:needsCuration true have an empty or label-restating
+# definition and/or a placeholder canonical example -- see
+# docs/reference-lexicons.md recommendation #2 before relying on them.
+
+lex:tapi-dsr-digital-signal-type
+    a lex:ReferenceEntry ;
+    skos:prefLabel "DIGITAL_SIGNAL_TYPE" ;
+    skos:definition "none" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-dsr/DIGITAL_SIGNAL_TYPE> .
+
+lex:tapi-dsr-digital-signal-type-10-gige-lan
+    a lex:ReferenceEntry ;
+    skos:prefLabel "DIGITAL_SIGNAL_TYPE_10_GigE_LAN" ;
+    skos:definition "none" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-dsr/DIGITAL_SIGNAL_TYPE_10_GigE_LAN> .
+
+lex:tapi-dsr-digital-signal-type-10-gige-wan
+    a lex:ReferenceEntry ;
+    skos:prefLabel "DIGITAL_SIGNAL_TYPE_10_GigE_WAN" ;
+    skos:definition "none" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-dsr/DIGITAL_SIGNAL_TYPE_10_GigE_WAN> .
+
+lex:tapi-dsr-digital-signal-type-100-gige
+    a lex:ReferenceEntry ;
+    skos:prefLabel "DIGITAL_SIGNAL_TYPE_100_GigE" ;
+    skos:definition "none" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-dsr/DIGITAL_SIGNAL_TYPE_100_GigE> .
+
+lex:tapi-dsr-digital-signal-type-200-gige
+    a lex:ReferenceEntry ;
+    skos:prefLabel "DIGITAL_SIGNAL_TYPE_200_GigE" ;
+    skos:definition "none" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-dsr/DIGITAL_SIGNAL_TYPE_200_GigE> .
+
+lex:tapi-dsr-digital-signal-type-40-gige
+    a lex:ReferenceEntry ;
+    skos:prefLabel "DIGITAL_SIGNAL_TYPE_40_GigE" ;
+    skos:definition "none" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-dsr/DIGITAL_SIGNAL_TYPE_40_GigE> .
+
+lex:tapi-dsr-digital-signal-type-400-gige
+    a lex:ReferenceEntry ;
+    skos:prefLabel "DIGITAL_SIGNAL_TYPE_400_GigE" ;
+    skos:definition "none" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-dsr/DIGITAL_SIGNAL_TYPE_400_GigE> .
+
+lex:tapi-dsr-digital-signal-type-dvb-asi
+    a lex:ReferenceEntry ;
+    skos:prefLabel "DIGITAL_SIGNAL_TYPE_DVB_ASI" ;
+    skos:definition "none" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-dsr/DIGITAL_SIGNAL_TYPE_DVB_ASI> .
+
+lex:tapi-dsr-digital-signal-type-fc-100
+    a lex:ReferenceEntry ;
+    skos:prefLabel "DIGITAL_SIGNAL_TYPE_FC_100" ;
+    skos:definition "none" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-dsr/DIGITAL_SIGNAL_TYPE_FC_100> .
+
+lex:tapi-dsr-digital-signal-type-fc-1200
+    a lex:ReferenceEntry ;
+    skos:prefLabel "DIGITAL_SIGNAL_TYPE_FC_1200" ;
+    skos:definition "none" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-dsr/DIGITAL_SIGNAL_TYPE_FC_1200> .
+
+lex:tapi-dsr-digital-signal-type-fc-1600
+    a lex:ReferenceEntry ;
+    skos:prefLabel "DIGITAL_SIGNAL_TYPE_FC_1600" ;
+    skos:definition "none" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-dsr/DIGITAL_SIGNAL_TYPE_FC_1600> .
+
+lex:tapi-dsr-digital-signal-type-fc-200
+    a lex:ReferenceEntry ;
+    skos:prefLabel "DIGITAL_SIGNAL_TYPE_FC_200" ;
+    skos:definition "none" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-dsr/DIGITAL_SIGNAL_TYPE_FC_200> .
+
+lex:tapi-dsr-digital-signal-type-fc-3200
+    a lex:ReferenceEntry ;
+    skos:prefLabel "DIGITAL_SIGNAL_TYPE_FC_3200" ;
+    skos:definition "none" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-dsr/DIGITAL_SIGNAL_TYPE_FC_3200> .
+
+lex:tapi-dsr-digital-signal-type-fc-400
+    a lex:ReferenceEntry ;
+    skos:prefLabel "DIGITAL_SIGNAL_TYPE_FC_400" ;
+    skos:definition "none" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-dsr/DIGITAL_SIGNAL_TYPE_FC_400> .
+
+lex:tapi-dsr-digital-signal-type-fc-800
+    a lex:ReferenceEntry ;
+    skos:prefLabel "DIGITAL_SIGNAL_TYPE_FC_800" ;
+    skos:definition "none" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-dsr/DIGITAL_SIGNAL_TYPE_FC_800> .
+
+lex:tapi-dsr-digital-signal-type-gige
+    a lex:ReferenceEntry ;
+    skos:prefLabel "DIGITAL_SIGNAL_TYPE_GigE" ;
+    skos:definition "none" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-dsr/DIGITAL_SIGNAL_TYPE_GigE> .
+
+lex:tapi-dsr-digital-signal-type-gpon
+    a lex:ReferenceEntry ;
+    skos:prefLabel "DIGITAL_SIGNAL_TYPE_GPON" ;
+    skos:definition "none" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-dsr/DIGITAL_SIGNAL_TYPE_GPON> .
+
+lex:tapi-dsr-digital-signal-type-ib-ddr
+    a lex:ReferenceEntry ;
+    skos:prefLabel "DIGITAL_SIGNAL_TYPE_IB_DDR" ;
+    skos:definition "none" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-dsr/DIGITAL_SIGNAL_TYPE_IB_DDR> .
+
+lex:tapi-dsr-digital-signal-type-ib-qdr
+    a lex:ReferenceEntry ;
+    skos:prefLabel "DIGITAL_SIGNAL_TYPE_IB_QDR" ;
+    skos:definition "none" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-dsr/DIGITAL_SIGNAL_TYPE_IB_QDR> .
+
+lex:tapi-dsr-digital-signal-type-ib-sdr
+    a lex:ReferenceEntry ;
+    skos:prefLabel "DIGITAL_SIGNAL_TYPE_IB_SDR" ;
+    skos:definition "none" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-dsr/DIGITAL_SIGNAL_TYPE_IB_SDR> .
+
+lex:tapi-dsr-digital-signal-type-oc-12
+    a lex:ReferenceEntry ;
+    skos:prefLabel "DIGITAL_SIGNAL_TYPE_OC_12" ;
+    skos:definition "none" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-dsr/DIGITAL_SIGNAL_TYPE_OC_12> .
+
+lex:tapi-dsr-digital-signal-type-oc-192
+    a lex:ReferenceEntry ;
+    skos:prefLabel "DIGITAL_SIGNAL_TYPE_OC_192" ;
+    skos:definition "none" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-dsr/DIGITAL_SIGNAL_TYPE_OC_192> .
+
+lex:tapi-dsr-digital-signal-type-oc-3
+    a lex:ReferenceEntry ;
+    skos:prefLabel "DIGITAL_SIGNAL_TYPE_OC_3" ;
+    skos:definition "none" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-dsr/DIGITAL_SIGNAL_TYPE_OC_3> .
+
+lex:tapi-dsr-digital-signal-type-oc-48
+    a lex:ReferenceEntry ;
+    skos:prefLabel "DIGITAL_SIGNAL_TYPE_OC_48" ;
+    skos:definition "none" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-dsr/DIGITAL_SIGNAL_TYPE_OC_48> .
+
+lex:tapi-dsr-digital-signal-type-oc-768
+    a lex:ReferenceEntry ;
+    skos:prefLabel "DIGITAL_SIGNAL_TYPE_OC_768" ;
+    skos:definition "none" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-dsr/DIGITAL_SIGNAL_TYPE_OC_768> .
+
+lex:tapi-dsr-digital-signal-type-otu-1
+    a lex:ReferenceEntry ;
+    skos:prefLabel "DIGITAL_SIGNAL_TYPE_OTU_1" ;
+    skos:definition "none" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-dsr/DIGITAL_SIGNAL_TYPE_OTU_1> .
+
+lex:tapi-dsr-digital-signal-type-otu-2
+    a lex:ReferenceEntry ;
+    skos:prefLabel "DIGITAL_SIGNAL_TYPE_OTU_2" ;
+    skos:definition "none" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-dsr/DIGITAL_SIGNAL_TYPE_OTU_2> .
+
+lex:tapi-dsr-digital-signal-type-otu-2e
+    a lex:ReferenceEntry ;
+    skos:prefLabel "DIGITAL_SIGNAL_TYPE_OTU_2E" ;
+    skos:definition "none" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-dsr/DIGITAL_SIGNAL_TYPE_OTU_2E> .
+
+lex:tapi-dsr-digital-signal-type-otu-3
+    a lex:ReferenceEntry ;
+    skos:prefLabel "DIGITAL_SIGNAL_TYPE_OTU_3" ;
+    skos:definition "none" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-dsr/DIGITAL_SIGNAL_TYPE_OTU_3> .
+
+lex:tapi-dsr-digital-signal-type-otu-4
+    a lex:ReferenceEntry ;
+    skos:prefLabel "DIGITAL_SIGNAL_TYPE_OTU_4" ;
+    skos:definition "none" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-dsr/DIGITAL_SIGNAL_TYPE_OTU_4> .
+
+lex:tapi-dsr-digital-signal-type-sbcon-escon
+    a lex:ReferenceEntry ;
+    skos:prefLabel "DIGITAL_SIGNAL_TYPE_SBCON_ESCON" ;
+    skos:definition "none" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-dsr/DIGITAL_SIGNAL_TYPE_SBCON_ESCON> .
+
+lex:tapi-dsr-digital-signal-type-sdi
+    a lex:ReferenceEntry ;
+    skos:prefLabel "DIGITAL_SIGNAL_TYPE_SDI" ;
+    skos:definition "none" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-dsr/DIGITAL_SIGNAL_TYPE_SDI> .
+
+lex:tapi-dsr-digital-signal-type-sdi-1g5
+    a lex:ReferenceEntry ;
+    skos:prefLabel "DIGITAL_SIGNAL_TYPE_SDI_1G5" ;
+    skos:definition "none" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-dsr/DIGITAL_SIGNAL_TYPE_SDI_1G5> .
+
+lex:tapi-dsr-digital-signal-type-sdi-3g
+    a lex:ReferenceEntry ;
+    skos:prefLabel "DIGITAL_SIGNAL_TYPE_SDI_3G" ;
+    skos:definition "none" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-dsr/DIGITAL_SIGNAL_TYPE_SDI_3G> .
+
+lex:tapi-dsr-digital-signal-type-stm-1
+    a lex:ReferenceEntry ;
+    skos:prefLabel "DIGITAL_SIGNAL_TYPE_STM_1" ;
+    skos:definition "none" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-dsr/DIGITAL_SIGNAL_TYPE_STM_1> .
+
+lex:tapi-dsr-digital-signal-type-stm-16
+    a lex:ReferenceEntry ;
+    skos:prefLabel "DIGITAL_SIGNAL_TYPE_STM_16" ;
+    skos:definition "none" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-dsr/DIGITAL_SIGNAL_TYPE_STM_16> .
+
+lex:tapi-dsr-digital-signal-type-stm-256
+    a lex:ReferenceEntry ;
+    skos:prefLabel "DIGITAL_SIGNAL_TYPE_STM_256" ;
+    skos:definition "none" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-dsr/DIGITAL_SIGNAL_TYPE_STM_256> .
+
+lex:tapi-dsr-digital-signal-type-stm-4
+    a lex:ReferenceEntry ;
+    skos:prefLabel "DIGITAL_SIGNAL_TYPE_STM_4" ;
+    skos:definition "none" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-dsr/DIGITAL_SIGNAL_TYPE_STM_4> .
+
+lex:tapi-dsr-digital-signal-type-stm-64
+    a lex:ReferenceEntry ;
+    skos:prefLabel "DIGITAL_SIGNAL_TYPE_STM_64" ;
+    skos:definition "none" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-dsr/DIGITAL_SIGNAL_TYPE_STM_64> .
+
+lex:tapi-dsr-digital-signal-type-xgpon
+    a lex:ReferenceEntry ;
+    skos:prefLabel "DIGITAL_SIGNAL_TYPE_XGPON" ;
+    skos:definition "none" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-dsr/DIGITAL_SIGNAL_TYPE_XGPON> .

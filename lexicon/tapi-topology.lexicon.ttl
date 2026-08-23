@@ -1,0 +1,514 @@
+@prefix lex: <http://example.org/ontology/lexicon-vocab#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+# Reference lexicon for module: tapi-topology
+# Auto-drafted by draft_lexicon.py from yang4owl.py output. Do not hand-edit
+# without removing lex:needsCuration once an entry has been reviewed --
+# it exists so curated and uncurated entries stay distinguishable.
+#
+# Entries flagged lex:needsCuration true have an empty or label-restating
+# definition and/or a placeholder canonical example -- see
+# docs/reference-lexicons.md recommendation #2 before relying on them.
+
+lex:tapi-topology-connection-spec-reference
+    a lex:ReferenceEntry ;
+    skos:prefLabel "connection-spec-reference" ;
+    skos:definition "Grouping definition: connection-spec-reference" ;
+    skos:scopeNote "The definition of the type of Connection.\nThis definition will explain the flows in the Connection and how they relate to the roles of (conceptual) ports." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-topology/connection-spec-reference> .
+
+lex:tapi-topology-cost-characteristic
+    a lex:ReferenceEntry ;
+    skos:prefLabel "cost-characteristic" ;
+    skos:definition "Grouping definition: cost-characteristic" ;
+    skos:scopeNote "The cost characteristic related to some aspect of a topological entity." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-topology/cost-characteristic> .
+
+lex:tapi-topology-forwarding-rule
+    a lex:ReferenceEntry ;
+    skos:prefLabel "FORWARDING_RULE" ;
+    skos:definition "none" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-topology/FORWARDING_RULE> .
+
+lex:tapi-topology-forwarding-rule-cannot-forward-across-group
+    a lex:ReferenceEntry ;
+    skos:prefLabel "FORWARDING_RULE_CANNOT_FORWARD_ACROSS_GROUP" ;
+    skos:definition "NEPs referenced by the NodeRuleGroup (or indirectly by the InterRuleGroup between NodeRuleGroups) MUST NOT have Connections created between them.\nFor an InterRuleGroup points in a NodeRuleGroup at one end of the InterRuleGroup MUST NOT be connected to points in an NodeRuleGroup at another end of the InterRuleGroup." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-topology/FORWARDING_RULE_CANNOT_FORWARD_ACROSS_GROUP> .
+
+lex:tapi-topology-forwarding-rule-inter-connection-contention
+    a lex:ReferenceEntry ;
+    skos:prefLabel "FORWARDING_RULE_INTER_CONNECTION_CONTENTION" ;
+    skos:definition "Connections to NEPs in the Rule Group contend for resources based upon a constraint of some signal property.\nFor example, each Connection to a NEP in the Group must use a different value of the signal property from all other Connections to NEPs in the Rule Group.\nFor example, each Connection to a NEP in the Group must use a same value of the signal property as all other Connections to NEPs in the Rule Group. In this case the first Connection created in the Rule Group sets the value and the Group constraint is freed when the last Connection is deleted." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-topology/FORWARDING_RULE_INTER_CONNECTION_CONTENTION> .
+
+lex:tapi-topology-forwarding-rule-may-forward-across-group
+    a lex:ReferenceEntry ;
+    skos:prefLabel "FORWARDING_RULE_MAY_FORWARD_ACROSS_GROUP" ;
+    skos:definition "NEPs referenced by the NodeRuleGroup (or indirectly by the InterRuleGroup between NodeRuleGroups) may have Connections created between them unless some other rule overrides this.\nFor an InterRuleGroup, points in a NodeRuleGroup at one end of the InterRuleGroup may be connected to points in a NodeRuleGroup at another end of the InterRuleGroup." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-topology/FORWARDING_RULE_MAY_FORWARD_ACROSS_GROUP> .
+
+lex:tapi-topology-forwarding-rule-must-forward-across-group
+    a lex:ReferenceEntry ;
+    skos:prefLabel "FORWARDING_RULE_MUST_FORWARD_ACROSS_GROUP" ;
+    skos:definition "NEPs referenced by the NodeRuleGroup (or indirectly by the InterRuleGroup between NodeRuleGroups) MUST have Connections created between them unless some other rule overrides this.\nFor an InterRuleGroup, points in a NodeRuleGroup at one end of the InterRuleGroup MUST be connected to points in a NodeRuleGroup at another end of the InterRuleGroup." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-topology/FORWARDING_RULE_MUST_FORWARD_ACROSS_GROUP> .
+
+lex:tapi-topology-forwarding-rule-no-statement-on-forwarding
+    a lex:ReferenceEntry ;
+    skos:prefLabel "FORWARDING_RULE_NO_STATEMENT_ON_FORWARDING" ;
+    skos:definition "The rule group makes no statement on forwarding." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-topology/FORWARDING_RULE_NO_STATEMENT_ON_FORWARDING> .
+
+lex:tapi-topology-inter-domain-plug-id-pac
+    a lex:ReferenceEntry ;
+    skos:prefLabel "inter-domain-plug-id-pac" ;
+    skos:definition "Grouping definition: inter-domain-plug-id-pac" ;
+    skos:scopeNote "NEP at ENNI shall include an ENNI identifier (inter domain plug id) which must be unique in both the connected managed domains, to support the automatic discovery of interdomain links between E-NNI interfaces of e.g. different network providers.\nThe inter domain plug id can be based on OTN technology (OTU or ODU Trail Trace Identifier, SAPI).\nITU-T G.709: The access point identifier shall consist of a three-character international segment and a twelve-character national segment coded according to [ITU-T  T.50].\nThe international segment field provides a three-character ISO 3166 geographic/political country code (G/PCC).\nThe country code shall be based on the three-character uppercase alphabetic ISO 3166 country code.\nThe national segment field consists of two subfields: the ITU carrier code (ICC) followed by a unique access point code (UAPC).\nThe ITU carrier code is assigned to a network operator/service provider and shall consist of 1-6 left-justified characters, alphabetic, or leading alphabetic with trailing numeric [e.g., 'USATELCORuapc']." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-topology/inter-domain-plug-id-pac> .
+
+lex:tapi-topology-inter-rule-group
+    a lex:ReferenceEntry ;
+    skos:prefLabel "inter-rule-group" ;
+    skos:definition "Grouping definition: inter-rule-group" ;
+    skos:scopeNote "Rules that apply between groups of NodeEdgePoint (NEP) instances." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-topology/inter-rule-group> .
+
+lex:tapi-topology-latency-characteristic
+    a lex:ReferenceEntry ;
+    skos:prefLabel "latency-characteristic" ;
+    skos:definition "Grouping definition: latency-characteristic" ;
+    skos:scopeNote "Provides information on latency characteristic for a particular stated trafficProperty." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-topology/latency-characteristic> .
+
+lex:tapi-topology-layer-protocol-transition-pac
+    a lex:ReferenceEntry ;
+    skos:prefLabel "layer-protocol-transition-pac" ;
+    skos:definition "Grouping definition: layer-protocol-transition-pac" ;
+    skos:scopeNote "Relevant for a Link that is formed by abstracting one or more termination entities (in a stack) to focus on the flow and deemphasize the protocol transformation.\nThis abstraction is relevant when considering multi-layer routing and the protocol transformation is not too complex, e.g. there is not multiplexing.\nThis Pac provides the relevant abstractions of the embedded termination entities: The layer protocols of the embedded termination entities and the order of their application to the signal is still relevant and need to be accounted for.\nLinks that included details in this Pac are often referred to as Transitional Links." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-topology/layer-protocol-transition-pac> .
+
+lex:tapi-topology-link
+    a lex:ReferenceEntry ;
+    skos:prefLabel "link" ;
+    skos:definition "A Link is a topological entity which is an abstract representation of the effective adjacency between two or more Node instances (specifically NodeEdgePoint instances) in a Topology." ;
+    skos:scopeNote "Grouping definition: link" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-topology/link> .
+
+lex:tapi-topology-link-ref
+    a lex:ReferenceEntry ;
+    skos:prefLabel "link-ref" ;
+    skos:definition "Grouping definition: link-ref" ;
+    skos:scopeNote "none" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-topology/link-ref> .
+
+lex:tapi-topology-network-topology-service
+    a lex:ReferenceEntry ;
+    skos:prefLabel "network-topology-service" ;
+    skos:definition "A NetworkTopologyService represents an 'intent-like' request for topology related provisioning, for future developments.\nThe NetworkTopologyService is a container for topology request details and is distinct from the Topology that realize the request." ;
+    skos:scopeNote "Grouping definition: network-topology-service" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-topology/network-topology-service> .
+
+lex:tapi-topology-node
+    a lex:ReferenceEntry ;
+    skos:prefLabel "node" ;
+    skos:definition "Grouping definition: node" ;
+    skos:scopeNote "The Node is a topological entity which is an abstract representation of the forwarding capabilities (of transport characteristic information) of a particular set of network resources.\nIt is described in terms of the aggregation of set of ports (NodeEdgePoint) belonging to those network resources and the potential to enable forwarding of information between those edge ports.\nAt the lowest level of recursion, a Node may represent a switch matrix (i.e., a fabric) in an equipment." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-topology/node> .
+
+lex:tapi-topology-node-edge-point
+    a lex:ReferenceEntry ;
+    skos:prefLabel "node-edge-point" ;
+    skos:definition "Grouping definition: node-edge-point" ;
+    skos:scopeNote "The NodeEdgePoint (NEP) is a topological entity which represents the ingress-egress edge-port functions that access the forwarding capabilities provided by the Node.\nHence it provides an encapsulation of addressing, mapping, termination, adaptation and OAM functions of one or more transport layers (including circuit and packet forms) performed at the entry and exit points of the Node." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-topology/node-edge-point> .
+
+lex:tapi-topology-node-edge-point-ref
+    a lex:ReferenceEntry ;
+    skos:prefLabel "node-edge-point-ref" ;
+    skos:definition "Grouping definition: node-edge-point-ref" ;
+    skos:scopeNote "none" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-topology/node-edge-point-ref> .
+
+lex:tapi-topology-node-ref
+    a lex:ReferenceEntry ;
+    skos:prefLabel "node-ref" ;
+    skos:definition "Grouping definition: node-ref" ;
+    skos:scopeNote "none" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-topology/node-ref> .
+
+lex:tapi-topology-node-rule-group
+    a lex:ReferenceEntry ;
+    skos:prefLabel "node-rule-group" ;
+    skos:definition "Grouping definition: node-rule-group" ;
+    skos:scopeNote "Rules that apply to a group of NodeEdgePoint (NEP) instances." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-topology/node-rule-group> .
+
+lex:tapi-topology-node-rule-group-ref
+    a lex:ReferenceEntry ;
+    skos:prefLabel "node-rule-group-ref" ;
+    skos:definition "Grouping definition: node-rule-group-ref" ;
+    skos:scopeNote "none" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-topology/node-rule-group-ref> .
+
+lex:tapi-topology-port-role-rule
+    a lex:ReferenceEntry ;
+    skos:prefLabel "port-role-rule" ;
+    skos:definition "Constrains which (conceptual) port roles the rule applies to." ;
+    skos:scopeNote "Grouping definition: port-role-rule" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-topology/port-role-rule> .
+
+lex:tapi-topology-port-role-rule-option
+    a lex:ReferenceEntry ;
+    skos:prefLabel "PORT_ROLE_RULE_OPTION" ;
+    skos:definition "none" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-topology/PORT_ROLE_RULE_OPTION> .
+
+lex:tapi-topology-port-role-rule-option-any-role
+    a lex:ReferenceEntry ;
+    skos:prefLabel "PORT_ROLE_RULE_OPTION_ANY_ROLE" ;
+    skos:definition "The (conceptual) ports of the Connection to which the rule applies may take any identified role." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-topology/PORT_ROLE_RULE_OPTION_ANY_ROLE> .
+
+lex:tapi-topology-port-role-rule-option-different-role
+    a lex:ReferenceEntry ;
+    skos:prefLabel "PORT_ROLE_RULE_OPTION_DIFFERENT_ROLE" ;
+    skos:definition "The (conceptual) ports of the Connection to which the rule applies must have different roles from the list in port role." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-topology/PORT_ROLE_RULE_OPTION_DIFFERENT_ROLE> .
+
+lex:tapi-topology-port-role-rule-option-not-role
+    a lex:ReferenceEntry ;
+    skos:prefLabel "PORT_ROLE_RULE_OPTION_NOT_ROLE" ;
+    skos:definition "The (conceptual) ports of the Connection to which the rule applies must not have any of the listed roles." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-topology/PORT_ROLE_RULE_OPTION_NOT_ROLE> .
+
+lex:tapi-topology-port-role-rule-option-same-role
+    a lex:ReferenceEntry ;
+    skos:prefLabel "PORT_ROLE_RULE_OPTION_SAME_ROLE" ;
+    skos:definition "The (conceptual) ports of the Connection to which the rule applies must have the same role from the list in port role." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-topology/PORT_ROLE_RULE_OPTION_SAME_ROLE> .
+
+lex:tapi-topology-protection-type
+    a lex:ReferenceEntry ;
+    skos:prefLabel "protection-type" ;
+    skos:definition "The types of protection and restoration." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:EnumeratedKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/types/tapi-topology/protection-type> .
+
+lex:tapi-topology-resilience-type
+    a lex:ReferenceEntry ;
+    skos:prefLabel "resilience-type" ;
+    skos:definition "Grouping definition: resilience-type" ;
+    skos:scopeNote "The type of resiliency (protection/restoration)." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-topology/resilience-type> .
+
+lex:tapi-topology-restoration-policy
+    a lex:ReferenceEntry ;
+    skos:prefLabel "restoration-policy" ;
+    skos:definition "The restoration policy." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:EnumeratedKind ;
+    lex:needsCuration true ;
+    prov:wasDerivedFrom <http://example.org/ontology/types/tapi-topology/restoration-policy> .
+
+lex:tapi-topology-risk-characteristic
+    a lex:ReferenceEntry ;
+    skos:prefLabel "risk-characteristic" ;
+    skos:definition "Grouping definition: risk-characteristic" ;
+    skos:scopeNote "The information for a particular risk characteristic where there is a list of risk identifiers related to that characteristic." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-topology/risk-characteristic> .
+
+lex:tapi-topology-risk-parameter-pac
+    a lex:ReferenceEntry ;
+    skos:prefLabel "risk-parameter-pac" ;
+    skos:definition "Grouping definition: risk-parameter-pac" ;
+    skos:scopeNote "The risk characteristics of a topological entity (e.g. the Link) come directly from the underlying physical realization.\nThe risk characteristics propagate from the physical realization to the client and from the server layer to the client layer, this propagation may be modified by protection.\nA topological entity may suffer degradation or failure as a result of a problem in a part of the underlying realization.\nThe realization can be partitioned into segments which have some relevant common failure modes.\nThere is a risk of failure/degradation of each segment of the underlying realization.\nEach segment is a part of a larger physical/geographical unit that behaves as one with respect to failure (i.e. a failure will have a high probability of impacting the whole unit (e.g. all cables in the same duct).\nDisruptions to that larger physical/geographical unit will impact (cause failure/errors to) all topological entities that use any part of that larger physical/geographical entity.\nAny topological entity that uses any part of that larger physical/geographical unit will suffer impact and hence each topological entity shares risk.\nThe identifier of each physical/geographical unit that is involved in the realization of each segment of a topological entity can be listed in the RiskParameter_Pac of that topological entity.\nA segment has one or more risk characteristic.\nShared risk between two topological entities compromises the integrity of any solution that use one of those topological entity as a backup for the other.\nWhere two topological entities have a common risk characteristic they have an elevated probability of failing simultaneously compared to two topological entities that do not share risk characteristics." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-topology/risk-parameter-pac> .
+
+lex:tapi-topology-rule
+    a lex:ReferenceEntry ;
+    skos:prefLabel "rule" ;
+    skos:definition "Grouping definition: rule" ;
+    skos:scopeNote "Single complex rule statement.\nA Node with no rule group has no restrictions and is essentially May/Any.\nA NodeRuleGroup constrains the CEP connectability in the Node.\nA Connection from a CEP/NEP must abide by all rules that relate to that CEP/NEP.\nRules that are for a particular layerProtocolQualifier, connectionSpecReference, cepPortRole and cepDirection combination must be abided by in combination as dictated by overridePriority.\nIf a particular connectionSpecReference does not have any rule statements then it is not supported and connections of that type are not possible within the rule group.\nIf a particular cepPortRole of a particular connectionSpecReference does not have any rule statements then it is not supported and connections of that connectionSpecReference (type) cannot have that cepPortRole for CEPs from NEPs in that rule group.\nIf a particular cepDirection for a particular connectionSpecReference does not have any rule statements then it is not supported and connections of that connectionSpecReference (type) cannot have that cepPortDirection for CEPs from NEPs in that rule group.\nRules that are for different layerProtocolQualifiers or connectionSpecReferences are independent and provide options for Connection in the NodeRuleGroup.\nSome rules may apply to multiple connectionSpecReferences and all cepPortRoles and all cepDirections." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-topology/rule> .
+
+lex:tapi-topology-rule-type
+    a lex:ReferenceEntry ;
+    skos:prefLabel "rule-type" ;
+    skos:definition "The focus of the rule." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:EnumeratedKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/types/tapi-topology/rule-type> .
+
+lex:tapi-topology-signal-property-rule
+    a lex:ReferenceEntry ;
+    skos:prefLabel "signal-property-rule" ;
+    skos:definition "Grouping definition: signal-property-rule" ;
+    skos:scopeNote "Rule related to an identified signal property." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-topology/signal-property-rule> .
+
+lex:tapi-topology-signal-property-value-rule
+    a lex:ReferenceEntry ;
+    skos:prefLabel "SIGNAL_PROPERTY_VALUE_RULE" ;
+    skos:definition "none" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-topology/SIGNAL_PROPERTY_VALUE_RULE> .
+
+lex:tapi-topology-signal-property-value-rule-any-value
+    a lex:ReferenceEntry ;
+    skos:prefLabel "SIGNAL_PROPERTY_VALUE_RULE_ANY_VALUE" ;
+    skos:definition "The signal property of the CEP to which the rule applies may take any identified value." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-topology/SIGNAL_PROPERTY_VALUE_RULE_ANY_VALUE> .
+
+lex:tapi-topology-signal-property-value-rule-different-value
+    a lex:ReferenceEntry ;
+    skos:prefLabel "SIGNAL_PROPERTY_VALUE_RULE_DIFFERENT_VALUE" ;
+    skos:definition "The signal property of the CEP to which the rule applies each must have different values from the identified list." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-topology/SIGNAL_PROPERTY_VALUE_RULE_DIFFERENT_VALUE> .
+
+lex:tapi-topology-signal-property-value-rule-not-value
+    a lex:ReferenceEntry ;
+    skos:prefLabel "SIGNAL_PROPERTY_VALUE_RULE_NOT_VALUE" ;
+    skos:definition "The signal property of the CEP to which the rule applies must not have any of the identified values." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-topology/SIGNAL_PROPERTY_VALUE_RULE_NOT_VALUE> .
+
+lex:tapi-topology-signal-property-value-rule-same-value
+    a lex:ReferenceEntry ;
+    skos:prefLabel "SIGNAL_PROPERTY_VALUE_RULE_SAME_VALUE" ;
+    skos:definition "The signal property of the CEP to which the rule applies must have the same value from the identied list." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-topology/SIGNAL_PROPERTY_VALUE_RULE_SAME_VALUE> .
+
+lex:tapi-topology-topology
+    a lex:ReferenceEntry ;
+    skos:prefLabel "topology" ;
+    skos:definition "Grouping definition: topology" ;
+    skos:scopeNote "The Topology is an abstract representation of the topological aspects of a particular set of network resources. It is described in terms of the underlying topological network of Node and Link instances that enable the forwarding capabilities of that particular set of network resources." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-topology/topology> .
+
+lex:tapi-topology-topology-context
+    a lex:ReferenceEntry ;
+    skos:prefLabel "topology-context" ;
+    skos:definition "Grouping definition: topology-context" ;
+    skos:scopeNote "This object class represents the scope of control that a particular SDN controller has with respect to a particular network, specifically regarding the topology description.\nAn instance of this class includes its Topology object instances." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-topology/topology-context> .
+
+lex:tapi-topology-topology-object-type
+    a lex:ReferenceEntry ;
+    skos:prefLabel "TOPOLOGY_OBJECT_TYPE" ;
+    skos:definition "none" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-topology/TOPOLOGY_OBJECT_TYPE> .
+
+lex:tapi-topology-topology-object-type-inter-rule-group
+    a lex:ReferenceEntry ;
+    skos:prefLabel "TOPOLOGY_OBJECT_TYPE_INTER_RULE_GROUP" ;
+    skos:definition "The InterRuleGroup class." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-topology/TOPOLOGY_OBJECT_TYPE_INTER_RULE_GROUP> .
+
+lex:tapi-topology-topology-object-type-link
+    a lex:ReferenceEntry ;
+    skos:prefLabel "TOPOLOGY_OBJECT_TYPE_LINK" ;
+    skos:definition "The Link class." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-topology/TOPOLOGY_OBJECT_TYPE_LINK> .
+
+lex:tapi-topology-topology-object-type-network-topology-service
+    a lex:ReferenceEntry ;
+    skos:prefLabel "TOPOLOGY_OBJECT_TYPE_NETWORK_TOPOLOGY_SERVICE" ;
+    skos:definition "The NetworkTopologyService class." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-topology/TOPOLOGY_OBJECT_TYPE_NETWORK_TOPOLOGY_SERVICE> .
+
+lex:tapi-topology-topology-object-type-node
+    a lex:ReferenceEntry ;
+    skos:prefLabel "TOPOLOGY_OBJECT_TYPE_NODE" ;
+    skos:definition "The Node class." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-topology/TOPOLOGY_OBJECT_TYPE_NODE> .
+
+lex:tapi-topology-topology-object-type-node-edge-point
+    a lex:ReferenceEntry ;
+    skos:prefLabel "TOPOLOGY_OBJECT_TYPE_NODE_EDGE_POINT" ;
+    skos:definition "The NodeEdgePoint (NEP) class." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-topology/TOPOLOGY_OBJECT_TYPE_NODE_EDGE_POINT> .
+
+lex:tapi-topology-topology-object-type-node-rule-group
+    a lex:ReferenceEntry ;
+    skos:prefLabel "TOPOLOGY_OBJECT_TYPE_NODE_RULE_GROUP" ;
+    skos:definition "The NodeRuleGroup class." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-topology/TOPOLOGY_OBJECT_TYPE_NODE_RULE_GROUP> .
+
+lex:tapi-topology-topology-object-type-rule
+    a lex:ReferenceEntry ;
+    skos:prefLabel "TOPOLOGY_OBJECT_TYPE_RULE" ;
+    skos:definition "The Rule class." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-topology/TOPOLOGY_OBJECT_TYPE_RULE> .
+
+lex:tapi-topology-topology-object-type-topology
+    a lex:ReferenceEntry ;
+    skos:prefLabel "TOPOLOGY_OBJECT_TYPE_TOPOLOGY" ;
+    skos:definition "The Topology class." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-topology/TOPOLOGY_OBJECT_TYPE_TOPOLOGY> .
+
+lex:tapi-topology-topology-profile-type
+    a lex:ReferenceEntry ;
+    skos:prefLabel "TOPOLOGY_PROFILE_TYPE" ;
+    skos:definition "none" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-topology/TOPOLOGY_PROFILE_TYPE> .
+
+lex:tapi-topology-topology-profile-type-transmission-capability
+    a lex:ReferenceEntry ;
+    skos:prefLabel "TOPOLOGY_PROFILE_TYPE_TRANSMISSION_CAPABILITY" ;
+    skos:definition "none" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-topology/TOPOLOGY_PROFILE_TYPE_TRANSMISSION_CAPABILITY> .
+
+lex:tapi-topology-topology-ref
+    a lex:ReferenceEntry ;
+    skos:prefLabel "topology-ref" ;
+    skos:definition "Grouping definition: topology-ref" ;
+    skos:scopeNote "none" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-topology/topology-ref> .
+
+lex:tapi-topology-transfer-cost-pac
+    a lex:ReferenceEntry ;
+    skos:prefLabel "transfer-cost-pac" ;
+    skos:definition "Grouping definition: transfer-cost-pac" ;
+    skos:scopeNote "The cost characteristics of a topological entity (e.g. a Link or a Node) not necessarily correlated to the cost of the underlying physical realization.\nThey may be quite specific to the individual topological entity e.g. opportunity cost. Relates to layer capacity.\nThere may be many perspectives from which cost may be considered  for a particular topological entity and hence many specific costs and potentially cost algorithms.\nUsing an entity will incur a cost." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-topology/transfer-cost-pac> .
+
+lex:tapi-topology-transfer-integrity-pac
+    a lex:ReferenceEntry ;
+    skos:prefLabel "transfer-integrity-pac" ;
+    skos:definition "Grouping definition: transfer-integrity-pac" ;
+    skos:scopeNote "Transfer integrity characteristic covers expected/specified/acceptable characteristic of degradation of the transfered signal.\nIt includes all aspects of possible degradation of signal content as well as any damage of any form to the total topological entity and to the carried signals.\nNote that the statement is of total impact to the topological entity so any partial usage of the topological entity (e.g. a signal that does not use full capacity) will only suffer its portion of the impact." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-topology/transfer-integrity-pac> .
+
+lex:tapi-topology-transfer-timing-pac
+    a lex:ReferenceEntry ;
+    skos:prefLabel "transfer-timing-pac" ;
+    skos:definition "A topological entity (e.g. a Link or a Node) will suffer effects from the underlying physical realization related to the timing of the information passed by the topological entity." ;
+    skos:scopeNote "Grouping definition: transfer-timing-pac" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-topology/transfer-timing-pac> .
+
+lex:tapi-topology-validation-mechanism
+    a lex:ReferenceEntry ;
+    skos:prefLabel "validation-mechanism" ;
+    skos:definition "Grouping definition: validation-mechanism" ;
+    skos:scopeNote "Identifies the validation mechanism and describes the characteristics of that mechanism." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-topology/validation-mechanism> .
+
+lex:tapi-topology-validation-pac
+    a lex:ReferenceEntry ;
+    skos:prefLabel "validation-pac" ;
+    skos:definition "Grouping definition: validation-pac" ;
+    skos:scopeNote "Validation covers the various adjacency discovery and reachability verification protocols. Also may cover information source and degree of integrity." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-topology/validation-pac> .

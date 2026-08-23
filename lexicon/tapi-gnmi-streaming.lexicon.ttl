@@ -1,0 +1,185 @@
+@prefix lex: <http://example.org/ontology/lexicon-vocab#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+# Reference lexicon for module: tapi-gnmi-streaming
+# Auto-drafted by draft_lexicon.py from yang4owl.py output. Do not hand-edit
+# without removing lex:needsCuration once an entry has been reviewed --
+# it exists so curated and uncurated entries stay distinguishable.
+#
+# Entries flagged lex:needsCuration true have an empty or label-restating
+# definition and/or a placeholder canonical example -- see
+# docs/reference-lexicons.md recommendation #2 before relying on them.
+
+lex:tapi-gnmi-streaming-direction-of-measured-signal
+    a lex:ReferenceEntry ;
+    skos:prefLabel "direction-of-measured-signal" ;
+    skos:definition "Flow directions." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:EnumeratedKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/types/tapi-gnmi-streaming/direction-of-measured-signal> .
+
+lex:tapi-gnmi-streaming-gnmi-streaming-object-type
+    a lex:ReferenceEntry ;
+    skos:prefLabel "GNMI_STREAMING_OBJECT_TYPE" ;
+    skos:definition "none" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-gnmi-streaming/GNMI_STREAMING_OBJECT_TYPE> .
+
+lex:tapi-gnmi-streaming-gnmi-streaming-object-type-measurement-details
+    a lex:ReferenceEntry ;
+    skos:prefLabel "GNMI_STREAMING_OBJECT_TYPE_MEASUREMENT_DETAILS" ;
+    skos:definition "none" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-gnmi-streaming/GNMI_STREAMING_OBJECT_TYPE_MEASUREMENT_DETAILS> .
+
+lex:tapi-gnmi-streaming-measurement-details
+    a lex:ReferenceEntry ;
+    skos:prefLabel "measurement-details" ;
+    skos:definition "Allows:\no    a single measurement record to be conveyed via the QualifiedMeasurementCommon structure\no    multiple measurements records to be conveyed via QualifiedMeasurement.\nWhen QualifiedMeasurement is used, multiple measurements can be conveyed in one stream record.\nAny properties, that have the same value across all measurements in the stream records, may be conveyed in the single measurement fields of the QualifiedMeasurementCommon augment of MeasurementDetails.\nWhere at least one of the measurements to be conveyed in the stream record has a different value from others, the value for each measurment should be conveyed in its dedicated QualifiedMeasurement.\nIf a value is provided for a field is provided in QualifiedMeasurementCommon and a value for the same field is provided in QualifiedMeasurement, the value in QualifiedMeasurement applies for that specific measurement (i.e., it overrides the common value)." ;
+    skos:scopeNote "Grouping definition: measurement-details" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-gnmi-streaming/measurement-details> .
+
+lex:tapi-gnmi-streaming-normalized-measurement-type
+    a lex:ReferenceEntry ;
+    skos:prefLabel "normalized-measurement-type" ;
+    skos:definition "none" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:EnumeratedKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/types/tapi-gnmi-streaming/normalized-measurement-type> .
+
+lex:tapi-gnmi-streaming-notification
+    a lex:ReferenceEntry ;
+    skos:prefLabel "notification" ;
+    skos:definition "Extract from https://github.com/openconfig/gnmi/blob/master/proto/gnmi/gnmi.proto\n// Notification is a re-usable message that is used to encode data from the\n// target to the client.\n....\n// Reference: gNMI Specification Section 2.1" ;
+    skos:scopeNote "Grouping definition: notification" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-gnmi-streaming/notification> .
+
+lex:tapi-gnmi-streaming-path
+    a lex:ReferenceEntry ;
+    skos:prefLabel "path" ;
+    skos:definition "Extract from https://github.com/openconfig/gnmi/blob/master/proto/gnmi/gnmi.proto\n// Elements of the path are no longer encoded as a string, but rather within\n// the elem field as a PathElem message." ;
+    skos:scopeNote "Grouping definition: path" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-gnmi-streaming/path> .
+
+lex:tapi-gnmi-streaming-path-elem
+    a lex:ReferenceEntry ;
+    skos:prefLabel "path-elem" ;
+    skos:definition "Extract from https://github.com/openconfig/gnmi/blob/master/proto/gnmi/gnmi.proto\n// PathElem encodes an element of a gNMI path, along with any attributes (keys)\n// that may be associated with it.\n// Reference: gNMI Specification Section 2.2.2." ;
+    skos:scopeNote "Grouping definition: path-elem" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-gnmi-streaming/path-elem> .
+
+lex:tapi-gnmi-streaming-qualified-measured-value
+    a lex:ReferenceEntry ;
+    skos:prefLabel "qualified-measured-value" ;
+    skos:definition "Grouping definition: qualified-measured-value" ;
+    skos:scopeNote "This structure allows for various value qualifications:\n- Where the value is valid and is for the complete period, then only the value will be provided (valueQualifier will not be present).\n- Where there are issues with the value, then the valueQualifier will be provided and there may be no value depending upon the valueQualifier.\n" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-gnmi-streaming/qualified-measured-value> .
+
+lex:tapi-gnmi-streaming-qualified-measurement
+    a lex:ReferenceEntry ;
+    skos:prefLabel "qualified-measurement" ;
+    skos:definition "Grouping definition: qualified-measurement" ;
+    skos:scopeNote "none" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-gnmi-streaming/qualified-measurement> .
+
+lex:tapi-gnmi-streaming-qualified-measurement-common-1-to-10
+    a lex:ReferenceEntry ;
+    skos:prefLabel "qualified-measurement-common-1-to-10" ;
+    skos:definition "Grouping definition: qualified-measurement-common-1-to-10" ;
+    skos:scopeNote "Provides the details of the measurement(s) being streamed from protobufEnumeration 1 to 10." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-gnmi-streaming/qualified-measurement-common-1-to-10> .
+
+lex:tapi-gnmi-streaming-qualified-measurement-common-12-onward
+    a lex:ReferenceEntry ;
+    skos:prefLabel "qualified-measurement-common-12-onward" ;
+    skos:definition "Grouping definition: qualified-measurement-common-12-onward" ;
+    skos:scopeNote "Provides the details of the measurement(s) being streamed from protobufEnumeration 12 onwards." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-gnmi-streaming/qualified-measurement-common-12-onward> .
+
+lex:tapi-gnmi-streaming-relative-position
+    a lex:ReferenceEntry ;
+    skos:prefLabel "relative-position" ;
+    skos:definition "Position of the measurement relative to the point against which the measurement was reported." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:EnumeratedKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/types/tapi-gnmi-streaming/relative-position> .
+
+lex:tapi-gnmi-streaming-sample-qualifier
+    a lex:ReferenceEntry ;
+    skos:prefLabel "sample-qualifier" ;
+    skos:definition "The sample qualifiers." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:EnumeratedKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/types/tapi-gnmi-streaming/sample-qualifier> .
+
+lex:tapi-gnmi-streaming-stream-details
+    a lex:ReferenceEntry ;
+    skos:prefLabel "stream-details" ;
+    skos:definition "Defines the protobuf structures for the stream of measurement data." ;
+    skos:scopeNote "Grouping definition: stream-details" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-gnmi-streaming/stream-details> .
+
+lex:tapi-gnmi-streaming-stream-structure
+    a lex:ReferenceEntry ;
+    skos:prefLabel "stream-structure" ;
+    skos:definition "Grouping definition: stream-structure" ;
+    skos:scopeNote "TAPI Augmentation of proto_bytes adding TAPI structured content to the TypedValue protobuf message.\nThis model fragment defines the structure." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-gnmi-streaming/stream-structure> .
+
+lex:tapi-gnmi-streaming-subscribe-response
+    a lex:ReferenceEntry ;
+    skos:prefLabel "subscribe-response" ;
+    skos:definition "Extract from https://github.com/openconfig/gnmi/blob/master/proto/gnmi/gnmi.proto\n// SubscribeResponse is the message used by the target within a Subscribe RPC.\n// The target includes a Notification message which is used to transmit values\n// of the path(s) that are associated with the subscription. The same message\n// is to indicate that the target has sent all data values once (is\n// synchronized).\n// Reference: gNMI Specification Section 3.5.1.4" ;
+    skos:scopeNote "Grouping definition: subscribe-response" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-gnmi-streaming/subscribe-response> .
+
+lex:tapi-gnmi-streaming-typed-value
+    a lex:ReferenceEntry ;
+    skos:prefLabel "typed-value" ;
+    skos:definition "Extract from https://github.com/openconfig/gnmi/blob/master/proto/gnmi/gnmi.proto\n// TypedValue is used to encode a value being sent between the client and\n// target (originated by either entity).\nExtract from https://github.com/openconfig/gnmi/blob/master/proto/gnmi/gnmi.proto\n// One of the fields within the val oneof is populated with the value\n// of the update. The type of the value being included in the Update\n// determines which field should be populated. In the case that the\n// encoding is a particular form of the base protobuf type, a specific\n// field is used to store the value (e.g., json_val).\nTAPI only uses, via augmentation,\nbytes proto_bytes = 13;\nWhich is defined as\nExtract from https://github.com/openconfig/gnmi/blob/master/proto/gnmi/gnmi.proto\n// Protobuf binary encoded bytes. The message type is not included.\n// See the specification at\n// github.com/openconfig/reference/blob/master/rpc/gnmi/protobuf-vals.md\n// for a complete specification. [Experimental]\n" ;
+    skos:scopeNote "Grouping definition: typed-value" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-gnmi-streaming/typed-value> .
+
+lex:tapi-gnmi-streaming-update
+    a lex:ReferenceEntry ;
+    skos:prefLabel "update" ;
+    skos:definition "Extract from https://github.com/openconfig/gnmi/blob/master/proto/gnmi/gnmi.proto\n// Update is a re-usable message that is used to store a particular Path,\n// Value pair.\n// Reference: gNMI Specification Section 2.1" ;
+    skos:scopeNote "Grouping definition: update" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-gnmi-streaming/update> .
+
+lex:tapi-gnmi-streaming-value-qualifier
+    a lex:ReferenceEntry ;
+    skos:prefLabel "value-qualifier" ;
+    skos:definition "The value qualifiers." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:EnumeratedKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/types/tapi-gnmi-streaming/value-qualifier> .

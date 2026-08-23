@@ -1,0 +1,89 @@
+@prefix lex: <http://example.org/ontology/lexicon-vocab#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+# Reference lexicon for module: tapi-virtual-network
+# Auto-drafted by draft_lexicon.py from yang4owl.py output. Do not hand-edit
+# without removing lex:needsCuration once an entry has been reviewed --
+# it exists so curated and uncurated entries stay distinguishable.
+#
+# Entries flagged lex:needsCuration true have an empty or label-restating
+# definition and/or a placeholder canonical example -- see
+# docs/reference-lexicons.md recommendation #2 before relying on them.
+
+lex:tapi-virtual-network-virtual-network-constraint
+    a lex:ReferenceEntry ;
+    skos:prefLabel "virtual-network-constraint" ;
+    skos:definition "Grouping definition: virtual-network-constraint" ;
+    skos:scopeNote "none" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-virtual-network/virtual-network-constraint> .
+
+lex:tapi-virtual-network-virtual-network-context
+    a lex:ReferenceEntry ;
+    skos:prefLabel "virtual-network-context" ;
+    skos:definition "Grouping definition: virtual-network-context" ;
+    skos:scopeNote "This object class represents the scope of control that a particular SDN controller has with respect to a particular network, specifically regarding the virtual network description.\nAn instance of this class includes its VirtualNetworkService instances." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-virtual-network/virtual-network-context> .
+
+lex:tapi-virtual-network-virtual-network-object-type
+    a lex:ReferenceEntry ;
+    skos:prefLabel "VIRTUAL_NETWORK_OBJECT_TYPE" ;
+    skos:definition "none" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-virtual-network/VIRTUAL_NETWORK_OBJECT_TYPE> .
+
+lex:tapi-virtual-network-virtual-network-object-type-virtual-network-constraint
+    a lex:ReferenceEntry ;
+    skos:prefLabel "VIRTUAL_NETWORK_OBJECT_TYPE_VIRTUAL_NETWORK_CONSTRAINT" ;
+    skos:definition "The VirtualNetworkConstraint class." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-virtual-network/VIRTUAL_NETWORK_OBJECT_TYPE_VIRTUAL_NETWORK_CONSTRAINT> .
+
+lex:tapi-virtual-network-virtual-network-object-type-virtual-network-service
+    a lex:ReferenceEntry ;
+    skos:prefLabel "VIRTUAL_NETWORK_OBJECT_TYPE_VIRTUAL_NETWORK_SERVICE" ;
+    skos:definition "none" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-virtual-network/VIRTUAL_NETWORK_OBJECT_TYPE_VIRTUAL_NETWORK_SERVICE> .
+
+lex:tapi-virtual-network-virtual-network-object-type-virtual-network-service-end-point
+    a lex:ReferenceEntry ;
+    skos:prefLabel "VIRTUAL_NETWORK_OBJECT_TYPE_VIRTUAL_NETWORK_SERVICE_END_POINT" ;
+    skos:definition "none" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-virtual-network/VIRTUAL_NETWORK_OBJECT_TYPE_VIRTUAL_NETWORK_SERVICE_END_POINT> .
+
+lex:tapi-virtual-network-virtual-network-service
+    a lex:ReferenceEntry ;
+    skos:prefLabel "virtual-network-service" ;
+    skos:definition "Grouping definition: virtual-network-service" ;
+    skos:scopeNote "The ForwardingConstruct (FC) object class models enabled potential for forwarding between two or more LTPs and like the LTP supports any transport protocol including all circuit and packet forms.\nAt the lowest level of recursion, a FC represents a cross-connection within an NE." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-virtual-network/virtual-network-service> .
+
+lex:tapi-virtual-network-virtual-network-service-end-point
+    a lex:ReferenceEntry ;
+    skos:prefLabel "virtual-network-service-end-point" ;
+    skos:definition "Grouping definition: virtual-network-service-end-point" ;
+    skos:scopeNote "The association of the FC to LTPs is made via EndPoints.\nThe EndPoint (EP) object class models the access to the FC function.\nThe traffic forwarding between the associated EPs of the FC depends upon the type of FC and may be associated with FcSwitch object instances.\nIn cases where there is resilience the EndPoint may convey the resilience role of the access to the FC.\nIt can represent a protected (resilient/reliable) point or a protecting (unreliable working or protection) point.\nThe EP replaces the Protection Unit of a traditional protection model.\nThe ForwadingConstruct can be considered as a component and the EndPoint as a Port on that component" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-virtual-network/virtual-network-service-end-point> .
+
+lex:tapi-virtual-network-virtual-nw-service-ref
+    a lex:ReferenceEntry ;
+    skos:prefLabel "virtual-nw-service-ref" ;
+    skos:definition "Grouping definition: virtual-nw-service-ref" ;
+    skos:scopeNote "none" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-virtual-network/virtual-nw-service-ref> .

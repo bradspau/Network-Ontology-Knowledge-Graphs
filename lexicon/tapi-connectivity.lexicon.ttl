@@ -1,0 +1,525 @@
+@prefix lex: <http://example.org/ontology/lexicon-vocab#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+# Reference lexicon for module: tapi-connectivity
+# Auto-drafted by draft_lexicon.py from yang4owl.py output. Do not hand-edit
+# without removing lex:needsCuration once an entry has been reviewed --
+# it exists so curated and uncurated entries stay distinguishable.
+#
+# Entries flagged lex:needsCuration true have an empty or label-restating
+# definition and/or a placeholder canonical example -- see
+# docs/reference-lexicons.md recommendation #2 before relying on them.
+
+lex:tapi-connectivity-cep-list
+    a lex:ReferenceEntry ;
+    skos:prefLabel "cep-list" ;
+    skos:definition "Grouping definition: cep-list" ;
+    skos:scopeNote "This class provides the linkage between the NodeEdgePoint (NEP) instance and its supported ConnectionEndPoint CEP instances.\nThe NEP class, which is defined in TapiTopology module, cannot directly include the reference to its CEPs, because CEP class is defined in another module, TapiConnectivity." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-connectivity/cep-list> .
+
+lex:tapi-connectivity-cep-role
+    a lex:ReferenceEntry ;
+    skos:prefLabel "cep-role" ;
+    skos:definition "Grouping definition: cep-role" ;
+    skos:scopeNote "The role of the CEP in the context of the Connection spec." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-connectivity/cep-role> .
+
+lex:tapi-connectivity-connection
+    a lex:ReferenceEntry ;
+    skos:prefLabel "connection" ;
+    skos:definition "A Connection represents an enabled (provisioned) potential for forwarding (of transport characteristic information including all circuit/packet forms) between two or more ConnectionEndPoint instances.\nThe bounding Node of a Connection may be explicit or be conceptually implicit.\nThe Connection is a container for provisioned connectivity that tracks the state of the allocated resources and is distinct from the ConnectivityService.\nAt the lowest level of recursion, a Connection may represent a cross-connection in a switch matrix (i.e., a fabric) in an equipment." ;
+    skos:scopeNote "Grouping definition: connection" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-connectivity/connection> .
+
+lex:tapi-connectivity-connection-and-partition
+    a lex:ReferenceEntry ;
+    skos:prefLabel "connection-and-partition" ;
+    skos:definition "Grouping definition: connection-and-partition" ;
+    skos:scopeNote "none" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-connectivity/connection-and-partition> .
+
+lex:tapi-connectivity-connection-and-partition-constraint
+    a lex:ReferenceEntry ;
+    skos:prefLabel "connection-and-partition-constraint" ;
+    skos:definition "Grouping definition: connection-and-partition-constraint" ;
+    skos:scopeNote "none" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-connectivity/connection-and-partition-constraint> .
+
+lex:tapi-connectivity-connection-and-route
+    a lex:ReferenceEntry ;
+    skos:prefLabel "connection-and-route" ;
+    skos:definition "Grouping definition: connection-and-route" ;
+    skos:scopeNote "none" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-connectivity/connection-and-route> .
+
+lex:tapi-connectivity-connection-and-route-constraint
+    a lex:ReferenceEntry ;
+    skos:prefLabel "connection-and-route-constraint" ;
+    skos:definition "Grouping definition: connection-and-route-constraint" ;
+    skos:scopeNote "none" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-connectivity/connection-and-route-constraint> .
+
+lex:tapi-connectivity-connection-end-point
+    a lex:ReferenceEntry ;
+    skos:prefLabel "connection-end-point" ;
+    skos:definition "Grouping definition: connection-end-point" ;
+    skos:scopeNote "The ConnectionEndPoint (CEP) encapsulates information related to a Connection at the ingress/egress points of every Node that the Connection traverses in a Topology.\nThe CEP includes the termination and adaptation functions of one or more transport layers (circuit and packet forms) plus the information of the (conceptual) port of associated Connection." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-connectivity/connection-end-point> .
+
+lex:tapi-connectivity-connection-end-point-ref
+    a lex:ReferenceEntry ;
+    skos:prefLabel "connection-end-point-ref" ;
+    skos:definition "Grouping definition: connection-end-point-ref" ;
+    skos:scopeNote "none" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-connectivity/connection-end-point-ref> .
+
+lex:tapi-connectivity-connection-ref
+    a lex:ReferenceEntry ;
+    skos:prefLabel "connection-ref" ;
+    skos:definition "Grouping definition: connection-ref" ;
+    skos:scopeNote "none" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-connectivity/connection-ref> .
+
+lex:tapi-connectivity-connection-spec-reference
+    a lex:ReferenceEntry ;
+    skos:prefLabel "connection-spec-reference" ;
+    skos:definition "Grouping definition: connection-spec-reference" ;
+    skos:scopeNote "The reference to a spec for a type of Connection." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-connectivity/connection-spec-reference> .
+
+lex:tapi-connectivity-connectivity-constraint
+    a lex:ReferenceEntry ;
+    skos:prefLabel "connectivity-constraint" ;
+    skos:definition "Grouping definition: connectivity-constraint" ;
+    skos:scopeNote "The connectivity constraints associated to a ConnectivityService instance." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-connectivity/connectivity-constraint> .
+
+lex:tapi-connectivity-connectivity-context
+    a lex:ReferenceEntry ;
+    skos:prefLabel "connectivity-context" ;
+    skos:definition "Grouping definition: connectivity-context" ;
+    skos:scopeNote "This object class represents the scope of control that a particular SDN controller has with respect to a particular network, specifically regarding the connectivity description.\nAn instance of this class includes its ConnectivityService and Connection object instances." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-connectivity/connectivity-context> .
+
+lex:tapi-connectivity-connectivity-object-type
+    a lex:ReferenceEntry ;
+    skos:prefLabel "CONNECTIVITY_OBJECT_TYPE" ;
+    skos:definition "none" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-connectivity/CONNECTIVITY_OBJECT_TYPE> .
+
+lex:tapi-connectivity-connectivity-object-type-connection
+    a lex:ReferenceEntry ;
+    skos:prefLabel "CONNECTIVITY_OBJECT_TYPE_CONNECTION" ;
+    skos:definition "The Connection class." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-connectivity/CONNECTIVITY_OBJECT_TYPE_CONNECTION> .
+
+lex:tapi-connectivity-connectivity-object-type-connection-end-point
+    a lex:ReferenceEntry ;
+    skos:prefLabel "CONNECTIVITY_OBJECT_TYPE_CONNECTION_END_POINT" ;
+    skos:definition "The ConnectionEndPoint (CEP) class." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-connectivity/CONNECTIVITY_OBJECT_TYPE_CONNECTION_END_POINT> .
+
+lex:tapi-connectivity-connectivity-object-type-connectivity-service
+    a lex:ReferenceEntry ;
+    skos:prefLabel "CONNECTIVITY_OBJECT_TYPE_CONNECTIVITY_SERVICE" ;
+    skos:definition "The ConnectivityService class." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-connectivity/CONNECTIVITY_OBJECT_TYPE_CONNECTIVITY_SERVICE> .
+
+lex:tapi-connectivity-connectivity-object-type-connectivity-service-end-point
+    a lex:ReferenceEntry ;
+    skos:prefLabel "CONNECTIVITY_OBJECT_TYPE_CONNECTIVITY_SERVICE_END_POINT" ;
+    skos:definition "The ConnectivityServiceEndPoint (CSEP) class." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-connectivity/CONNECTIVITY_OBJECT_TYPE_CONNECTIVITY_SERVICE_END_POINT> .
+
+lex:tapi-connectivity-connectivity-object-type-layer-protocol-constraint
+    a lex:ReferenceEntry ;
+    skos:prefLabel "CONNECTIVITY_OBJECT_TYPE_LAYER_PROTOCOL_CONSTRAINT" ;
+    skos:definition "The ServerConstraint class." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-connectivity/CONNECTIVITY_OBJECT_TYPE_LAYER_PROTOCOL_CONSTRAINT> .
+
+lex:tapi-connectivity-connectivity-object-type-resilience-constraint
+    a lex:ReferenceEntry ;
+    skos:prefLabel "CONNECTIVITY_OBJECT_TYPE_RESILIENCE_CONSTRAINT" ;
+    skos:definition "The ResilienceConstraint class." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-connectivity/CONNECTIVITY_OBJECT_TYPE_RESILIENCE_CONSTRAINT> .
+
+lex:tapi-connectivity-connectivity-object-type-resilience-route
+    a lex:ReferenceEntry ;
+    skos:prefLabel "CONNECTIVITY_OBJECT_TYPE_RESILIENCE_ROUTE" ;
+    skos:definition "The ResilienceRoute class." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-connectivity/CONNECTIVITY_OBJECT_TYPE_RESILIENCE_ROUTE> .
+
+lex:tapi-connectivity-connectivity-object-type-resilience-route-constraint
+    a lex:ReferenceEntry ;
+    skos:prefLabel "CONNECTIVITY_OBJECT_TYPE_RESILIENCE_ROUTE_CONSTRAINT" ;
+    skos:definition "The ResilienceRouteConstraint class." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-connectivity/CONNECTIVITY_OBJECT_TYPE_RESILIENCE_ROUTE_CONSTRAINT> .
+
+lex:tapi-connectivity-connectivity-object-type-route
+    a lex:ReferenceEntry ;
+    skos:prefLabel "CONNECTIVITY_OBJECT_TYPE_ROUTE" ;
+    skos:definition "The Route class." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-connectivity/CONNECTIVITY_OBJECT_TYPE_ROUTE> .
+
+lex:tapi-connectivity-connectivity-object-type-switch
+    a lex:ReferenceEntry ;
+    skos:prefLabel "CONNECTIVITY_OBJECT_TYPE_SWITCH" ;
+    skos:definition "The Switch class." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-connectivity/CONNECTIVITY_OBJECT_TYPE_SWITCH> .
+
+lex:tapi-connectivity-connectivity-object-type-switch-control
+    a lex:ReferenceEntry ;
+    skos:prefLabel "CONNECTIVITY_OBJECT_TYPE_SWITCH_CONTROL" ;
+    skos:definition "The SwitchControl class." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-connectivity/CONNECTIVITY_OBJECT_TYPE_SWITCH_CONTROL> .
+
+lex:tapi-connectivity-connectivity-protection-service
+    a lex:ReferenceEntry ;
+    skos:prefLabel "connectivity-protection-service" ;
+    skos:definition "Grouping definition: connectivity-protection-service" ;
+    skos:scopeNote "none" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-connectivity/connectivity-protection-service> .
+
+lex:tapi-connectivity-connectivity-service
+    a lex:ReferenceEntry ;
+    skos:prefLabel "connectivity-service" ;
+    skos:definition "A ConnectivityService represents an intent-like request for connectivity between two or more ConnectivityServiceEndPoint (CSEP) instances.\nThe ConnectivityService is a container for connectivity request details and is distinct from the Connection(s) that realize the request." ;
+    skos:scopeNote "Grouping definition: connectivity-service" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-connectivity/connectivity-service> .
+
+lex:tapi-connectivity-connectivity-service-end-point
+    a lex:ReferenceEntry ;
+    skos:prefLabel "connectivity-service-end-point" ;
+    skos:definition "Grouping definition: connectivity-service-end-point" ;
+    skos:scopeNote "The ConnectivityServiceEndPoint (CSEP) encapsulates information related to a ConnectivityService at the ingress/egress points of that ConnectivityService." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-connectivity/connectivity-service-end-point> .
+
+lex:tapi-connectivity-connectivity-service-end-point-ref
+    a lex:ReferenceEntry ;
+    skos:prefLabel "connectivity-service-end-point-ref" ;
+    skos:definition "Grouping definition: connectivity-service-end-point-ref" ;
+    skos:scopeNote "none" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-connectivity/connectivity-service-end-point-ref> .
+
+lex:tapi-connectivity-connectivity-service-internal-point
+    a lex:ReferenceEntry ;
+    skos:prefLabel "connectivity-service-internal-point" ;
+    skos:definition "Experimental class for complex/detailed provisioning schemes." ;
+    skos:scopeNote "Grouping definition: connectivity-service-internal-point" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-connectivity/connectivity-service-internal-point> .
+
+lex:tapi-connectivity-connectivity-service-internal-point-ref
+    a lex:ReferenceEntry ;
+    skos:prefLabel "connectivity-service-internal-point-ref" ;
+    skos:definition "Grouping definition: connectivity-service-internal-point-ref" ;
+    skos:scopeNote "none" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-connectivity/connectivity-service-internal-point-ref> .
+
+lex:tapi-connectivity-connectivity-service-ref
+    a lex:ReferenceEntry ;
+    skos:prefLabel "connectivity-service-ref" ;
+    skos:definition "Grouping definition: connectivity-service-ref" ;
+    skos:scopeNote "none" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-connectivity/connectivity-service-ref> .
+
+lex:tapi-connectivity-connectivity-service-spec-reference
+    a lex:ReferenceEntry ;
+    skos:prefLabel "connectivity-service-spec-reference" ;
+    skos:definition "Grouping definition: connectivity-service-spec-reference" ;
+    skos:scopeNote "The reference to a spec for a type of Connectivity Service" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-connectivity/connectivity-service-spec-reference> .
+
+lex:tapi-connectivity-coordinate-type
+    a lex:ReferenceEntry ;
+    skos:prefLabel "coordinate-type" ;
+    skos:definition " The types of coordination mechanisms between protection/restoration operations across multiple layers." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:EnumeratedKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/types/tapi-connectivity/coordinate-type> .
+
+lex:tapi-connectivity-csep-role
+    a lex:ReferenceEntry ;
+    skos:prefLabel "csep-role" ;
+    skos:definition "Grouping definition: csep-role" ;
+    skos:scopeNote "The role of the CSEP in the context of the Connectivity Service spec." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-connectivity/csep-role> .
+
+lex:tapi-connectivity-fault-condition-determination
+    a lex:ReferenceEntry ;
+    skos:prefLabel "FAULT_CONDITION_DETERMINATION" ;
+    skos:definition "none" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-connectivity/FAULT_CONDITION_DETERMINATION> .
+
+lex:tapi-connectivity-fault-condition-determination-inherent
+    a lex:ReferenceEntry ;
+    skos:prefLabel "FAULT_CONDITION_DETERMINATION_INHERENT" ;
+    skos:definition "Inherent monitored (/I): The fault condition status of each link connection is derived from the status of the underlying server layer trail." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-connectivity/FAULT_CONDITION_DETERMINATION_INHERENT> .
+
+lex:tapi-connectivity-fault-condition-determination-non-intrusive
+    a lex:ReferenceEntry ;
+    skos:prefLabel "FAULT_CONDITION_DETERMINATION_NON_INTRUSIVE" ;
+    skos:definition "Non-intrusive monitored (/N): Each serial compound link connection is extended with a non-intrusive monitoring termination sink function to derive the fault condition status from the traffic signal that is present." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-connectivity/FAULT_CONDITION_DETERMINATION_NON_INTRUSIVE> .
+
+lex:tapi-connectivity-fault-condition-determination-sublayer
+    a lex:ReferenceEntry ;
+    skos:prefLabel "FAULT_CONDITION_DETERMINATION_SUBLAYER" ;
+    skos:definition "Sublayer monitored (/S): Each serial compound link connection is extended with tandem connection monitoring or segment termination/adaptation functions to derive the fault condition status independent of the traffic signal present." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-connectivity/FAULT_CONDITION_DETERMINATION_SUBLAYER> .
+
+lex:tapi-connectivity-fault-condition-determination-test
+    a lex:ReferenceEntry ;
+    skos:prefLabel "FAULT_CONDITION_DETERMINATION_TEST" ;
+    skos:definition "Test monitored (/T): Each serial compound link connection's fault condition status is derived from an additional monitored serial compound link connection transported via the same serial compound link." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-connectivity/FAULT_CONDITION_DETERMINATION_TEST> .
+
+lex:tapi-connectivity-layer-protocol-constraint
+    a lex:ReferenceEntry ;
+    skos:prefLabel "layer-protocol-constraint" ;
+    skos:definition "Grouping definition: layer-protocol-constraint" ;
+    skos:scopeNote "LayerProtocolConstraint allows to specify constraints at any layer, by allowing the technology specific augmentations of the generic CSEP." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-connectivity/layer-protocol-constraint> .
+
+lex:tapi-connectivity-protection-role
+    a lex:ReferenceEntry ;
+    skos:prefLabel "protection-role" ;
+    skos:definition "The protection role of a (conceptual) port of a forwarding entity, e.g. Link, ConnectivityService, Connection, PathComputationService, Path, VirtualNetworkService." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:EnumeratedKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/types/tapi-connectivity/protection-role> .
+
+lex:tapi-connectivity-resilience-constraint
+    a lex:ReferenceEntry ;
+    skos:prefLabel "resilience-constraint" ;
+    skos:definition "Grouping definition: resilience-constraint" ;
+    skos:scopeNote "The parameters of a protection/restoration scheme of a ConnectivityService or Connection." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-connectivity/resilience-constraint> .
+
+lex:tapi-connectivity-resilience-route
+    a lex:ReferenceEntry ;
+    skos:prefLabel "resilience-route" ;
+    skos:definition "Grouping definition: resilience-route" ;
+    skos:scopeNote "This object adds resilience and state attributes to the Route.\nWhen this object is not present, then the Route is intended as 'current' Route of the Connection." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-connectivity/resilience-route> .
+
+lex:tapi-connectivity-resiliency-route-constraint
+    a lex:ReferenceEntry ;
+    skos:prefLabel "resiliency-route-constraint" ;
+    skos:definition "Grouping definition: resiliency-route-constraint" ;
+    skos:scopeNote "The constraints related to the Resiliency route." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-connectivity/resiliency-route-constraint> .
+
+lex:tapi-connectivity-reversion-mode
+    a lex:ReferenceEntry ;
+    skos:prefLabel "reversion-mode" ;
+    skos:definition "The reversion mode associated with protection scheme." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:EnumeratedKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/types/tapi-connectivity/reversion-mode> .
+
+lex:tapi-connectivity-route
+    a lex:ReferenceEntry ;
+    skos:prefLabel "route" ;
+    skos:definition "Grouping definition: route" ;
+    skos:scopeNote "The Route of a Connection is modeled as a collection of ConnectionEndPoint (CEP) instances.\nThe logical order of the ConnectionEndPoint (CEP) instances within the Route object can be inferred by the TAPI client by the knowledge of the topology information." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-connectivity/route> .
+
+lex:tapi-connectivity-route-ref
+    a lex:ReferenceEntry ;
+    skos:prefLabel "route-ref" ;
+    skos:definition "Grouping definition: route-ref" ;
+    skos:scopeNote "none" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-connectivity/route-ref> .
+
+lex:tapi-connectivity-route-state
+    a lex:ReferenceEntry ;
+    skos:prefLabel "ROUTE_STATE" ;
+    skos:definition "none" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-connectivity/ROUTE_STATE> .
+
+lex:tapi-connectivity-route-state-current
+    a lex:ReferenceEntry ;
+    skos:prefLabel "ROUTE_STATE_CURRENT" ;
+    skos:definition "The Route instance identified is the current Route, i.e., is the one that is active and selected to support service." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-connectivity/ROUTE_STATE_CURRENT> .
+
+lex:tapi-connectivity-route-state-not-current
+    a lex:ReferenceEntry ;
+    skos:prefLabel "ROUTE_STATE_NOT_CURRENT" ;
+    skos:definition "The Route instance is not the one supporting the service." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-connectivity/ROUTE_STATE_NOT_CURRENT> .
+
+lex:tapi-connectivity-route-state-unknown
+    a lex:ReferenceEntry ;
+    skos:prefLabel "ROUTE_STATE_UNKNOWN" ;
+    skos:definition "The Route state is unknown." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-connectivity/ROUTE_STATE_UNKNOWN> .
+
+lex:tapi-connectivity-selection-control
+    a lex:ReferenceEntry ;
+    skos:prefLabel "selection-control" ;
+    skos:definition "Possible degrees of administrative control applied to the Route selection." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:EnumeratedKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/types/tapi-connectivity/selection-control> .
+
+lex:tapi-connectivity-selection-reason
+    a lex:ReferenceEntry ;
+    skos:prefLabel "selection-reason" ;
+    skos:definition "The cause of the current Route selection." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:EnumeratedKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/types/tapi-connectivity/selection-reason> .
+
+lex:tapi-connectivity-service-type
+    a lex:ReferenceEntry ;
+    skos:prefLabel "service-type" ;
+    skos:definition "List of simple connectivity types." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:EnumeratedKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/types/tapi-connectivity/service-type> .
+
+lex:tapi-connectivity-switch
+    a lex:ReferenceEntry ;
+    skos:prefLabel "switch" ;
+    skos:definition "Grouping definition: switch" ;
+    skos:scopeNote "The class models the switched forwarding of traffic (traffic flow) between (conceptual) ports of resilient forwarding entities (e.g. resilient ConnectivityService, resilient Connection), these ports being mapped to ConnectionEndPoint (CEP) instances.\nA resilient forwarding entity may have two or more (conceptual) ports that provide alternative identical inputs/outputs, and one or more associated Switch instances to represent the alternative flow choices visible at the edge of the forwarding entity.\nThe Switch instance represents and defines a protection switch structure conceptually encapsulated in the forwarding entity.\nThe Switch instance essentially performs one of the functions of the Protection Group in a traditional model. It associates to 2 or more (conceptual) ports each playing the role of a Protection Unit.\nOne or more protection, i.e. standby/backup, conceptual ports provide protection for one or more working (i.e. regular/main/preferred) ports where either protection or working can feed one or more protected port.\nThe switch may be used in revertive or non-revertive (symmetric) mode. When in revertive mode it may define a waitToRestore time.\nIt may be used in one of several modes including source switch, destination switched, source and destination switched, etc. (covering cases such as 1+1 and 1:1).\nIt may be locked out (prevented from switching), force switched or manual switched.\nIt will indicate switch state and change of state.\nThe Switch can be switched away from all sources such that it becomes open and hence two coordinated switches can both feed the same (conceptual) port or CEP so long as at least one of the two is switched away from all sources (is 'open').\nThe ability for a Switch to be 'high impedance' allows bidirectional forwarding entities to be overlaid on the same bidirectional CEP where the appropriate control is enabled to prevent signal conflict.\nThis ability allows multiple alternate routes to be present that otherwise would be in conflict." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-connectivity/switch> .
+
+lex:tapi-connectivity-switch-control
+    a lex:ReferenceEntry ;
+    skos:prefLabel "switch-control" ;
+    skos:definition "Grouping definition: switch-control" ;
+    skos:scopeNote "Represents the capability to control and coordinate Switch instances, to add/delete/modify Connections and to add/delete/modify CEPs so as to realize a protection scheme." ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-connectivity/switch-control> .
+
+lex:tapi-connectivity-switch-control-ref
+    a lex:ReferenceEntry ;
+    skos:prefLabel "switch-control-ref" ;
+    skos:definition "Grouping definition: switch-control-ref" ;
+    skos:scopeNote "none" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-connectivity/switch-control-ref> .
+
+lex:tapi-connectivity-switch-operation
+    a lex:ReferenceEntry ;
+    skos:prefLabel "switch-operation" ;
+    skos:definition "Grouping definition: switch-operation" ;
+    skos:scopeNote "none" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-connectivity/switch-operation> .
+
+lex:tapi-connectivity-switch-ref
+    a lex:ReferenceEntry ;
+    skos:prefLabel "switch-ref" ;
+    skos:definition "Grouping definition: switch-ref" ;
+    skos:scopeNote "none" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:GroupingKind ;
+    prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-connectivity/switch-ref> .
