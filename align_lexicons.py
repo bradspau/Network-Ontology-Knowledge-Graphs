@@ -35,7 +35,7 @@ Usage:
 import argparse
 import re
 import sys
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Dict, List, Literal, Optional, Set, Tuple
 
@@ -181,6 +181,11 @@ class CallBudgetExceeded(RuntimeError):
 
 
 CONFIRMED_VERDICTS = ("confirm_exact_match", "confirm_close_match")
+
+# All four MatchVerdict.verdict values, in the order they're reported. Used
+# to pre-populate RunSummary.verdict_counts so a verdict that never occurs in
+# a run still prints as an explicit zero rather than vanishing (D-04).
+ALL_VERDICTS = ("confirm_exact_match", "confirm_close_match", "reject", "insufficient_evidence")
 
 
 @dataclass
@@ -682,7 +687,14 @@ def print_pair_transcript(result: PairResult) -> None:
     unavailable field prints an explicit "(none available)" marker, never an
     omitted line and never fabricated filler. Prints only MatchVerdict
     fields and lexicon text pulled from the Turtle files -- never the client
-    object, request headers, or any environment variable (threat T-01-02)."""
+    object, request headers, or any environment variable (threat T-01-02).
+
+    Order: header naming both entries; candidate origin and label score;
+    entry A's definition/scope-note/canonical-example; the same three for
+    entry B; a curation-flag line (always printed, an explicit "none" when
+    neither side carries lex:needsCuration, matching draft_lexicon.py's own
+    visible-but-empty discipline); the verdict; the quoted evidence; the
+    rationale."""
     cand = result.candidate
     tapi, ietf = cand.tapi, cand.ietf
 
@@ -700,9 +712,68 @@ def print_pair_transcript(result: PairResult) -> None:
     print(f"  {ietf.source} definition: {_render_field(ietf.definition)}")
     print(f"  {ietf.source} scope note: {_render_field(ietf_scope_text)}")
     print(f"  {ietf.source} canonical example: {_render_field(ietf.canonical_example)}")
+
+    flagged = []
+    if tapi.needs_curation:
+        flagged.append(f"{tapi.source}:{tapi.lex_id}")
+    if ietf.needs_curation:
+        flagged.append(f"{ietf.source}:{ietf.lex_id}")
+    print(f"  needs curation: {', '.join(flagged) if flagged else 'none'}")
+
     print(f"  verdict: {result.verdict} (decided by: {result.decided_by})")
     print(f"  evidence quote: {_render_field(result.evidence_quote)}")
     print(f"  rationale: {result.rationale}")
+    print()
+
+
+# ── Run summary ──────────────────────────────────────────────────────────
+
+
+@dataclass
+class RunSummary:
+    """D-02/D-04: reports candidates proposed, recovery pairs evaluated,
+    confirmation calls made, and a count for every verdict value together --
+    a bare match rate is never producible from this tool. verdict_counts is
+    initialized to zero for all four MatchVerdict values at construction, so
+    a verdict that never occurred in a run still prints as an explicit zero
+    rather than vanishing from the summary."""
+
+    lexicon_dir: Path
+    model: str
+    label_threshold: float
+    max_calls: int
+    tapi_entry_count: int
+    ietf_entry_count: int
+    candidates_proposed: int
+    recovery_pairs_evaluated: int
+    confirmation_calls_made: int
+    verdict_counts: Dict[str, int] = field(default_factory=lambda: {v: 0 for v in ALL_VERDICTS})
+
+    def record(self, result: PairResult) -> None:
+        """Tallies one PairResult's verdict. Called once per result as the
+        run proceeds, so the summary is built incrementally rather than
+        re-derived after the fact."""
+        self.verdict_counts[result.verdict] = self.verdict_counts.get(result.verdict, 0) + 1
+
+
+def print_run_summary(summary: RunSummary) -> None:
+    """Prints every RunSummary field in one block. There is no code path
+    that prints a subset: no match rate, no success-only variant, no
+    --quiet flag. Candidate counts, per-verdict counts, and the
+    insufficient-evidence count always appear together (D-04)."""
+    print("=== Run summary ===")
+    print(f"  lexicon_dir: {summary.lexicon_dir}")
+    print(f"  model: {summary.model}")
+    print(f"  label_threshold: {summary.label_threshold:.1f}")
+    print(f"  max_calls: {summary.max_calls}")
+    print(f"  tapi entries loaded: {summary.tapi_entry_count}")
+    print(f"  ietf entries loaded: {summary.ietf_entry_count}")
+    print(f"  candidates proposed (label pass): {summary.candidates_proposed}")
+    print(f"  recovery pairs evaluated: {summary.recovery_pairs_evaluated}")
+    print(f"  confirmation calls made: {summary.confirmation_calls_made}")
+    print("  verdict counts:")
+    for verdict in ALL_VERDICTS:
+        print(f"    {verdict}: {summary.verdict_counts.get(verdict, 0)}")
     print()
 
 
@@ -775,10 +846,27 @@ def main() -> None:
     recovery_results = recover_misses(
         client, tapi_entries, ietf_entries, label_results, args.max_calls, calls_used
     )
+    calls_used += sum(1 for r in recovery_results if r.decided_by == "confirmation-pass")
 
     results = label_results + recovery_results
+
+    summary = RunSummary(
+        lexicon_dir=args.lexicon_dir,
+        model=args.model,
+        label_threshold=args.label_threshold,
+        max_calls=args.max_calls,
+        tapi_entry_count=len(tapi_entries),
+        ietf_entry_count=len(ietf_entries),
+        candidates_proposed=len(candidates),
+        recovery_pairs_evaluated=len(recovery_results),
+        confirmation_calls_made=calls_used,
+    )
+
     for result in results:
         print_pair_transcript(result)
+        summary.record(result)
+
+    print_run_summary(summary)
 
 
 if __name__ == "__main__":

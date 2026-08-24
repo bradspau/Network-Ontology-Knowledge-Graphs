@@ -13,6 +13,8 @@ test_handles_sparse_evidence_gracefully and test_evidence_is_stable_and_
 deterministic (Phase 1, Plan 02, Task 1) exercise the full eleven-entry
 curated OTN fixture via the fixture_entries pytest fixture.
 """
+import sys
+
 import pytest
 
 import align_lexicons
@@ -366,3 +368,102 @@ def test_recover_misses_respects_shared_call_cap(fixture_entries, scripted_clien
         align_lexicons.recover_misses(
             client, tapi_entries, ietf_entries, [], max_calls=0, calls_used=0
         )
+
+
+# ── Task 3 (Plan 03): the full auditable transcript and run summary ────────
+
+
+def test_full_fixture_run_no_crash(recording_client, capsys, monkeypatch):
+    """The smoke test: a full run over the real, un-curated lexicon files
+    completes, prints exactly one transcript block per PairResult, and
+    raises nothing (direct proof of ROADMAP SC1)."""
+    monkeypatch.setattr(sys, "argv", ["align_lexicons.py"])
+    monkeypatch.setattr(align_lexicons.anthropic, "Anthropic", lambda: recording_client)
+
+    block_count = {"n": 0}
+    original_print_pair_transcript = align_lexicons.print_pair_transcript
+
+    def _counting_print_pair_transcript(result):
+        block_count["n"] += 1
+        original_print_pair_transcript(result)
+
+    monkeypatch.setattr(align_lexicons, "print_pair_transcript", _counting_print_pair_transcript)
+
+    align_lexicons.main()
+
+    captured = capsys.readouterr()
+    assert block_count["n"] > 0
+    assert captured.out.count("candidate origin:") == block_count["n"]
+    assert "=== Run summary ===" in captured.out
+
+    # The D-03 entry's block(s) show the unavailable marker on its
+    # definition, scope-note, and canonical-example lines -- no field is
+    # ever omitted, and nothing is fabricated in its place.
+    blocks = captured.out.split("\n\n")
+    d03_blocks = [
+        b for b in blocks if "tapi-common-node-edge-point-event-notification" in b
+    ]
+    assert d03_blocks, "expected at least one transcript block for the D-03 entry"
+    for block in d03_blocks:
+        assert block.count("(none available)") >= 3
+
+
+def test_run_does_not_modify_lexicon_files(lexicon_dir, recording_client, monkeypatch, capsys):
+    """Mechanical proof of the read-only-corpus prohibition (T-01-05): every
+    file under lexicon_dir is byte-identical before and after a full run."""
+    import hashlib
+
+    def _hashes():
+        return {
+            str(p.relative_to(lexicon_dir)): hashlib.sha256(p.read_bytes()).hexdigest()
+            for p in sorted(lexicon_dir.rglob("*"))
+            if p.is_file()
+        }
+
+    before = _hashes()
+    assert before, "expected at least one file under lexicon_dir to hash"
+
+    monkeypatch.setattr(sys, "argv", ["align_lexicons.py"])
+    monkeypatch.setattr(align_lexicons.anthropic, "Anthropic", lambda: recording_client)
+    align_lexicons.main()
+    capsys.readouterr()  # drain stdout; not under test here
+
+    after = _hashes()
+    assert after == before
+
+
+def test_summary_reports_all_counts(recording_client, capsys, monkeypatch):
+    """A run that confirms nothing (recording_client's default verdict is
+    reject) must still report everything -- no success-only path."""
+    fresh_summary = align_lexicons.RunSummary(
+        lexicon_dir=align_lexicons.DEFAULT_LEXICON_DIR,
+        model=align_lexicons.DEFAULT_MODEL,
+        label_threshold=align_lexicons.DEFAULT_LABEL_THRESHOLD,
+        max_calls=align_lexicons.DEFAULT_MAX_CALLS,
+        tapi_entry_count=0,
+        ietf_entry_count=0,
+        candidates_proposed=0,
+        recovery_pairs_evaluated=0,
+        confirmation_calls_made=0,
+    )
+    # Immediately after construction, before any result is recorded, all
+    # four verdict keys exist at zero.
+    assert set(fresh_summary.verdict_counts.keys()) == set(align_lexicons.ALL_VERDICTS)
+    assert all(count == 0 for count in fresh_summary.verdict_counts.values())
+
+    monkeypatch.setattr(sys, "argv", ["align_lexicons.py"])
+    monkeypatch.setattr(align_lexicons.anthropic, "Anthropic", lambda: recording_client)
+    align_lexicons.main()
+
+    captured = capsys.readouterr()
+    assert "=== Run summary ===" in captured.out
+    for verdict in align_lexicons.ALL_VERDICTS:
+        assert f"{verdict}:" in captured.out
+    # An all-reject run still confirms nothing -- the zero-valued confirm
+    # counts must be visibly present, not silently omitted.
+    assert "confirm_exact_match: 0" in captured.out
+    assert "confirm_close_match: 0" in captured.out
+
+    assert "candidates proposed" in captured.out
+    assert "recovery pairs evaluated" in captured.out
+    assert "confirmation calls made" in captured.out
