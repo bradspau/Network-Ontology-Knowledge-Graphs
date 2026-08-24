@@ -127,6 +127,120 @@ def test_main_threads_custom_model_through_to_api_calls(recording_client, monkey
     assert "model=claude-test-model-xyz" in captured.out
 
 
+class _SystemRejectingMessages:
+    """WR-03 test double: rejects the system= kwarg with the exact TypeError
+    shape confirm_pair's fallback is meant to catch (RESEARCH.md Assumption
+    A2), then succeeds on the retry that omits it."""
+
+    def __init__(self, verdict):
+        self._verdict = verdict
+        self.calls = []
+
+    def parse(self, **kwargs):
+        self.calls.append(kwargs)
+        if "system" in kwargs:
+            raise TypeError("parse() got an unexpected keyword argument 'system'")
+        return _ParsedVerdict(self._verdict)
+
+
+class _ParsedVerdict:
+    def __init__(self, parsed_output):
+        self.parsed_output = parsed_output
+
+
+class _SystemRejectingClient:
+    def __init__(self, verdict):
+        self.messages = _SystemRejectingMessages(verdict)
+
+
+def test_confirm_pair_falls_back_and_warns_on_system_kwarg_rejection(fixture_entries, capsys):
+    """WR-03 regression: the narrowed TypeError fallback still recovers from
+    the specific system= kwarg rejection case, and now prints a visible
+    warning when it does -- the run's audit trail must show that caching
+    and system-role framing were lost for this call."""
+    tapi_entries, ietf_entries, _ = fixture_entries
+    candidate = align_lexicons.Candidate(
+        tapi=tapi_entries[0], ietf=ietf_entries[0], label_score=100.0, origin="label-pass"
+    )
+    verdict = align_lexicons.MatchVerdict(verdict="reject", rationale="r", evidence_quote="q")
+    client = _SystemRejectingClient(verdict)
+
+    result = align_lexicons.confirm_pair(client, candidate)
+
+    assert result is verdict
+    assert len(client.messages.calls) == 2
+    assert "system" in client.messages.calls[0]
+    assert "system" not in client.messages.calls[1]
+
+    captured = capsys.readouterr()
+    assert "WARNING" in captured.out
+    assert "system" in captured.out.lower()
+
+
+def test_confirm_pair_reraises_unrelated_type_error(fixture_entries):
+    """WR-03 regression: a TypeError unrelated to the system= kwarg (a real
+    bug elsewhere in the call construction) must propagate, not be silently
+    masked by a structurally different fallback call that would never even
+    hint the real defect existed."""
+    tapi_entries, ietf_entries, _ = fixture_entries
+    candidate = align_lexicons.Candidate(
+        tapi=tapi_entries[0], ietf=ietf_entries[0], label_score=100.0, origin="label-pass"
+    )
+
+    class _AlwaysBrokenMessages:
+        def parse(self, **kwargs):
+            raise TypeError("unexpected keyword argument 'output_format'")
+
+    class _AlwaysBrokenClient:
+        messages = _AlwaysBrokenMessages()
+
+    with pytest.raises(TypeError, match="output_format"):
+        align_lexicons.confirm_pair(_AlwaysBrokenClient(), candidate)
+
+
+def test_anthropic_error_produces_visible_per_pair_result_and_continues(
+    fixture_entries, error_raising_client, capsys
+):
+    """WR-04 regression: _evaluate_candidates's docstring promises a single
+    client exception on one pair produces a visible per-pair error line and
+    a non-confirmed PairResult, without aborting remaining pairs. Neither
+    recording_client nor scripted_client can ever raise -- this proves the
+    documented behavior actually holds against a client double that does."""
+    tapi_entries, ietf_entries, _ = fixture_entries
+    candidates = align_lexicons.label_pass(tapi_entries, ietf_entries, align_lexicons.DEFAULT_LABEL_THRESHOLD)
+    real_call_candidates = [c for c in candidates if align_lexicons.evidence_gate(c) is None]
+    assert len(real_call_candidates) >= 2, (
+        "need at least 2 real-call candidates to prove the run continues past the failure"
+    )
+
+    failing = real_call_candidates[0]
+    client = error_raising_client({(failing.tapi.lex_id, failing.ietf.lex_id)})
+
+    results = align_lexicons.run_confirmation_stage(client, candidates, max_calls=len(candidates))
+
+    failed_result = next(
+        r for r in results
+        if r.candidate.tapi.lex_id == failing.tapi.lex_id and r.candidate.ietf.lex_id == failing.ietf.lex_id
+    )
+    assert failed_result.verdict == "insufficient_evidence"
+    assert failed_result.decided_by == "confirmation-pass"
+    assert failed_result.evidence_quote == ""
+
+    captured = capsys.readouterr()
+    assert "ERROR" in captured.out
+    assert failing.tapi.lex_id in captured.out
+    assert failing.ietf.lex_id in captured.out
+
+    other_real_calls = [c for c in real_call_candidates if c is not failing]
+    assert other_real_calls, "expected at least one other real-call candidate to prove continuation"
+    other = other_real_calls[0]
+    other_result = next(
+        r for r in results
+        if r.candidate.tapi.lex_id == other.tapi.lex_id and r.candidate.ietf.lex_id == other.ietf.lex_id
+    )
+    assert other_result.decided_by == "confirmation-pass"
+
+
 def test_system_prompt_includes_canonical_example_as_valid_evidence():
     """CR-02 regression: SYSTEM_PROMPT previously told the model to judge
     verdicts ONLY on definition/scope-note text, silently excluding

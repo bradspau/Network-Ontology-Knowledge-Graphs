@@ -505,7 +505,10 @@ def confirm_pair(client, cand: Candidate, model: str = DEFAULT_MODEL) -> MatchVe
     system block with cache_control (byte-identical across every pair in a
     run). If the SDK rejects a `system` kwarg on messages.parse()
     (RESEARCH.md Assumption A2), fall back to a leading user message rather
-    than redesigning the call.
+    than redesigning the call -- WR-03: narrowly, by inspecting the
+    TypeError's message for the `system` name, with a visible warning
+    printed when the fallback fires. Any other TypeError re-raises rather
+    than being silently retried under a structurally different call.
 
     CR-01: `model` defaults to DEFAULT_MODEL for direct callers (including
     existing tests), but main() threads args.model through here -- the
@@ -526,7 +529,21 @@ def confirm_pair(client, cand: Candidate, model: str = DEFAULT_MODEL) -> MatchVe
             messages=[{"role": "user", "content": user_content}],
             output_format=MatchVerdict,
         )
-    except TypeError:
+    except TypeError as exc:
+        # WR-03: only the specific system= kwarg rejection (RESEARCH.md
+        # Assumption A2) is expected here. A bare `except TypeError` would
+        # also swallow an unrelated bug elsewhere in this call (a malformed
+        # cache_control dict, a bad output_format, ...) and silently retry
+        # with a structurally different request -- re-raise anything that
+        # doesn't name the system kwarg so a real defect surfaces instead of
+        # being masked by the fallback.
+        if "system" not in str(exc):
+            raise
+        print(
+            "WARNING: client.messages.parse() rejected the system= kwarg "
+            f"({exc}) -- falling back to a leading user message. Prompt "
+            "caching and system-role framing are lost for this call."
+        )
         response = client.messages.parse(
             model=model,
             max_tokens=2048,

@@ -152,3 +152,44 @@ def scripted_client():
         return _RecordingClient(_verdict_for_call)
 
     return _make
+
+
+@pytest.fixture
+def error_raising_client():
+    """Factory fixture: given a set of (tapi_lex_id, ietf_lex_id) pairs that
+    should raise anthropic.AnthropicError, and an optional mapping from pair
+    to MatchVerdict for pairs that should succeed, returns a recording
+    client whose .parse() raises for the named pairs (matched the same way
+    scripted_client matches -- both lex ids as substrings of the prompt
+    text) and falls back to a reject verdict for everything else.
+
+    _RecordingMessages.parse() has no try/except of its own -- it just calls
+    the caller-supplied lookup function and returns whatever it returns, so
+    a lookup function that raises propagates naturally. WR-04: proves
+    _evaluate_candidates's documented per-pair AnthropicError resilience
+    (neither recording_client nor scripted_client can ever raise)."""
+    import align_lexicons  # lazy import -- see module docstring
+
+    def _make(error_pairs: set, verdicts_by_pair: dict = None):
+        verdicts_by_pair = verdicts_by_pair or {}
+        fallback = align_lexicons.MatchVerdict(
+            verdict="reject",
+            rationale="error_raising_client fallback -- no verdict mapped for this pair.",
+            evidence_quote="",
+        )
+
+        def _verdict_for_call(kwargs):
+            prompt_text = _extract_prompt_text(kwargs)
+            for tapi_lex_id, ietf_lex_id in error_pairs:
+                if tapi_lex_id in prompt_text and ietf_lex_id in prompt_text:
+                    raise align_lexicons.anthropic.AnthropicError(
+                        f"simulated failure for {tapi_lex_id} <-> {ietf_lex_id}"
+                    )
+            for (tapi_lex_id, ietf_lex_id), verdict in verdicts_by_pair.items():
+                if tapi_lex_id in prompt_text and ietf_lex_id in prompt_text:
+                    return verdict
+            return fallback
+
+        return _RecordingClient(_verdict_for_call)
+
+    return _make
