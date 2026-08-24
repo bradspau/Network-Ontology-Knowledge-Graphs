@@ -13,6 +13,8 @@ test_handles_sparse_evidence_gracefully and test_evidence_is_stable_and_
 deterministic (Phase 1, Plan 02, Task 1) exercise the full eleven-entry
 curated OTN fixture via the fixture_entries pytest fixture.
 """
+import pytest
+
 import align_lexicons
 
 
@@ -192,3 +194,70 @@ def test_no_entity_class_equality_blocking():
 
     src = open(align_lexicons.__file__).read()
     assert not re.search(r"entityClass\s*==", src)
+
+
+# ── Task 3 (Plan 03): confirm every candidate, never on label alone ────────
+
+
+def test_no_match_without_confirmation(fixture_entries, scripted_client):
+    """The load-bearing assertion: even when the model is scripted to
+    confirm EVERYTHING, an entry with no evidence (D-03) cannot be
+    confirmed, because evidence_gate runs before the model is ever
+    consulted."""
+    tapi_entries, ietf_entries, _ = fixture_entries
+    candidates = align_lexicons.label_pass(tapi_entries, ietf_entries, align_lexicons.DEFAULT_LABEL_THRESHOLD)
+    assert candidates, "expected at least one label-pass candidate for this fixture"
+
+    confirm_everything = align_lexicons.MatchVerdict(
+        verdict="confirm_exact_match",
+        rationale="Scripted confirm for every candidate pair -- test_no_match_without_confirmation.",
+        evidence_quote="scripted evidence quote text",
+    )
+    client = scripted_client(
+        {(c.tapi.lex_id, c.ietf.lex_id): confirm_everything for c in candidates}
+    )
+
+    results = align_lexicons.run_confirmation_stage(client, candidates, max_calls=len(candidates))
+    assert len(results) == len(candidates)
+
+    for result in results:
+        if result.verdict in ("confirm_exact_match", "confirm_close_match"):
+            assert result.decided_by == "confirmation-pass"
+            assert result.evidence_quote.strip() != ""
+
+    d03_lex_id = "tapi-common-node-edge-point-event-notification"
+    d03_results = [r for r in results if r.candidate.tapi.lex_id == d03_lex_id]
+    assert d03_results, "expected the D-03 entry to appear among label-pass candidates"
+    for d03_result in d03_results:
+        assert d03_result.verdict == "insufficient_evidence"
+        assert d03_result.decided_by == "evidence-gate"
+
+    recorded_calls_text = "\n".join(str(v) for call in client.calls for v in _flatten(call))
+    assert d03_lex_id not in recorded_calls_text
+
+
+def test_pair_result_rejects_confirmed_verdict_from_evidence_gate(fixture_entries):
+    tapi_entries, ietf_entries, _ = fixture_entries
+    candidate = align_lexicons.Candidate(
+        tapi=tapi_entries[0], ietf=ietf_entries[0], label_score=100.0, origin="label-pass"
+    )
+    with pytest.raises(ValueError):
+        align_lexicons.PairResult(
+            candidate=candidate,
+            verdict="confirm_exact_match",
+            rationale="should never construct -- decided_by is evidence-gate",
+            evidence_quote="a quote that exists but must not matter here",
+            decided_by="evidence-gate",
+        )
+
+
+def test_run_confirmation_stage_respects_max_calls_cap(fixture_entries, scripted_client):
+    tapi_entries, ietf_entries, _ = fixture_entries
+    candidates = align_lexicons.label_pass(tapi_entries, ietf_entries, align_lexicons.DEFAULT_LABEL_THRESHOLD)
+    assert any(
+        align_lexicons.evidence_gate(c) is None for c in candidates
+    ), "expected at least one candidate that needs a real confirmation call"
+
+    client = scripted_client({})
+    with pytest.raises(align_lexicons.CallBudgetExceeded):
+        align_lexicons.run_confirmation_stage(client, candidates, max_calls=0)

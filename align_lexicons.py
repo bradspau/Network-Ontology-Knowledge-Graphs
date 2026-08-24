@@ -14,12 +14,19 @@ Plan 01 (the tracer) wired exactly ONE candidate pair through every layer --
 rdflib fixture load, evidence normalization, a rapidfuzz label score, and a
 real Anthropic structured-output confirmation call -- proving the
 false-cognate rejection (node-edge-point vs. tunnel-termination-point)
-end-to-end. Plan 02 (this file, current state) expands FIXTURE_TAPI/
-FIXTURE_IETF to the full 11-entry curated OTN fixture and adds the real
-candidate-generation stage: label_tokens() + block_candidates() (token-
-overlap blocking) feeding label_pass() (rapidfuzz scoring, --label-threshold
-gated). Plan 03 adds the misses-recovery pass for zero-candidate entries;
-no architectural change is required to do so.
+end-to-end. Plan 02 expanded FIXTURE_TAPI/FIXTURE_IETF to the full 11-entry
+curated OTN fixture and added the real candidate-generation stage:
+label_tokens() + block_candidates() (token-overlap blocking) feeding
+label_pass() (rapidfuzz scoring, --label-threshold gated). Plan 03 (this
+file, current state) completes the vertical slice: run_confirmation_stage()
+drives every label-pass candidate through evidence_gate() then confirm_pair()
+under a shared, hard --max-calls budget; recover_misses() re-compares every
+TAPI entry left without a confirmed correspondent against the IETF entries
+it wasn't already paired with, so correspondences the label stage
+legitimately missed (e.g. NodeRuleGroup <-> connectivity-matrix, named too
+differently to share a label token) are still recovered from definition
+text; RunSummary/print_run_summary() report candidate, recovery, call, and
+per-verdict counts together so a bare match rate is never producible.
 
 Usage:
     ANTHROPIC_API_KEY=... python3 yang4owl/align_lexicons.py
@@ -30,7 +37,7 @@ import re
 import sys
 from dataclasses import dataclass
 from pathlib import Path
-from typing import List, Literal, Optional, Set, Tuple
+from typing import Dict, List, Literal, Optional, Set, Tuple
 
 from rdflib import Graph, Namespace, RDF
 from rdflib.namespace import SKOS
@@ -165,6 +172,17 @@ class MatchVerdict(BaseModel):
     evidence_quote: str
 
 
+class CallBudgetExceeded(RuntimeError):
+    """Raised when a confirmation call would push the shared call counter
+    past --max-calls. A hard stop, not a silent truncation: ROADMAP SC5
+    requires the paid stage to never fan out into the full cross product,
+    and a logic error here must be visible rather than quietly degrade a run
+    (threat T-01-04)."""
+
+
+CONFIRMED_VERDICTS = ("confirm_exact_match", "confirm_close_match")
+
+
 @dataclass
 class PairResult:
     candidate: Candidate
@@ -172,6 +190,27 @@ class PairResult:
     rationale: str
     evidence_quote: str
     decided_by: str  # "confirmation-pass" or "evidence-gate"
+
+    def __post_init__(self) -> None:
+        """Structural invariant behind ROADMAP SC4: a confirmed verdict is
+        impossible to construct without a recorded confirmation-stage
+        decision and quoted evidence -- the evidence gate and the label
+        score can never carry a confirm_exact_match/confirm_close_match
+        verdict. This makes the invariant true by construction rather than
+        by remembering to check it at every call site."""
+        if self.verdict in CONFIRMED_VERDICTS:
+            if self.decided_by != "confirmation-pass":
+                raise ValueError(
+                    f"PairResult invariant violated: verdict {self.verdict!r} "
+                    f"requires decided_by == 'confirmation-pass', got "
+                    f"{self.decided_by!r} (matching on label evidence alone "
+                    "is prohibited -- CLAUDE.md non-name-only constraint)"
+                )
+            if not self.evidence_quote or not self.evidence_quote.strip():
+                raise ValueError(
+                    f"PairResult invariant violated: verdict {self.verdict!r} "
+                    "requires a non-empty evidence_quote"
+                )
 
 
 # D-01: fixture entries are pulled by explicit lex: id, never by scanning for
@@ -208,6 +247,12 @@ FIXTURE_IETF: List[FixtureRef] = [
         lex_id="ietf-network-tunnel-termination-point-te",
     ),
 ]
+
+# Strictly fewer than the full cross product (ROADMAP SC5), computed from the
+# fixture lists rather than written as a literal so it stays correct if the
+# fixture changes. The confirmation stage and the misses-recovery pass share
+# ONE call counter against this cap (threat T-01-04).
+DEFAULT_MAX_CALLS = len(FIXTURE_TAPI) * len(FIXTURE_IETF) - 1
 
 
 # ── Evidence normalization ──────────────────────────────────────────────
@@ -476,6 +521,98 @@ def confirm_pair(client, cand: Candidate) -> MatchVerdict:
     return response.parsed_output
 
 
+# ── Confirmation stage / misses recovery ────────────────────────────────
+
+
+def _evaluate_candidates(
+    client, candidates: List[Candidate], max_calls: int, calls_used: int
+) -> Tuple[List[PairResult], int]:
+    """Shared evaluation loop for both run_confirmation_stage and
+    recover_misses: gate first (never call the model on an evidence-free
+    entry -- D-03), then confirm_pair, sharing one call budget across both
+    callers. Returns (results, calls_used_after) so calls_used can be
+    threaded from the label-driven stage into the recovery pass.
+
+    A single client exception on one pair produces a visible per-pair error
+    line (naming both lex: ids and the exception type only -- never request
+    headers or the client repr, threat T-01-02) and records a distinct
+    non-confirmed PairResult rather than aborting the remaining pairs.
+    """
+    results: List[PairResult] = []
+    for candidate in candidates:
+        gate_verdict = evidence_gate(candidate)
+        if gate_verdict is not None:
+            results.append(
+                PairResult(
+                    candidate=candidate,
+                    verdict=gate_verdict.verdict,
+                    rationale=gate_verdict.rationale,
+                    evidence_quote=gate_verdict.evidence_quote,
+                    decided_by="evidence-gate",
+                )
+            )
+            continue
+
+        if calls_used + 1 > max_calls:
+            remaining = len(candidates) - len(results)
+            raise CallBudgetExceeded(
+                f"--max-calls={max_calls} would be exceeded (already used "
+                f"{calls_used} call(s)); {remaining} pair(s) still "
+                f"unprocessed, starting with {candidate.tapi.source}:"
+                f"{candidate.tapi.lex_id!r} vs {candidate.ietf.source}:"
+                f"{candidate.ietf.lex_id!r}"
+            )
+
+        try:
+            verdict = confirm_pair(client, candidate)
+        except anthropic.AnthropicError as exc:
+            calls_used += 1
+            print(
+                "ERROR: confirmation call failed for "
+                f"{candidate.tapi.source}:{candidate.tapi.lex_id} <-> "
+                f"{candidate.ietf.source}:{candidate.ietf.lex_id} "
+                f"({type(exc).__name__}) -- skipping this pair"
+            )
+            results.append(
+                PairResult(
+                    candidate=candidate,
+                    verdict="insufficient_evidence",
+                    rationale=(
+                        f"Confirmation call failed with {type(exc).__name__}; "
+                        "no verdict could be obtained for this pair."
+                    ),
+                    evidence_quote="",
+                    decided_by="confirmation-pass",
+                )
+            )
+            continue
+
+        calls_used += 1
+        results.append(
+            PairResult(
+                candidate=candidate,
+                verdict=verdict.verdict,
+                rationale=verdict.rationale,
+                evidence_quote=verdict.evidence_quote,
+                decided_by="confirmation-pass",
+            )
+        )
+    return results, calls_used
+
+
+def run_confirmation_stage(
+    client, candidates: List[Candidate], max_calls: int
+) -> List[PairResult]:
+    """Runs every label_pass candidate through evidence_gate then
+    confirm_pair, in order, producing exactly one PairResult per candidate.
+    An entry with no usable definition and no usable scope note never
+    reaches the model as a prompt full of absent fields (edge row
+    MATCH-02/empty, D-03) -- it escalates to insufficient_evidence at the
+    gate instead, contributing zero calls."""
+    results, _ = _evaluate_candidates(client, candidates, max_calls, calls_used=0)
+    return results
+
+
 # ── Transcript ───────────────────────────────────────────────────────────
 
 
@@ -540,6 +677,18 @@ def main() -> None:
             "the wider, un-repaired corpus (Prohibition P5)."
         ),
     )
+    parser.add_argument(
+        "--max-calls",
+        type=int,
+        default=DEFAULT_MAX_CALLS,
+        help=(
+            "Hard cap on total confirmation calls across the label-driven "
+            "confirmation stage and the misses-recovery pass combined. "
+            "Defaults to strictly fewer than the full fixture cross product. "
+            "Exceeding the cap raises rather than silently continuing "
+            "(ROADMAP SC5, threat T-01-04)."
+        ),
+    )
     args = parser.parse_args()
 
     tapi_entries = load_fixture_entries(args.lexicon_dir, FIXTURE_TAPI)
@@ -547,7 +696,8 @@ def main() -> None:
 
     print(
         f"=== align_lexicons run: lexicon_dir={args.lexicon_dir} "
-        f"model={args.model} label_threshold={args.label_threshold:.1f} ==="
+        f"model={args.model} label_threshold={args.label_threshold:.1f} "
+        f"max_calls={args.max_calls} ==="
     )
 
     candidates = label_pass(tapi_entries, ietf_entries, args.label_threshold)
@@ -558,26 +708,8 @@ def main() -> None:
     # (threat T-01-02).
     client = anthropic.Anthropic()
 
-    for candidate in candidates:
-        gate_verdict = evidence_gate(candidate)
-        if gate_verdict is not None:
-            result = PairResult(
-                candidate=candidate,
-                verdict=gate_verdict.verdict,
-                rationale=gate_verdict.rationale,
-                evidence_quote=gate_verdict.evidence_quote,
-                decided_by="evidence-gate",
-            )
-        else:
-            verdict = confirm_pair(client, candidate)
-            result = PairResult(
-                candidate=candidate,
-                verdict=verdict.verdict,
-                rationale=verdict.rationale,
-                evidence_quote=verdict.evidence_quote,
-                decided_by="confirmation-pass",
-            )
-
+    results = run_confirmation_stage(client, candidates, args.max_calls)
+    for result in results:
         print_pair_transcript(result)
 
 
