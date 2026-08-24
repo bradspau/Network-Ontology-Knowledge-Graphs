@@ -560,13 +560,22 @@ def _evaluate_candidates(
 
         if calls_used + 1 > max_calls:
             remaining = len(candidates) - len(results)
-            raise CallBudgetExceeded(
+            exc = CallBudgetExceeded(
                 f"--max-calls={max_calls} would be exceeded (already used "
                 f"{calls_used} call(s)); {remaining} pair(s) still "
                 f"unprocessed, starting with {candidate.tapi.source}:"
                 f"{candidate.tapi.lex_id!r} vs {candidate.ietf.source}:"
                 f"{candidate.ietf.lex_id!r}"
             )
+            # CR-03: carry the results already computed in THIS call out with
+            # the exception. Without this, a caller catching CallBudgetExceeded
+            # has no way to recover the partial run -- the local `results` list
+            # is lost with the stack frame, so "hard stop, visible" (the
+            # docstring's own intent) degenerates into "hard stop, zero
+            # transcript, zero summary" instead.
+            exc.partial_results = list(results)
+            exc.calls_used = calls_used
+            raise exc
 
         try:
             verdict = confirm_pair(client, candidate)
@@ -593,15 +602,42 @@ def _evaluate_candidates(
             continue
 
         calls_used += 1
-        results.append(
-            PairResult(
+        try:
+            result = PairResult(
                 candidate=candidate,
                 verdict=verdict.verdict,
                 rationale=verdict.rationale,
                 evidence_quote=verdict.evidence_quote,
                 decided_by="confirmation-pass",
             )
-        )
+        except ValueError as exc:
+            # CR-03: a confirmed verdict with an empty evidence_quote is a
+            # structurally plausible live-model response (the MatchVerdict
+            # schema only requires evidence_quote to be a str, not non-empty),
+            # and PairResult's own invariant rejects it. Downgrade to a
+            # visible insufficient_evidence result instead of letting the
+            # ValueError propagate and crash the whole run before any
+            # transcript or summary is printed -- never fabricate a
+            # confirmation the invariant itself refused to accept.
+            print(
+                "ERROR: confirmation call for "
+                f"{candidate.tapi.source}:{candidate.tapi.lex_id} <-> "
+                f"{candidate.ietf.source}:{candidate.ietf.lex_id} returned "
+                f"verdict={verdict.verdict!r} with no usable evidence_quote "
+                f"-- downgrading to insufficient_evidence ({exc})"
+            )
+            result = PairResult(
+                candidate=candidate,
+                verdict="insufficient_evidence",
+                rationale=(
+                    f"Model returned {verdict.verdict!r} without a non-empty "
+                    "evidence_quote; downgraded rather than confirmed "
+                    "(PairResult invariant)."
+                ),
+                evidence_quote="",
+                decided_by="confirmation-pass",
+            )
+        results.append(result)
     return results, calls_used
 
 
@@ -840,14 +876,37 @@ def main() -> None:
     # (threat T-01-02).
     client = anthropic.Anthropic()
 
-    label_results = run_confirmation_stage(client, candidates, args.max_calls)
-    calls_used = sum(1 for r in label_results if r.decided_by == "confirmation-pass")
+    # CR-03: label_results/recovery_results are pre-declared and populated
+    # incrementally so that a CallBudgetExceeded raised by EITHER stage still
+    # leaves this function holding everything computed so far -- the
+    # transcript/summary print below then runs unconditionally instead of
+    # being skipped by an uncaught exception (the "hard stop, visible" intent
+    # behind --max-calls must not mean "hard stop, silent").
+    label_results: List[PairResult] = []
+    recovery_results: List[PairResult] = []
+    label_stage_done = False
+    stopped_early = False
+    stop_reason = ""
+    try:
+        label_results = run_confirmation_stage(client, candidates, args.max_calls)
+        label_stage_done = True
+        calls_used = sum(1 for r in label_results if r.decided_by == "confirmation-pass")
 
-    recovery_results = recover_misses(
-        client, tapi_entries, ietf_entries, label_results, args.max_calls, calls_used
+        recovery_results = recover_misses(
+            client, tapi_entries, ietf_entries, label_results, args.max_calls, calls_used
+        )
+    except CallBudgetExceeded as exc:
+        stopped_early = True
+        stop_reason = str(exc)
+        partial = list(getattr(exc, "partial_results", None) or [])
+        if label_stage_done:
+            recovery_results = partial
+        else:
+            label_results = partial
+
+    calls_used = sum(
+        1 for r in (label_results + recovery_results) if r.decided_by == "confirmation-pass"
     )
-    calls_used += sum(1 for r in recovery_results if r.decided_by == "confirmation-pass")
-
     results = label_results + recovery_results
 
     summary = RunSummary(
@@ -867,6 +926,13 @@ def main() -> None:
         summary.record(result)
 
     print_run_summary(summary)
+
+    if stopped_early:
+        # CR-03: still exit non-zero (the budget cap is a deliberate hard
+        # stop, ROADMAP SC5/threat T-01-04) but only AFTER the transcript and
+        # summary above have printed everything computed before the stop.
+        print(f"!!! RUN STOPPED EARLY: {stop_reason} !!!", file=sys.stderr)
+        sys.exit(1)
 
 
 if __name__ == "__main__":

@@ -265,6 +265,62 @@ def test_run_confirmation_stage_respects_max_calls_cap(fixture_entries, scripted
         align_lexicons.run_confirmation_stage(client, candidates, max_calls=0)
 
 
+def test_call_budget_exceeded_carries_partial_results(fixture_entries, scripted_client):
+    """CR-03 regression: a CallBudgetExceeded raised mid-run must carry
+    everything already computed out with it (.partial_results/.calls_used),
+    not lose it with the stack frame -- main() needs this to still print a
+    transcript/summary for the partial run instead of exiting silently."""
+    tapi_entries, ietf_entries, _ = fixture_entries
+    candidates = align_lexicons.label_pass(tapi_entries, ietf_entries, align_lexicons.DEFAULT_LABEL_THRESHOLD)
+    real_call_candidates = [c for c in candidates if align_lexicons.evidence_gate(c) is None]
+    assert len(real_call_candidates) >= 2, "need at least 2 real-call candidates to prove a partial stop"
+
+    client = scripted_client({})
+    with pytest.raises(align_lexicons.CallBudgetExceeded) as exc_info:
+        align_lexicons.run_confirmation_stage(client, candidates, max_calls=1)
+
+    exc = exc_info.value
+    partial = exc.partial_results
+    assert isinstance(partial, list)
+    assert exc.calls_used == 1
+    confirmation_pass_results = [r for r in partial if r.decided_by == "confirmation-pass"]
+    assert len(confirmation_pass_results) == 1, (
+        "exactly the one call the budget allowed should be recorded in partial_results"
+    )
+    assert len(partial) < len(candidates), "partial_results must stop before the full candidate list"
+
+
+def test_confirmed_verdict_with_empty_evidence_quote_downgrades(fixture_entries, scripted_client):
+    """CR-03 regression: PairResult's own invariant rejects a confirmed
+    verdict with an empty evidence_quote -- a structurally plausible live-
+    model response (MatchVerdict.evidence_quote is typed str, not
+    constrained non-empty). run_confirmation_stage must downgrade this to a
+    visible insufficient_evidence result rather than letting the ValueError
+    crash the whole run before any transcript/summary prints."""
+    tapi_entries, ietf_entries, _ = fixture_entries
+    candidates = align_lexicons.label_pass(tapi_entries, ietf_entries, align_lexicons.DEFAULT_LABEL_THRESHOLD)
+    real_call_candidates = [c for c in candidates if align_lexicons.evidence_gate(c) is None]
+    assert real_call_candidates, "need at least one real-call candidate"
+    target = real_call_candidates[0]
+
+    malformed_verdict = align_lexicons.MatchVerdict(
+        verdict="confirm_exact_match",
+        rationale="Claims a match but forgot to quote evidence.",
+        evidence_quote="",
+    )
+    client = scripted_client({(target.tapi.lex_id, target.ietf.lex_id): malformed_verdict})
+
+    results = align_lexicons.run_confirmation_stage(client, candidates, max_calls=len(candidates))
+
+    downgraded = next(
+        r for r in results
+        if r.candidate.tapi.lex_id == target.tapi.lex_id and r.candidate.ietf.lex_id == target.ietf.lex_id
+    )
+    assert downgraded.verdict == "insufficient_evidence"
+    assert downgraded.decided_by == "confirmation-pass"
+    assert downgraded.evidence_quote == ""
+
+
 # ── Task 2 (Plan 03): recover the correspondences the label stage missed ───
 
 
@@ -406,6 +462,26 @@ def test_full_fixture_run_no_crash(recording_client, capsys, monkeypatch):
     assert d03_blocks, "expected at least one transcript block for the D-03 entry"
     for block in d03_blocks:
         assert block.count("(none available)") >= 3
+
+
+def test_main_prints_partial_run_on_budget_exceeded(recording_client, capsys, monkeypatch):
+    """CR-03 regression at the main() level: a --max-calls cap tight enough
+    to trigger CallBudgetExceeded mid-run must still print a transcript
+    block per result processed so far and the run summary -- not exit with
+    a raw traceback and zero output. Exits non-zero (the cap is still a
+    deliberate hard stop, ROADMAP SC5/threat T-01-04), but only after
+    everything computed prints."""
+    monkeypatch.setattr(sys, "argv", ["align_lexicons.py", "--max-calls", "1"])
+    monkeypatch.setattr(align_lexicons.anthropic, "Anthropic", lambda: recording_client)
+
+    with pytest.raises(SystemExit) as exc_info:
+        align_lexicons.main()
+    assert exc_info.value.code == 1
+
+    captured = capsys.readouterr()
+    assert "candidate origin:" in captured.out, "partial run must still print at least one transcript block"
+    assert "=== Run summary ===" in captured.out, "partial run must still print the run summary"
+    assert "STOPPED EARLY" in captured.err
 
 
 def test_run_does_not_modify_lexicon_files(lexicon_dir, recording_client, monkeypatch, capsys):
