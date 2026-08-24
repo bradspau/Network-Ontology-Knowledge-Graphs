@@ -339,7 +339,15 @@ def load_fixture_entries(lexicon_dir: Path, refs: List[FixtureRef]) -> List[Lexi
         canonical_example = normalize_evidence_text(raw_example, pref_label)
 
         raw_needs_curation = graph.value(subject, LEX.needsCuration)
-        needs_curation = bool(raw_needs_curation) if raw_needs_curation is not None else False
+        # WR-01: bool() on an rdflib Literal is always True for a non-empty
+        # string, including "false"^^xsd:boolean -- Literal is a str
+        # subclass with no __bool__ override for typed literals. toPython()
+        # converts a typed xsd:boolean literal to a real Python bool first,
+        # so an explicit lex:needsCuration false is honored rather than
+        # silently coerced to True.
+        needs_curation = (
+            bool(raw_needs_curation.toPython()) if raw_needs_curation is not None else False
+        )
 
         entries.append(
             LexiconEntry(

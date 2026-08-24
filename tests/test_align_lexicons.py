@@ -13,7 +13,9 @@ test_handles_sparse_evidence_gracefully and test_evidence_is_stable_and_
 deterministic (Phase 1, Plan 02, Task 1) exercise the full eleven-entry
 curated OTN fixture via the fixture_entries pytest fixture.
 """
+import re
 import sys
+from pathlib import Path
 
 import pytest
 
@@ -182,6 +184,69 @@ def test_canonical_example_only_entry_reaches_confirmation_with_its_text_in_prom
     prompt_text = "\n".join(str(v) for call in client.calls for v in _flatten(call))
     assert "e.g. a physical fiber patch panel port." in prompt_text
     assert "canonical" in prompt_text.lower()  # the system prompt now names it explicitly too
+
+
+def test_needs_curation_false_literal_parses_as_false(tmp_path):
+    """WR-01 regression: an rdflib xsd:boolean Literal("false") is truthy
+    under plain bool() -- Literal is a str subclass with no __bool__
+    override for typed literals. load_fixture_entries must honor an
+    explicit lex:needsCuration false rather than silently coercing it to
+    True."""
+    ttl_content = """\
+@prefix lex: <http://example.org/ontology/lexicon-vocab#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+
+lex:wr-01-test-entry
+    a lex:ReferenceEntry ;
+    skos:prefLabel "wr-01 test entry" ;
+    skos:definition "A definition that is not a restatement of the label." ;
+    lex:needsCuration false .
+"""
+    ttl_file = tmp_path / "wr01.lexicon.ttl"
+    ttl_file.write_text(ttl_content)
+
+    ref = align_lexicons.FixtureRef(source="test", file="wr01.lexicon.ttl", lex_id="wr-01-test-entry")
+    entries = align_lexicons.load_fixture_entries(tmp_path, [ref])
+
+    assert len(entries) == 1
+    assert entries[0].needs_curation is False
+
+
+def test_needs_curation_true_literal_still_parses_as_true(tmp_path):
+    """Companion to the WR-01 regression above -- the fix must not flip the
+    already-correct true case."""
+    ttl_content = """\
+@prefix lex: <http://example.org/ontology/lexicon-vocab#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+
+lex:wr-01-test-entry-true
+    a lex:ReferenceEntry ;
+    skos:prefLabel "wr-01 test entry true" ;
+    skos:definition "Another real definition, not a restatement." ;
+    lex:needsCuration true .
+"""
+    ttl_file = tmp_path / "wr01true.lexicon.ttl"
+    ttl_file.write_text(ttl_content)
+
+    ref = align_lexicons.FixtureRef(
+        source="test", file="wr01true.lexicon.ttl", lex_id="wr-01-test-entry-true"
+    )
+    entries = align_lexicons.load_fixture_entries(tmp_path, [ref])
+
+    assert len(entries) == 1
+    assert entries[0].needs_curation is True
+
+
+def test_requirements_align_declares_pydantic():
+    """WR-02 regression: align_lexicons.py imports pydantic directly
+    (MatchVerdict) and its own ImportError message points users at
+    requirements-align.txt -- that file must actually pin pydantic rather
+    than relying on it arriving as anthropic's transitive dependency."""
+    requirements_path = Path(__file__).resolve().parents[1] / "requirements-align.txt"
+    content = requirements_path.read_text()
+    assert re.search(r"^pydantic==", content, re.MULTILINE), (
+        "requirements-align.txt must pin an explicit pydantic== version"
+    )
 
 
 def _flatten(value):

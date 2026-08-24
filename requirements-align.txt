@@ -2,3 +2,7 @@
 rapidfuzz==3.14.5
 anthropic==1.0.0
 pytest==9.1.1
+# WR-02: pydantic is imported directly (MatchVerdict) and align_lexicons.py's
+# own ImportError message points here -- declare it explicitly rather than
+# relying on it arriving as anthropic's transitive dependency.
+pydantic==2.13.4
