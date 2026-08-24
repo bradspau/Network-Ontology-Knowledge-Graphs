@@ -613,6 +613,67 @@ def run_confirmation_stage(
     return results
 
 
+def recover_misses(
+    client,
+    tapi: List[LexiconEntry],
+    ietf: List[LexiconEntry],
+    results: List[PairResult],
+    max_calls: int,
+    calls_used: int,
+) -> List[PairResult]:
+    """Recovers correspondences the label stage legitimately missed.
+
+    Driven from "no confirmed correspondent after the label-driven
+    confirmation stage" -- NOT from "zero label candidates". Verified
+    against this fixture: tapi-topology-node-rule-group shares the token
+    "node" with the IETF ietf-network-node entry, so it DOES receive a
+    label-pass candidate -- just not the right one. Keying recovery on
+    zero-candidates would never reach ietf-network-connectivity-matrix and
+    would silently drop the pair the drafts' own OTN worked example calls
+    out (docs/reference-lexicons.md section 4.2 and section 6).
+
+    For each TAPI entry left unresolved, builds a Candidate against every
+    IETF entry it was not already paired with (origin="misses-recovery"),
+    sorts the generated pairs by (tapi.lex_id, ietf.lex_id) for a
+    reproducible run, then routes them through the same evidence_gate ->
+    confirm_pair path and shared call budget as the label-driven stage --
+    the D-03 entry is never sent to the model by this pass either.
+
+    Bounded only because the fixture is small (D-01): this pass is
+    quadratic in corpus size as written (every unresolved TAPI entry against
+    every not-yet-paired IETF entry) and MUST be re-bounded -- e.g. with its
+    own blocking/ranking stage -- before Phase 5's full-corpus run. This is
+    a note for the future reader, not a deferral of any work inside this
+    phase's scope.
+    """
+    confirmed_tapi_ids = {
+        r.candidate.tapi.lex_id for r in results if r.verdict in CONFIRMED_VERDICTS
+    }
+    already_paired = {(r.candidate.tapi.lex_id, r.candidate.ietf.lex_id) for r in results}
+
+    unresolved = [entry for entry in tapi if entry.lex_id not in confirmed_tapi_ids]
+
+    recovery_candidates: List[Candidate] = []
+    for tapi_entry in unresolved:
+        for ietf_entry in ietf:
+            if (tapi_entry.lex_id, ietf_entry.lex_id) in already_paired:
+                continue
+            recovery_candidates.append(
+                Candidate(
+                    tapi=tapi_entry,
+                    ietf=ietf_entry,
+                    label_score=label_score(tapi_entry.pref_label, ietf_entry.pref_label),
+                    origin="misses-recovery",
+                )
+            )
+    recovery_candidates.sort(key=lambda c: (c.tapi.lex_id, c.ietf.lex_id))
+
+    recovery_results, _ = _evaluate_candidates(
+        client, recovery_candidates, max_calls, calls_used
+    )
+    return recovery_results
+
+
 # ── Transcript ───────────────────────────────────────────────────────────
 
 
@@ -708,7 +769,14 @@ def main() -> None:
     # (threat T-01-02).
     client = anthropic.Anthropic()
 
-    results = run_confirmation_stage(client, candidates, args.max_calls)
+    label_results = run_confirmation_stage(client, candidates, args.max_calls)
+    calls_used = sum(1 for r in label_results if r.decided_by == "confirmation-pass")
+
+    recovery_results = recover_misses(
+        client, tapi_entries, ietf_entries, label_results, args.max_calls, calls_used
+    )
+
+    results = label_results + recovery_results
     for result in results:
         print_pair_transcript(result)
 

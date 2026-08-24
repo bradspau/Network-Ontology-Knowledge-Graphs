@@ -261,3 +261,108 @@ def test_run_confirmation_stage_respects_max_calls_cap(fixture_entries, scripted
     client = scripted_client({})
     with pytest.raises(align_lexicons.CallBudgetExceeded):
         align_lexicons.run_confirmation_stage(client, candidates, max_calls=0)
+
+
+# ── Task 2 (Plan 03): recover the correspondences the label stage missed ───
+
+
+def test_recovers_node_rule_group_correspondent(fixture_entries, scripted_client):
+    tapi_entries, ietf_entries, by_lex_id = fixture_entries
+    candidates = align_lexicons.label_pass(tapi_entries, ietf_entries, align_lexicons.DEFAULT_LABEL_THRESHOLD)
+
+    node_rule_group = by_lex_id["tapi-topology-node-rule-group"]
+    connectivity_matrix = by_lex_id["ietf-network-connectivity-matrix"]
+    assert (node_rule_group.lex_id, connectivity_matrix.lex_id) not in {
+        (c.tapi.lex_id, c.ietf.lex_id) for c in candidates
+    }, "node-rule-group <-> connectivity-matrix must NOT be a label-pass candidate -- that's the point of recovery"
+
+    confirm_verdict = align_lexicons.MatchVerdict(
+        verdict="confirm_close_match",
+        rationale=(
+            "Both describe a node's internal switching limitations across TE "
+            "links, despite sharing no label token."
+        ),
+        evidence_quote="Represents a node's switching limitations",
+    )
+    # Every OTHER pair (label-pass and recovery alike) falls back to reject --
+    # this is the "rejects every label-pass pair" client the plan specifies.
+    client = scripted_client(
+        {(node_rule_group.lex_id, connectivity_matrix.lex_id): confirm_verdict}
+    )
+
+    label_results = align_lexicons.run_confirmation_stage(client, candidates, max_calls=len(candidates))
+    assert all(r.verdict not in ("confirm_exact_match", "confirm_close_match") for r in label_results), (
+        "every label-pass candidate should have been rejected by the fallback client"
+    )
+    calls_used = sum(1 for r in label_results if r.decided_by == "confirmation-pass")
+
+    recovery_results = align_lexicons.recover_misses(
+        client, tapi_entries, ietf_entries, label_results, max_calls=1000, calls_used=calls_used
+    )
+
+    recovered = next(
+        r
+        for r in recovery_results
+        if r.candidate.tapi.lex_id == node_rule_group.lex_id
+        and r.candidate.ietf.lex_id == connectivity_matrix.lex_id
+    )
+    assert recovered.candidate.origin == "misses-recovery"
+    assert recovered.verdict == "confirm_close_match"
+    assert recovered.decided_by == "confirmation-pass"
+    assert recovered.evidence_quote.strip() != ""
+
+    # The scope-gap case: rejected everywhere, ends unmatched -- not forced.
+    service_interface_point = by_lex_id["tapi-common-service-interface-point-tapi-common"]
+    all_results = label_results + recovery_results
+    sip_results = [r for r in all_results if r.candidate.tapi.lex_id == service_interface_point.lex_id]
+    assert sip_results, "expected service-interface-point to be evaluated at least once"
+    assert not any(r.verdict in ("confirm_exact_match", "confirm_close_match") for r in sip_results)
+
+    # The D-03 entry is never sent to the model by the recovery pass either.
+    d03_lex_id = "tapi-common-node-edge-point-event-notification"
+    recorded_calls_text = "\n".join(str(v) for call in client.calls for v in _flatten(call))
+    assert d03_lex_id not in recorded_calls_text
+
+
+def test_recovery_candidates_are_sorted_and_share_call_budget(fixture_entries, scripted_client):
+    import re
+
+    tapi_entries, ietf_entries, by_lex_id = fixture_entries
+
+    # No prior confirmed correspondents and nothing already paired -- every
+    # TAPI x IETF pair is a recovery candidate this time, generated and
+    # evaluated in deterministic (tapi.lex_id, ietf.lex_id) order.
+    client = scripted_client({})  # everything falls back to reject
+    recovery_results = align_lexicons.recover_misses(
+        client, tapi_entries, ietf_entries, [], max_calls=1000, calls_used=0
+    )
+    assert len(recovery_results) == len(tapi_entries) * len(ietf_entries)
+    assert all(r.candidate.origin == "misses-recovery" for r in recovery_results)
+
+    expected_pairs = sorted((t.lex_id, i.lex_id) for t in tapi_entries for i in ietf_entries)
+    # Results themselves must be in generated (sorted) order.
+    assert [(r.candidate.tapi.lex_id, r.candidate.ietf.lex_id) for r in recovery_results] == expected_pairs
+
+    # Only pairs where BOTH sides have evidence reach confirm_pair -- extract
+    # the exact lex_id tokens recorded in each call's prompt text (not a raw
+    # substring search, since some lex_ids are prefixes of others).
+    expected_call_pairs = [
+        (t, i) for (t, i) in expected_pairs if by_lex_id[t].has_evidence and by_lex_id[i].has_evidence
+    ]
+    recorded_call_pairs = []
+    for call in client.calls:
+        text = "\n".join(str(v) for v in _flatten(call))
+        ids = re.findall(r"lex_id: (\S+)", text)
+        assert len(ids) == 2
+        recorded_call_pairs.append((ids[0], ids[1]))
+
+    assert recorded_call_pairs == expected_call_pairs
+
+
+def test_recover_misses_respects_shared_call_cap(fixture_entries, scripted_client):
+    tapi_entries, ietf_entries, _ = fixture_entries
+    client = scripted_client({})
+    with pytest.raises(align_lexicons.CallBudgetExceeded):
+        align_lexicons.recover_misses(
+            client, tapi_entries, ietf_entries, [], max_calls=0, calls_used=0
+        )
