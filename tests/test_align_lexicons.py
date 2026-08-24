@@ -125,6 +125,65 @@ def test_main_threads_custom_model_through_to_api_calls(recording_client, monkey
     assert "model=claude-test-model-xyz" in captured.out
 
 
+def test_system_prompt_includes_canonical_example_as_valid_evidence():
+    """CR-02 regression: SYSTEM_PROMPT previously told the model to judge
+    verdicts ONLY on definition/scope-note text, silently excluding
+    canonical_example even though has_evidence()/_render_entry() already
+    treat it as real evidence and put it in the prompt -- a direct
+    contradiction of CLAUDE.md's 'definition + canonical example' matching
+    constraint. The prompt must now name canonical example text as a valid
+    basis, not just supplement the old exclusionary wording."""
+    prompt = align_lexicons.SYSTEM_PROMPT
+    assert "canonical" in prompt.lower(), (
+        "SYSTEM_PROMPT must name canonical example text as a valid evidence basis"
+    )
+    assert "definition and scope-note text" not in prompt, (
+        "the old ONLY-definition-and-scope-note wording must be gone, not merely supplemented"
+    )
+
+
+def test_canonical_example_only_entry_reaches_confirmation_with_its_text_in_prompt(scripted_client):
+    """CR-02 regression: an entry whose ONLY evidence is a canonical example
+    (no definition, no scope-note) already passes evidence_gate (has_evidence
+    treats canonical_example as sufficient on its own) and its text is
+    already rendered into the prompt -- this proves the evidence basis the
+    code offers and the basis the prompt authorizes now agree, closing the
+    gap CR-02 identified."""
+    tapi_entry = align_lexicons.LexiconEntry(
+        source="tapi",
+        lex_id="synthetic-tapi-canonical-only",
+        pref_label="synthetic entry",
+        definition=None,
+        scope_notes=[],
+        canonical_example="e.g. a physical fiber patch panel port.",
+        needs_curation=False,
+    )
+    ietf_entry = align_lexicons.LexiconEntry(
+        source="ietf",
+        lex_id="synthetic-ietf-canonical-only",
+        pref_label="synthetic counterpart",
+        definition=None,
+        scope_notes=[],
+        canonical_example="e.g. a physical fiber patch panel port.",
+        needs_curation=False,
+    )
+    candidate = align_lexicons.Candidate(
+        tapi=tapi_entry, ietf=ietf_entry, label_score=100.0, origin="label-pass"
+    )
+
+    assert tapi_entry.has_evidence and ietf_entry.has_evidence
+    assert align_lexicons.evidence_gate(candidate) is None, (
+        "an entry with only a canonical example must still pass the evidence gate"
+    )
+
+    client = scripted_client({})
+    align_lexicons.confirm_pair(client, candidate)
+
+    prompt_text = "\n".join(str(v) for call in client.calls for v in _flatten(call))
+    assert "e.g. a physical fiber patch panel port." in prompt_text
+    assert "canonical" in prompt_text.lower()  # the system prompt now names it explicitly too
+
+
 def _flatten(value):
     if isinstance(value, str):
         yield value
