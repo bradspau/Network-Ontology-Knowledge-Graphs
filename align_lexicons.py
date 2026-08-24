@@ -10,14 +10,16 @@ draft_lexicon.py. It never writes to yang4owl/lexicon/ -- the lexicon
 corpus is read-only input (see the threat model's process -> lexicon/
 trust boundary).
 
-Phase 1 (this file, first cut): wires exactly ONE candidate pair through
-every layer -- rdflib fixture load, evidence normalization, a rapidfuzz
-label score, and a real Anthropic structured-output confirmation call --
-proving the false-cognate rejection (node-edge-point vs.
-tunnel-termination-point) end-to-end before any horizontal expansion.
-Plans 02/03 of this phase expand FIXTURE_TAPI/FIXTURE_IETF and add the
-label-pass blocking + misses-recovery stages; no architectural change is
-required to do so.
+Plan 01 (the tracer) wired exactly ONE candidate pair through every layer --
+rdflib fixture load, evidence normalization, a rapidfuzz label score, and a
+real Anthropic structured-output confirmation call -- proving the
+false-cognate rejection (node-edge-point vs. tunnel-termination-point)
+end-to-end. This file's current state (Plan 02, Task 1) expands
+FIXTURE_TAPI/FIXTURE_IETF to the full 11-entry curated OTN fixture with
+hardened, deterministic evidence extraction. Task 2 of this plan adds the
+real candidate-generation stage (label_tokens/block_candidates/label_pass);
+Plan 03 adds the misses-recovery pass for zero-candidate entries. No
+architectural change is required for either.
 
 Usage:
     ANTHROPIC_API_KEY=... python3 yang4owl/align_lexicons.py
@@ -174,12 +176,32 @@ class PairResult:
 
 # D-01: fixture entries are pulled by explicit lex: id, never by scanning for
 # a matching skos:prefLabel (tapi-common.lexicon.ttl alone has 14 separate
-# entries whose prefLabel is "service-interface-point"). This phase's one
-# tracer pair is the false-cognate case, MATCH-06.
+# entries whose prefLabel is "service-interface-point"). This is the full
+# curated OTN worked-example fixture (RESEARCH.md "Concrete fixture
+# entries"): the drafts' own ForwardingDomain/NodeEdgePoint/Link/
+# NodeRuleGroup/ServiceInterfacePoint pairs, the D-03 genuinely-undocumented
+# entry, and the MATCH-06 false-cognate case.
 FIXTURE_TAPI: List[FixtureRef] = [
+    FixtureRef(source="tapi", file="tapi-topology.lexicon.ttl", lex_id="tapi-topology-node"),
     FixtureRef(source="tapi", file="tapi-topology.lexicon.ttl", lex_id="tapi-topology-node-edge-point"),
+    FixtureRef(source="tapi", file="tapi-topology.lexicon.ttl", lex_id="tapi-topology-link"),
+    FixtureRef(source="tapi", file="tapi-topology.lexicon.ttl", lex_id="tapi-topology-node-rule-group"),
+    FixtureRef(
+        source="tapi",
+        file="tapi-common.lexicon.ttl",
+        lex_id="tapi-common-service-interface-point-tapi-common",
+    ),
+    FixtureRef(
+        source="tapi",
+        file="tapi-common.lexicon.ttl",
+        lex_id="tapi-common-node-edge-point-event-notification",
+    ),
 ]
 FIXTURE_IETF: List[FixtureRef] = [
+    FixtureRef(source="ietf", file="ietf-network.lexicon.ttl", lex_id="ietf-network-node"),
+    FixtureRef(source="ietf", file="ietf-network.lexicon.ttl", lex_id="ietf-network-termination-point"),
+    FixtureRef(source="ietf", file="ietf-network.lexicon.ttl", lex_id="ietf-network-link"),
+    FixtureRef(source="ietf", file="ietf-network.lexicon.ttl", lex_id="ietf-network-connectivity-matrix"),
     FixtureRef(
         source="ietf",
         file="ietf-network.lexicon.ttl",
@@ -243,7 +265,10 @@ def load_fixture_entries(lexicon_dir: Path, refs: List[FixtureRef]) -> List[Lexi
             )
 
         raw_pref_label = graph.value(subject, SKOS.prefLabel)
-        pref_label = str(raw_pref_label) if raw_pref_label is not None else ref.lex_id
+        pref_label = str(raw_pref_label) if raw_pref_label is not None else ""
+        if not pref_label.strip():
+            print(f"WARNING: {ref.lex_id!r} has no usable skos:prefLabel -- skipping entry")
+            continue
 
         raw_definition = graph.value(subject, SKOS.definition)
         raw_definition = str(raw_definition) if raw_definition is not None else None

@@ -33,6 +33,21 @@ def lexicon_dir() -> Path:
     return Path(__file__).resolve().parents[1] / "lexicon"
 
 
+@pytest.fixture
+def fixture_entries(lexicon_dir):
+    """Loads the full 11-entry curated OTN fixture (FIXTURE_TAPI +
+    FIXTURE_IETF) from the real lexicon_dir once, and returns
+    (tapi_entries, ietf_entries, by_lex_id) so tests can assert on the whole
+    list or look a specific entry up by its lex: id without repeating the
+    load boilerplate."""
+    import align_lexicons  # lazy import -- see module docstring
+
+    tapi_entries = align_lexicons.load_fixture_entries(lexicon_dir, align_lexicons.FIXTURE_TAPI)
+    ietf_entries = align_lexicons.load_fixture_entries(lexicon_dir, align_lexicons.FIXTURE_IETF)
+    by_lex_id = {entry.lex_id: entry for entry in tapi_entries + ietf_entries}
+    return tapi_entries, ietf_entries, by_lex_id
+
+
 class _ParsedResponse:
     """Mimics the return shape of anthropic's client.messages.parse(): the
     one attribute align_lexicons.py reads off it is .parsed_output."""
