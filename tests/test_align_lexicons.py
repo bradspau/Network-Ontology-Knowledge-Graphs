@@ -128,3 +128,67 @@ def test_evidence_is_stable_and_deterministic(lexicon_dir, fixture_entries):
     ietf_again = align_lexicons.load_fixture_entries(lexicon_dir, align_lexicons.FIXTURE_IETF)
     assert tapi_again == tapi_entries
     assert ietf_again == ietf_entries
+
+
+# ── Task 2: blocked candidate generation ────────────────────────────────────
+
+
+def test_label_tokens_and_blocking():
+    assert align_lexicons.label_tokens("node-edge-point") == {"node", "edge", "point"}
+    assert align_lexicons.label_tokens("Node_Edge_Point") == align_lexicons.label_tokens("node-edge-point")
+    assert align_lexicons.label_tokens("") == set()
+
+
+def test_label_pass_proposes_otn_candidates(fixture_entries):
+    tapi_entries, ietf_entries, _ = fixture_entries
+    candidates = align_lexicons.label_pass(tapi_entries, ietf_entries, align_lexicons.DEFAULT_LABEL_THRESHOLD)
+
+    pairs = {(c.tapi.lex_id, c.ietf.lex_id) for c in candidates}
+    assert ("tapi-topology-node", "ietf-network-node") in pairs
+    assert ("tapi-topology-node-edge-point", "ietf-network-termination-point") in pairs
+
+    for c in candidates:
+        assert isinstance(c.label_score, float)
+        assert c.origin == "label-pass"
+
+    assert candidates == sorted(candidates, key=lambda c: (c.tapi.lex_id, c.ietf.lex_id))
+
+
+def test_label_pass_is_bounded(fixture_entries):
+    tapi_entries, ietf_entries, _ = fixture_entries
+
+    candidates = align_lexicons.label_pass(tapi_entries, ietf_entries, align_lexicons.DEFAULT_LABEL_THRESHOLD)
+    assert len(candidates) < len(tapi_entries) * len(ietf_entries)
+
+    pairs = {(c.tapi.lex_id, c.ietf.lex_id) for c in candidates}
+    assert ("tapi-topology-node-rule-group", "ietf-network-connectivity-matrix") not in pairs
+
+    # block_candidates itself does not raise on an empty-token-set label,
+    # and node-edge-point/termination-point are blocked together via "point"
+    # while link/connectivity-matrix share no token.
+    blocked_pairs = {
+        (a.lex_id, b.lex_id)
+        for a, b in align_lexicons.block_candidates(tapi_entries, ietf_entries)
+    }
+    assert ("tapi-topology-node-edge-point", "ietf-network-termination-point") in blocked_pairs
+    assert ("tapi-topology-node-rule-group", "ietf-network-connectivity-matrix") not in blocked_pairs
+    assert ("tapi-topology-link", "ietf-network-connectivity-matrix") not in blocked_pairs
+    assert align_lexicons.block_candidates([], []) == []
+
+
+def test_label_pass_threshold_boundary_is_inclusive(fixture_entries):
+    tapi_entries, ietf_entries, _ = fixture_entries
+    all_candidates = align_lexicons.label_pass(tapi_entries, ietf_entries, 0.0)
+    assert all_candidates, "expected at least one blocked candidate at threshold=0"
+
+    observed_score = all_candidates[0].label_score
+    at_threshold = align_lexicons.label_pass(tapi_entries, ietf_entries, observed_score)
+    at_threshold_pairs = {(c.tapi.lex_id, c.ietf.lex_id) for c in at_threshold}
+    assert (all_candidates[0].tapi.lex_id, all_candidates[0].ietf.lex_id) in at_threshold_pairs
+
+
+def test_no_entity_class_equality_blocking():
+    import re
+
+    src = open(align_lexicons.__file__).read()
+    assert not re.search(r"entityClass\s*==", src)

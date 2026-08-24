@@ -14,12 +14,12 @@ Plan 01 (the tracer) wired exactly ONE candidate pair through every layer --
 rdflib fixture load, evidence normalization, a rapidfuzz label score, and a
 real Anthropic structured-output confirmation call -- proving the
 false-cognate rejection (node-edge-point vs. tunnel-termination-point)
-end-to-end. This file's current state (Plan 02, Task 1) expands
-FIXTURE_TAPI/FIXTURE_IETF to the full 11-entry curated OTN fixture with
-hardened, deterministic evidence extraction. Task 2 of this plan adds the
-real candidate-generation stage (label_tokens/block_candidates/label_pass);
-Plan 03 adds the misses-recovery pass for zero-candidate entries. No
-architectural change is required for either.
+end-to-end. Plan 02 (this file, current state) expands FIXTURE_TAPI/
+FIXTURE_IETF to the full 11-entry curated OTN fixture and adds the real
+candidate-generation stage: label_tokens() + block_candidates() (token-
+overlap blocking) feeding label_pass() (rapidfuzz scoring, --label-threshold
+gated). Plan 03 adds the misses-recovery pass for zero-candidate entries;
+no architectural change is required to do so.
 
 Usage:
     ANTHROPIC_API_KEY=... python3 yang4owl/align_lexicons.py
@@ -30,7 +30,7 @@ import re
 import sys
 from dataclasses import dataclass
 from pathlib import Path
-from typing import List, Literal, Optional
+from typing import List, Literal, Optional, Set, Tuple
 
 from rdflib import Graph, Namespace, RDF
 from rdflib.namespace import SKOS
@@ -308,8 +308,82 @@ def load_fixture_entries(lexicon_dir: Path, refs: List[FixtureRef]) -> List[Lexi
 # ── Label pass ───────────────────────────────────────────────────────────
 
 
+def label_tokens(label: str) -> Set[str]:
+    """Lowercase, collapse non-alphanumeric runs to a single space, strip,
+    split on whitespace. Reuses the exact normalization draft_lexicon.py's
+    is_restatement() applies (_normalize_label) so the two files agree on
+    what a label's tokens are (edge row MATCH-01/encoding). Empty/whitespace
+    -only input returns an empty set."""
+    normalized = _normalize_label(label)
+    if not normalized:
+        return set()
+    return set(normalized.split())
+
+
 def label_score(a: str, b: str) -> float:
     return fuzz.token_set_ratio(a, b)
+
+
+def block_candidates(
+    tapi: List[LexiconEntry], ietf: List[LexiconEntry]
+) -> List[Tuple[LexiconEntry, LexiconEntry]]:
+    """The phase's sole blocking mechanism: emit a pair only when the two
+    entries' label_tokens share at least one token. An entry whose token set
+    is empty is skipped (with a warning naming its lex: id) rather than
+    matched against everything.
+
+    lex:entityClass is deliberately NOT consulted anywhere in this file --
+    every TAPI OTN fixture concept is lex:GroupingKind and every IETF
+    counterpart is lex:StructuralKind (draft_lexicon.py's KIND_ENTITY_CLASS
+    map assigns the class from YANG construct kind, not semantic category),
+    so equality blocking on that field would return zero candidates for
+    every true positive in this fixture. See the
+    <assumption_delta_decision> block in 01-01-PLAN.md."""
+    tapi_tokens = []
+    for entry in tapi:
+        tokens = label_tokens(entry.pref_label)
+        if not tokens:
+            print(f"WARNING: {entry.lex_id!r} has an empty label token set -- excluded from blocking")
+            continue
+        tapi_tokens.append((entry, tokens))
+
+    ietf_tokens = []
+    for entry in ietf:
+        tokens = label_tokens(entry.pref_label)
+        if not tokens:
+            print(f"WARNING: {entry.lex_id!r} has an empty label token set -- excluded from blocking")
+            continue
+        ietf_tokens.append((entry, tokens))
+
+    pairs: List[Tuple[LexiconEntry, LexiconEntry]] = []
+    for tapi_entry, t_tokens in tapi_tokens:
+        for ietf_entry, i_tokens in ietf_tokens:
+            if t_tokens & i_tokens:
+                pairs.append((tapi_entry, ietf_entry))
+    return pairs
+
+
+def label_pass(tapi: List[LexiconEntry], ietf: List[LexiconEntry], threshold: float) -> List[Candidate]:
+    """Scores only the pairs block_candidates returned -- never the full
+    cross product (ROADMAP SC5). Keeps pairs whose raw float score satisfies
+    score >= threshold (inclusive: a pair landing exactly on the threshold is
+    proposed -- edge row MATCH-01/boundary). Compares the raw float without
+    rounding. Returns the survivors sorted by (tapi.lex_id, ietf.lex_id) so
+    equal scores never reorder between runs (edge row MATCH-01/precision)."""
+    candidates: List[Candidate] = []
+    for tapi_entry, ietf_entry in block_candidates(tapi, ietf):
+        score = label_score(tapi_entry.pref_label, ietf_entry.pref_label)
+        if score >= threshold:
+            candidates.append(
+                Candidate(
+                    tapi=tapi_entry,
+                    ietf=ietf_entry,
+                    label_score=score,
+                    origin="label-pass",
+                )
+            )
+    candidates.sort(key=lambda c: (c.tapi.lex_id, c.ietf.lex_id))
+    return candidates
 
 
 # ── Evidence gate ────────────────────────────────────────────────────────
@@ -455,46 +529,56 @@ def main() -> None:
         default=DEFAULT_MODEL,
         help="Anthropic model to use for the confirmation pass",
     )
+    parser.add_argument(
+        "--label-threshold",
+        type=float,
+        default=DEFAULT_LABEL_THRESHOLD,
+        help=(
+            "Minimum rapidfuzz token_set_ratio score (0-100, inclusive) for a "
+            "blocked pair to be proposed as a label-pass candidate. Tune "
+            "against this fixture's own transcript output -- never against "
+            "the wider, un-repaired corpus (Prohibition P5)."
+        ),
+    )
     args = parser.parse_args()
 
     tapi_entries = load_fixture_entries(args.lexicon_dir, FIXTURE_TAPI)
     ietf_entries = load_fixture_entries(args.lexicon_dir, FIXTURE_IETF)
 
-    tapi_entry = tapi_entries[0]
-    ietf_entry = ietf_entries[0]
-
-    candidate = Candidate(
-        tapi=tapi_entry,
-        ietf=ietf_entry,
-        label_score=label_score(tapi_entry.pref_label, ietf_entry.pref_label),
-        origin="label-pass",
+    print(
+        f"=== align_lexicons run: lexicon_dir={args.lexicon_dir} "
+        f"model={args.model} label_threshold={args.label_threshold:.1f} ==="
     )
+
+    candidates = label_pass(tapi_entries, ietf_entries, args.label_threshold)
+    print(f"Label pass proposed {len(candidates)} candidate(s) (not matches -- see verdicts below).\n")
 
     # Client reads ANTHROPIC_API_KEY from the environment -- never pass
     # api_key= explicitly, so the credential never appears in source
     # (threat T-01-02).
     client = anthropic.Anthropic()
 
-    gate_verdict = evidence_gate(candidate)
-    if gate_verdict is not None:
-        result = PairResult(
-            candidate=candidate,
-            verdict=gate_verdict.verdict,
-            rationale=gate_verdict.rationale,
-            evidence_quote=gate_verdict.evidence_quote,
-            decided_by="evidence-gate",
-        )
-    else:
-        verdict = confirm_pair(client, candidate)
-        result = PairResult(
-            candidate=candidate,
-            verdict=verdict.verdict,
-            rationale=verdict.rationale,
-            evidence_quote=verdict.evidence_quote,
-            decided_by="confirmation-pass",
-        )
+    for candidate in candidates:
+        gate_verdict = evidence_gate(candidate)
+        if gate_verdict is not None:
+            result = PairResult(
+                candidate=candidate,
+                verdict=gate_verdict.verdict,
+                rationale=gate_verdict.rationale,
+                evidence_quote=gate_verdict.evidence_quote,
+                decided_by="evidence-gate",
+            )
+        else:
+            verdict = confirm_pair(client, candidate)
+            result = PairResult(
+                candidate=candidate,
+                verdict=verdict.verdict,
+                rationale=verdict.rationale,
+                evidence_quote=verdict.evidence_quote,
+                decided_by="confirmation-pass",
+            )
 
-    print_pair_transcript(result)
+        print_pair_transcript(result)
 
 
 if __name__ == "__main__":
