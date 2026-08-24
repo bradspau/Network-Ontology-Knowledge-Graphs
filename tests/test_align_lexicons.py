@@ -82,6 +82,49 @@ def test_confirmation_rejects_false_cognate(lexicon_dir, scripted_client, capsys
     assert captured.out.count("(none available)") >= 3
 
 
+def test_confirm_pair_uses_requested_model(lexicon_dir, scripted_client):
+    """CR-01 regression: confirm_pair must send the model it was actually
+    asked for, not silently substitute DEFAULT_MODEL underneath a caller
+    that thinks it requested something else."""
+    tapi_entries = align_lexicons.load_fixture_entries(lexicon_dir, align_lexicons.FIXTURE_TAPI)
+    ietf_entries = align_lexicons.load_fixture_entries(lexicon_dir, align_lexicons.FIXTURE_IETF)
+    tapi_entry = next(e for e in tapi_entries if e.lex_id == "tapi-topology-node-edge-point")
+    ietf_entry = next(
+        e for e in ietf_entries if e.lex_id == "ietf-network-tunnel-termination-point-te"
+    )
+    candidate = align_lexicons.Candidate(
+        tapi=tapi_entry, ietf=ietf_entry, label_score=100.0, origin="label-pass"
+    )
+    client = scripted_client({})
+
+    align_lexicons.confirm_pair(client, candidate, model="claude-test-model-xyz")
+
+    assert len(client.calls) == 1
+    assert client.calls[0]["model"] == "claude-test-model-xyz"
+
+    # No model argument at all still falls back to DEFAULT_MODEL -- existing
+    # callers (and the tests above) that never pass model= are unaffected.
+    align_lexicons.confirm_pair(client, candidate)
+    assert client.calls[1]["model"] == align_lexicons.DEFAULT_MODEL
+
+
+def test_main_threads_custom_model_through_to_api_calls(recording_client, monkeypatch, capsys):
+    """CR-01 regression at the main() level: --model must actually reach
+    every client.messages.parse() call, not just the printed run header."""
+    monkeypatch.setattr(sys, "argv", ["align_lexicons.py", "--model", "claude-test-model-xyz"])
+    monkeypatch.setattr(align_lexicons.anthropic, "Anthropic", lambda: recording_client)
+
+    align_lexicons.main()
+
+    assert recording_client.calls, "expected at least one confirmation call in a full fixture run"
+    assert all(call["model"] == "claude-test-model-xyz" for call in recording_client.calls), (
+        "every API call must use the --model value, not DEFAULT_MODEL"
+    )
+
+    captured = capsys.readouterr()
+    assert "model=claude-test-model-xyz" in captured.out
+
+
 def _flatten(value):
     if isinstance(value, str):
         yield value

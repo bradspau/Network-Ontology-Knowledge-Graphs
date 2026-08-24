@@ -492,16 +492,21 @@ def _build_user_message(cand: Candidate) -> str:
     )
 
 
-def confirm_pair(client, cand: Candidate) -> MatchVerdict:
+def confirm_pair(client, cand: Candidate, model: str = DEFAULT_MODEL) -> MatchVerdict:
     """One client.messages.parse() call. SYSTEM_PROMPT is passed as a single
     system block with cache_control (byte-identical across every pair in a
     run). If the SDK rejects a `system` kwarg on messages.parse()
     (RESEARCH.md Assumption A2), fall back to a leading user message rather
-    than redesigning the call."""
+    than redesigning the call.
+
+    CR-01: `model` defaults to DEFAULT_MODEL for direct callers (including
+    existing tests), but main() threads args.model through here -- the
+    --model CLI flag used to be parsed and printed in the run header/summary
+    while every call still hardcoded DEFAULT_MODEL underneath it."""
     user_content = _build_user_message(cand)
     try:
         response = client.messages.parse(
-            model=DEFAULT_MODEL,
+            model=model,
             max_tokens=2048,
             system=[
                 {
@@ -515,7 +520,7 @@ def confirm_pair(client, cand: Candidate) -> MatchVerdict:
         )
     except TypeError:
         response = client.messages.parse(
-            model=DEFAULT_MODEL,
+            model=model,
             max_tokens=2048,
             messages=[
                 {"role": "user", "content": SYSTEM_PROMPT},
@@ -530,7 +535,11 @@ def confirm_pair(client, cand: Candidate) -> MatchVerdict:
 
 
 def _evaluate_candidates(
-    client, candidates: List[Candidate], max_calls: int, calls_used: int
+    client,
+    candidates: List[Candidate],
+    max_calls: int,
+    calls_used: int,
+    model: str = DEFAULT_MODEL,
 ) -> Tuple[List[PairResult], int]:
     """Shared evaluation loop for both run_confirmation_stage and
     recover_misses: gate first (never call the model on an evidence-free
@@ -578,7 +587,7 @@ def _evaluate_candidates(
             raise exc
 
         try:
-            verdict = confirm_pair(client, candidate)
+            verdict = confirm_pair(client, candidate, model)
         except anthropic.AnthropicError as exc:
             calls_used += 1
             print(
@@ -642,7 +651,7 @@ def _evaluate_candidates(
 
 
 def run_confirmation_stage(
-    client, candidates: List[Candidate], max_calls: int
+    client, candidates: List[Candidate], max_calls: int, model: str = DEFAULT_MODEL
 ) -> List[PairResult]:
     """Runs every label_pass candidate through evidence_gate then
     confirm_pair, in order, producing exactly one PairResult per candidate.
@@ -650,7 +659,7 @@ def run_confirmation_stage(
     reaches the model as a prompt full of absent fields (edge row
     MATCH-02/empty, D-03) -- it escalates to insufficient_evidence at the
     gate instead, contributing zero calls."""
-    results, _ = _evaluate_candidates(client, candidates, max_calls, calls_used=0)
+    results, _ = _evaluate_candidates(client, candidates, max_calls, calls_used=0, model=model)
     return results
 
 
@@ -661,6 +670,7 @@ def recover_misses(
     results: List[PairResult],
     max_calls: int,
     calls_used: int,
+    model: str = DEFAULT_MODEL,
 ) -> List[PairResult]:
     """Recovers correspondences the label stage legitimately missed.
 
@@ -710,7 +720,7 @@ def recover_misses(
     recovery_candidates.sort(key=lambda c: (c.tapi.lex_id, c.ietf.lex_id))
 
     recovery_results, _ = _evaluate_candidates(
-        client, recovery_candidates, max_calls, calls_used
+        client, recovery_candidates, max_calls, calls_used, model=model
     )
     return recovery_results
 
@@ -888,12 +898,16 @@ def main() -> None:
     stopped_early = False
     stop_reason = ""
     try:
-        label_results = run_confirmation_stage(client, candidates, args.max_calls)
+        # CR-01: args.model is now actually threaded through to the API
+        # calls -- previously parsed and printed in the run header/summary
+        # while confirm_pair() silently hardcoded DEFAULT_MODEL underneath.
+        label_results = run_confirmation_stage(client, candidates, args.max_calls, model=args.model)
         label_stage_done = True
         calls_used = sum(1 for r in label_results if r.decided_by == "confirmation-pass")
 
         recovery_results = recover_misses(
-            client, tapi_entries, ietf_entries, label_results, args.max_calls, calls_used
+            client, tapi_entries, ietf_entries, label_results, args.max_calls, calls_used,
+            model=args.model,
         )
     except CallBudgetExceeded as exc:
         stopped_early = True
