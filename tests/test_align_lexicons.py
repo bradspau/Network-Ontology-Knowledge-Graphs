@@ -712,6 +712,116 @@ def test_recover_misses_respects_shared_call_cap(fixture_entries, scripted_clien
         )
 
 
+# ── GAP-1/CR-01 regression locks (Plan 02-04): run_confirmation_stage()/
+# recover_misses() must hand back the REAL cross-stage call spend, not a
+# count re-derived from PairResult.decided_by ──────────────────────────────
+
+
+def test_stage_wrappers_return_the_real_call_count(fixture_entries, scripted_client):
+    """GAP-1: the counter run_confirmation_stage() returns must equal the
+    real number of client.messages.parse() calls made -- not a count
+    reconstructed by summing PairResults on decided_by, which undercounts
+    by exactly the number of validator self-check calls a confirmed pair
+    also makes (D-04: every confirmed pair costs 2 real calls, not 1)."""
+    tapi_entries, ietf_entries, by_lex_id = fixture_entries
+    candidates = align_lexicons.label_pass(
+        tapi_entries, ietf_entries, align_lexicons.DEFAULT_LABEL_THRESHOLD
+    )
+
+    link = by_lex_id["tapi-topology-link"]
+    ietf_link = by_lex_id["ietf-network-link"]
+    confirm_verdict = align_lexicons.MatchVerdict(
+        verdict="confirm_exact_match",
+        rationale="Scripted confirm for the call-count regression test.",
+        evidence_quote="scripted evidence quote text for call-count test",
+    )
+    # Every other pair falls back to reject (scripted_client's own
+    # fallback); the unmapped validator call for the one confirmed pair
+    # falls back to an agreeing ValidatorVerdict.
+    client = scripted_client({(link.lex_id, ietf_link.lex_id): confirm_verdict})
+
+    label_results, calls_used = align_lexicons.run_confirmation_stage(
+        client, candidates, max_calls=1000
+    )
+
+    assert calls_used == len(client.calls), (
+        "the returned counter must equal the real number of "
+        "client.messages.parse() calls made, not a re-derived count"
+    )
+
+    confirmation_only = sum(1 for r in label_results if r.decided_by == "confirmation-pass")
+    assert calls_used > confirmation_only, (
+        "this test is meaningless unless a validator call actually fired -- "
+        "if calls_used == confirmation_only, no confirmed pair triggered a "
+        "validator self-check, and the old undercount defect would be "
+        "arithmetically invisible here too"
+    )
+
+    calls_before_recovery = len(client.calls)
+    with pytest.raises(align_lexicons.CallBudgetExceeded):
+        align_lexicons.recover_misses(
+            client, tapi_entries, ietf_entries, label_results,
+            max_calls=calls_used, calls_used=calls_used,
+        )
+    assert len(client.calls) == calls_before_recovery, (
+        "handing recover_misses() the label stage's true spend as both "
+        "max_calls and calls_used must raise CallBudgetExceeded immediately, "
+        "before any further real call is made"
+    )
+
+
+def test_full_run_never_exceeds_max_calls_when_a_label_pair_confirms(
+    fixture_entries, scripted_client, monkeypatch
+):
+    """GAP-1: the direct, behavioural form of the truth at the main()/CLI
+    boundary -- a full run whose label stage confirms a pair must never make
+    more real client.messages.parse() calls than --max-calls authorises,
+    even though a confirmed pair costs 2 real calls (D-04) and main() must
+    thread that true spend into the recovery pass rather than re-derive an
+    undercounted baseline from PairResult.decided_by."""
+    tapi_entries, ietf_entries, by_lex_id = fixture_entries
+    candidates = align_lexicons.label_pass(
+        tapi_entries, ietf_entries, align_lexicons.DEFAULT_LABEL_THRESHOLD
+    )
+
+    link = by_lex_id["tapi-topology-link"]
+    ietf_link = by_lex_id["ietf-network-link"]
+    confirm_verdict = align_lexicons.MatchVerdict(
+        verdict="confirm_exact_match",
+        rationale="Scripted confirm for the main()-level budget regression test.",
+        evidence_quote="scripted evidence quote text for main()-level budget test",
+    )
+    script = {(link.lex_id, ietf_link.lex_id): confirm_verdict}
+
+    # Probe run: measure the label stage's TRUE spend on a throwaway client,
+    # exactly as the previous test does.
+    probe_client = scripted_client(script)
+    probe_results, true_spend = align_lexicons.run_confirmation_stage(
+        probe_client, candidates, max_calls=1000
+    )
+    confirmation_only = sum(1 for r in probe_results if r.decided_by == "confirmation-pass")
+    assert true_spend > confirmation_only, (
+        "the probe run must include at least one validator call, or this "
+        "test cannot distinguish the pre-fix undercount from the fix"
+    )
+
+    # Real run: a SECOND, fresh scripted_client with the same script, driven
+    # through main() at the CLI boundary with --max-calls set exactly at the
+    # label stage's true spend.
+    run_client = scripted_client(script)
+    monkeypatch.setattr(sys, "argv", ["align_lexicons.py", "--max-calls", str(true_spend)])
+    monkeypatch.setattr(align_lexicons.anthropic, "Anthropic", lambda: run_client)
+
+    with pytest.raises(SystemExit) as exc_info:
+        align_lexicons.main()
+    assert exc_info.value.code == 1, "the budget cap is a deliberate hard stop (ROADMAP SC5/T-01-04)"
+
+    assert len(run_client.calls) <= true_spend, (
+        f"--max-calls={true_spend} was exceeded: {len(run_client.calls)} real "
+        "client.messages.parse() calls were made across the full run"
+    )
+
+
 # ── Task 3 (Plan 03): the full auditable transcript and run summary ────────
 
 
