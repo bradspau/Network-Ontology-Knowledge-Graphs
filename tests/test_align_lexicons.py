@@ -1342,3 +1342,97 @@ def test_gap_classification_undocumented_entry_is_insufficient_evidence(fixture_
         assert gate_verdict.verdict == "insufficient_evidence"
 
     assert align_lexicons.classify_gap(True, 51.28, 0.1667) == "insufficient-evidence"
+
+
+# ── Phase 2, Plan 03, Task 2: structural-corroboration deciding signal ─────
+
+
+def test_structural_deciding_signal_on_text_ambiguous_pair(fixture_entries, scripted_client, capsys):
+    """ROADMAP SC4: a targeted unit test rather than a live-run expectation
+    -- every pair in the locked 11-entry fixture was already resolvable
+    from text alone in Phase 1. Scripts confirm_pair() to return
+    insufficient_evidence and asserts structural corroboration (real value
+    0.2, above STRUCTURAL_SIGNAL_FLOOR) becomes the recorded deciding
+    signal without changing the verdict or triggering a validator call."""
+    tapi_entries, ietf_entries, by_lex_id = fixture_entries
+    tapi_entry = by_lex_id["tapi-topology-node-edge-point"]
+    ietf_entry = by_lex_id["ietf-network-termination-point"]
+
+    real_structural_score = align_lexicons.structural_corroboration(tapi_entry, ietf_entry)
+    assert real_structural_score == 0.2
+    assert real_structural_score >= align_lexicons.STRUCTURAL_SIGNAL_FLOOR
+
+    candidate = align_lexicons.Candidate(
+        tapi=tapi_entry,
+        ietf=ietf_entry,
+        label_score=align_lexicons.label_score(tapi_entry.pref_label, ietf_entry.pref_label),
+        origin="label-pass",
+    )
+    insufficient_verdict = align_lexicons.MatchVerdict(
+        verdict="insufficient_evidence",
+        rationale="The two definitions do not discriminate between these entries.",
+        evidence_quote="",
+    )
+    client = scripted_client({(tapi_entry.lex_id, ietf_entry.lex_id): insufficient_verdict})
+
+    results, _ = align_lexicons._evaluate_candidates(client, [candidate], max_calls=10, calls_used=0)
+    assert len(results) == 1
+    result = results[0]
+
+    assert result.verdict == "insufficient_evidence"
+    assert result.deciding_signal == "structural-corroboration"
+    assert result.confidence.structural_corroboration == 0.2
+
+    # No validator call fired for a non-confirmed verdict.
+    assert len(client.calls) == 1
+    assert client.calls[0]["output_format"] is align_lexicons.MatchVerdict
+
+    align_lexicons.print_pair_transcript(result)
+    captured = capsys.readouterr()
+    assert "structural-corroboration" in captured.out
+
+
+def test_absent_structural_signal_is_never_the_deciding_signal(fixture_entries, scripted_client):
+    import dataclasses
+
+    tapi_entries, ietf_entries, by_lex_id = fixture_entries
+    tapi_entry = by_lex_id["tapi-topology-link"]
+    ietf_entry = by_lex_id["ietf-network-link"]
+
+    real_structural_score = align_lexicons.structural_corroboration(tapi_entry, ietf_entry)
+    assert real_structural_score == 0.14285714285714285
+    assert real_structural_score < align_lexicons.STRUCTURAL_SIGNAL_FLOOR
+
+    insufficient_verdict = align_lexicons.MatchVerdict(
+        verdict="insufficient_evidence",
+        rationale="The two definitions do not discriminate between these entries.",
+        evidence_quote="",
+    )
+    client = scripted_client({(tapi_entry.lex_id, ietf_entry.lex_id): insufficient_verdict})
+    candidate = align_lexicons.Candidate(
+        tapi=tapi_entry,
+        ietf=ietf_entry,
+        label_score=align_lexicons.label_score(tapi_entry.pref_label, ietf_entry.pref_label),
+        origin="label-pass",
+    )
+    results, _ = align_lexicons._evaluate_candidates(client, [candidate], max_calls=10, calls_used=0)
+    assert results[0].deciding_signal == "definition-text"
+
+    # An absent structural score (both entries stripped of source_path) is
+    # also never the deciding signal.
+    no_path_tapi = dataclasses.replace(tapi_entry, source_path=None)
+    no_path_ietf = dataclasses.replace(ietf_entry, source_path=None)
+    assert align_lexicons.structural_corroboration(no_path_tapi, no_path_ietf) is None
+    absent_candidate = align_lexicons.Candidate(
+        tapi=no_path_tapi,
+        ietf=no_path_ietf,
+        label_score=align_lexicons.label_score(no_path_tapi.pref_label, no_path_ietf.pref_label),
+        origin="label-pass",
+    )
+    absent_client = scripted_client(
+        {(no_path_tapi.lex_id, no_path_ietf.lex_id): insufficient_verdict}
+    )
+    absent_results, _ = align_lexicons._evaluate_candidates(
+        absent_client, [absent_candidate], max_calls=10, calls_used=0
+    )
+    assert absent_results[0].deciding_signal == "definition-text"
