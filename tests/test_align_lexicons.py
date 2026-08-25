@@ -1269,3 +1269,76 @@ def test_validator_budget_exceeded_carries_unvalidated_confirmation(fixture_entr
     assert last.candidate.ietf.lex_id == target.ietf.lex_id
     assert last.verdict in align_lexicons.CONFIRMED_VERDICTS
     assert last.confidence.validator_ran is False
+
+
+# ── Phase 2, Plan 03, Task 1: the four-code gap taxonomy (D-03) ────────────
+
+
+def test_classify_gap_signature_takes_only_structured_signals():
+    """T-02-10: the parameter list is restricted to three structured
+    scalars -- proving no free-text field (MatchVerdict, PairResult,
+    rationale) can reach the classifier."""
+    import inspect
+
+    params = list(inspect.signature(align_lexicons.classify_gap).parameters)
+    assert params == ["all_insufficient", "best_label_score", "best_structural_score"]
+
+    cases = [
+        (True, 100.0, 0.9),
+        (False, 51.28, 0.2),
+        (False, 100.0, 0.1429),
+        (False, 55.0, 0.0909),
+        (False, 55.0, None),
+    ]
+    for all_insufficient, best_label_score, best_structural_score in cases:
+        result = align_lexicons.classify_gap(all_insufficient, best_label_score, best_structural_score)
+        assert result in align_lexicons.ALL_GAP_REASONS
+
+    # Both floors are inclusive, matching label_pass()'s own documented
+    # inclusive-threshold convention.
+    assert align_lexicons.classify_gap(False, 60.0, 0.15) == "structural"
+    assert align_lexicons.classify_gap(False, 59.99, 0.1499) == "ontological-content"
+
+
+def test_gap_classification_sip_is_ontological_content(fixture_entries):
+    """The drafts' own worked example (docs/reference-lexicons.md OTN
+    example): ServiceInterfacePoint reaches no correspondent, decided from
+    real fixture data rather than invented numbers."""
+    tapi_entries, ietf_entries, by_lex_id = fixture_entries
+    sip = by_lex_id["tapi-common-service-interface-point-tapi-common"]
+
+    label_scores = [align_lexicons.label_score(sip.pref_label, e.pref_label) for e in ietf_entries]
+    structural_scores = [
+        s for s in (align_lexicons.structural_corroboration(sip, e) for e in ietf_entries)
+        if s is not None
+    ]
+    best_label_score = max(label_scores)
+    best_structural_score = max(structural_scores) if structural_scores else None
+
+    assert best_label_score == 55.0
+    assert best_structural_score == 0.09090909090909091
+
+    result = align_lexicons.classify_gap(False, best_label_score, best_structural_score)
+    assert result == "ontological-content"
+
+
+def test_gap_classification_undocumented_entry_is_insufficient_evidence(fixture_entries):
+    """An evidence-starved entry can never fall back to label similarity --
+    the all_insufficient branch wins even when the label/structural scores
+    would otherwise have selected a different code."""
+    tapi_entries, ietf_entries, by_lex_id = fixture_entries
+    d03_entry = by_lex_id["tapi-common-node-edge-point-event-notification"]
+    assert d03_entry.has_evidence is False
+
+    for ietf_entry in ietf_entries:
+        candidate = align_lexicons.Candidate(
+            tapi=d03_entry,
+            ietf=ietf_entry,
+            label_score=align_lexicons.label_score(d03_entry.pref_label, ietf_entry.pref_label),
+            origin="label-pass",
+        )
+        gate_verdict = align_lexicons.evidence_gate(candidate)
+        assert gate_verdict is not None
+        assert gate_verdict.verdict == "insufficient_evidence"
+
+    assert align_lexicons.classify_gap(True, 51.28, 0.1667) == "insufficient-evidence"
