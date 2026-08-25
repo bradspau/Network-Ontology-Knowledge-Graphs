@@ -1351,7 +1351,15 @@ class RunSummary:
     a bare match rate is never producible from this tool. verdict_counts is
     initialized to zero for all four MatchVerdict values at construction, so
     a verdict that never occurred in a run still prints as an explicit zero
-    rather than vanishing from the summary."""
+    rather than vanishing from the summary.
+
+    Plan 02-02 extends this same unconditional block with two more values:
+    validator_calls_made (a constructor field, populated by main() the same
+    way confirmation_calls_made already is) and escalated_count (tallied
+    incrementally by record(), the same way verdict_counts is). Both print
+    alongside the per-verdict counts in print_run_summary() -- there is
+    still no code path that prints a subset, no match rate, and no quiet
+    variant."""
 
     lexicon_dir: Path
     model: str
@@ -1362,20 +1370,29 @@ class RunSummary:
     candidates_proposed: int
     recovery_pairs_evaluated: int
     confirmation_calls_made: int
+    validator_calls_made: int
     verdict_counts: Dict[str, int] = field(default_factory=lambda: {v: 0 for v in ALL_VERDICTS})
+    escalated_count: int = 0
 
     def record(self, result: PairResult) -> None:
-        """Tallies one PairResult's verdict. Called once per result as the
-        run proceeds, so the summary is built incrementally rather than
-        re-derived after the fact."""
+        """Tallies one PairResult's verdict, and increments escalated_count
+        when the result carries a ConfidenceBreakdown whose escalated is
+        True (guarded for confidence being None, so a directly-constructed
+        PairResult predating Phase 2's wiring can never crash the tally).
+        Called once per result as the run proceeds, so the summary is built
+        incrementally rather than re-derived after the fact."""
         self.verdict_counts[result.verdict] = self.verdict_counts.get(result.verdict, 0) + 1
+        if result.confidence is not None and result.confidence.escalated:
+            self.escalated_count += 1
 
 
 def print_run_summary(summary: RunSummary) -> None:
     """Prints every RunSummary field in one block. There is no code path
     that prints a subset: no match rate, no success-only variant, no
-    --quiet flag. Candidate counts, per-verdict counts, and the
-    insufficient-evidence count always appear together (D-04)."""
+    --quiet flag. Candidate counts, per-verdict counts, the
+    insufficient-evidence count, validator calls made, and escalated pairs
+    always appear together (D-04, extended by plan 02-02 for the validator
+    and escalation values)."""
     print("=== Run summary ===")
     print(f"  lexicon_dir: {summary.lexicon_dir}")
     print(f"  model: {summary.model}")
@@ -1386,9 +1403,11 @@ def print_run_summary(summary: RunSummary) -> None:
     print(f"  candidates proposed (label pass): {summary.candidates_proposed}")
     print(f"  recovery pairs evaluated: {summary.recovery_pairs_evaluated}")
     print(f"  confirmation calls made: {summary.confirmation_calls_made}")
+    print(f"  validator calls made: {summary.validator_calls_made}")
     print("  verdict counts:")
     for verdict in ALL_VERDICTS:
         print(f"    {verdict}: {summary.verdict_counts.get(verdict, 0)}")
+    print(f"  escalated pairs: {summary.escalated_count}")
     print()
 
 
@@ -1502,6 +1521,14 @@ def main() -> None:
     )
     results = label_results + recovery_results
 
+    # Plan 02-02: derived from the same results list the transcript and
+    # verdict counts are derived from -- never a second, untracked counter --
+    # so a partial run stopped by CallBudgetExceeded reports the validator
+    # spend it actually incurred.
+    validator_calls_made = sum(
+        1 for r in results if r.confidence is not None and r.confidence.validator_ran
+    )
+
     summary = RunSummary(
         lexicon_dir=args.lexicon_dir,
         model=args.model,
@@ -1512,6 +1539,7 @@ def main() -> None:
         candidates_proposed=len(candidates),
         recovery_pairs_evaluated=len(recovery_results),
         confirmation_calls_made=calls_used,
+        validator_calls_made=validator_calls_made,
     )
 
     for result in results:

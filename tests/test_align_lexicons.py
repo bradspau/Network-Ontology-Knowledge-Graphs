@@ -807,11 +807,37 @@ def test_summary_reports_all_counts(recording_client, capsys, monkeypatch):
         candidates_proposed=0,
         recovery_pairs_evaluated=0,
         confirmation_calls_made=0,
+        validator_calls_made=0,
     )
     # Immediately after construction, before any result is recorded, all
-    # four verdict keys exist at zero.
+    # four verdict keys exist at zero, and escalated_count defaults to zero.
     assert set(fresh_summary.verdict_counts.keys()) == set(align_lexicons.ALL_VERDICTS)
     assert all(count == 0 for count in fresh_summary.verdict_counts.values())
+    assert fresh_summary.escalated_count == 0
+
+    # RunSummary.record() must never crash on a directly-constructed
+    # PairResult whose confidence is None, and must leave escalated_count
+    # unchanged in that case.
+    tapi_only_entry = align_lexicons.LexiconEntry(
+        source="tapi", lex_id="synthetic-a", pref_label="a", definition="def a",
+        scope_notes=[], canonical_example=None, needs_curation=False, source_path=None,
+    )
+    ietf_only_entry = align_lexicons.LexiconEntry(
+        source="ietf", lex_id="synthetic-b", pref_label="b", definition="def b",
+        scope_notes=[], canonical_example=None, needs_curation=False, source_path=None,
+    )
+    synthetic_candidate = align_lexicons.Candidate(
+        tapi=tapi_only_entry, ietf=ietf_only_entry, label_score=0.0, origin="label-pass"
+    )
+    no_confidence_result = align_lexicons.PairResult(
+        candidate=synthetic_candidate,
+        verdict="reject",
+        rationale="synthetic, no confidence attached",
+        evidence_quote="",
+        decided_by="confirmation-pass",
+    )
+    fresh_summary.record(no_confidence_result)
+    assert fresh_summary.escalated_count == 0
 
     monkeypatch.setattr(sys, "argv", ["align_lexicons.py"])
     monkeypatch.setattr(align_lexicons.anthropic, "Anthropic", lambda: recording_client)
@@ -829,6 +855,66 @@ def test_summary_reports_all_counts(recording_client, capsys, monkeypatch):
     assert "candidates proposed" in captured.out
     assert "recovery pairs evaluated" in captured.out
     assert "confirmation calls made" in captured.out
+    # recording_client's default verdict is reject, so no confirmed pair --
+    # and therefore no validator call and no escalation -- ever occurs.
+    assert "validator calls made: 0" in captured.out
+    assert "escalated pairs: 0" in captured.out
+
+
+def test_summary_reports_validator_and_escalation_counts(scripted_client, monkeypatch, capsys):
+    """Phase 2, Plan 02, Task 3: validator spend and escalation volume must
+    print alongside the per-verdict counts in every run, unconditionally."""
+    tapi_entries = align_lexicons.load_fixture_entries(
+        align_lexicons.DEFAULT_LEXICON_DIR, align_lexicons.FIXTURE_TAPI
+    )
+    ietf_entries = align_lexicons.load_fixture_entries(
+        align_lexicons.DEFAULT_LEXICON_DIR, align_lexicons.FIXTURE_IETF
+    )
+    candidates = align_lexicons.label_pass(
+        tapi_entries, ietf_entries, align_lexicons.DEFAULT_LABEL_THRESHOLD
+    )
+    real_call_candidates = [c for c in candidates if align_lexicons.evidence_gate(c) is None]
+    assert len(real_call_candidates) >= 2, "need at least 2 real-call candidates for this test"
+
+    first, second = real_call_candidates[0], real_call_candidates[1]
+    first_confirm = align_lexicons.MatchVerdict(
+        verdict="confirm_exact_match",
+        rationale="Scripted confirm for the run-summary regression (first pair).",
+        evidence_quote="scripted evidence quote for the first pair",
+    )
+    second_confirm = align_lexicons.MatchVerdict(
+        verdict="confirm_exact_match",
+        rationale="Scripted confirm for the run-summary regression (second pair).",
+        evidence_quote="scripted evidence quote for the second pair",
+    )
+    disagreeing_validator = align_lexicons.ValidatorVerdict(
+        agrees=False, counter_argument="Argues the first pair actually diverges."
+    )
+    agreeing_validator = align_lexicons.ValidatorVerdict(
+        agrees=True, counter_argument="Considered a divergence for the second pair but found none."
+    )
+
+    client = scripted_client(
+        {
+            (first.tapi.lex_id, first.ietf.lex_id): first_confirm,
+            (second.tapi.lex_id, second.ietf.lex_id): second_confirm,
+        },
+        {
+            (first.tapi.lex_id, first.ietf.lex_id): disagreeing_validator,
+            (second.tapi.lex_id, second.ietf.lex_id): agreeing_validator,
+        },
+    )
+
+    monkeypatch.setattr(sys, "argv", ["align_lexicons.py"])
+    monkeypatch.setattr(align_lexicons.anthropic, "Anthropic", lambda: client)
+
+    align_lexicons.main()
+
+    captured = capsys.readouterr()
+    assert "validator calls made: 2" in captured.out
+    assert "escalated pairs: 1" in captured.out
+    for verdict in align_lexicons.ALL_VERDICTS:
+        assert f"{verdict}:" in captured.out
 
 
 # ── Phase 2, Plan 01, Task 1: contracts + scripted_client dual-call ────────
