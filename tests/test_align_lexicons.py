@@ -502,7 +502,10 @@ def test_no_match_without_confirmation(fixture_entries, scripted_client):
         {(c.tapi.lex_id, c.ietf.lex_id): confirm_everything for c in candidates}
     )
 
-    results = align_lexicons.run_confirmation_stage(client, candidates, max_calls=len(candidates))
+    # Phase 2: every confirmed verdict now also triggers a second,
+    # argue-against validate_pair() call sharing this same budget (D-04) --
+    # max_calls must accommodate up to 2 calls per candidate, not 1.
+    results = align_lexicons.run_confirmation_stage(client, candidates, max_calls=len(candidates) * 2)
     assert len(results) == len(candidates)
 
     for result in results:
@@ -989,3 +992,9 @@ def test_confidence_breakdown_shows_three_signals_end_to_end(fixture_entries, sc
     assert "0.1429" in captured.out
     assert validator_verdict.counter_argument in captured.out
     assert "definition-text" in captured.out
+
+    # T-02-02: the transcript must never leak the client double, an API key,
+    # or any ANTHROPIC-named environment variable.
+    assert "_RecordingClient" not in captured.out
+    assert "api_key" not in captured.out
+    assert "ANTHROPIC" not in captured.out
