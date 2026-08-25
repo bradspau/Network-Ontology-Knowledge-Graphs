@@ -1013,6 +1013,14 @@ def _evaluate_candidates(
                 f"{candidate.ietf.source}:{candidate.ietf.lex_id} "
                 f"({type(exc).__name__}) -- skipping this pair"
             )
+            # Every PairResult _evaluate_candidates produces carries a
+            # ConfidenceBreakdown, including this failure path -- "no
+            # verdict obtained" still composes from the signals that ARE
+            # available (structural_score, no validator) rather than
+            # leaving confidence silently absent.
+            error_confidence = compose_confidence(
+                candidate, "insufficient_evidence", structural_score, None, label_threshold
+            )
             results.append(
                 PairResult(
                     candidate=candidate,
@@ -1023,6 +1031,10 @@ def _evaluate_candidates(
                     ),
                     evidence_quote="",
                     decided_by="confirmation-pass",
+                    confidence=error_confidence,
+                    deciding_signal=resolve_deciding_signal(
+                        "confirmation-pass", "insufficient_evidence", error_confidence
+                    ),
                 )
             )
             continue
