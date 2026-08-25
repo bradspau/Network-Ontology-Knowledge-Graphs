@@ -902,3 +902,90 @@ def test_validator_prompt_carries_untrusted_data_framing():
     paragraphs = align_lexicons.SYSTEM_PROMPT.split("\n\n")
     untrusted_data_paragraph = next(p for p in paragraphs if "untrusted data" in p)
     assert untrusted_data_paragraph in align_lexicons.VALIDATOR_SYSTEM_PROMPT
+
+
+# ── Phase 2, Plan 01, Task 2: one real pair, all three D-01 signals ────────
+
+
+def test_structural_corroboration_node_rule_group_vs_connectivity_matrix(fixture_entries):
+    _, _, by_lex_id = fixture_entries
+
+    node_rule_group = by_lex_id["tapi-topology-node-rule-group"]
+    connectivity_matrix = by_lex_id["ietf-network-connectivity-matrix"]
+    assert align_lexicons.structural_corroboration(node_rule_group, connectivity_matrix) == 0.0625
+
+    node_edge_point = by_lex_id["tapi-topology-node-edge-point"]
+    termination_point = by_lex_id["ietf-network-termination-point"]
+    assert align_lexicons.structural_corroboration(node_edge_point, termination_point) == 0.2
+
+    service_interface_point = by_lex_id["tapi-common-service-interface-point-tapi-common"]
+    zero_result = align_lexicons.structural_corroboration(service_interface_point, connectivity_matrix)
+    assert zero_result == 0.0
+    assert zero_result is not None  # a computed-and-low signal, distinct from unavailable (None)
+
+
+def test_structural_corroboration_is_none_without_source_path(fixture_entries):
+    import dataclasses
+
+    _, _, by_lex_id = fixture_entries
+    entry_no_path = dataclasses.replace(by_lex_id["tapi-topology-node"], source_path=None)
+    other = by_lex_id["ietf-network-node"]
+
+    assert align_lexicons.structural_corroboration(entry_no_path, other) is None
+    assert align_lexicons.structural_corroboration(other, entry_no_path) is None
+
+
+def test_confidence_breakdown_shows_three_signals_end_to_end(fixture_entries, scripted_client, capsys):
+    tapi_entries, ietf_entries, by_lex_id = fixture_entries
+    tapi_entry = by_lex_id["tapi-topology-link"]
+    ietf_entry = by_lex_id["ietf-network-link"]
+
+    candidate = align_lexicons.Candidate(
+        tapi=tapi_entry,
+        ietf=ietf_entry,
+        label_score=align_lexicons.label_score(tapi_entry.pref_label, ietf_entry.pref_label),
+        origin="label-pass",
+    )
+
+    confirm_verdict = align_lexicons.MatchVerdict(
+        verdict="confirm_exact_match",
+        rationale="Both entries denote a topological link connecting two nodes.",
+        evidence_quote="A link represents a directed or bidirectional connection between two nodes.",
+    )
+    validator_verdict = align_lexicons.ValidatorVerdict(
+        agrees=True,
+        counter_argument=(
+            "Considered whether the two link definitions differ in directionality "
+            "or scope but found no material difference between them."
+        ),
+    )
+    client = scripted_client(
+        {(tapi_entry.lex_id, ietf_entry.lex_id): confirm_verdict},
+        {(tapi_entry.lex_id, ietf_entry.lex_id): validator_verdict},
+    )
+
+    results, calls_used = align_lexicons._evaluate_candidates(
+        client, [candidate], max_calls=10, calls_used=0
+    )
+
+    assert len(client.calls) == 2
+    assert client.calls[1]["output_format"] is align_lexicons.ValidatorVerdict
+    assert calls_used == 2
+
+    assert len(results) == 1
+    result = results[0]
+    confidence = result.confidence
+    assert confidence.label_definition_agreement is True
+    assert confidence.structural_corroboration == 0.14285714285714285
+    assert confidence.validator_ran is True
+    assert confidence.validator_agrees is True
+    assert confidence.escalated is False
+    assert confidence.tier == "medium"
+    assert result.deciding_signal == "definition-text"
+
+    align_lexicons.print_pair_transcript(result)
+    captured = capsys.readouterr()
+    assert "medium" in captured.out
+    assert "0.1429" in captured.out
+    assert validator_verdict.counter_argument in captured.out
+    assert "definition-text" in captured.out
