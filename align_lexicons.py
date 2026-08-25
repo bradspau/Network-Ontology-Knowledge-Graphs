@@ -332,8 +332,8 @@ class ConfidenceBreakdown:
     independently inspectable; tier is derived from how many of them
     corroborate (compose_confidence()). D-01a's invariant (a validator
     disagreement can never coexist with tier "high", and disagreement must
-    always set escalated) is added to this same __post_init__ by plan 02-02
-    -- structured as further branches here, not a second validation function
+    always set escalated) is enforced by two further branches in this same
+    __post_init__ (plan 02-02) -- never a second validation function
     elsewhere."""
 
     label_definition_agreement: bool
@@ -364,6 +364,26 @@ class ConfidenceBreakdown:
                 "ConfidenceBreakdown invariant violated: validator_ran is "
                 "True but validator_agrees is None -- a validator call that "
                 "ran must record whether it agreed"
+            )
+        # D-01a: a validator disagreement is an escalation trigger, never a
+        # signal a composite score is permitted to outvote. Both clauses
+        # below make the two illegal combinations impossible to construct,
+        # rather than relying on every call site remembering the rule.
+        if self.validator_ran and self.validator_agrees is False and self.tier == "high":
+            raise ValueError(
+                "ConfidenceBreakdown invariant violated: a validator "
+                "disagreement (validator_ran=True, validator_agrees=False) "
+                "cannot coexist with tier 'high' -- disagreement is an "
+                "escalation trigger, not a signal a composite score is "
+                "permitted to outvote (D-01a)"
+            )
+        if self.validator_ran and self.validator_agrees is False and not self.escalated:
+            raise ValueError(
+                "ConfidenceBreakdown invariant violated: a recorded "
+                "validator disagreement (validator_ran=True, "
+                "validator_agrees=False) must always set escalated=True -- "
+                "an escalation cannot be lost by a call site that forgot to "
+                "set the flag (D-01a)"
             )
 
 

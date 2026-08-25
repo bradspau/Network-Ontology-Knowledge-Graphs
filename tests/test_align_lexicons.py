@@ -998,3 +998,82 @@ def test_confidence_breakdown_shows_three_signals_end_to_end(fixture_entries, sc
     assert "_RecordingClient" not in captured.out
     assert "api_key" not in captured.out
     assert "ANTHROPIC" not in captured.out
+
+
+# ── Phase 2, Plan 02, Task 1: D-01a escalation invariant ───────────────────
+
+
+def test_validator_disagreement_escalates_and_never_scores_high(fixture_entries):
+    tapi_entries, ietf_entries, by_lex_id = fixture_entries
+    tapi_entry = by_lex_id["tapi-topology-node"]
+    ietf_entry = by_lex_id["ietf-network-node"]
+
+    candidate = align_lexicons.Candidate(
+        tapi=tapi_entry,
+        ietf=ietf_entry,
+        label_score=align_lexicons.label_score(tapi_entry.pref_label, ietf_entry.pref_label),
+        origin="label-pass",
+    )
+    structural_score = align_lexicons.structural_corroboration(tapi_entry, ietf_entry)
+
+    disagreeing_verdict = align_lexicons.ValidatorVerdict(
+        agrees=False,
+        counter_argument="Argues the two entries actually diverge despite the proposed match.",
+    )
+
+    confidence = align_lexicons.compose_confidence(
+        candidate, "confirm_exact_match", structural_score, disagreeing_verdict
+    )
+    assert confidence.escalated is True
+    assert confidence.tier == "low"
+
+    with pytest.raises(ValueError, match="D-01a"):
+        align_lexicons.ConfidenceBreakdown(
+            label_definition_agreement=True,
+            structural_corroboration=structural_score,
+            validator_ran=True,
+            validator_agrees=False,
+            validator_counter_argument="counter-argument text",
+            escalated=True,
+            tier="high",
+        )
+
+    with pytest.raises(ValueError):
+        align_lexicons.ConfidenceBreakdown(
+            label_definition_agreement=True,
+            structural_corroboration=structural_score,
+            validator_ran=True,
+            validator_agrees=False,
+            validator_counter_argument="counter-argument text",
+            escalated=False,
+            tier="low",
+        )
+
+
+def test_validator_agreement_alone_does_not_lift_tier(fixture_entries):
+    tapi_entries, ietf_entries, by_lex_id = fixture_entries
+    tapi_entry = by_lex_id["tapi-topology-node-rule-group"]
+    ietf_entry = by_lex_id["ietf-network-connectivity-matrix"]
+
+    label_score = align_lexicons.label_score(tapi_entry.pref_label, ietf_entry.pref_label)
+    assert label_score < align_lexicons.DEFAULT_LABEL_THRESHOLD, (
+        "this pair's real label score must be below the label threshold -- the "
+        "point of the recovery-stage confirmation this test models"
+    )
+    structural_score = align_lexicons.structural_corroboration(tapi_entry, ietf_entry)
+    assert structural_score is not None and structural_score < align_lexicons.STRUCTURAL_SIGNAL_FLOOR
+
+    candidate = align_lexicons.Candidate(
+        tapi=tapi_entry, ietf=ietf_entry, label_score=label_score, origin="misses-recovery"
+    )
+    agreeing_verdict = align_lexicons.ValidatorVerdict(
+        agrees=True,
+        counter_argument="Considered a scope mismatch between the two entries but found none.",
+    )
+
+    confidence = align_lexicons.compose_confidence(
+        candidate, "confirm_close_match", structural_score, agreeing_verdict
+    )
+    assert confidence.label_definition_agreement is False
+    assert confidence.escalated is False
+    assert confidence.tier == "low"
