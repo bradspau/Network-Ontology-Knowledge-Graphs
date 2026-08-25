@@ -740,10 +740,15 @@ def test_full_fixture_run_no_crash(recording_client, capsys, monkeypatch):
 
     # The D-03 entry's block(s) show the unavailable marker on its
     # definition, scope-note, and canonical-example lines -- no field is
-    # ever omitted, and nothing is fabricated in its place.
+    # ever omitted, and nothing is fabricated in its place. Filtered to
+    # actual pair-transcript blocks ("candidate origin:" is
+    # print_pair_transcript()'s own marker line) -- Plan 03 added a
+    # separate gap-report block that also names the D-03 entry but is not
+    # a pair transcript and carries no evidence-field markers of its own.
     blocks = captured.out.split("\n\n")
     d03_blocks = [
-        b for b in blocks if "tapi-common-node-edge-point-event-notification" in b
+        b for b in blocks
+        if "tapi-common-node-edge-point-event-notification" in b and "candidate origin:" in b
     ]
     assert d03_blocks, "expected at least one transcript block for the D-03 entry"
     for block in d03_blocks:
@@ -1436,3 +1441,146 @@ def test_absent_structural_signal_is_never_the_deciding_signal(fixture_entries, 
         absent_client, [absent_candidate], max_calls=10, calls_used=0
     )
     assert absent_results[0].deciding_signal == "definition-text"
+
+
+# ── Phase 2, Plan 03, Task 3: GapRecord / collect_gap_records / gap report ─
+
+
+def _all_reject_client(scripted_client):
+    """Every real-call pair in the fixture confirms nothing -- this is the
+    counterfactual all-reject run these tests exercise, exactly the
+    scenario collect_gap_records()/print_gap_report() must report fully.
+    All non-mapped pairs already fall back to a reject MatchVerdict via
+    scripted_client's own fallback, so an empty mapping suffices."""
+    return scripted_client({})
+
+
+def test_gap_taxonomy_invariant_blocks_missing_evaluated_against(fixture_entries):
+    tapi_entries, ietf_entries, by_lex_id = fixture_entries
+    entry = by_lex_id["tapi-topology-node"]
+
+    for reason in ("structural", "ontological-content", "genuinely-ambiguous-lexical"):
+        with pytest.raises(ValueError):
+            align_lexicons.GapRecord(
+                entry=entry,
+                gap_reason=reason,
+                best_label_score=55.0,
+                best_structural_score=0.1,
+                evaluated_against=[],
+                deciding_signals=[],
+            )
+
+    # insufficient-evidence legitimately permits an empty evaluated_against
+    # -- it means too little was examined, not that a claim of "no
+    # correspondent" was made without naming what was compared.
+    record = align_lexicons.GapRecord(
+        entry=entry,
+        gap_reason="insufficient-evidence",
+        best_label_score=0.0,
+        best_structural_score=None,
+        evaluated_against=[],
+        deciding_signals=[],
+    )
+    assert record.gap_reason == "insufficient-evidence"
+
+    with pytest.raises(ValueError):
+        align_lexicons.GapRecord(
+            entry=entry,
+            gap_reason="not-a-real-reason",
+            best_label_score=0.0,
+            best_structural_score=None,
+            evaluated_against=[],
+            deciding_signals=[],
+        )
+
+
+def test_every_unresolved_entry_produces_one_gap_record(fixture_entries, scripted_client):
+    tapi_entries, ietf_entries, _ = fixture_entries
+    client = _all_reject_client(scripted_client)
+    candidates = align_lexicons.label_pass(
+        tapi_entries, ietf_entries, align_lexicons.DEFAULT_LABEL_THRESHOLD
+    )
+    label_results = align_lexicons.run_confirmation_stage(
+        client, candidates, max_calls=align_lexicons.DEFAULT_MAX_CALLS
+    )
+    calls_used = sum(1 for r in label_results if r.decided_by == "confirmation-pass")
+    recovery_results = align_lexicons.recover_misses(
+        client, tapi_entries, ietf_entries, label_results,
+        max_calls=align_lexicons.DEFAULT_MAX_CALLS, calls_used=calls_used,
+    )
+    results = label_results + recovery_results
+
+    records = align_lexicons.collect_gap_records(tapi_entries, results)
+
+    record_lex_ids = {r.entry.lex_id for r in records}
+    expected_lex_ids = {ref.lex_id for ref in align_lexicons.FIXTURE_TAPI}
+    assert record_lex_ids == expected_lex_ids
+    assert len(records) == len(expected_lex_ids)
+    for record in records:
+        assert record.gap_reason in align_lexicons.ALL_GAP_REASONS
+
+    # Reproducible order: sorted by entry.lex_id.
+    assert [r.entry.lex_id for r in records] == sorted(record_lex_ids)
+
+
+def test_full_reject_run_exercises_all_four_gap_reasons(fixture_entries, scripted_client):
+    """This is the counterfactual all-reject run: four of these entries
+    confirm in the intended run, and their reason codes here describe what
+    the two independent signals say about them when the text pass declines
+    them."""
+    tapi_entries, ietf_entries, _ = fixture_entries
+    client = _all_reject_client(scripted_client)
+    candidates = align_lexicons.label_pass(
+        tapi_entries, ietf_entries, align_lexicons.DEFAULT_LABEL_THRESHOLD
+    )
+    label_results = align_lexicons.run_confirmation_stage(
+        client, candidates, max_calls=align_lexicons.DEFAULT_MAX_CALLS
+    )
+    calls_used = sum(1 for r in label_results if r.decided_by == "confirmation-pass")
+    recovery_results = align_lexicons.recover_misses(
+        client, tapi_entries, ietf_entries, label_results,
+        max_calls=align_lexicons.DEFAULT_MAX_CALLS, calls_used=calls_used,
+    )
+    results = label_results + recovery_results
+
+    records = align_lexicons.collect_gap_records(tapi_entries, results)
+    by_lex_id = {r.entry.lex_id: r for r in records}
+
+    expected_reasons = {
+        "tapi-topology-node": "genuinely-ambiguous-lexical",
+        "tapi-topology-node-edge-point": "structural",
+        "tapi-topology-link": "genuinely-ambiguous-lexical",
+        "tapi-topology-node-rule-group": "ontological-content",
+        "tapi-common-service-interface-point-tapi-common": "ontological-content",
+        "tapi-common-node-edge-point-event-notification": "insufficient-evidence",
+    }
+    for lex_id, expected_reason in expected_reasons.items():
+        assert by_lex_id[lex_id].gap_reason == expected_reason, (
+            f"{lex_id}: expected {expected_reason!r}, got {by_lex_id[lex_id].gap_reason!r}"
+        )
+
+    all_reasons_seen = {r.gap_reason for r in records}
+    assert all_reasons_seen == set(align_lexicons.ALL_GAP_REASONS)
+
+
+def test_gap_report_and_reason_counts_always_print(fixture_entries, scripted_client, monkeypatch, capsys):
+    client = _all_reject_client(scripted_client)
+    monkeypatch.setattr(sys, "argv", ["align_lexicons.py"])
+    monkeypatch.setattr(align_lexicons.anthropic, "Anthropic", lambda: client)
+
+    align_lexicons.main()
+
+    captured = capsys.readouterr()
+    assert "=== Gap report ===" in captured.out
+    for ref in align_lexicons.FIXTURE_TAPI:
+        assert ref.lex_id in captured.out
+    for reason in align_lexicons.ALL_GAP_REASONS:
+        assert f"{reason}:" in captured.out
+
+    assert "api_key" not in captured.out
+    assert "ANTHROPIC" not in captured.out
+
+    capsys.readouterr()
+    align_lexicons.print_gap_report([])
+    empty_captured = capsys.readouterr()
+    assert "no entry was left without a confirmed correspondent" in empty_captured.out.lower()
