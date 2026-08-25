@@ -1552,6 +1552,77 @@ def test_absent_structural_signal_is_never_the_deciding_signal(fixture_entries, 
     assert absent_results[0].deciding_signal == "definition-text"
 
 
+# ── GAP-2/WR-01 regression lock (Plan 02-04): a confirm_pair() transport
+# failure must never be recorded as "structural-corroboration" ─────────────
+
+
+def test_confirmation_call_failure_is_never_audited_as_structural_corroboration(
+    fixture_entries, error_raising_client, capsys
+):
+    """WR-01/GAP-2: resolve_deciding_signal()'s (decided_by, verdict,
+    confidence) inputs cannot distinguish a genuine insufficient_evidence
+    verdict from one synthesized after an AnthropicError -- both produce
+    decided_by=='confirmation-pass' and verdict=='insufficient_evidence'.
+    Uses the one fixture pair whose structural_corroboration() clears
+    STRUCTURAL_SIGNAL_FLOOR (0.2 >= 0.15), so the mislabeling branch is
+    genuinely reachable -- exactly the analog of
+    test_structural_deciding_signal_on_text_ambiguous_pair, but driven by a
+    call failure instead of a genuine model verdict."""
+    tapi_entries, ietf_entries, by_lex_id = fixture_entries
+    tapi_entry = by_lex_id["tapi-topology-node-edge-point"]
+    ietf_entry = by_lex_id["ietf-network-termination-point"]
+
+    real_structural_score = align_lexicons.structural_corroboration(tapi_entry, ietf_entry)
+    assert real_structural_score == 0.2
+    assert real_structural_score >= align_lexicons.STRUCTURAL_SIGNAL_FLOOR
+
+    candidate = align_lexicons.Candidate(
+        tapi=tapi_entry,
+        ietf=ietf_entry,
+        label_score=align_lexicons.label_score(tapi_entry.pref_label, ietf_entry.pref_label),
+        origin="label-pass",
+    )
+    client = error_raising_client({(tapi_entry.lex_id, ietf_entry.lex_id)})
+
+    results, _ = align_lexicons._evaluate_candidates(client, [candidate], max_calls=10, calls_used=0)
+    assert len(results) == 1
+    result = results[0]
+
+    # The existing error-path shape is preserved -- this fix changes
+    # attribution only, never the verdict.
+    assert result.verdict == "insufficient_evidence"
+    assert result.decided_by == "confirmation-pass"
+    assert result.deciding_signal == "confirmation-call-failed"
+    assert result.deciding_signal != "structural-corroboration"
+    # The structural score is still honestly recorded in the breakdown --
+    # it is only barred from *claiming to have decided* the pair.
+    assert result.confidence.structural_corroboration == 0.2
+    assert result.confidence.validator_ran is False
+
+    assert "confirmation-call-failed" in align_lexicons.ALL_DECIDING_SIGNALS
+    assert len(align_lexicons.ALL_DECIDING_SIGNALS) == 4
+
+    # The pure function's own behaviour on these exact inputs is unchanged --
+    # i.e. precisely why the error site can no longer delegate to it.
+    assert (
+        align_lexicons.resolve_deciding_signal(
+            "confirmation-pass", "insufficient_evidence", result.confidence
+        )
+        == "structural-corroboration"
+    )
+
+    # Drive the value through the reviewer-facing audit trail.
+    align_lexicons.print_pair_transcript(result)
+    captured = capsys.readouterr()
+    assert "confirmation-call-failed" in captured.out
+
+    gap_records = align_lexicons.collect_gap_records([tapi_entry], [result])
+    assert len(gap_records) == 1
+    gap_record = gap_records[0]
+    assert "confirmation-call-failed" in gap_record.deciding_signals
+    assert "structural-corroboration" not in gap_record.deciding_signals
+
+
 # ── Phase 2, Plan 03, Task 3: GapRecord / collect_gap_records / gap report ─
 
 
