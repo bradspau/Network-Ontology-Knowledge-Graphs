@@ -351,6 +351,45 @@ class PairResult:
 
 
 @dataclass
+class GapRecord:
+    """D-03/MATCH-05: a first-class, typed record for a TAPI entry left
+    without a confirmed correspondent -- the structural form of the
+    project's non-fabrication constraint. A gap is a statement about ONE
+    entry across all its evaluated candidates, keyed on (source, lex_id) --
+    a different primary key than PairResult's (tapi.lex_id, ietf.lex_id)
+    pair key, hence a sibling record rather than a generalised
+    "MatchOutcome" (see 02-03-PLAN.md's assumption_delta_decision)."""
+
+    entry: LexiconEntry
+    gap_reason: str  # one of ALL_GAP_REASONS
+    best_label_score: float
+    best_structural_score: Optional[float]
+    evaluated_against: List[str]  # IETF lex ids this entry was compared against
+    deciding_signals: List[str]  # distinct deciding signals seen across those comparisons
+
+    def __post_init__(self) -> None:
+        """gap_reason must be one of the four codes classify_gap() can
+        produce. The second clause is the structural form of the project's
+        non-fabrication constraint: a claim that no correspondent exists
+        ("structural", "ontological-content", or "genuinely-ambiguous-
+        lexical") is unmakeable without naming what was compared, whereas
+        "insufficient-evidence" legitimately means too little was examined
+        and therefore permits an empty evaluated_against list."""
+        if self.gap_reason not in ALL_GAP_REASONS:
+            raise ValueError(
+                f"GapRecord invariant violated: gap_reason {self.gap_reason!r} "
+                f"must be one of {ALL_GAP_REASONS!r}"
+            )
+        if self.gap_reason != "insufficient-evidence" and not self.evaluated_against:
+            raise ValueError(
+                f"GapRecord invariant violated: gap_reason {self.gap_reason!r} "
+                "requires a non-empty evaluated_against -- a claim that no "
+                "correspondent exists is unmakeable without naming the "
+                "entries it was compared against (non-fabrication constraint)"
+            )
+
+
+@dataclass
 class ConfidenceBreakdown:
     """D-01: a confirmed or rejected pair's confidence, composed from three
     separately-named behavioral signals -- never a model-verbalized "how
@@ -1362,6 +1401,79 @@ def recover_misses(
     return recovery_results
 
 
+def collect_gap_records(tapi: List[LexiconEntry], results: List[PairResult]) -> List[GapRecord]:
+    """D-03/MATCH-05: builds one GapRecord for every TAPI entry left without
+    a confirmed correspondent -- no filtering, no early exit, no entry
+    skipped. confirmed_tapi_ids is derived exactly as recover_misses()
+    already derives it, so the two functions agree on what "resolved"
+    means.
+
+    For each unresolved entry, gathers every result whose candidate names
+    it (across both the label-driven stage and misses-recovery), then
+    computes the three scalars classify_gap() needs from that gathered
+    list alone -- never from a wider or narrower set:
+
+    - all_insufficient: True when the gathered list is non-empty and every
+      verdict in it is insufficient_evidence, OR when the list is empty (an
+      entry with zero results, e.g. one whose label token set is empty and
+      was excluded from blocking, is exactly as unresolved as one whose
+      every candidate came back insufficient_evidence).
+    - best_label_score: the maximum candidate.label_score over the
+      gathered results, or 0.0 when there are none.
+    - best_structural_score: the maximum non-None
+      confidence.structural_corroboration over the gathered results, or
+      None when every one is None or the list is empty.
+
+    evaluated_against is the sorted, distinct set of IETF lex ids the entry
+    was actually compared against; deciding_signals is the sorted, distinct
+    set of deciding signals recorded across those comparisons. Returns the
+    list sorted by entry.lex_id, so two runs over identical inputs emit the
+    same order."""
+    confirmed_tapi_ids = {
+        r.candidate.tapi.lex_id for r in results if r.verdict in CONFIRMED_VERDICTS
+    }
+    unresolved = [entry for entry in tapi if entry.lex_id not in confirmed_tapi_ids]
+
+    records: List[GapRecord] = []
+    for entry in unresolved:
+        entry_results = [r for r in results if r.candidate.tapi.lex_id == entry.lex_id]
+
+        if entry_results:
+            all_insufficient = all(r.verdict == "insufficient_evidence" for r in entry_results)
+            best_label_score = max(r.candidate.label_score for r in entry_results)
+            structural_scores = [
+                r.confidence.structural_corroboration
+                for r in entry_results
+                if r.confidence is not None and r.confidence.structural_corroboration is not None
+            ]
+            best_structural_score = max(structural_scores) if structural_scores else None
+        else:
+            all_insufficient = True
+            best_label_score = 0.0
+            best_structural_score = None
+
+        gap_reason = classify_gap(all_insufficient, best_label_score, best_structural_score)
+
+        evaluated_against = sorted({r.candidate.ietf.lex_id for r in entry_results})
+        deciding_signals = sorted(
+            {r.deciding_signal for r in entry_results if r.deciding_signal is not None}
+        )
+
+        records.append(
+            GapRecord(
+                entry=entry,
+                gap_reason=gap_reason,
+                best_label_score=best_label_score,
+                best_structural_score=best_structural_score,
+                evaluated_against=evaluated_against,
+                deciding_signals=deciding_signals,
+            )
+        )
+
+    records.sort(key=lambda r: r.entry.lex_id)
+    return records
+
+
 # ── Transcript ───────────────────────────────────────────────────────────
 
 
@@ -1462,7 +1574,13 @@ class RunSummary:
     incrementally by record(), the same way verdict_counts is). Both print
     alongside the per-verdict counts in print_run_summary() -- there is
     still no code path that prints a subset, no match rate, and no quiet
-    variant."""
+    variant.
+
+    Plan 02-03 extends this same discipline once more with
+    gap_reason_counts, defaulted to zero for every ALL_GAP_REASONS member
+    exactly as verdict_counts is defaulted from ALL_VERDICTS, and tallied
+    by record_gap() the same way record() tallies verdict_counts -- a
+    reason code that never occurred still prints as an explicit zero."""
 
     lexicon_dir: Path
     model: str
@@ -1476,6 +1594,9 @@ class RunSummary:
     validator_calls_made: int
     verdict_counts: Dict[str, int] = field(default_factory=lambda: {v: 0 for v in ALL_VERDICTS})
     escalated_count: int = 0
+    gap_reason_counts: Dict[str, int] = field(
+        default_factory=lambda: {r: 0 for r in ALL_GAP_REASONS}
+    )
 
     def record(self, result: PairResult) -> None:
         """Tallies one PairResult's verdict, and increments escalated_count
@@ -1488,14 +1609,54 @@ class RunSummary:
         if result.confidence is not None and result.confidence.escalated:
             self.escalated_count += 1
 
+    def record_gap(self, record: "GapRecord") -> None:
+        """Tallies one GapRecord's reason code, mirroring record()'s own
+        incremental-tally shape."""
+        self.gap_reason_counts[record.gap_reason] = (
+            self.gap_reason_counts.get(record.gap_reason, 0) + 1
+        )
+
+
+def print_gap_report(records: List[GapRecord]) -> None:
+    """D-03/MATCH-05: prints one block per GapRecord naming the entry, its
+    reason code, and the signal values behind the classification. When
+    records is empty, prints one explicit line stating that no entry was
+    left without a confirmed correspondent -- following the same
+    visible-but-empty discipline print_pair_transcript()'s curation line
+    and print_run_summary()'s pre-populated zero counts already use, rather
+    than printing nothing. Prints only GapRecord and LexiconEntry field
+    values -- never the client object, request headers, or any environment
+    variable (T-02-13)."""
+    print("=== Gap report ===")
+    if not records:
+        print("  no entry was left without a confirmed correspondent.")
+        print()
+        return
+    for record in records:
+        entry = record.entry
+        print(f"--- {entry.pref_label} ({entry.source}:{entry.lex_id}) ---")
+        print(f"  gap reason: {record.gap_reason}")
+        print(f"  best label score: {record.best_label_score:.2f}")
+        print(f"  best structural score: {_render_structural(record.best_structural_score)}")
+        print(
+            "  evaluated against: "
+            f"{', '.join(record.evaluated_against) if record.evaluated_against else '(none)'}"
+        )
+        print(
+            "  deciding signals: "
+            f"{', '.join(record.deciding_signals) if record.deciding_signals else '(none)'}"
+        )
+    print()
+
 
 def print_run_summary(summary: RunSummary) -> None:
     """Prints every RunSummary field in one block. There is no code path
     that prints a subset: no match rate, no success-only variant, no
     --quiet flag. Candidate counts, per-verdict counts, the
-    insufficient-evidence count, validator calls made, and escalated pairs
-    always appear together (D-04, extended by plan 02-02 for the validator
-    and escalation values)."""
+    insufficient-evidence count, validator calls made, escalated pairs, and
+    gap-reason counts always appear together (D-04, extended by plan 02-02
+    for the validator/escalation values and plan 02-03 for the gap-reason
+    counts)."""
     print("=== Run summary ===")
     print(f"  lexicon_dir: {summary.lexicon_dir}")
     print(f"  model: {summary.model}")
@@ -1511,6 +1672,9 @@ def print_run_summary(summary: RunSummary) -> None:
     for verdict in ALL_VERDICTS:
         print(f"    {verdict}: {summary.verdict_counts.get(verdict, 0)}")
     print(f"  escalated pairs: {summary.escalated_count}")
+    print("  gap reason counts:")
+    for reason in ALL_GAP_REASONS:
+        print(f"    {reason}: {summary.gap_reason_counts.get(reason, 0)}")
     print()
 
 
@@ -1645,9 +1809,18 @@ def main() -> None:
         validator_calls_made=validator_calls_made,
     )
 
+    # Plan 02-03/D-03: computed from the same `results` a partial run
+    # (CallBudgetExceeded) still holds, so a stopped run still reports the
+    # gaps it did establish rather than printing nothing.
+    gap_records = collect_gap_records(tapi_entries, results)
+
     for result in results:
         print_pair_transcript(result)
         summary.record(result)
+
+    print_gap_report(gap_records)
+    for gap_record in gap_records:
+        summary.record_gap(gap_record)
 
     print_run_summary(summary)
 
