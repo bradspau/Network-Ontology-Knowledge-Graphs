@@ -189,19 +189,48 @@ def error_raising_client():
     the caller-supplied lookup function and returns whatever it returns, so
     a lookup function that raises propagates naturally. WR-04: proves
     _evaluate_candidates's documented per-pair AnthropicError resilience
-    (neither recording_client nor scripted_client can ever raise)."""
+    (neither recording_client nor scripted_client can ever raise).
+
+    Phase 2 Plan 02 (T-02-06): a confirmed pair now triggers a second,
+    validator-self-check call (output_format=ValidatorVerdict) sharing the
+    same seam. validator_error_pairs is a SEPARATE pair set from
+    error_pairs, scoped to validator calls only -- error_pairs still raises
+    for the confirmation call of a pair (unchanged, existing behavior),
+    while validator_error_pairs lets a pair's confirmation call succeed
+    normally and raises only when the follow-on validator call for that same
+    pair is attempted. This is what lets a test prove "the confirmation
+    succeeded, then the validator transport failed" as two distinct events.
+    A validator call for a pair in neither set falls back to an agreeing
+    ValidatorVerdict, mirroring scripted_client's own validator fallback."""
     import align_lexicons  # lazy import -- see module docstring
 
-    def _make(error_pairs: set, verdicts_by_pair: dict = None):
+    def _make(error_pairs: set, verdicts_by_pair: dict = None, validator_error_pairs: set = None):
         verdicts_by_pair = verdicts_by_pair or {}
+        validator_error_pairs = validator_error_pairs or set()
         fallback = align_lexicons.MatchVerdict(
             verdict="reject",
             rationale="error_raising_client fallback -- no verdict mapped for this pair.",
             evidence_quote="",
         )
+        validator_fallback = align_lexicons.ValidatorVerdict(
+            agrees=True,
+            counter_argument=(
+                "error_raising_client validator fallback -- no validator "
+                "verdict mapped for this pair."
+            ),
+        )
 
         def _verdict_for_call(kwargs):
             prompt_text = _extract_prompt_text(kwargs)
+
+            if kwargs.get("output_format") is align_lexicons.ValidatorVerdict:
+                for tapi_lex_id, ietf_lex_id in validator_error_pairs:
+                    if tapi_lex_id in prompt_text and ietf_lex_id in prompt_text:
+                        raise align_lexicons.anthropic.AnthropicError(
+                            f"simulated validator failure for {tapi_lex_id} <-> {ietf_lex_id}"
+                        )
+                return validator_fallback
+
             for tapi_lex_id, ietf_lex_id in error_pairs:
                 if tapi_lex_id in prompt_text and ietf_lex_id in prompt_text:
                     raise align_lexicons.anthropic.AnthropicError(

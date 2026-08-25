@@ -256,9 +256,9 @@ class MatchVerdict(BaseModel):
 
 class ValidatorVerdict(BaseModel):
     """The validator self-check's structured output (D-01 signal 3, D-04).
-    counter_argument is always populated -- the argue-against case built by
-    validate_pair() is recorded even when the validator ultimately agrees
-    with the proposed verdict, never omitted or left empty."""
+    counter_argument is always populated -- the argue-against case that
+    validate_pair builds is recorded even when the validator ultimately
+    agrees with the proposed verdict, never omitted or left empty."""
 
     agrees: bool
     counter_argument: str
@@ -974,10 +974,22 @@ def _evaluate_candidates(
 
     D-01/D-04 (Phase 2): structural_corroboration() is computed once per
     candidate regardless of which branch decides it. A verdict that reaches
-    CONFIRMED_VERDICTS also gets a second, argue-against validate_pair()
-    call -- sharing this same calls_used/max_calls budget via an identical
-    pre-call check -- before compose_confidence() composes the three D-01
-    signals into a ConfidenceBreakdown attached to the PairResult.
+    CONFIRMED_VERDICTS also gets a second, argue-against call to
+    validate_pair -- sharing this same calls_used/max_calls budget via an
+    identical pre-call check -- before compose_confidence() composes the
+    three D-01 signals into a ConfidenceBreakdown attached to the
+    PairResult.
+
+    Plan 02-02 hardens this validator call site two ways. A call to
+    validate_pair that raises anthropic.AnthropicError never un-confirms
+    the pair -- the confirmed verdict is kept, the pair's ConfidenceBreakdown
+    simply reports validator_ran False, and one visible per-pair ERROR line
+    is printed (T-02-06: a transport failure must not be able to fabricate
+    a rejection the model never made). A validator call that would exceed
+    --max-calls composes and appends the pair's PairResult (validator_ran
+    False) BEFORE raising CallBudgetExceeded, so the already-billed
+    confirmation is recovered via exc.partial_results rather than discarded
+    by the hard stop (T-02-07).
     """
     results: List[PairResult] = []
     for candidate in candidates:
@@ -1068,19 +1080,53 @@ def _evaluate_candidates(
         validator_verdict: Optional[ValidatorVerdict] = None
         if verdict.verdict in CONFIRMED_VERDICTS:
             if calls_used + 1 > max_calls:
-                remaining = len(candidates) - len(results)
+                # T-02-07/CR-03: a budget stop on the validator call must not
+                # discard the confirmation already paid for. Compose and
+                # append this pair's PairResult (validator_ran False) BEFORE
+                # raising, so exc.partial_results recovers the already-billed
+                # confirmation as an explicitly un-validated result instead
+                # of losing it with the stack frame.
+                unvalidated_confidence = compose_confidence(
+                    candidate, verdict.verdict, structural_score, None, label_threshold
+                )
+                unvalidated_deciding_signal = resolve_deciding_signal(
+                    "confirmation-pass", verdict.verdict, unvalidated_confidence
+                )
+                results.append(
+                    PairResult(
+                        candidate=candidate,
+                        verdict=verdict.verdict,
+                        rationale=verdict.rationale,
+                        evidence_quote=verdict.evidence_quote,
+                        decided_by="confirmation-pass",
+                        confidence=unvalidated_confidence,
+                        deciding_signal=unvalidated_deciding_signal,
+                    )
+                )
                 exc = CallBudgetExceeded(
-                    f"--max-calls={max_calls} would be exceeded (already used "
-                    f"{calls_used} call(s)); {remaining} pair(s) still "
-                    f"unprocessed, starting with {candidate.tapi.source}:"
-                    f"{candidate.tapi.lex_id!r} vs {candidate.ietf.source}:"
-                    f"{candidate.ietf.lex_id!r}"
+                    f"--max-calls={max_calls} would be exceeded by the "
+                    "validator self-check for "
+                    f"{candidate.tapi.source}:{candidate.tapi.lex_id!r} vs "
+                    f"{candidate.ietf.source}:{candidate.ietf.lex_id!r} "
+                    f"(already used {calls_used} call(s)); this pair's "
+                    "confirmation is recorded un-validated rather than lost."
                 )
                 exc.partial_results = list(results)
                 exc.calls_used = calls_used
                 raise exc
-            validator_verdict = validate_pair(client, candidate, verdict, model)
-            calls_used += 1
+            try:
+                validator_verdict = validate_pair(client, candidate, verdict, model)
+                calls_used += 1
+            except anthropic.AnthropicError as exc:
+                calls_used += 1
+                print(
+                    "ERROR: validator call failed for "
+                    f"{candidate.tapi.source}:{candidate.tapi.lex_id} <-> "
+                    f"{candidate.ietf.source}:{candidate.ietf.lex_id} "
+                    f"({type(exc).__name__}) -- continuing without a "
+                    "validator verdict; the pair keeps its confirmed verdict"
+                )
+                validator_verdict = None
 
         confidence = compose_confidence(
             candidate, verdict.verdict, structural_score, validator_verdict, label_threshold

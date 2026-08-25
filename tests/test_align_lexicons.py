@@ -1077,3 +1077,109 @@ def test_validator_agreement_alone_does_not_lift_tier(fixture_entries):
     assert confidence.label_definition_agreement is False
     assert confidence.escalated is False
     assert confidence.tier == "low"
+
+
+# ── Phase 2, Plan 02, Task 2: validator runs on every confirmed verdict,
+# resiliently and inside the shared budget ──────────────────────────────────
+
+
+def test_validator_runs_only_for_confirmed_verdicts(fixture_entries, scripted_client):
+    tapi_entries, ietf_entries, _ = fixture_entries
+    candidates = align_lexicons.label_pass(tapi_entries, ietf_entries, align_lexicons.DEFAULT_LABEL_THRESHOLD)
+    real_call_candidates = [c for c in candidates if align_lexicons.evidence_gate(c) is None]
+    assert real_call_candidates, "expected at least one real-call (non-evidence-gated) candidate"
+
+    confirmed_pair = real_call_candidates[0]
+    confirm_verdict = align_lexicons.MatchVerdict(
+        verdict="confirm_exact_match",
+        rationale="Scripted confirm for validator-scope test.",
+        evidence_quote="scripted evidence quote text for validator scope test",
+    )
+    client = scripted_client(
+        {(confirmed_pair.tapi.lex_id, confirmed_pair.ietf.lex_id): confirm_verdict}
+    )
+
+    results = align_lexicons.run_confirmation_stage(client, candidates, max_calls=len(candidates) * 2)
+
+    confirmed_results = [r for r in results if r.verdict in align_lexicons.CONFIRMED_VERDICTS]
+    validator_calls = [
+        call for call in client.calls if call.get("output_format") is align_lexicons.ValidatorVerdict
+    ]
+
+    assert len(validator_calls) == len(confirmed_results)
+    assert len(validator_calls) > 0
+
+    for call in validator_calls:
+        prompt_text = "\n".join(str(v) for v in _flatten(call))
+        assert any(
+            r.candidate.tapi.lex_id in prompt_text and r.candidate.ietf.lex_id in prompt_text
+            for r in confirmed_results
+        )
+
+
+def test_validator_error_downgrades_without_unconfirming(fixture_entries, error_raising_client, capsys):
+    tapi_entries, ietf_entries, _ = fixture_entries
+    candidates = align_lexicons.label_pass(tapi_entries, ietf_entries, align_lexicons.DEFAULT_LABEL_THRESHOLD)
+    real_call_candidates = [c for c in candidates if align_lexicons.evidence_gate(c) is None]
+    assert real_call_candidates, "need at least one real-call candidate"
+    target = real_call_candidates[0]
+
+    confirm_verdict = align_lexicons.MatchVerdict(
+        verdict="confirm_exact_match",
+        rationale="Scripted confirm for the validator-error regression.",
+        evidence_quote="scripted evidence quote text for validator error test",
+    )
+    client = error_raising_client(
+        error_pairs=set(),
+        verdicts_by_pair={(target.tapi.lex_id, target.ietf.lex_id): confirm_verdict},
+        validator_error_pairs={(target.tapi.lex_id, target.ietf.lex_id)},
+    )
+
+    results = align_lexicons.run_confirmation_stage(client, candidates, max_calls=len(candidates) * 2)
+
+    result = next(
+        r for r in results
+        if r.candidate.tapi.lex_id == target.tapi.lex_id and r.candidate.ietf.lex_id == target.ietf.lex_id
+    )
+    assert result.verdict == "confirm_exact_match"
+    assert result.confidence.validator_ran is False
+    assert result.confidence.validator_agrees is None
+
+    captured = capsys.readouterr()
+    error_lines = [line for line in captured.out.splitlines() if line.startswith("ERROR")]
+    assert len(error_lines) == 1
+    assert target.tapi.lex_id in error_lines[0]
+    assert target.ietf.lex_id in error_lines[0]
+    assert "api_key" not in captured.out
+    assert "ANTHROPIC" not in captured.out
+
+
+def test_validator_budget_exceeded_carries_unvalidated_confirmation(fixture_entries, scripted_client):
+    tapi_entries, ietf_entries, _ = fixture_entries
+    candidates = align_lexicons.label_pass(tapi_entries, ietf_entries, align_lexicons.DEFAULT_LABEL_THRESHOLD)
+    real_call_candidates = [c for c in candidates if align_lexicons.evidence_gate(c) is None]
+    assert real_call_candidates, "need at least one real-call candidate"
+    target = real_call_candidates[0]
+
+    confirm_verdict = align_lexicons.MatchVerdict(
+        verdict="confirm_exact_match",
+        rationale="Scripted confirm for the validator-budget regression.",
+        evidence_quote="scripted evidence quote text for validator budget test",
+    )
+    client = scripted_client({(target.tapi.lex_id, target.ietf.lex_id): confirm_verdict})
+
+    # Order candidates so target is evaluated first, then cap max_calls at
+    # exactly 1 -- enough for target's confirm_pair() call but not the
+    # validator self-check that follows its confirmed verdict.
+    ordered_candidates = [target] + [c for c in candidates if c is not target]
+
+    with pytest.raises(align_lexicons.CallBudgetExceeded) as exc_info:
+        align_lexicons._evaluate_candidates(client, ordered_candidates, max_calls=1, calls_used=0)
+
+    exc = exc_info.value
+    assert exc.partial_results, "expected the already-paid confirmation to be recovered"
+    last = exc.partial_results[-1]
+    assert last.candidate.tapi.lex_id == target.tapi.lex_id
+    assert last.candidate.ietf.lex_id == target.ietf.lex_id
+    assert last.verdict in align_lexicons.CONFIRMED_VERDICTS
+    assert last.confidence.validator_ran is False
