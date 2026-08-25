@@ -1320,17 +1320,22 @@ def run_confirmation_stage(
     max_calls: int,
     model: str = DEFAULT_MODEL,
     label_threshold: float = DEFAULT_LABEL_THRESHOLD,
-) -> List[PairResult]:
+) -> Tuple[List[PairResult], int]:
     """Runs every label_pass candidate through evidence_gate then
     confirm_pair, in order, producing exactly one PairResult per candidate.
     An entry with no usable definition and no usable scope note never
     reaches the model as a prompt full of absent fields (edge row
     MATCH-02/empty, D-03) -- it escalates to insufficient_evidence at the
-    gate instead, contributing zero calls."""
-    results, _ = _evaluate_candidates(
+    gate instead, contributing zero calls.
+
+    GAP-1/CR-01: returns (results, calls_used) where calls_used is this
+    stage's real spend -- every client.messages.parse() call actually made,
+    including validator self-checks for confirmed pairs (D-04) -- and
+    callers sharing the --max-calls budget with a later stage MUST thread
+    this value through rather than reconstruct it by counting PairResults."""
+    return _evaluate_candidates(
         client, candidates, max_calls, calls_used=0, model=model, label_threshold=label_threshold
     )
-    return results
 
 
 def recover_misses(
@@ -1342,7 +1347,7 @@ def recover_misses(
     calls_used: int,
     model: str = DEFAULT_MODEL,
     label_threshold: float = DEFAULT_LABEL_THRESHOLD,
-) -> List[PairResult]:
+) -> Tuple[List[PairResult], int]:
     """Recovers correspondences the label stage legitimately missed.
 
     Driven from "no confirmed correspondent after the label-driven
@@ -1367,7 +1372,11 @@ def recover_misses(
     own blocking/ranking stage -- before Phase 5's full-corpus run. This is
     a note for the future reader, not a deferral of any work inside this
     phase's scope.
-    """
+
+    GAP-1/CR-01: returns (results, calls_used) mirroring
+    run_confirmation_stage()'s own return shape -- calls_used is this pass's
+    real spend, seeded from the caller-supplied baseline and incremented by
+    every client.messages.parse() call this pass actually makes."""
     confirmed_tapi_ids = {
         r.candidate.tapi.lex_id for r in results if r.verdict in CONFIRMED_VERDICTS
     }
@@ -1390,7 +1399,7 @@ def recover_misses(
             )
     recovery_candidates.sort(key=lambda c: (c.tapi.lex_id, c.ietf.lex_id))
 
-    recovery_results, _ = _evaluate_candidates(
+    return _evaluate_candidates(
         client,
         recovery_candidates,
         max_calls,
@@ -1398,7 +1407,6 @@ def recover_misses(
         model=model,
         label_threshold=label_threshold,
     )
-    return recovery_results
 
 
 def collect_gap_records(tapi: List[LexiconEntry], results: List[PairResult]) -> List[GapRecord]:
@@ -1752,6 +1760,12 @@ def main() -> None:
     label_stage_done = False
     stopped_early = False
     stop_reason = ""
+    # GAP-1/CR-01: the shared cross-stage call-budget baseline. Threaded
+    # from run_confirmation_stage()'s own accurate return value, never
+    # re-derived by counting PairResults (that undercounts by exactly the
+    # number of validator self-check calls the label stage made -- D-04
+    # means every confirmed pair costs 2 real calls, not 1).
+    budget_calls_used: int = 0
     try:
         # CR-01: args.model is now actually threaded through to the API
         # calls -- previously parsed and printed in the run header/summary
@@ -1759,7 +1773,7 @@ def main() -> None:
         # The same CR-01 defect previously applied to --label-threshold:
         # compose_confidence() needs the actual threshold used to compute
         # label_definition_agreement, not the module default.
-        label_results = run_confirmation_stage(
+        label_results, budget_calls_used = run_confirmation_stage(
             client,
             candidates,
             args.max_calls,
@@ -1767,10 +1781,9 @@ def main() -> None:
             label_threshold=args.label_threshold,
         )
         label_stage_done = True
-        calls_used = sum(1 for r in label_results if r.decided_by == "confirmation-pass")
 
-        recovery_results = recover_misses(
-            client, tapi_entries, ietf_entries, label_results, args.max_calls, calls_used,
+        recovery_results, budget_calls_used = recover_misses(
+            client, tapi_entries, ietf_entries, label_results, args.max_calls, budget_calls_used,
             model=args.model,
             label_threshold=args.label_threshold,
         )
@@ -1778,12 +1791,22 @@ def main() -> None:
         stopped_early = True
         stop_reason = str(exc)
         partial = list(getattr(exc, "partial_results", None) or [])
+        # CR-03: _evaluate_candidates() already attaches the accurate spend
+        # at the moment of the raise -- recover it here too, so a partial
+        # run's baseline stays honest instead of holding a stale value.
+        budget_calls_used = getattr(exc, "calls_used", budget_calls_used)
         if label_stage_done:
             recovery_results = partial
         else:
             label_results = partial
 
-    calls_used = sum(
+    # Plan 02-02: the run summary's confirmation-call count is derived from
+    # the same results list the transcript and verdict counts come from --
+    # counting confirmation-pass PairResults is the correct way to count
+    # CONFIRMATION calls. It was only ever wrong when reused as the
+    # cross-stage BUDGET baseline above (GAP-1/CR-01) -- renamed so the two
+    # quantities can never again be confused through a shared name.
+    confirmation_calls_made = sum(
         1 for r in (label_results + recovery_results) if r.decided_by == "confirmation-pass"
     )
     results = label_results + recovery_results
@@ -1805,7 +1828,7 @@ def main() -> None:
         ietf_entry_count=len(ietf_entries),
         candidates_proposed=len(candidates),
         recovery_pairs_evaluated=len(recovery_results),
-        confirmation_calls_made=calls_used,
+        confirmation_calls_made=confirmation_calls_made,
         validator_calls_made=validator_calls_made,
     )
 

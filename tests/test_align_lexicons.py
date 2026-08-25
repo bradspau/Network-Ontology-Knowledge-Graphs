@@ -216,7 +216,7 @@ def test_anthropic_error_produces_visible_per_pair_result_and_continues(
     failing = real_call_candidates[0]
     client = error_raising_client({(failing.tapi.lex_id, failing.ietf.lex_id)})
 
-    results = align_lexicons.run_confirmation_stage(client, candidates, max_calls=len(candidates))
+    results, _ = align_lexicons.run_confirmation_stage(client, candidates, max_calls=len(candidates))
 
     failed_result = next(
         r for r in results
@@ -505,7 +505,7 @@ def test_no_match_without_confirmation(fixture_entries, scripted_client):
     # Phase 2: every confirmed verdict now also triggers a second,
     # argue-against validate_pair() call sharing this same budget (D-04) --
     # max_calls must accommodate up to 2 calls per candidate, not 1.
-    results = align_lexicons.run_confirmation_stage(client, candidates, max_calls=len(candidates) * 2)
+    results, _ = align_lexicons.run_confirmation_stage(client, candidates, max_calls=len(candidates) * 2)
     assert len(results) == len(candidates)
 
     for result in results:
@@ -596,7 +596,7 @@ def test_confirmed_verdict_with_empty_evidence_quote_downgrades(fixture_entries,
     )
     client = scripted_client({(target.tapi.lex_id, target.ietf.lex_id): malformed_verdict})
 
-    results = align_lexicons.run_confirmation_stage(client, candidates, max_calls=len(candidates))
+    results, _ = align_lexicons.run_confirmation_stage(client, candidates, max_calls=len(candidates))
 
     downgraded = next(
         r for r in results
@@ -634,13 +634,12 @@ def test_recovers_node_rule_group_correspondent(fixture_entries, scripted_client
         {(node_rule_group.lex_id, connectivity_matrix.lex_id): confirm_verdict}
     )
 
-    label_results = align_lexicons.run_confirmation_stage(client, candidates, max_calls=len(candidates))
+    label_results, calls_used = align_lexicons.run_confirmation_stage(client, candidates, max_calls=len(candidates))
     assert all(r.verdict not in ("confirm_exact_match", "confirm_close_match") for r in label_results), (
         "every label-pass candidate should have been rejected by the fallback client"
     )
-    calls_used = sum(1 for r in label_results if r.decided_by == "confirmation-pass")
 
-    recovery_results = align_lexicons.recover_misses(
+    recovery_results, _ = align_lexicons.recover_misses(
         client, tapi_entries, ietf_entries, label_results, max_calls=1000, calls_used=calls_used
     )
 
@@ -677,7 +676,7 @@ def test_recovery_candidates_are_sorted_and_share_call_budget(fixture_entries, s
     # TAPI x IETF pair is a recovery candidate this time, generated and
     # evaluated in deterministic (tapi.lex_id, ietf.lex_id) order.
     client = scripted_client({})  # everything falls back to reject
-    recovery_results = align_lexicons.recover_misses(
+    recovery_results, _ = align_lexicons.recover_misses(
         client, tapi_entries, ietf_entries, [], max_calls=1000, calls_used=0
     )
     assert len(recovery_results) == len(tapi_entries) * len(ietf_entries)
@@ -1300,7 +1299,7 @@ def test_validator_runs_only_for_confirmed_verdicts(fixture_entries, scripted_cl
         {(confirmed_pair.tapi.lex_id, confirmed_pair.ietf.lex_id): confirm_verdict}
     )
 
-    results = align_lexicons.run_confirmation_stage(client, candidates, max_calls=len(candidates) * 2)
+    results, _ = align_lexicons.run_confirmation_stage(client, candidates, max_calls=len(candidates) * 2)
 
     confirmed_results = [r for r in results if r.verdict in align_lexicons.CONFIRMED_VERDICTS]
     validator_calls = [
@@ -1336,7 +1335,7 @@ def test_validator_error_downgrades_without_unconfirming(fixture_entries, error_
         validator_error_pairs={(target.tapi.lex_id, target.ietf.lex_id)},
     )
 
-    results = align_lexicons.run_confirmation_stage(client, candidates, max_calls=len(candidates) * 2)
+    results, _ = align_lexicons.run_confirmation_stage(client, candidates, max_calls=len(candidates) * 2)
 
     result = next(
         r for r in results
@@ -1610,11 +1609,10 @@ def test_every_unresolved_entry_produces_one_gap_record(fixture_entries, scripte
     candidates = align_lexicons.label_pass(
         tapi_entries, ietf_entries, align_lexicons.DEFAULT_LABEL_THRESHOLD
     )
-    label_results = align_lexicons.run_confirmation_stage(
+    label_results, calls_used = align_lexicons.run_confirmation_stage(
         client, candidates, max_calls=align_lexicons.DEFAULT_MAX_CALLS
     )
-    calls_used = sum(1 for r in label_results if r.decided_by == "confirmation-pass")
-    recovery_results = align_lexicons.recover_misses(
+    recovery_results, _ = align_lexicons.recover_misses(
         client, tapi_entries, ietf_entries, label_results,
         max_calls=align_lexicons.DEFAULT_MAX_CALLS, calls_used=calls_used,
     )
@@ -1643,11 +1641,10 @@ def test_full_reject_run_exercises_all_four_gap_reasons(fixture_entries, scripte
     candidates = align_lexicons.label_pass(
         tapi_entries, ietf_entries, align_lexicons.DEFAULT_LABEL_THRESHOLD
     )
-    label_results = align_lexicons.run_confirmation_stage(
+    label_results, calls_used = align_lexicons.run_confirmation_stage(
         client, candidates, max_calls=align_lexicons.DEFAULT_MAX_CALLS
     )
-    calls_used = sum(1 for r in label_results if r.decided_by == "confirmation-pass")
-    recovery_results = align_lexicons.recover_misses(
+    recovery_results, _ = align_lexicons.recover_misses(
         client, tapi_entries, ietf_entries, label_results,
         max_calls=align_lexicons.DEFAULT_MAX_CALLS, calls_used=calls_used,
     )
