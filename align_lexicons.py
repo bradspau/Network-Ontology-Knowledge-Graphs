@@ -1006,16 +1006,43 @@ def compose_confidence(
 def resolve_deciding_signal(decided_by: str, verdict: str, confidence: ConfidenceBreakdown) -> str:
     """MATCH-07: names which signal within decided_by's stage actually
     decided this pair. Returns "evidence-gate" when decided_by is
-    "evidence-gate"; otherwise "definition-text" (the confirmation pass's
-    own definition/example judgment). Plan 02-03 adds the
-    "structural-corroboration" branch to this same function as a further
-    explicit clause, not a rewrite.
+    "evidence-gate"; "structural-corroboration" when the confirmation pass
+    itself could not decide and containment context is what dispositioned
+    the pair (see the plan 03 branch below); otherwise "definition-text"
+    (the confirmation pass's own definition/example judgment).
 
     decided_by (which stage) and deciding_signal (which signal within that
     stage) are separate fields/axes -- this function never collapses them
-    into one value."""
+    into one value.
+
+    Plan 03 branch (MATCH-07, ROADMAP SC4): fires only when the
+    confirmation pass saw the real definition and canonical-example text
+    and still could not decide (decided_by == "confirmation-pass" and
+    verdict == "insufficient_evidence") AND the breakdown's
+    structural_corroboration is not None and is at or above
+    STRUCTURAL_SIGNAL_FLOOR. That is the concrete meaning of "the
+    definitions under-determine the match" -- in that state the containment
+    corroboration is what dispositions the pair, and the run records it.
+
+    This branch never changes the verdict: an insufficient_evidence result
+    stays insufficient_evidence. It has no path to manufacture a
+    confirmation either -- PairResult.__post_init__ independently requires
+    a confirmation-pass verdict AND a non-empty evidence_quote for any
+    confirmed value, and this branch only ever fires on an
+    insufficient_evidence verdict, never a confirmed one. A structural
+    score recorded here is a tie-break record, not evidence of
+    correspondence -- matching on structure alone would violate the same
+    definition-and-example-not-name-alone constraint the project holds for
+    labels."""
     if decided_by == "evidence-gate":
         result = "evidence-gate"
+    elif (
+        decided_by == "confirmation-pass"
+        and verdict == "insufficient_evidence"
+        and confidence.structural_corroboration is not None
+        and confidence.structural_corroboration >= STRUCTURAL_SIGNAL_FLOOR
+    ):
+        result = "structural-corroboration"
     else:
         result = "definition-text"
     assert result in ALL_DECIDING_SIGNALS
@@ -1402,6 +1429,10 @@ def print_pair_transcript(result: PairResult) -> None:
         print(
             f"  validator counter-argument: {_render_field(confidence.validator_counter_argument)}"
         )
+    # A value of "structural-corroboration" means the definition text did
+    # not resolve the pair and the containment context is what placed it
+    # (MATCH-07, ROADMAP SC4) -- never that a structural signal confirmed a
+    # correspondence; the verdict stays insufficient_evidence either way.
     print(
         "  deciding signal: "
         f"{result.deciding_signal if result.deciding_signal is not None else '(none available)'}"
