@@ -112,12 +112,39 @@ LEXICON_URI_PREFIX = "http://example.org/ontology/"
 # corpus (Phase 2 prohibition).
 STRUCTURAL_SIGNAL_FLOOR = 0.15
 
+# Phase 2 Plan 03 D-03: the inclusive floor at or above which a label score
+# counts as real name overlap (not a shared-token coincidence) when
+# classify_gap() has to fall back to the lexical signal. Hand-computed this
+# session with rapidfuzz.fuzz.token_set_ratio over the real skos:prefLabel
+# values in the locked 11-entry OTN fixture only:
+#   node vs node                                           100.00
+#   link vs link                                            100.00
+#   service-interface-point vs termination-point             55.00
+#   service-interface-point vs tunnel-termination-point       51.06
+#   node-edge-point vs tunnel-termination-point               51.28
+#   node-rule-group vs node                                   42.11
+#   node-rule-group vs connectivity-matrix                    23.53
+# 60.0 sits strictly between the "real correspondence" cluster (100.00) and
+# the "no plausible correspondent by name" cluster (<=55.00), separating a
+# genuine label correspondence from a shared-token coincidence. This floor
+# is fitted to this locked fixture ONLY and must not be re-fitted against
+# the un-repaired full corpus (Phase 2 prohibition).
+LABEL_SIGNAL_FLOOR = 60.0
+
 CONFIDENCE_TIERS = ("high", "medium", "low")
 
-# The two decided_by-derived deciding signals this plan (02-01) can resolve.
-# Plan 02-03 adds "structural-corroboration" as a third branch to
-# resolve_deciding_signal() -- this tuple grows to admit it there.
+# The three decided_by-derived deciding signals this file can resolve.
+# "structural-corroboration" (MATCH-07, ROADMAP SC4) is added by Plan 03's
+# resolve_deciding_signal() branch below.
 ALL_DECIDING_SIGNALS = ("definition-text", "structural-corroboration", "evidence-gate")
+
+# D-03: the four gap reason codes an unresolved TAPI entry can be classified
+# under, in the order classify_gap()'s branch chain checks them (excluding
+# the all_insufficient short-circuit, which is checked first). Used to
+# pre-populate RunSummary.gap_reason_counts, exactly as ALL_VERDICTS already
+# pre-populates verdict_counts.
+ALL_GAP_REASONS = ("structural", "ontological-content", "genuinely-ambiguous-lexical", "insufficient-evidence")
+GapReason = Literal["structural", "ontological-content", "genuinely-ambiguous-lexical", "insufficient-evidence"]
 
 # The exact literal draft_lexicon.py's source (yang4owl.py's comment-capture
 # logic) writes into skos:definition / skos:scopeNote where the source YANG
@@ -687,6 +714,51 @@ def evidence_gate(cand: Candidate) -> Optional[MatchVerdict]:
         ),
         evidence_quote="",
     )
+
+
+def classify_gap(
+    all_insufficient: bool,
+    best_label_score: float,
+    best_structural_score: Optional[float],
+) -> str:
+    """D-03: assigns one of ALL_GAP_REASONS to an entry left without a
+    confirmed correspondent, by a deterministic rule over three already-
+    computed structured scalars -- never given a MatchVerdict, a
+    PairResult, or any free-text field. Reading the model's own rationale
+    to infer a reason code would reintroduce the self-classification D-03
+    forbids, merely laundered through string matching instead of a direct
+    question -- this function's restricted signature makes that mistake
+    impossible to make by accident.
+
+    Branches, checked in this order, each mapped onto the drafts' own
+    three-way difference taxonomy (docs/ontology-reconciliation.md):
+
+    1. all_insufficient -- evidence_gate()'s existing Phase 1 outcome,
+       carried forward unchanged. An entry (or every candidate it was
+       evaluated against) never had usable text to judge; no other signal
+       can override this, so it is checked first.
+    2. best_structural_score at or above STRUCTURAL_SIGNAL_FLOOR (inclusive)
+       -- the drafts' grammatical difference: same content, different
+       structural convention. The entries sit in comparable containment
+       neighbourhoods yet the definition text rejected them. An absent
+       structural signal (None) is treated as non-corroborating, never as
+       corroborating -- it can only fail this check, never pass it.
+    3. best_label_score at or above LABEL_SIGNAL_FLOOR (inclusive) -- the
+       drafts' lexical difference: real name overlap the definition text
+       could not resolve either way.
+    4. Otherwise -- the drafts' ontological-content difference: no
+       plausible correspondent by either independent signal. This is the
+       drafts' own ServiceInterfacePoint worked example.
+
+    Both floors are compared on the raw float, inclusive, matching
+    label_pass()'s own documented inclusive-threshold convention."""
+    if all_insufficient:
+        return "insufficient-evidence"
+    if best_structural_score is not None and best_structural_score >= STRUCTURAL_SIGNAL_FLOOR:
+        return "structural"
+    if best_label_score >= LABEL_SIGNAL_FLOOR:
+        return "genuinely-ambiguous-lexical"
+    return "ontological-content"
 
 
 # ── Confirmation pass ────────────────────────────────────────────────────
