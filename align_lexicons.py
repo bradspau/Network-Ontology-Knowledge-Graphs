@@ -133,10 +133,20 @@ LABEL_SIGNAL_FLOOR = 60.0
 
 CONFIDENCE_TIERS = ("high", "medium", "low")
 
-# The three decided_by-derived deciding signals this file can resolve.
-# "structural-corroboration" (MATCH-07, ROADMAP SC4) is added by Plan 03's
-# resolve_deciding_signal() branch below.
-ALL_DECIDING_SIGNALS = ("definition-text", "structural-corroboration", "evidence-gate")
+# The three decided_by-derived deciding signals resolve_deciding_signal()
+# can resolve, plus one signal assigned outside it. "structural-corroboration"
+# (MATCH-07, ROADMAP SC4) is added by Plan 03's resolve_deciding_signal()
+# branch below. "confirmation-call-failed" (WR-01, GAP-2) is set directly at
+# the confirm_pair() AnthropicError call site, never by
+# resolve_deciding_signal() itself -- no signal was evaluated at all when the
+# call never completed, so the value exists outside anything the pure
+# function over (decided_by, verdict, confidence) can produce.
+ALL_DECIDING_SIGNALS = (
+    "definition-text",
+    "structural-corroboration",
+    "evidence-gate",
+    "confirmation-call-failed",
+)
 
 # D-03: the four gap reason codes an unresolved TAPI entry can be classified
 # under, in the order classify_gap()'s branch chain checks them (excluding
@@ -1072,7 +1082,18 @@ def resolve_deciding_signal(decided_by: str, verdict: str, confidence: Confidenc
     score recorded here is a tie-break record, not evidence of
     correspondence -- matching on structure alone would violate the same
     definition-and-example-not-name-alone constraint the project holds for
-    labels."""
+    labels.
+
+    WR-01/GAP-2: this function can return only the three signals the
+    pipeline actually evaluated -- "evidence-gate", "structural-
+    corroboration", and "definition-text". It must never be given a
+    synthetic verdict standing in for a confirm_pair() call that never
+    completed: resolve_deciding_signal()'s (decided_by, verdict, confidence)
+    inputs cannot distinguish a genuine insufficient_evidence verdict from
+    one fabricated after an AnthropicError, so the fourth value,
+    "confirmation-call-failed", is assigned only by the caller that knows
+    the call actually failed -- the confirm_pair() AnthropicError handler in
+    _evaluate_candidates() -- never by this function."""
     if decided_by == "evidence-gate":
         result = "evidence-gate"
     elif (
@@ -1202,9 +1223,17 @@ def _evaluate_candidates(
                     evidence_quote="",
                     decided_by="confirmation-pass",
                     confidence=error_confidence,
-                    deciding_signal=resolve_deciding_signal(
-                        "confirmation-pass", "insufficient_evidence", error_confidence
-                    ),
+                    # WR-01/GAP-2: a literal, not a resolve_deciding_signal()
+                    # call. resolve_deciding_signal()'s (decided_by, verdict,
+                    # confidence) inputs cannot distinguish this synthetic
+                    # insufficient_evidence result from a genuine one the
+                    # confirmation pass actually returned -- if this pair's
+                    # structural_corroboration() clears STRUCTURAL_SIGNAL_FLOOR,
+                    # delegating here would mislabel a transport failure as
+                    # "structural-corroboration" in the transcript and gap
+                    # report. Only this call site knows the call truly failed,
+                    # so only this call site may record that truthfully.
+                    deciding_signal="confirmation-call-failed",
                 )
             )
             continue
