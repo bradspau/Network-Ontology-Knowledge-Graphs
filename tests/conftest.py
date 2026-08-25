@@ -130,20 +130,42 @@ def _extract_prompt_text(kwargs: dict) -> str:
 @pytest.fixture
 def scripted_client():
     """Factory fixture: given a mapping from (tapi_lex_id, ietf_lex_id) to a
-    MatchVerdict, returns a recording client that looks up the verdict for
-    the pair named in the call's prompt text (both lex ids must appear as
-    substrings), falling back to a reject verdict for unmapped pairs."""
+    MatchVerdict, and an optional second mapping from the same pair keys to
+    a ValidatorVerdict, returns a recording client that looks up the verdict
+    for the pair named in the call's prompt text (both lex ids must appear
+    as substrings). The lookup is keyed on (pair, output_format) because a
+    confirmed pair now produces two client.messages.parse() calls carrying
+    the same two lex ids in their prompt text -- one asking for a
+    MatchVerdict (the confirmation pass), one asking for a ValidatorVerdict
+    (the validator self-check). output_format is present in both call
+    shapes, including the WR-03 system-kwarg fallback path, so it is a
+    reliable discriminator. Falls back to a reject MatchVerdict for an
+    unmapped confirmation call, and an agreeing ValidatorVerdict for an
+    unmapped validator call."""
     import align_lexicons  # lazy import -- see module docstring
 
-    def _make(verdicts_by_pair: dict):
+    def _make(verdicts_by_pair: dict, validator_verdicts_by_pair: dict = None):
+        validator_verdicts_by_pair = validator_verdicts_by_pair or {}
         fallback = align_lexicons.MatchVerdict(
             verdict="reject",
             rationale="scripted_client fallback -- no verdict mapped for this pair.",
             evidence_quote="",
         )
+        validator_fallback = align_lexicons.ValidatorVerdict(
+            agrees=True,
+            counter_argument=(
+                "scripted_client validator fallback -- no validator verdict "
+                "mapped for this pair."
+            ),
+        )
 
         def _verdict_for_call(kwargs):
             prompt_text = _extract_prompt_text(kwargs)
+            if kwargs.get("output_format") is align_lexicons.ValidatorVerdict:
+                for (tapi_lex_id, ietf_lex_id), verdict in validator_verdicts_by_pair.items():
+                    if tapi_lex_id in prompt_text and ietf_lex_id in prompt_text:
+                        return verdict
+                return validator_fallback
             for (tapi_lex_id, ietf_lex_id), verdict in verdicts_by_pair.items():
                 if tapi_lex_id in prompt_text and ietf_lex_id in prompt_text:
                     return verdict

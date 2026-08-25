@@ -273,6 +273,7 @@ def test_canonical_example_only_entry_reaches_confirmation_with_its_text_in_prom
         scope_notes=[],
         canonical_example="e.g. a physical fiber patch panel port.",
         needs_curation=False,
+        source_path=None,
     )
     ietf_entry = align_lexicons.LexiconEntry(
         source="ietf",
@@ -282,6 +283,7 @@ def test_canonical_example_only_entry_reaches_confirmation_with_its_text_in_prom
         scope_notes=[],
         canonical_example="e.g. a physical fiber patch panel port.",
         needs_curation=False,
+        source_path=None,
     )
     candidate = align_lexicons.Candidate(
         tapi=tapi_entry, ietf=ietf_entry, label_score=100.0, origin="label-pass"
@@ -824,3 +826,79 @@ def test_summary_reports_all_counts(recording_client, capsys, monkeypatch):
     assert "candidates proposed" in captured.out
     assert "recovery pairs evaluated" in captured.out
     assert "confirmation calls made" in captured.out
+
+
+# ── Phase 2, Plan 01, Task 1: contracts + scripted_client dual-call ────────
+
+
+def test_source_path_loads_from_prov_was_derived_from(fixture_entries):
+    _, _, by_lex_id = fixture_entries
+
+    node_rule_group = by_lex_id["tapi-topology-node-rule-group"]
+    assert node_rule_group.source_path == (
+        "http://example.org/ontology/grouping/tapi-topology/node-rule-group"
+    )
+
+    connectivity_matrix = by_lex_id["ietf-network-connectivity-matrix"]
+    assert connectivity_matrix.source_path == (
+        "http://example.org/ontology/ietf-network/networks/network/node/te/"
+        "information-source-entry/connectivity-matrices/connectivity-matrix"
+    )
+
+    for entry in by_lex_id.values():
+        assert entry.source_path is not None, (
+            f"{entry.lex_id!r} expected a non-None source_path -- every fixture "
+            "entry carries a real prov:wasDerivedFrom value"
+        )
+
+
+def test_scripted_client_distinguishes_confirm_from_validate_call(fixture_entries, scripted_client):
+    tapi_entries, ietf_entries, _ = fixture_entries
+    tapi_entry = next(e for e in tapi_entries if e.lex_id == "tapi-topology-link")
+    ietf_entry = next(e for e in ietf_entries if e.lex_id == "ietf-network-link")
+
+    match_verdict = align_lexicons.MatchVerdict(
+        verdict="confirm_exact_match",
+        rationale="distinguishable confirmation-pass rationale",
+        evidence_quote="distinguishable confirmation-pass evidence quote",
+    )
+    validator_verdict = align_lexicons.ValidatorVerdict(
+        agrees=False,
+        counter_argument="distinguishable validator counter-argument text",
+    )
+    client = scripted_client(
+        {(tapi_entry.lex_id, ietf_entry.lex_id): match_verdict},
+        {(tapi_entry.lex_id, ietf_entry.lex_id): validator_verdict},
+    )
+
+    prompt = f"pair under test: {tapi_entry.lex_id} <-> {ietf_entry.lex_id}"
+
+    confirm_response = client.messages.parse(
+        model=align_lexicons.DEFAULT_MODEL,
+        max_tokens=2048,
+        messages=[{"role": "user", "content": prompt}],
+        output_format=align_lexicons.MatchVerdict,
+    )
+    assert isinstance(confirm_response.parsed_output, align_lexicons.MatchVerdict)
+    assert confirm_response.parsed_output.rationale == "distinguishable confirmation-pass rationale"
+
+    validate_response = client.messages.parse(
+        model=align_lexicons.DEFAULT_MODEL,
+        max_tokens=2048,
+        messages=[{"role": "user", "content": prompt}],
+        output_format=align_lexicons.ValidatorVerdict,
+    )
+    assert isinstance(validate_response.parsed_output, align_lexicons.ValidatorVerdict)
+    assert validate_response.parsed_output.counter_argument == (
+        "distinguishable validator counter-argument text"
+    )
+    assert validate_response.parsed_output.agrees is False
+
+
+def test_validator_prompt_carries_untrusted_data_framing():
+    """T-02-01: the untrusted-data paragraph must appear verbatim in both
+    system prompts, extracted from SYSTEM_PROMPT at runtime rather than
+    hard-coded here, so the two constants cannot drift apart silently."""
+    paragraphs = align_lexicons.SYSTEM_PROMPT.split("\n\n")
+    untrusted_data_paragraph = next(p for p in paragraphs if "untrusted data" in p)
+    assert untrusted_data_paragraph in align_lexicons.VALIDATOR_SYSTEM_PROMPT
