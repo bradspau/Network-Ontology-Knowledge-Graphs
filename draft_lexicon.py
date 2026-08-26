@@ -24,12 +24,17 @@ Usage:
     python3 draft_lexicon.py /tmp/ivy.ttl --base-uri http://example.org/ontology --out-dir lexicon
 """
 import argparse
+import os
 import re
+import tempfile
 from collections import defaultdict
 from pathlib import Path
 
 from rdflib import Graph, Namespace, RDF, RDFS
 from rdflib.namespace import OWL
+
+SKOS = Namespace("http://www.w3.org/2004/02/skos/core#")
+PROV = Namespace("http://www.w3.org/ns/prov#")
 
 # URI path segments that denote a "kind" other than a plain container/list.
 NAMESPACED_KINDS = {"identity", "grouping", "types", "typedef", "rpc", "notification", "module"}
@@ -235,6 +240,131 @@ def render_concept(module, local_name, occurrences):
     return lines
 
 
+def _unescape_ttl(s: str) -> str:
+    """Exact inverse of escape_ttl(): \\\\ -> \\, \\" -> ", \\n -> a real
+    newline. Safe because escape_ttl() doubles backslashes before adding
+    any new backslash-escapes, so every two-character `\\\\` in escaped
+    text always represents exactly one original backslash, never the start
+    of an ambiguous longer escape."""
+    out = []
+    i = 0
+    n = len(s)
+    while i < n:
+        c = s[i]
+        if c == "\\" and i + 1 < n:
+            nxt = s[i + 1]
+            if nxt == "\\":
+                out.append("\\")
+                i += 2
+                continue
+            if nxt == '"':
+                out.append('"')
+                i += 2
+                continue
+            if nxt == "n":
+                out.append("\n")
+                i += 2
+                continue
+        out.append(c)
+        i += 1
+    return "".join(out)
+
+
+# Matches render_concept()'s own "# source: <uri>" provenance comment
+# immediately followed by the skos:definition/scopeNote line it documents --
+# the exact shape render_concept() writes, never anything hand-authored
+# (T-03-03: a corrupt/hand-edited file is out of this tool's trust boundary).
+_SOURCE_TEXT_RE = re.compile(
+    r'#\s*source:\s*(?P<uri>\S+)\s*\n'
+    r'\s*skos:(?:definition|scopeNote)\s+"(?P<text>(?:[^"\\]|\\.)*)"'
+)
+
+
+def merge_existing_lexicon(path, base_uri):
+    """Parse an existing lexicon/<module>.lexicon.ttl back into the same
+    dict[(module, local_name)] -> list[occurrence] shape collect_occurrences()
+    produces, so it can be unioned with a fresh run's freshly-collected
+    concepts before rendering (LEX-01).
+
+    render_concept()'s "# source: <uri>" comment is a Turtle comment, not a
+    triple, so rdflib's own parse discards which occurrence contributed
+    which text. That per-occurrence attribution is recovered with a
+    lightweight regex scan of the file's own raw text instead (safe here
+    because this function only ever reads a file this same tool wrote --
+    see the docstring's trust-boundary note): for each occurrence URI, the
+    lexicographically smallest text it was ever named "# source:" for
+    becomes its reconstructed `definition` (comments[0]) and the rest
+    become its `extra_notes` (comments[1:]) -- an occurrence never named as
+    a source for anything (e.g. a pure text-duplicate of another, smaller,
+    occurrence URI) reconstructs as blank. This choice does not need to
+    exactly recover history; it only needs to be deterministic and to give
+    every occurrence URI credit for exactly the text(s) it actually
+    contributed, so that re-deriving definition_texts from the reconstructed
+    occurrences reproduces the same distinct-count the original render used
+    -- which is what makes a sequential multi-invocation merge byte-identical
+    to a single combined invocation."""
+    raw = path.read_text(encoding="utf-8")
+    source_to_texts = defaultdict(list)
+    for m in _SOURCE_TEXT_RE.finditer(raw):
+        source_to_texts[m.group("uri")].append(_unescape_ttl(m.group("text")))
+
+    graph = Graph()
+    graph.parse(str(path), format="turtle")
+    lex_ns = Namespace(f"{base_uri}/lexicon-vocab#")
+
+    concepts = defaultdict(list)
+    for subject in graph.subjects(RDF.type, lex_ns.ReferenceEntry):
+        uris = sorted(str(u) for u in graph.objects(subject, PROV.wasDerivedFrom))
+        if not uris:
+            continue
+
+        label = graph.value(subject, SKOS.prefLabel)
+        label = str(label) if label is not None else ""
+
+        module = local_name = None
+        kinds_by_uri = {}
+        for uri in uris:
+            classification = classify_uri(uri, base_uri)
+            if classification is None:
+                continue
+            kind, m, ln = classification
+            kinds_by_uri[uri] = kind
+            module, local_name = m, ln
+        if module is None or local_name is None:
+            continue
+
+        occurrences = []
+        for uri in uris:
+            attributed = sorted(source_to_texts.get(uri, []))
+            definition_text = attributed[0] if attributed else ""
+            extra = attributed[1:]
+            occurrences.append(
+                {
+                    "uri": uri,
+                    "label": label,
+                    "definition": definition_text,
+                    "extra_notes": extra,
+                    "kind": kinds_by_uri.get(uri, "container-or-list"),
+                }
+            )
+        concepts[(module, local_name)].extend(occurrences)
+
+    return dict(concepts)
+
+
+def write_atomic(path: Path, content: str) -> None:
+    """Write content to path via a sibling temp file + os.replace(), so an
+    interrupted or failing run leaves the file at path unchanged rather
+    than truncated (T-03-04). No try/except: if the write itself fails, the
+    temp file may be left behind for inspection but path is never touched
+    until os.replace() succeeds -- matching this tool's existing fail-loud
+    convention (no try/except anywhere else in this file)."""
+    fd, tmp_name = tempfile.mkstemp(dir=str(path.parent), prefix=f".{path.name}.", suffix=".tmp")
+    with os.fdopen(fd, "w", encoding="utf-8") as f:
+        f.write(content)
+    os.replace(tmp_name, str(path))
+
+
 def main():
     ap = argparse.ArgumentParser(
         description="Draft reference-lexicon entries from yang4owl.py ontology output.",
@@ -281,15 +411,105 @@ def main():
             "# docs/reference-lexicons.md recommendation #2 before relying on them.",
             "",
         ]
-        for local_name in sorted(local_concepts.keys(), key=slugify):
-            occurrences = local_concepts[local_name]
+        # LEX-01: merge-aware by default -- read any existing output file
+        # back into the same shape and union it into this run's freshly
+        # collected concepts before rendering, so a single-source-tree run
+        # never clobbers another source tree's contributions to a
+        # shared-module file. Unconditional; no --force/--overwrite flag
+        # (D-07).
+        existing_concepts = {}
+        if out_path.exists():
+            for (m, ln), occurrences in merge_existing_lexicon(out_path, base_uri).items():
+                if m == module:
+                    existing_concepts[ln] = occurrences
+
+        merged_concepts = {}
+        for local_name in set(local_concepts) | set(existing_concepts):
+            fresh_by_uri = {occ["uri"]: occ for occ in local_concepts.get(local_name, [])}
+            existing_by_uri = {occ["uri"]: occ for occ in existing_concepts.get(local_name, [])}
+
+            merged_occs = []
+            for uri in sorted(set(fresh_by_uri) | set(existing_by_uri)):
+                fresh_occ = fresh_by_uri.get(uri)
+                existing_occ = existing_by_uri.get(uri)
+                if fresh_occ is not None and existing_occ is not None:
+                    # Present in both this run's fresh data and the prior
+                    # file -- union each side's texts for this exact URI
+                    # rather than letting one side silently shadow the
+                    # other. Different source trees can carry a
+                    # differently-complete rdfs:comment set for the
+                    # identical occurrence URI (e.g. a tree without a TE
+                    # augmentation sees fewer rdfs:comment values on the
+                    # same base container than a tree that includes it),
+                    # and D-08's never-silently-drop-real-content floor
+                    # applies at the text level, not just the
+                    # occurrence-URI level.
+                    #
+                    # Which side's definition/extra_notes split is used as
+                    # the base matters for byte-stability, not just content:
+                    # whichever side recorded strictly more total text for
+                    # this URI reflects a more complete view of its real
+                    # rdfs:comment set, so its role split (which text was
+                    # comments[0] vs comments[1:]) is kept; a tie prefers
+                    # this run's own fresh view. The other side's texts are
+                    # then folded in as additional extra_notes so nothing it
+                    # uniquely knew about is lost.
+                    fresh_texts = ([fresh_occ["definition"]] if fresh_occ["definition"] else []) + list(
+                        fresh_occ["extra_notes"]
+                    )
+                    existing_texts = (
+                        [existing_occ["definition"]] if existing_occ["definition"] else []
+                    ) + list(existing_occ["extra_notes"])
+                    if len(existing_texts) > len(fresh_texts):
+                        base_definition = existing_occ["definition"]
+                        base_extra = list(existing_occ["extra_notes"])
+                        other_texts = fresh_texts
+                    else:
+                        base_definition = fresh_occ["definition"]
+                        base_extra = list(fresh_occ["extra_notes"])
+                        other_texts = existing_texts
+
+                    combined_extra = list(base_extra)
+                    known = set(base_extra)
+                    if base_definition:
+                        known.add(base_definition)
+                    for t in other_texts:
+                        if t and t not in known:
+                            combined_extra.append(t)
+                            known.add(t)
+
+                    merged_occs.append(
+                        {
+                            "uri": uri,
+                            "label": fresh_occ["label"] or existing_occ["label"],
+                            "definition": base_definition,
+                            "extra_notes": combined_extra,
+                            "kind": fresh_occ["kind"],
+                        }
+                    )
+                elif fresh_occ is not None:
+                    merged_occs.append(fresh_occ)
+                else:
+                    # D-08: never silently delete an occurrence the current
+                    # run's inputs cannot regenerate -- retain it and
+                    # surface it on stdout instead.
+                    print(
+                        f"STALE: {uri} retained in {module}.lexicon.ttl "
+                        f"(no current input regenerates it)"
+                    )
+                    merged_occs.append(existing_occ)
+
+            merged_concepts[local_name] = merged_occs
+
+        for local_name in sorted(merged_concepts.keys(), key=slugify):
+            occurrences = merged_concepts[local_name]
             concept_lines = render_concept(module, local_name, occurrences)
             lines.extend(concept_lines)
             total_entries += 1
             if "    lex:needsCuration true ;" in concept_lines:
                 total_flagged += 1
-        out_path.write_text("\n".join(lines), encoding="utf-8")
-        print(f"Wrote {len(local_concepts)} entries to {out_path}")
+        write_atomic(out_path, "\n".join(lines))
+        print(f"Wrote {len(merged_concepts)} entries to {out_path}")
 
     print(f"\nTotal: {total_entries} entries across {len(by_module)} module(s); {total_flagged} flagged lex:needsCuration")
 
