@@ -14,14 +14,15 @@
 lex:tapi-photonic-media-adjustment-granularity
     a lex:ReferenceEntry ;
     skos:prefLabel "ADJUSTMENT_GRANULARITY" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-photonic-media/ADJUSTMENT_GRANULARITY> .
 
 lex:tapi-photonic-media-adjustment-granularity-g-100ghz
     a lex:ReferenceEntry ;
     skos:prefLabel "ADJUSTMENT_GRANULARITY_G_100GHZ" ;
+    # source: http://example.org/ontology/identity/tapi-photonic-media/ADJUSTMENT_GRANULARITY_G_100GHZ
     skos:definition "100000 MHz" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -30,6 +31,7 @@ lex:tapi-photonic-media-adjustment-granularity-g-100ghz
 lex:tapi-photonic-media-adjustment-granularity-g-12-5ghz
     a lex:ReferenceEntry ;
     skos:prefLabel "ADJUSTMENT_GRANULARITY_G_12_5GHZ" ;
+    # source: http://example.org/ontology/identity/tapi-photonic-media/ADJUSTMENT_GRANULARITY_G_12_5GHZ
     skos:definition "12500 MHz" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -38,6 +40,7 @@ lex:tapi-photonic-media-adjustment-granularity-g-12-5ghz
 lex:tapi-photonic-media-adjustment-granularity-g-25ghz
     a lex:ReferenceEntry ;
     skos:prefLabel "ADJUSTMENT_GRANULARITY_G_25GHZ" ;
+    # source: http://example.org/ontology/identity/tapi-photonic-media/ADJUSTMENT_GRANULARITY_G_25GHZ
     skos:definition "25000 MHz" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -46,6 +49,7 @@ lex:tapi-photonic-media-adjustment-granularity-g-25ghz
 lex:tapi-photonic-media-adjustment-granularity-g-3-125ghz
     a lex:ReferenceEntry ;
     skos:prefLabel "ADJUSTMENT_GRANULARITY_G_3_125GHZ" ;
+    # source: http://example.org/ontology/identity/tapi-photonic-media/ADJUSTMENT_GRANULARITY_G_3_125GHZ
     skos:definition "3125 MHz" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -54,6 +58,7 @@ lex:tapi-photonic-media-adjustment-granularity-g-3-125ghz
 lex:tapi-photonic-media-adjustment-granularity-g-50ghz
     a lex:ReferenceEntry ;
     skos:prefLabel "ADJUSTMENT_GRANULARITY_G_50GHZ" ;
+    # source: http://example.org/ontology/identity/tapi-photonic-media/ADJUSTMENT_GRANULARITY_G_50GHZ
     skos:definition "50000 MHz" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -62,6 +67,7 @@ lex:tapi-photonic-media-adjustment-granularity-g-50ghz
 lex:tapi-photonic-media-adjustment-granularity-g-6-25ghz
     a lex:ReferenceEntry ;
     skos:prefLabel "ADJUSTMENT_GRANULARITY_G_6_25GHZ" ;
+    # source: http://example.org/ontology/identity/tapi-photonic-media/ADJUSTMENT_GRANULARITY_G_6_25GHZ
     skos:definition "6250 MHz" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -70,15 +76,17 @@ lex:tapi-photonic-media-adjustment-granularity-g-6-25ghz
 lex:tapi-photonic-media-adjustment-granularity-unconstrained
     a lex:ReferenceEntry ;
     skos:prefLabel "ADJUSTMENT_GRANULARITY_UNCONSTRAINED" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-photonic-media/ADJUSTMENT_GRANULARITY_UNCONSTRAINED> .
 
 lex:tapi-photonic-media-amplification
     a lex:ReferenceEntry ;
     skos:prefLabel "amplification" ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/amplification
     skos:definition "Grouping definition: amplification" ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/amplification
     skos:scopeNote "The CEP which includes the Amplification impairments is the CEP which better approximates the output of the amplification function." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -87,7 +95,9 @@ lex:tapi-photonic-media-amplification
 lex:tapi-photonic-media-amplification-config
     a lex:ReferenceEntry ;
     skos:prefLabel "amplification-config" ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/amplification-config
     skos:definition "Grouping definition: amplification-config" ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/amplification-config
     skos:scopeNote "This structure is for further development and is NOT used in this version." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -96,8 +106,8 @@ lex:tapi-photonic-media-amplification-config
 lex:tapi-photonic-media-amplification-performance-data
     a lex:ReferenceEntry ;
     skos:prefLabel "amplification-performance-data" ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/amplification-performance-data
     skos:definition "Grouping definition: amplification-performance-data" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-photonic-media/amplification-performance-data> .
@@ -105,8 +115,8 @@ lex:tapi-photonic-media-amplification-performance-data
 lex:tapi-photonic-media-amplification-profile
     a lex:ReferenceEntry ;
     skos:prefLabel "amplification-profile" ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/amplification-profile
     skos:definition "Grouping definition: amplification-profile" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-photonic-media/amplification-profile> .
@@ -114,8 +124,8 @@ lex:tapi-photonic-media-amplification-profile
 lex:tapi-photonic-media-amplification-ref
     a lex:ReferenceEntry ;
     skos:prefLabel "amplification-ref" ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/amplification-ref
     skos:definition "Grouping definition: amplification-ref" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-photonic-media/amplification-ref> .
@@ -123,7 +133,9 @@ lex:tapi-photonic-media-amplification-ref
 lex:tapi-photonic-media-application-identifier
     a lex:ReferenceEntry ;
     skos:prefLabel "application-identifier" ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/application-identifier
     skos:definition "For backward compatibility wrt TAPI 2.1.3, in case the transceiver profile is not used." ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/application-identifier
     skos:scopeNote "Grouping definition: application-identifier" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -132,7 +144,9 @@ lex:tapi-photonic-media-application-identifier
 lex:tapi-photonic-media-cd-penalty
     a lex:ReferenceEntry ;
     skos:prefLabel "cd-penalty" ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/cd-penalty
     skos:definition "Entries of table; pair of values, chromatic dispersion and associated penalty." ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/cd-penalty
     skos:scopeNote "Grouping definition: cd-penalty" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -141,8 +155,8 @@ lex:tapi-photonic-media-cd-penalty
 lex:tapi-photonic-media-channel-power
     a lex:ReferenceEntry ;
     skos:prefLabel "channel-power" ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/channel-power
     skos:definition "Grouping definition: channel-power" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-photonic-media/channel-power> .
@@ -150,7 +164,9 @@ lex:tapi-photonic-media-channel-power
 lex:tapi-photonic-media-channel-power-penalty
     a lex:ReferenceEntry ;
     skos:prefLabel "channel-power-penalty" ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/channel-power-penalty
     skos:definition "Entries of table; pair of values, received power and associated penalty." ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/channel-power-penalty
     skos:scopeNote "Grouping definition: channel-power-penalty" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -159,7 +175,9 @@ lex:tapi-photonic-media-channel-power-penalty
 lex:tapi-photonic-media-common-explicit
     a lex:ReferenceEntry ;
     skos:prefLabel "common-explicit" ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/common-explicit
     skos:definition "Attributes capabilities related to explicit transceiver's mode.\nThis object also contains the list of attributes related to optical impairment limits for explicit mode (min OSNR, max PMD,  max CD, max PDL, Q-factor limit, etc.).\nIn case of standard and operational mode the attributes are implicit." ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/common-explicit
     skos:scopeNote "Grouping definition: common-explicit" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -168,8 +186,8 @@ lex:tapi-photonic-media-common-explicit
 lex:tapi-photonic-media-common-transceiver-parameters
     a lex:ReferenceEntry ;
     skos:prefLabel "common-transceiver-parameters" ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/common-transceiver-parameters
     skos:definition "Grouping definition: common-transceiver-parameters" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-photonic-media/common-transceiver-parameters> .
@@ -177,7 +195,9 @@ lex:tapi-photonic-media-common-transceiver-parameters
 lex:tapi-photonic-media-connectivity-impairment-profile
     a lex:ReferenceEntry ;
     skos:prefLabel "connectivity-impairment-profile" ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/connectivity-impairment-profile
     skos:definition "Grouping definition: connectivity-impairment-profile" ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/connectivity-impairment-profile
     skos:scopeNote "This profile centralizes all the parameters of CCAMP ROADM add/drop/express path impairment profiles." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -186,8 +206,8 @@ lex:tapi-photonic-media-connectivity-impairment-profile
 lex:tapi-photonic-media-external-transceiver-parameters
     a lex:ReferenceEntry ;
     skos:prefLabel "external-transceiver-parameters" ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/external-transceiver-parameters
     skos:definition "Grouping definition: external-transceiver-parameters" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-photonic-media/external-transceiver-parameters> .
@@ -195,14 +215,15 @@ lex:tapi-photonic-media-external-transceiver-parameters
 lex:tapi-photonic-media-fec-type
     a lex:ReferenceEntry ;
     skos:prefLabel "FEC_TYPE" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-photonic-media/FEC_TYPE> .
 
 lex:tapi-photonic-media-fec-type-c-fec
     a lex:ReferenceEntry ;
     skos:prefLabel "FEC_TYPE_C_FEC" ;
+    # source: http://example.org/ontology/identity/tapi-photonic-media/FEC_TYPE_C_FEC
     skos:definition "Concatenated FEC (C-FEC) that combines an outer Staircase Forward Error Correction (SC-FEC) code and an inner double-extended SD-FEC (128,119) Hamming code.\nMore details are provided in clause 15/G.709.3 where it is called DSH instead of concatenated FEC.\nAnnex A of ITU-T G.709.2 v1.1 (09/2020):OTU4 long-reach interface;\nAnnex D of ITU-T G.709.3 v2.1 (11/2022): Flexible OTN long-reach interfaces;\nClause 15 of ITU-T G.709.3 v2.1 (11/2022): Flexible OTN long-reach interfaces." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -211,6 +232,7 @@ lex:tapi-photonic-media-fec-type-c-fec
 lex:tapi-photonic-media-fec-type-g-fec
     a lex:ReferenceEntry ;
     skos:prefLabel "FEC_TYPE_G_FEC" ;
+    # source: http://example.org/ontology/identity/tapi-photonic-media/FEC_TYPE_G_FEC
     skos:definition "Generic Forward Error Correction (G-FEC) - Reed Solomon (255,239) coding schema.\nITU-T G.975 v2.0 (10/2000): Forward error correction for submarine systems." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -219,6 +241,7 @@ lex:tapi-photonic-media-fec-type-g-fec
 lex:tapi-photonic-media-fec-type-golay
     a lex:ReferenceEntry ;
     skos:prefLabel "FEC_TYPE_GOLAY" ;
+    # source: http://example.org/ontology/identity/tapi-photonic-media/FEC_TYPE_GOLAY
     skos:definition "Golay error correction." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -227,6 +250,7 @@ lex:tapi-photonic-media-fec-type-golay
 lex:tapi-photonic-media-fec-type-hamming-code
     a lex:ReferenceEntry ;
     skos:prefLabel "FEC_TYPE_HAMMING_CODE" ;
+    # source: http://example.org/ontology/identity/tapi-photonic-media/FEC_TYPE_HAMMING_CODE
     skos:definition "Hamming Code error correction." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -235,6 +259,7 @@ lex:tapi-photonic-media-fec-type-hamming-code
 lex:tapi-photonic-media-fec-type-no-fec
     a lex:ReferenceEntry ;
     skos:prefLabel "FEC_TYPE_NO_FEC" ;
+    # source: http://example.org/ontology/identity/tapi-photonic-media/FEC_TYPE_NO_FEC
     skos:definition "FEC feature not supported." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -243,6 +268,7 @@ lex:tapi-photonic-media-fec-type-no-fec
 lex:tapi-photonic-media-fec-type-o-fec
     a lex:ReferenceEntry ;
     skos:prefLabel "FEC_TYPE_O_FEC" ;
+    # source: http://example.org/ontology/identity/tapi-photonic-media/FEC_TYPE_O_FEC
     skos:definition "Open Forward Error Correction (O-FEC) which reuses the Bose, Chaudhuri and Hocquenghem (BCH) FEC.\nClause 16.4.4 of ITU-T G.709.3 v2.1 (11/2022): Flexible OTN long-reach interfaces." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -251,6 +277,7 @@ lex:tapi-photonic-media-fec-type-o-fec
 lex:tapi-photonic-media-fec-type-sc-fec
     a lex:ReferenceEntry ;
     skos:prefLabel "FEC_TYPE_SC_FEC" ;
+    # source: http://example.org/ontology/identity/tapi-photonic-media/FEC_TYPE_SC_FEC
     skos:definition "Staircase Forward Error Correction (SC-FEC).\nAnnex A of ITU-T G.709.2 v1.1 (09/2020): OTU4 long-reach interface." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -259,6 +286,7 @@ lex:tapi-photonic-media-fec-type-sc-fec
 lex:tapi-photonic-media-fec-type-super-fec
     a lex:ReferenceEntry ;
     skos:prefLabel "FEC_TYPE_SUPER_FEC" ;
+    # source: http://example.org/ontology/identity/tapi-photonic-media/FEC_TYPE_SUPER_FEC
     skos:definition "Super Forward Error Correction (S-FEC). Also called Enhanced FEC (E-FEC).\nITU-T G.975.1 v1.2 (07/2013): Forward error correction for high bit-rate DWDM submarine systems." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -267,8 +295,8 @@ lex:tapi-photonic-media-fec-type-super-fec
 lex:tapi-photonic-media-fiber-profile
     a lex:ReferenceEntry ;
     skos:prefLabel "fiber-profile" ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/fiber-profile
     skos:definition "Grouping definition: fiber-profile" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-photonic-media/fiber-profile> .
@@ -276,24 +304,24 @@ lex:tapi-photonic-media-fiber-profile
 lex:tapi-photonic-media-flexi-channel-spacing
     a lex:ReferenceEntry ;
     skos:prefLabel "FLEXI_CHANNEL_SPACING" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-photonic-media/FLEXI_CHANNEL_SPACING> .
 
 lex:tapi-photonic-media-flexi-channel-spacing-6-25ghz
     a lex:ReferenceEntry ;
     skos:prefLabel "FLEXI_CHANNEL_SPACING_6_25GHz" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-photonic-media/FLEXI_CHANNEL_SPACING_6_25GHz> .
 
 lex:tapi-photonic-media-flexi-grid-config-pac
     a lex:ReferenceEntry ;
     skos:prefLabel "flexi-grid-config-pac" ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/flexi-grid-config-pac
     skos:definition "Grouping definition: flexi-grid-config-pac" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-photonic-media/flexi-grid-config-pac> .
@@ -301,8 +329,8 @@ lex:tapi-photonic-media-flexi-grid-config-pac
 lex:tapi-photonic-media-flexi-grid-pac
     a lex:ReferenceEntry ;
     skos:prefLabel "flexi-grid-pac" ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/flexi-grid-pac
     skos:definition "Grouping definition: flexi-grid-pac" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-photonic-media/flexi-grid-pac> .
@@ -310,23 +338,25 @@ lex:tapi-photonic-media-flexi-grid-pac
 lex:tapi-photonic-media-flexi-slot-width-granularity
     a lex:ReferenceEntry ;
     skos:prefLabel "FLEXI_SLOT_WIDTH_GRANULARITY" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-photonic-media/FLEXI_SLOT_WIDTH_GRANULARITY> .
 
 lex:tapi-photonic-media-flexi-slot-width-granularity-12-5ghz
     a lex:ReferenceEntry ;
     skos:prefLabel "FLEXI_SLOT_WIDTH_GRANULARITY_12_5GHz" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-photonic-media/FLEXI_SLOT_WIDTH_GRANULARITY_12_5GHz> .
 
 lex:tapi-photonic-media-frequency-constraint
     a lex:ReferenceEntry ;
     skos:prefLabel "frequency-constraint" ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/frequency-constraint
     skos:definition "Grouping definition: frequency-constraint" ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/frequency-constraint
     skos:scopeNote "This data-type holds the frequency constraint information in terms of GridType ( FIXED grid (DWDM or CWDM) or FLEX grid) and AdjustmentGranularity." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -335,8 +365,8 @@ lex:tapi-photonic-media-frequency-constraint
 lex:tapi-photonic-media-frequency-range
     a lex:ReferenceEntry ;
     skos:prefLabel "frequency-range" ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/frequency-range
     skos:definition "Grouping definition: frequency-range" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-photonic-media/frequency-range> .
@@ -344,8 +374,8 @@ lex:tapi-photonic-media-frequency-range
 lex:tapi-photonic-media-gain-range
     a lex:ReferenceEntry ;
     skos:prefLabel "gain-range" ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/gain-range
     skos:definition "Grouping definition: gain-range" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-photonic-media/gain-range> .
@@ -353,14 +383,15 @@ lex:tapi-photonic-media-gain-range
 lex:tapi-photonic-media-grid-type
     a lex:ReferenceEntry ;
     skos:prefLabel "GRID_TYPE" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-photonic-media/GRID_TYPE> .
 
 lex:tapi-photonic-media-grid-type-cwdm
     a lex:ReferenceEntry ;
     skos:prefLabel "GRID_TYPE_CWDM" ;
+    # source: http://example.org/ontology/identity/tapi-photonic-media/GRID_TYPE_CWDM
     skos:definition "Fixed frequency grid as specified in ITU-T G.694.2" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -369,6 +400,7 @@ lex:tapi-photonic-media-grid-type-cwdm
 lex:tapi-photonic-media-grid-type-dwdm
     a lex:ReferenceEntry ;
     skos:prefLabel "GRID_TYPE_DWDM" ;
+    # source: http://example.org/ontology/identity/tapi-photonic-media/GRID_TYPE_DWDM
     skos:definition "Fixed frequency grid in C & L bands as specified in ITU-T G.694.1\n" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -377,6 +409,7 @@ lex:tapi-photonic-media-grid-type-dwdm
 lex:tapi-photonic-media-grid-type-flex
     a lex:ReferenceEntry ;
     skos:prefLabel "GRID_TYPE_FLEX" ;
+    # source: http://example.org/ontology/identity/tapi-photonic-media/GRID_TYPE_FLEX
     skos:definition "Flexible frequency grid as specified in ITU-T G.694.1. In this case,\n- the allowed frequency slots have a nominal central frequency (in THz) defined by:\n193.1 + n × 0.00625 where n is a positive or negative integer including 0 and 0.00625 is the nominal central frequency granularity in THz\n- and a slot width defined by:\n12.5 × m where m is a positive integer and 12.5 is the slot width granularity in GHz.\nAny combination of frequency slots is allowed as long as no two frequency slots overlap." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -385,15 +418,17 @@ lex:tapi-photonic-media-grid-type-flex
 lex:tapi-photonic-media-grid-type-gridless
     a lex:ReferenceEntry ;
     skos:prefLabel "GRID_TYPE_GRIDLESS" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-photonic-media/GRID_TYPE_GRIDLESS> .
 
 lex:tapi-photonic-media-impairment-route-entry
     a lex:ReferenceEntry ;
     skos:prefLabel "impairment-route-entry" ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/impairment-route-entry
     skos:definition "An ImpairmentRouteEntry can be exclusively either an OtsConcentratedLoss or an OtsFiberSpanImpairments." ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/impairment-route-entry
     skos:scopeNote "Grouping definition: impairment-route-entry" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -402,24 +437,24 @@ lex:tapi-photonic-media-impairment-route-entry
 lex:tapi-photonic-media-laser-control-status-type
     a lex:ReferenceEntry ;
     skos:prefLabel "laser-control-status-type" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:EnumeratedKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/types/tapi-photonic-media/laser-control-status-type> .
 
 lex:tapi-photonic-media-laser-control-type
     a lex:ReferenceEntry ;
     skos:prefLabel "laser-control-type" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:EnumeratedKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/types/tapi-photonic-media/laser-control-type> .
 
 lex:tapi-photonic-media-laser-properties
     a lex:ReferenceEntry ;
     skos:prefLabel "laser-properties" ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/laser-properties
     skos:definition "Grouping definition: laser-properties" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-photonic-media/laser-properties> .
@@ -427,22 +462,23 @@ lex:tapi-photonic-media-laser-properties
 lex:tapi-photonic-media-laser-type
     a lex:ReferenceEntry ;
     skos:prefLabel "laser-type" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:EnumeratedKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/types/tapi-photonic-media/laser-type> .
 
 lex:tapi-photonic-media-line-coding
     a lex:ReferenceEntry ;
     skos:prefLabel "LINE_CODING" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-photonic-media/LINE_CODING> .
 
 lex:tapi-photonic-media-line-coding-foic1-4-sc
     a lex:ReferenceEntry ;
     skos:prefLabel "LINE_CODING_FOIC1_4_SC" ;
+    # source: http://example.org/ontology/identity/tapi-photonic-media/LINE_CODING_FOIC1_4_SC
     skos:definition "The bit rate/line coding used by optical tributary signals carrying a FlexO Interface of order C1 with 4 lanes (FOIC1.1) with Staircase Forward Error Correction (SC FEC).\nSection 3.2.1 of ITU-T G.698.2 v3.0 (11/2018)." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -451,6 +487,7 @@ lex:tapi-photonic-media-line-coding-foic1-4-sc
 lex:tapi-photonic-media-line-coding-nrz-10g
     a lex:ReferenceEntry ;
     skos:prefLabel "LINE_CODING_NRZ-10G" ;
+    # source: http://example.org/ontology/identity/tapi-photonic-media/LINE_CODING_NRZ-10G
     skos:definition "The non return to zero (NRZ) bit rate/line coding used by the optical tributary signal class NRZ 10G\nSection 3.2.7 of ITU-T G.959.1 v8.0 (07/2018)." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -459,6 +496,7 @@ lex:tapi-photonic-media-line-coding-nrz-10g
 lex:tapi-photonic-media-line-coding-nrz-2p5g
     a lex:ReferenceEntry ;
     skos:prefLabel "LINE_CODING_NRZ-2P5G" ;
+    # source: http://example.org/ontology/identity/tapi-photonic-media/LINE_CODING_NRZ-2P5G
     skos:definition "The non return to zero (NRZ) bit rate/line coding used by the optical tributary signal class NRZ 2.5G\nSection 3.2.6 of ITU-T G.959.1 v8.0 (07/2018)." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -467,6 +505,7 @@ lex:tapi-photonic-media-line-coding-nrz-2p5g
 lex:tapi-photonic-media-line-coding-nrz-otu1
     a lex:ReferenceEntry ;
     skos:prefLabel "LINE_CODING_NRZ-OTU1" ;
+    # source: http://example.org/ontology/identity/tapi-photonic-media/LINE_CODING_NRZ-OTU1
     skos:definition "The non return to zero (NRZ) bit rate/line coding used by the Optical channel Transport Unit order 1 (OTU1) optical tributary signals.\nSection 7.2.1.2 of ITU-T G.959.1 v8.0 (07/2018)." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -475,6 +514,7 @@ lex:tapi-photonic-media-line-coding-nrz-otu1
 lex:tapi-photonic-media-line-coding-nrz-otu2
     a lex:ReferenceEntry ;
     skos:prefLabel "LINE_CODING_NRZ-OTU2" ;
+    # source: http://example.org/ontology/identity/tapi-photonic-media/LINE_CODING_NRZ-OTU2
     skos:definition "The non return to zero (NRZ) bit rate/line coding used by the Optical channel Transport Unit order 2 (OTU2) optical tributary signals.\nSection 7.2.1.2 of ITU-T G.959.1 v8.0 (07/2018)." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -483,6 +523,7 @@ lex:tapi-photonic-media-line-coding-nrz-otu2
 lex:tapi-photonic-media-line-coding-otl4-4-sc
     a lex:ReferenceEntry ;
     skos:prefLabel "LINE_CODING_OTL4_4_SC" ;
+    # source: http://example.org/ontology/identity/tapi-photonic-media/LINE_CODING_OTL4_4_SC
     skos:definition "The bit rate/line coding used by optical tributary signals carrying a 100G Optical Transport Unit order 4 (OTU4) with Staircase Forward Error Correction (SC FEC) from a group of four Optical Transport Lanes (OTL).\nSection 3.2.1 of ITU-T G.698.2 v3.0 (11/2018)." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -491,7 +532,9 @@ lex:tapi-photonic-media-line-coding-otl4-4-sc
 lex:tapi-photonic-media-mc-bandwidth-config-pac
     a lex:ReferenceEntry ;
     skos:prefLabel "mc-bandwidth-config-pac" ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/mc-bandwidth-config-pac
     skos:definition "Grouping definition: mc-bandwidth-config-pac" ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/mc-bandwidth-config-pac
     skos:scopeNote "MC configuration based on bandwidth, with the actual position in the spectrum is delegated to the server controller." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -500,8 +543,8 @@ lex:tapi-photonic-media-mc-bandwidth-config-pac
 lex:tapi-photonic-media-mc-connection-end-point-spec
     a lex:ReferenceEntry ;
     skos:prefLabel "mc-connection-end-point-spec" ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/mc-connection-end-point-spec
     skos:definition "Grouping definition: mc-connection-end-point-spec" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-photonic-media/mc-connection-end-point-spec> .
@@ -509,7 +552,9 @@ lex:tapi-photonic-media-mc-connection-end-point-spec
 lex:tapi-photonic-media-mc-flexi-grid-config-pac
     a lex:ReferenceEntry ;
     skos:prefLabel "mc-flexi-grid-config-pac" ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/mc-flexi-grid-config-pac
     skos:definition "Grouping definition: mc-flexi-grid-config-pac" ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/mc-flexi-grid-config-pac
     skos:scopeNote "ITU-T G.694.1 Spectral grids for WDM applications: DWDM frequency grid.\nThe flexi-grid-frequency-slot (RFC 9093) defines the nominal central frequency and its slot width in terms of N, M." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -518,7 +563,9 @@ lex:tapi-photonic-media-mc-flexi-grid-config-pac
 lex:tapi-photonic-media-mc-spectrum-config-pac
     a lex:ReferenceEntry ;
     skos:prefLabel "mc-spectrum-config-pac" ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/mc-spectrum-config-pac
     skos:definition "Grouping definition: mc-spectrum-config-pac" ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/mc-spectrum-config-pac
     skos:scopeNote "MC configuration based on spectrum specification." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -527,7 +574,9 @@ lex:tapi-photonic-media-mc-spectrum-config-pac
 lex:tapi-photonic-media-mcg-connectivity-service-end-point-spec
     a lex:ReferenceEntry ;
     skos:prefLabel "mcg-connectivity-service-end-point-spec" ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/mcg-connectivity-service-end-point-spec
     skos:definition "Grouping definition: mcg-connectivity-service-end-point-spec" ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/mcg-connectivity-service-end-point-spec
     skos:scopeNote "MCG provisioning scenarios:\n1) In case of MCG provisioning based on multiple SIPs (e.g. more add/drop ports each one potentially supporting a single OTSi),\nthen a unique/top CSEP instance (not referring to any SIP, with a MC LPC including McgConnectivityServiceEndPointSpec with specified only the number of MCs) refers to\nthe CSEP instances (one per each MEDIA Link, each one referring to one SIP, each one with a MC LPC including McgConnectivityServiceEndPointSpec composing only one MC config pac), through the CSEPHasAssembledCSEPs association.\n2) In case of MCG provisioning based on single SIP, then the model is compacted into only one CSEP instance, with a MC LPC including McgConnectivityServiceEndPointSpec, which composes one or more MC config pacs)." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -536,7 +585,9 @@ lex:tapi-photonic-media-mcg-connectivity-service-end-point-spec
 lex:tapi-photonic-media-modulation-technique
     a lex:ReferenceEntry ;
     skos:prefLabel "modulation-technique" ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/modulation-technique
     skos:definition "Grouping definition: modulation-technique" ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/modulation-technique
     skos:scopeNote "The standardModulationTechnique and proprietaryModulationTechnique attributes are mutually exclusive." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -545,14 +596,15 @@ lex:tapi-photonic-media-modulation-technique
 lex:tapi-photonic-media-mt
     a lex:ReferenceEntry ;
     skos:prefLabel "MT" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-photonic-media/MT> .
 
 lex:tapi-photonic-media-mt-dc-dp-qam16
     a lex:ReferenceEntry ;
     skos:prefLabel "MT_DC-DP-QAM16" ;
+    # source: http://example.org/ontology/identity/tapi-photonic-media/MT_DC-DP-QAM16
     skos:definition "DC-DP-QAM16 (16 symbols Dual Carrier Dual Polarization Quadrature Amplitude Modulation)." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -561,6 +613,7 @@ lex:tapi-photonic-media-mt-dc-dp-qam16
 lex:tapi-photonic-media-mt-dc-dp-qam8
     a lex:ReferenceEntry ;
     skos:prefLabel "MT_DC-DP-QAM8" ;
+    # source: http://example.org/ontology/identity/tapi-photonic-media/MT_DC-DP-QAM8
     skos:definition "DC-DP-QAM8 (8 symbols Dual Carrier Dual Polarization Quadrature Amplitude Modulation)." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -569,6 +622,7 @@ lex:tapi-photonic-media-mt-dc-dp-qam8
 lex:tapi-photonic-media-mt-dp-qam16
     a lex:ReferenceEntry ;
     skos:prefLabel "MT_DP-QAM16" ;
+    # source: http://example.org/ontology/identity/tapi-photonic-media/MT_DP-QAM16
     skos:definition "DP-QAM16 (16 symbols Dual Polarization Quadrature Amplitude Modulation)." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -577,6 +631,7 @@ lex:tapi-photonic-media-mt-dp-qam16
 lex:tapi-photonic-media-mt-dp-qam32
     a lex:ReferenceEntry ;
     skos:prefLabel "MT_DP-QAM32" ;
+    # source: http://example.org/ontology/identity/tapi-photonic-media/MT_DP-QAM32
     skos:definition "DP-QAM32 (32 symbols Dual Polarization Quadrature Amplitude Modulation)." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -585,6 +640,7 @@ lex:tapi-photonic-media-mt-dp-qam32
 lex:tapi-photonic-media-mt-dp-qam64
     a lex:ReferenceEntry ;
     skos:prefLabel "MT_DP-QAM64" ;
+    # source: http://example.org/ontology/identity/tapi-photonic-media/MT_DP-QAM64
     skos:definition "DP-QAM64 (64 symbols Dual Polarization Quadrature Amplitude Modulation)." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -593,6 +649,7 @@ lex:tapi-photonic-media-mt-dp-qam64
 lex:tapi-photonic-media-mt-dp-qam8
     a lex:ReferenceEntry ;
     skos:prefLabel "MT_DP-QAM8" ;
+    # source: http://example.org/ontology/identity/tapi-photonic-media/MT_DP-QAM8
     skos:definition "DP-QAM8 (8 symbols Dual Polarization Quadrature Amplitude Modulation)." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -601,6 +658,7 @@ lex:tapi-photonic-media-mt-dp-qam8
 lex:tapi-photonic-media-mt-dp-qpsk
     a lex:ReferenceEntry ;
     skos:prefLabel "MT_DP-QPSK" ;
+    # source: http://example.org/ontology/identity/tapi-photonic-media/MT_DP-QPSK
     skos:definition "DP-QPSK (Dual Polarization Quadrature Phase Shift Keying) modulation." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -609,6 +667,7 @@ lex:tapi-photonic-media-mt-dp-qpsk
 lex:tapi-photonic-media-mt-dpsk
     a lex:ReferenceEntry ;
     skos:prefLabel "MT_DPSK" ;
+    # source: http://example.org/ontology/identity/tapi-photonic-media/MT_DPSK
     skos:definition "DPSK (Differential Phase Shift Keying) modulation." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -617,6 +676,7 @@ lex:tapi-photonic-media-mt-dpsk
 lex:tapi-photonic-media-mt-qam16
     a lex:ReferenceEntry ;
     skos:prefLabel "MT_QAM16" ;
+    # source: http://example.org/ontology/identity/tapi-photonic-media/MT_QAM16
     skos:definition "QAM16 (16 symbols Quadrature Amplitude Modulation)." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -625,6 +685,7 @@ lex:tapi-photonic-media-mt-qam16
 lex:tapi-photonic-media-mt-qam32
     a lex:ReferenceEntry ;
     skos:prefLabel "MT_QAM32" ;
+    # source: http://example.org/ontology/identity/tapi-photonic-media/MT_QAM32
     skos:definition "QAM32 (32 symbols Quadrature Amplitude Modulation)." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -633,6 +694,7 @@ lex:tapi-photonic-media-mt-qam32
 lex:tapi-photonic-media-mt-qam64
     a lex:ReferenceEntry ;
     skos:prefLabel "MT_QAM64" ;
+    # source: http://example.org/ontology/identity/tapi-photonic-media/MT_QAM64
     skos:definition "QAM64 (64 symbols Quadrature Amplitude Modulation)." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -641,6 +703,7 @@ lex:tapi-photonic-media-mt-qam64
 lex:tapi-photonic-media-mt-qam8
     a lex:ReferenceEntry ;
     skos:prefLabel "MT_QAM8" ;
+    # source: http://example.org/ontology/identity/tapi-photonic-media/MT_QAM8
     skos:definition "8QAM (8 symbols Quadrature Amplitude Modulation)." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -649,6 +712,7 @@ lex:tapi-photonic-media-mt-qam8
 lex:tapi-photonic-media-mt-qpsk
     a lex:ReferenceEntry ;
     skos:prefLabel "MT_QPSK" ;
+    # source: http://example.org/ontology/identity/tapi-photonic-media/MT_QPSK
     skos:definition "QPSK (Quadrature Phase Shift Keying) modulation." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -657,8 +721,8 @@ lex:tapi-photonic-media-mt-qpsk
 lex:tapi-photonic-media-noise-figure-range
     a lex:ReferenceEntry ;
     skos:prefLabel "noise-figure-range" ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/noise-figure-range
     skos:definition "Grouping definition: noise-figure-range" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-photonic-media/noise-figure-range> .
@@ -666,8 +730,8 @@ lex:tapi-photonic-media-noise-figure-range
 lex:tapi-photonic-media-oms-connection-end-point-spec
     a lex:ReferenceEntry ;
     skos:prefLabel "oms-connection-end-point-spec" ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/oms-connection-end-point-spec
     skos:definition "Grouping definition: oms-connection-end-point-spec" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-photonic-media/oms-connection-end-point-spec> .
@@ -675,8 +739,8 @@ lex:tapi-photonic-media-oms-connection-end-point-spec
 lex:tapi-photonic-media-oms-general-optical-params
     a lex:ReferenceEntry ;
     skos:prefLabel "oms-general-optical-params" ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/oms-general-optical-params
     skos:definition "Grouping definition: oms-general-optical-params" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-photonic-media/oms-general-optical-params> .
@@ -684,8 +748,8 @@ lex:tapi-photonic-media-oms-general-optical-params
 lex:tapi-photonic-media-optical-impairment-constraints
     a lex:ReferenceEntry ;
     skos:prefLabel "optical-impairment-constraints" ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/optical-impairment-constraints
     skos:definition "Grouping definition: optical-impairment-constraints" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-photonic-media/optical-impairment-constraints> .
@@ -693,16 +757,16 @@ lex:tapi-photonic-media-optical-impairment-constraints
 lex:tapi-photonic-media-optical-routing-strategy
     a lex:ReferenceEntry ;
     skos:prefLabel "optical-routing-strategy" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:EnumeratedKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/types/tapi-photonic-media/optical-routing-strategy> .
 
 lex:tapi-photonic-media-osc-monitoring-pac
     a lex:ReferenceEntry ;
     skos:prefLabel "osc-monitoring-pac" ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/osc-monitoring-pac
     skos:definition "Grouping definition: osc-monitoring-pac" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-photonic-media/osc-monitoring-pac> .
@@ -710,8 +774,8 @@ lex:tapi-photonic-media-osc-monitoring-pac
 lex:tapi-photonic-media-osc-params
     a lex:ReferenceEntry ;
     skos:prefLabel "osc-params" ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/osc-params
     skos:definition "Grouping definition: osc-params" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-photonic-media/osc-params> .
@@ -719,16 +783,16 @@ lex:tapi-photonic-media-osc-params
 lex:tapi-photonic-media-other-modulation-techniques
     a lex:ReferenceEntry ;
     skos:prefLabel "other-modulation-techniques" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:EnumeratedKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/types/tapi-photonic-media/other-modulation-techniques> .
 
 lex:tapi-photonic-media-ots-concentrated-loss
     a lex:ReferenceEntry ;
     skos:prefLabel "ots-concentrated-loss" ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/ots-concentrated-loss
     skos:definition "Grouping definition: ots-concentrated-loss" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-photonic-media/ots-concentrated-loss> .
@@ -736,8 +800,8 @@ lex:tapi-photonic-media-ots-concentrated-loss
 lex:tapi-photonic-media-ots-fiber-span-impairments
     a lex:ReferenceEntry ;
     skos:prefLabel "ots-fiber-span-impairments" ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/ots-fiber-span-impairments
     skos:definition "Grouping definition: ots-fiber-span-impairments" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-photonic-media/ots-fiber-span-impairments> .
@@ -745,8 +809,8 @@ lex:tapi-photonic-media-ots-fiber-span-impairments
 lex:tapi-photonic-media-ots-impairments
     a lex:ReferenceEntry ;
     skos:prefLabel "ots-impairments" ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/ots-impairments
     skos:definition "Grouping definition: ots-impairments" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-photonic-media/ots-impairments> .
@@ -754,8 +818,8 @@ lex:tapi-photonic-media-ots-impairments
 lex:tapi-photonic-media-ots-media-connection-end-point-spec
     a lex:ReferenceEntry ;
     skos:prefLabel "ots-media-connection-end-point-spec" ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/ots-media-connection-end-point-spec
     skos:definition "Grouping definition: ots-media-connection-end-point-spec" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-photonic-media/ots-media-connection-end-point-spec> .
@@ -763,7 +827,9 @@ lex:tapi-photonic-media-ots-media-connection-end-point-spec
 lex:tapi-photonic-media-otsi-config-pac
     a lex:ReferenceEntry ;
     skos:prefLabel "otsi-config-pac" ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/otsi-config-pac
     skos:definition "Configuration parameters regarding the single O/E/O transmission function." ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/otsi-config-pac
     skos:scopeNote "Grouping definition: otsi-config-pac" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -772,7 +838,9 @@ lex:tapi-photonic-media-otsi-config-pac
 lex:tapi-photonic-media-otsi-mc-bandwidth-config-pac
     a lex:ReferenceEntry ;
     skos:prefLabel "otsi-mc-bandwidth-config-pac" ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/otsi-mc-bandwidth-config-pac
     skos:definition "Grouping definition: otsi-mc-bandwidth-config-pac" ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/otsi-mc-bandwidth-config-pac
     skos:scopeNote "OTSiMC configuration based on bandwidth, with the actual position in the spectrum is delegated to the server controller." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -781,8 +849,8 @@ lex:tapi-photonic-media-otsi-mc-bandwidth-config-pac
 lex:tapi-photonic-media-otsi-mc-connection-end-point-spec
     a lex:ReferenceEntry ;
     skos:prefLabel "otsi-mc-connection-end-point-spec" ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/otsi-mc-connection-end-point-spec
     skos:definition "Grouping definition: otsi-mc-connection-end-point-spec" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-photonic-media/otsi-mc-connection-end-point-spec> .
@@ -790,7 +858,9 @@ lex:tapi-photonic-media-otsi-mc-connection-end-point-spec
 lex:tapi-photonic-media-otsi-mc-flexi-grid-config-pac
     a lex:ReferenceEntry ;
     skos:prefLabel "otsi-mc-flexi-grid-config-pac" ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/otsi-mc-flexi-grid-config-pac
     skos:definition "Grouping definition: otsi-mc-flexi-grid-config-pac" ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/otsi-mc-flexi-grid-config-pac
     skos:scopeNote "ITU-T G.694.1 Spectral grids for WDM applications: DWDM frequency grid.\nThe flexi-grid-frequency-slot (RFC 9093) defines the nominal central frequency and its slot width in terms of N, M." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -799,7 +869,9 @@ lex:tapi-photonic-media-otsi-mc-flexi-grid-config-pac
 lex:tapi-photonic-media-otsi-mc-frequency-config-pac
     a lex:ReferenceEntry ;
     skos:prefLabel "otsi-mc-frequency-config-pac" ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/otsi-mc-frequency-config-pac
     skos:definition "Grouping definition: otsi-mc-frequency-config-pac" ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/otsi-mc-frequency-config-pac
     skos:scopeNote "OTSiMC configuration based on central frequency specification." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -808,7 +880,9 @@ lex:tapi-photonic-media-otsi-mc-frequency-config-pac
 lex:tapi-photonic-media-otsi-mc-spectrum-config-pac
     a lex:ReferenceEntry ;
     skos:prefLabel "otsi-mc-spectrum-config-pac" ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/otsi-mc-spectrum-config-pac
     skos:definition "Grouping definition: otsi-mc-spectrum-config-pac" ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/otsi-mc-spectrum-config-pac
     skos:scopeNote "OTSiMC configuration based on spectrum specification." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -817,7 +891,9 @@ lex:tapi-photonic-media-otsi-mc-spectrum-config-pac
 lex:tapi-photonic-media-otsi-mcg-connectivity-service-end-point-spec
     a lex:ReferenceEntry ;
     skos:prefLabel "otsi-mcg-connectivity-service-end-point-spec" ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/otsi-mcg-connectivity-service-end-point-spec
     skos:definition "Grouping definition: otsi-mcg-connectivity-service-end-point-spec" ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/otsi-mcg-connectivity-service-end-point-spec
     skos:scopeNote "OTSiMCG CSEP is provisioned also in case OTSiMC layer is not explicitly represented on Resource side, i.e. no OTSiMC Connections and CEPs are instantiated.\nOTSiMCG provisioning scenarios: are analogous to MCG provisioning scenarios.\nOtsiMcBandwidthConfigPac, OtsiMcSpectrumConfigPac and OtsiMcFrequencyConfigPac are mutually exclusive." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -826,8 +902,8 @@ lex:tapi-photonic-media-otsi-mcg-connectivity-service-end-point-spec
 lex:tapi-photonic-media-otsi-monitoring-pac
     a lex:ReferenceEntry ;
     skos:prefLabel "otsi-monitoring-pac" ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/otsi-monitoring-pac
     skos:definition "Grouping definition: otsi-monitoring-pac" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-photonic-media/otsi-monitoring-pac> .
@@ -835,8 +911,8 @@ lex:tapi-photonic-media-otsi-monitoring-pac
 lex:tapi-photonic-media-otsi-power-config-pac
     a lex:ReferenceEntry ;
     skos:prefLabel "otsi-power-config-pac" ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/otsi-power-config-pac
     skos:definition "Grouping definition: otsi-power-config-pac" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-photonic-media/otsi-power-config-pac> .
@@ -844,7 +920,9 @@ lex:tapi-photonic-media-otsi-power-config-pac
 lex:tapi-photonic-media-otsi-routing-spec
     a lex:ReferenceEntry ;
     skos:prefLabel "otsi-routing-spec" ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/otsi-routing-spec
     skos:definition "Grouping definition: otsi-routing-spec" ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/otsi-routing-spec
     skos:scopeNote "This structure is for further development and is NOT used in this version." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -853,7 +931,9 @@ lex:tapi-photonic-media-otsi-routing-spec
 lex:tapi-photonic-media-otsi-termination-pac
     a lex:ReferenceEntry ;
     skos:prefLabel "otsi-termination-pac" ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/otsi-termination-pac
     skos:definition "Grouping definition: otsi-termination-pac" ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/otsi-termination-pac
     skos:scopeNote "Present in case of terminated OTSiMC CEP, i.e. including O/E/O function." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -862,7 +942,9 @@ lex:tapi-photonic-media-otsi-termination-pac
 lex:tapi-photonic-media-otsi-threshold-power-config
     a lex:ReferenceEntry ;
     skos:prefLabel "otsi-threshold-power-config" ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/otsi-threshold-power-config
     skos:definition "Grouping definition: otsi-threshold-power-config" ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/otsi-threshold-power-config
     skos:scopeNote "This pac includes power management constraints." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -871,7 +953,9 @@ lex:tapi-photonic-media-otsi-threshold-power-config
 lex:tapi-photonic-media-otsia-connectivity-service-end-point-spec
     a lex:ReferenceEntry ;
     skos:prefLabel "otsia-connectivity-service-end-point-spec" ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/otsia-connectivity-service-end-point-spec
     skos:definition "Grouping definition: otsia-connectivity-service-end-point-spec" ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/otsia-connectivity-service-end-point-spec
     skos:scopeNote "OTU/OTSiG provisioning scenarios:\n1) In case of ODU/OTU/OTSiG provisioning based on multiple SIPs (e.g. more line ports each one potentially supporting a single OTSi),\nthen the unique/top CSEP instance (not referring to any SIP, with an OTSiMC LPC including OtsiaCsepTtpSpec with specified only the number of OTSis) refers to\nthe CSEP instances (one per each MEDIA Link, each one referring to one SIP, each one with an OTSiMC LPC including OtsiaCsepTtpSpec composing only one OTSi config pac), through the CSEPHasAssembledCSEPs association.\n2) In case of ODU/OTU/OTSiG provisioning based on single SIP, then the model is compacted into only one CSEP instance, with an OTSiMC LPC including OtsiaCsepTtpSpec which composes one or more OTSi config pacs)." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -880,7 +964,9 @@ lex:tapi-photonic-media-otsia-connectivity-service-end-point-spec
 lex:tapi-photonic-media-pdl-penalty
     a lex:ReferenceEntry ;
     skos:prefLabel "pdl-penalty" ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/pdl-penalty
     skos:definition "Entries of table; pair of values polarization dependent loss and associated penalty." ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/pdl-penalty
     skos:scopeNote "Grouping definition: pdl-penalty" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -889,78 +975,79 @@ lex:tapi-photonic-media-pdl-penalty
 lex:tapi-photonic-media-phot-profile-type
     a lex:ReferenceEntry ;
     skos:prefLabel "PHOT_PROFILE_TYPE" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-photonic-media/PHOT_PROFILE_TYPE> .
 
 lex:tapi-photonic-media-phot-profile-type-amplification
     a lex:ReferenceEntry ;
     skos:prefLabel "PHOT_PROFILE_TYPE_AMPLIFICATION" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-photonic-media/PHOT_PROFILE_TYPE_AMPLIFICATION> .
 
 lex:tapi-photonic-media-phot-profile-type-connectivity-impairment
     a lex:ReferenceEntry ;
     skos:prefLabel "PHOT_PROFILE_TYPE_CONNECTIVITY_IMPAIRMENT" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-photonic-media/PHOT_PROFILE_TYPE_CONNECTIVITY_IMPAIRMENT> .
 
 lex:tapi-photonic-media-phot-profile-type-fiber
     a lex:ReferenceEntry ;
     skos:prefLabel "PHOT_PROFILE_TYPE_FIBER" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-photonic-media/PHOT_PROFILE_TYPE_FIBER> .
 
 lex:tapi-photonic-media-phot-profile-type-transceiver
     a lex:ReferenceEntry ;
     skos:prefLabel "PHOT_PROFILE_TYPE_TRANSCEIVER" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-photonic-media/PHOT_PROFILE_TYPE_TRANSCEIVER> .
 
 lex:tapi-photonic-media-phot-thrs-add-qualif
     a lex:ReferenceEntry ;
     skos:prefLabel "PHOT_THRS_ADD_QUALIF" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-photonic-media/PHOT_THRS_ADD_QUALIF> .
 
 lex:tapi-photonic-media-phot-thrs-add-qualif-amplification
     a lex:ReferenceEntry ;
     skos:prefLabel "PHOT_THRS_ADD_QUALIF_AMPLIFICATION" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-photonic-media/PHOT_THRS_ADD_QUALIF_AMPLIFICATION> .
 
 lex:tapi-photonic-media-phot-thrs-add-qualif-osc
     a lex:ReferenceEntry ;
     skos:prefLabel "PHOT_THRS_ADD_QUALIF_OSC" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-photonic-media/PHOT_THRS_ADD_QUALIF_OSC> .
 
 lex:tapi-photonic-media-photonic-layer-qualifier
     a lex:ReferenceEntry ;
     skos:prefLabel "PHOTONIC_LAYER_QUALIFIER" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-photonic-media/PHOTONIC_LAYER_QUALIFIER> .
 
 lex:tapi-photonic-media-photonic-layer-qualifier-mc
     a lex:ReferenceEntry ;
     skos:prefLabel "PHOTONIC_LAYER_QUALIFIER_MC" ;
+    # source: http://example.org/ontology/identity/tapi-photonic-media/PHOTONIC_LAYER_QUALIFIER_MC
     skos:definition "The continuous optical spectrum between end points in the photonic layer obtained through optical filter configurations where it is expected one (or more – super channel case) OTSi(s)." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -969,6 +1056,7 @@ lex:tapi-photonic-media-photonic-layer-qualifier-mc
 lex:tapi-photonic-media-photonic-layer-qualifier-mca
     a lex:ReferenceEntry ;
     skos:prefLabel "PHOTONIC_LAYER_QUALIFIER_MCA" ;
+    # source: http://example.org/ontology/identity/tapi-photonic-media/PHOTONIC_LAYER_QUALIFIER_MCA
     skos:definition "Media Channel Assembly: the set of one or more MCs supporting one (or more) OTSiA(s)." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -977,86 +1065,87 @@ lex:tapi-photonic-media-photonic-layer-qualifier-mca
 lex:tapi-photonic-media-photonic-layer-qualifier-och
     a lex:ReferenceEntry ;
     skos:prefLabel "PHOTONIC_LAYER_QUALIFIER_OCH" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-photonic-media/PHOTONIC_LAYER_QUALIFIER_OCH> .
 
 lex:tapi-photonic-media-photonic-layer-qualifier-oms
     a lex:ReferenceEntry ;
     skos:prefLabel "PHOTONIC_LAYER_QUALIFIER_OMS" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-photonic-media/PHOTONIC_LAYER_QUALIFIER_OMS> .
 
 lex:tapi-photonic-media-photonic-layer-qualifier-omsa
     a lex:ReferenceEntry ;
     skos:prefLabel "PHOTONIC_LAYER_QUALIFIER_OMSA" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-photonic-media/PHOTONIC_LAYER_QUALIFIER_OMSA> .
 
 lex:tapi-photonic-media-photonic-layer-qualifier-os-media
     a lex:ReferenceEntry ;
     skos:prefLabel "PHOTONIC_LAYER_QUALIFIER_OS_MEDIA" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-photonic-media/PHOTONIC_LAYER_QUALIFIER_OS_MEDIA> .
 
 lex:tapi-photonic-media-photonic-layer-qualifier-ots
     a lex:ReferenceEntry ;
     skos:prefLabel "PHOTONIC_LAYER_QUALIFIER_OTS" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-photonic-media/PHOTONIC_LAYER_QUALIFIER_OTS> .
 
 lex:tapi-photonic-media-photonic-layer-qualifier-ots-media
     a lex:ReferenceEntry ;
     skos:prefLabel "PHOTONIC_LAYER_QUALIFIER_OTS_MEDIA" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-photonic-media/PHOTONIC_LAYER_QUALIFIER_OTS_MEDIA> .
 
 lex:tapi-photonic-media-photonic-layer-qualifier-ots-oms
     a lex:ReferenceEntry ;
     skos:prefLabel "PHOTONIC_LAYER_QUALIFIER_OTS_OMS" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-photonic-media/PHOTONIC_LAYER_QUALIFIER_OTS_OMS> .
 
 lex:tapi-photonic-media-photonic-layer-qualifier-otsa
     a lex:ReferenceEntry ;
     skos:prefLabel "PHOTONIC_LAYER_QUALIFIER_OTSA" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-photonic-media/PHOTONIC_LAYER_QUALIFIER_OTSA> .
 
 lex:tapi-photonic-media-photonic-layer-qualifier-otsi
     a lex:ReferenceEntry ;
     skos:prefLabel "PHOTONIC_LAYER_QUALIFIER_OTSi" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-photonic-media/PHOTONIC_LAYER_QUALIFIER_OTSi> .
 
 lex:tapi-photonic-media-photonic-layer-qualifier-otsia
     a lex:ReferenceEntry ;
     skos:prefLabel "PHOTONIC_LAYER_QUALIFIER_OTSiA" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-photonic-media/PHOTONIC_LAYER_QUALIFIER_OTSiA> .
 
 lex:tapi-photonic-media-photonic-layer-qualifier-otsimc
     a lex:ReferenceEntry ;
     skos:prefLabel "PHOTONIC_LAYER_QUALIFIER_OTSiMC" ;
+    # source: http://example.org/ontology/identity/tapi-photonic-media/PHOTONIC_LAYER_QUALIFIER_OTSiMC
     skos:definition "OTSiMC represents the bw portion dedicated to an OTSi." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -1065,6 +1154,7 @@ lex:tapi-photonic-media-photonic-layer-qualifier-otsimc
 lex:tapi-photonic-media-photonic-layer-qualifier-otsimca
     a lex:ReferenceEntry ;
     skos:prefLabel "PHOTONIC_LAYER_QUALIFIER_OTSiMCA" ;
+    # source: http://example.org/ontology/identity/tapi-photonic-media/PHOTONIC_LAYER_QUALIFIER_OTSiMCA
     skos:definition "OTSiMCA is the set of OTSiMC supporting an OTSiA." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -1073,8 +1163,8 @@ lex:tapi-photonic-media-photonic-layer-qualifier-otsimca
 lex:tapi-photonic-media-photonic-media-node-edge-point-spec
     a lex:ReferenceEntry ;
     skos:prefLabel "photonic-media-node-edge-point-spec" ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/photonic-media-node-edge-point-spec
     skos:definition "Grouping definition: photonic-media-node-edge-point-spec" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-photonic-media/photonic-media-node-edge-point-spec> .
@@ -1082,8 +1172,8 @@ lex:tapi-photonic-media-photonic-media-node-edge-point-spec
 lex:tapi-photonic-media-photonic-media-service-interface-point-spec
     a lex:ReferenceEntry ;
     skos:prefLabel "photonic-media-service-interface-point-spec" ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/photonic-media-service-interface-point-spec
     skos:definition "Grouping definition: photonic-media-service-interface-point-spec" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-photonic-media/photonic-media-service-interface-point-spec> .
@@ -1091,24 +1181,24 @@ lex:tapi-photonic-media-photonic-media-service-interface-point-spec
 lex:tapi-photonic-media-photonic-oam-job-type
     a lex:ReferenceEntry ;
     skos:prefLabel "PHOTONIC_OAM_JOB_TYPE" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-photonic-media/PHOTONIC_OAM_JOB_TYPE> .
 
 lex:tapi-photonic-media-photonic-oam-job-type-optical-power
     a lex:ReferenceEntry ;
     skos:prefLabel "PHOTONIC_OAM_JOB_TYPE_OPTICAL_POWER" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-photonic-media/PHOTONIC_OAM_JOB_TYPE_OPTICAL_POWER> .
 
 lex:tapi-photonic-media-photonic-performance-data
     a lex:ReferenceEntry ;
     skos:prefLabel "photonic-performance-data" ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/photonic-performance-data
     skos:definition "Grouping definition: photonic-performance-data" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-photonic-media/photonic-performance-data> .
@@ -1116,8 +1206,8 @@ lex:tapi-photonic-media-photonic-performance-data
 lex:tapi-photonic-media-photonic-position
     a lex:ReferenceEntry ;
     skos:prefLabel "photonic-position" ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/photonic-position
     skos:definition "Grouping definition: photonic-position" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-photonic-media/photonic-position> .
@@ -1125,7 +1215,9 @@ lex:tapi-photonic-media-photonic-position
 lex:tapi-photonic-media-pmd-penalty
     a lex:ReferenceEntry ;
     skos:prefLabel "pmd-penalty" ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/pmd-penalty
     skos:definition "Entries of table; pair of values, polarization mode dispersion and associated penalty." ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/pmd-penalty
     skos:scopeNote "Grouping definition: pmd-penalty" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -1134,7 +1226,9 @@ lex:tapi-photonic-media-pmd-penalty
 lex:tapi-photonic-media-power-management-capability-pac
     a lex:ReferenceEntry ;
     skos:prefLabel "power-management-capability-pac" ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/power-management-capability-pac
     skos:definition "Grouping definition: power-management-capability-pac" ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/power-management-capability-pac
     skos:scopeNote "This pac includes power management capabilities." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -1143,7 +1237,9 @@ lex:tapi-photonic-media-power-management-capability-pac
 lex:tapi-photonic-media-power-management-config-pac
     a lex:ReferenceEntry ;
     skos:prefLabel "power-management-config-pac" ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/power-management-config-pac
     skos:definition "Grouping definition: power-management-config-pac" ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/power-management-config-pac
     skos:scopeNote "This pac includes power management constraints." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -1152,8 +1248,8 @@ lex:tapi-photonic-media-power-management-config-pac
 lex:tapi-photonic-media-power-measurement-pac
     a lex:ReferenceEntry ;
     skos:prefLabel "power-measurement-pac" ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/power-measurement-pac
     skos:definition "Grouping definition: power-measurement-pac" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-photonic-media/power-measurement-pac> .
@@ -1161,7 +1257,9 @@ lex:tapi-photonic-media-power-measurement-pac
 lex:tapi-photonic-media-power-params
     a lex:ReferenceEntry ;
     skos:prefLabel "power-params" ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/power-params
     skos:definition "Grouping definition: power-params" ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/power-params
     skos:scopeNote "Optical power or PSD after the ROADM or after the out-voa." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -1170,8 +1268,8 @@ lex:tapi-photonic-media-power-params
 lex:tapi-photonic-media-power-properties
     a lex:ReferenceEntry ;
     skos:prefLabel "power-properties" ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/power-properties
     skos:definition "Grouping definition: power-properties" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-photonic-media/power-properties> .
@@ -1179,8 +1277,8 @@ lex:tapi-photonic-media-power-properties
 lex:tapi-photonic-media-power-spectral-density
     a lex:ReferenceEntry ;
     skos:prefLabel "power-spectral-density" ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/power-spectral-density
     skos:definition "Grouping definition: power-spectral-density" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-photonic-media/power-spectral-density> .
@@ -1188,7 +1286,9 @@ lex:tapi-photonic-media-power-spectral-density
 lex:tapi-photonic-media-regen-metric
     a lex:ReferenceEntry ;
     skos:prefLabel "regen-metric" ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/regen-metric
     skos:definition "Grouping definition: regen-metric" ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/regen-metric
     skos:scopeNote "This structure is for further development and is NOT used in this version." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -1197,7 +1297,9 @@ lex:tapi-photonic-media-regen-metric
 lex:tapi-photonic-media-spectrum-band
     a lex:ReferenceEntry ;
     skos:prefLabel "spectrum-band" ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/spectrum-band
     skos:definition "Grouping definition: spectrum-band" ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/spectrum-band
     skos:scopeNote "This data-type holds the spectrum information in terms of upper/lower frequency and optionally the information of frequency constraints." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -1206,8 +1308,8 @@ lex:tapi-photonic-media-spectrum-band
 lex:tapi-photonic-media-spectrum-capability-pac
     a lex:ReferenceEntry ;
     skos:prefLabel "spectrum-capability-pac" ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/spectrum-capability-pac
     skos:definition "Grouping definition: spectrum-capability-pac" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-photonic-media/spectrum-capability-pac> .
@@ -1215,8 +1317,8 @@ lex:tapi-photonic-media-spectrum-capability-pac
 lex:tapi-photonic-media-spectrum-pac
     a lex:ReferenceEntry ;
     skos:prefLabel "spectrum-pac" ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/spectrum-pac
     skos:definition "Grouping definition: spectrum-pac" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-photonic-media/spectrum-pac> .
@@ -1224,6 +1326,7 @@ lex:tapi-photonic-media-spectrum-pac
 lex:tapi-photonic-media-standard-application-code-rec
     a lex:ReferenceEntry ;
     skos:prefLabel "standard-application-code-rec" ;
+    # source: http://example.org/ontology/types/tapi-photonic-media/standard-application-code-rec
     skos:definition "The list of ITU-T Recommendations etc. that define application code format." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:EnumeratedKind ;
@@ -1232,7 +1335,9 @@ lex:tapi-photonic-media-standard-application-code-rec
 lex:tapi-photonic-media-total-power-threshold-pac
     a lex:ReferenceEntry ;
     skos:prefLabel "total-power-threshold-pac" ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/total-power-threshold-pac
     skos:definition "Grouping definition: total-power-threshold-pac" ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/total-power-threshold-pac
     skos:scopeNote "Indication with severity warning raised when a total power value measured is above the threshold." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -1241,8 +1346,8 @@ lex:tapi-photonic-media-total-power-threshold-pac
 lex:tapi-photonic-media-transceiver-capability-occurrence
     a lex:ReferenceEntry ;
     skos:prefLabel "transceiver-capability-occurrence" ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/transceiver-capability-occurrence
     skos:definition "Grouping definition: transceiver-capability-occurrence" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-photonic-media/transceiver-capability-occurrence> .
@@ -1250,8 +1355,8 @@ lex:tapi-photonic-media-transceiver-capability-occurrence
 lex:tapi-photonic-media-transceiver-explicit
     a lex:ReferenceEntry ;
     skos:prefLabel "transceiver-explicit" ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/transceiver-explicit
     skos:definition "Grouping definition: transceiver-explicit" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-photonic-media/transceiver-explicit> .
@@ -1259,8 +1364,8 @@ lex:tapi-photonic-media-transceiver-explicit
 lex:tapi-photonic-media-transceiver-organizational
     a lex:ReferenceEntry ;
     skos:prefLabel "transceiver-organizational" ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/transceiver-organizational
     skos:definition "Grouping definition: transceiver-organizational" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-photonic-media/transceiver-organizational> .
@@ -1268,7 +1373,9 @@ lex:tapi-photonic-media-transceiver-organizational
 lex:tapi-photonic-media-transceiver-profile
     a lex:ReferenceEntry ;
     skos:prefLabel "transceiver-profile" ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/transceiver-profile
     skos:definition "Grouping definition: transceiver-profile" ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/transceiver-profile
     skos:scopeNote "This object models a transceiver mode. A mode is a combination of parameters or parameter ranges that is supported by a transceiver.\nThe referenced specific profiles are mutually exclusive." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -1277,7 +1384,9 @@ lex:tapi-photonic-media-transceiver-profile
 lex:tapi-photonic-media-transceiver-standard
     a lex:ReferenceEntry ;
     skos:prefLabel "transceiver-standard" ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/transceiver-standard
     skos:definition "Grouping definition: transceiver-standard" ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/transceiver-standard
     skos:scopeNote "The standard application identifier." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -1285,8 +1394,18 @@ lex:tapi-photonic-media-transceiver-standard
 
 lex:tapi-photonic-media-transceiver-termination-type
     a lex:ReferenceEntry ;
+    skos:prefLabel "TRANSCEIVER_TERMINATION_TYPE" ;
+    lex:canonicalExample "" ;
+    lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
+    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-photonic-media/TRANSCEIVER_TERMINATION_TYPE> .
+
+lex:tapi-photonic-media-transceiver-termination-type-2
+    a lex:ReferenceEntry ;
     skos:prefLabel "transceiver-termination-type" ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/transceiver-termination-type
     skos:definition "Describes whether the transponder can be used in an Optical Tunnel termination configuration or in a 3R configuration (or both)." ;
+    # source: http://example.org/ontology/grouping/tapi-photonic-media/transceiver-termination-type
     skos:scopeNote "Grouping definition: transceiver-termination-type" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -1295,6 +1414,7 @@ lex:tapi-photonic-media-transceiver-termination-type
 lex:tapi-photonic-media-transceiver-termination-type-bidir-3r-only
     a lex:ReferenceEntry ;
     skos:prefLabel "TRANSCEIVER_TERMINATION_TYPE_BIDIR_3R_ONLY" ;
+    # source: http://example.org/ontology/identity/tapi-photonic-media/TRANSCEIVER_TERMINATION_TYPE_BIDIR_3R_ONLY
     skos:definition "The transponder can only be used in a 3R configuration, bidirectional." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -1303,22 +1423,16 @@ lex:tapi-photonic-media-transceiver-termination-type-bidir-3r-only
 lex:tapi-photonic-media-transceiver-termination-type-bidir-3r-or-tunnel
     a lex:ReferenceEntry ;
     skos:prefLabel "TRANSCEIVER_TERMINATION_TYPE_BIDIR_3R_OR_TUNNEL" ;
+    # source: http://example.org/ontology/identity/tapi-photonic-media/TRANSCEIVER_TERMINATION_TYPE_BIDIR_3R_OR_TUNNEL
     skos:definition "The transponder can be configure to be used either in an Optical Tunnel termination configuration or in a 3R configuration, bidirectional." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-photonic-media/TRANSCEIVER_TERMINATION_TYPE_BIDIR_3R_OR_TUNNEL> .
 
-lex:tapi-photonic-media-transceiver-termination-type-tapi-photonic-media
-    a lex:ReferenceEntry ;
-    skos:prefLabel "TRANSCEIVER_TERMINATION_TYPE" ;
-    skos:definition "none" ;
-    lex:canonicalExample "" ;
-    lex:entityClass lex:IdentityKind ;
-    prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-photonic-media/TRANSCEIVER_TERMINATION_TYPE> .
-
 lex:tapi-photonic-media-transceiver-termination-type-tunnel-only
     a lex:ReferenceEntry ;
     skos:prefLabel "TRANSCEIVER_TERMINATION_TYPE_TUNNEL_ONLY" ;
+    # source: http://example.org/ontology/identity/tapi-photonic-media/TRANSCEIVER_TERMINATION_TYPE_TUNNEL_ONLY
     skos:definition "The transponder can only be used in an Optical Tunnel termination configuration." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -1327,6 +1441,7 @@ lex:tapi-photonic-media-transceiver-termination-type-tunnel-only
 lex:tapi-photonic-media-transceiver-termination-type-unidir-3r-only
     a lex:ReferenceEntry ;
     skos:prefLabel "TRANSCEIVER_TERMINATION_TYPE_UNIDIR_3R_ONLY" ;
+    # source: http://example.org/ontology/identity/tapi-photonic-media/TRANSCEIVER_TERMINATION_TYPE_UNIDIR_3R_ONLY
     skos:definition "The transponder can only be used in a 3R configuration, unidirectional." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -1335,6 +1450,7 @@ lex:tapi-photonic-media-transceiver-termination-type-unidir-3r-only
 lex:tapi-photonic-media-transceiver-termination-type-unidir-3r-or-tunnel
     a lex:ReferenceEntry ;
     skos:prefLabel "TRANSCEIVER_TERMINATION_TYPE_UNIDIR_3R_OR_TUNNEL" ;
+    # source: http://example.org/ontology/identity/tapi-photonic-media/TRANSCEIVER_TERMINATION_TYPE_UNIDIR_3R_OR_TUNNEL
     skos:definition "The transponder can be configure to be used either in an Optical Tunnel termination configuration or in a 3R configuration, unidirectional." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;

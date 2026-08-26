@@ -14,7 +14,9 @@
 lex:tapi-eth-address-tuple
     a lex:ReferenceEntry ;
     skos:prefLabel "address-tuple" ;
+    # source: http://example.org/ontology/grouping/tapi-eth/address-tuple
     skos:definition "Grouping definition: address-tuple" ;
+    # source: http://example.org/ontology/grouping/tapi-eth/address-tuple
     skos:scopeNote "This data type contains an address tuple consisting of a MAC address and a corresponding port list." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -23,14 +25,15 @@ lex:tapi-eth-address-tuple
 lex:tapi-eth-admin-state
     a lex:ReferenceEntry ;
     skos:prefLabel "admin-state" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:EnumeratedKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/types/tapi-eth/admin-state> .
 
 lex:tapi-eth-association-id-permission-types
     a lex:ReferenceEntry ;
     skos:prefLabel "association-id-permission-types" ;
+    # source: http://example.org/ontology/types/tapi-eth/association-id-permission-types
     skos:definition "IEEE P802.1Qcx/D0.3:\nMEF 38:\nIndicates what, if anything, is to be included in the Sender ID TLV transmitted in CCMs, LBMs, LTMs, and LTRs." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:EnumeratedKind ;
@@ -39,8 +42,8 @@ lex:tapi-eth-association-id-permission-types
 lex:tapi-eth-bandwidth-profile
     a lex:ReferenceEntry ;
     skos:prefLabel "bandwidth-profile" ;
+    # source: http://example.org/ontology/grouping/tapi-eth/bandwidth-profile
     skos:definition "Grouping definition: bandwidth-profile" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-eth/bandwidth-profile> .
@@ -48,47 +51,49 @@ lex:tapi-eth-bandwidth-profile
 lex:tapi-eth-bandwidth-profile-type
     a lex:ReferenceEntry ;
     skos:prefLabel "BANDWIDTH_PROFILE_TYPE" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-eth/BANDWIDTH_PROFILE_TYPE> .
 
 lex:tapi-eth-bandwidth-profile-type-mef-10-x
     a lex:ReferenceEntry ;
     skos:prefLabel "BANDWIDTH_PROFILE_TYPE_MEF_10.x" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-eth/BANDWIDTH_PROFILE_TYPE_MEF_10.x> .
 
 lex:tapi-eth-bandwidth-profile-type-rfc-2697
     a lex:ReferenceEntry ;
     skos:prefLabel "BANDWIDTH_PROFILE_TYPE_RFC_2697" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-eth/BANDWIDTH_PROFILE_TYPE_RFC_2697> .
 
 lex:tapi-eth-bandwidth-profile-type-rfc-2698
     a lex:ReferenceEntry ;
     skos:prefLabel "BANDWIDTH_PROFILE_TYPE_RFC_2698" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-eth/BANDWIDTH_PROFILE_TYPE_RFC_2698> .
 
 lex:tapi-eth-bandwidth-profile-type-rfc-4115
     a lex:ReferenceEntry ;
     skos:prefLabel "BANDWIDTH_PROFILE_TYPE_RFC_4115" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-eth/BANDWIDTH_PROFILE_TYPE_RFC_4115> .
 
 lex:tapi-eth-bandwidth-report
     a lex:ReferenceEntry ;
     skos:prefLabel "bandwidth-report" ;
+    # source: http://example.org/ontology/grouping/tapi-eth/bandwidth-report
     skos:definition "Data type for the bandwidth report." ;
+    # source: http://example.org/ontology/grouping/tapi-eth/bandwidth-report
     skos:scopeNote "Grouping definition: bandwidth-report" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -97,15 +102,17 @@ lex:tapi-eth-bandwidth-report
 lex:tapi-eth-colour-mode
     a lex:ReferenceEntry ;
     skos:prefLabel "colour-mode" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:EnumeratedKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/types/tapi-eth/colour-mode> .
 
 lex:tapi-eth-control-frame-filter
     a lex:ReferenceEntry ;
     skos:prefLabel "control-frame-filter" ;
+    # source: http://example.org/ontology/grouping/tapi-eth/control-frame-filter
     skos:definition "Grouping definition: control-frame-filter" ;
+    # source: http://example.org/ontology/grouping/tapi-eth/control-frame-filter
     skos:scopeNote "This data type identifies the filter action for each of the 33 group MAC addresses (control frames).\nValue 'false' means block: The frame is discarded by the filter process.\nValue 'true' means pass: The frame is passed unchanged through the filter process." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -114,22 +121,23 @@ lex:tapi-eth-control-frame-filter
 lex:tapi-eth-csf-config
     a lex:ReferenceEntry ;
     skos:prefLabel "csf-config" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:EnumeratedKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/types/tapi-eth/csf-config> .
 
 lex:tapi-eth-eth-alarm-condition-name
     a lex:ReferenceEntry ;
     skos:prefLabel "ETH_ALARM_CONDITION_NAME" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-eth/ETH_ALARM_CONDITION_NAME> .
 
 lex:tapi-eth-eth-alarm-condition-name-ais
     a lex:ReferenceEntry ;
     skos:prefLabel "ETH_ALARM_CONDITION_NAME_AIS" ;
+    # source: http://example.org/ontology/identity/tapi-eth/ETH_ALARM_CONDITION_NAME_AIS
     skos:definition "G.8021: Reception of an AIS frame." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -138,6 +146,7 @@ lex:tapi-eth-eth-alarm-condition-name-ais
 lex:tapi-eth-eth-alarm-condition-name-csf
     a lex:ReferenceEntry ;
     skos:prefLabel "ETH_ALARM_CONDITION_NAME_CSF" ;
+    # source: http://example.org/ontology/identity/tapi-eth/ETH_ALARM_CONDITION_NAME_CSF
     skos:definition "G.8021 - ETH layer: Reception of a CSF frame that indicates a client loss of signal (dCSF-LOS) or a client forward defect indication (dCSF-FDI) or a client reverse defect indication (dCSF-RDI).\nThe CSF (CSF-LOS, CSF-FDI, and CSF-RDI) defect is calculated at the ETH layer. It monitors the presence of a CSF maintenance signal.\nG.8021 - GFP: dCSF is Client-specific GFP-F and GFP-T (resp. Frame and Transparent) sink processes.\ndCSF-RDI: GFP client signal fail-remote defect indication is raised when a GFP client management frame with the RDI UPI (as defined in Table 6-4 of [ITU-T G.7041]) is received.\ndCSF-RDI is cleared when no such GFP client management frame is received in N x 1000 ms (a value of 3 is suggested for N), a valid GFP client data frame is received, or a GFP client management frame with the DCI UPI is received.\ndCSF-FDI: GFP client signal fail-forward defect indication is raised when a GFP client management frame with the FDI UPI (as defined in Table 6-4 of [ITU-T G.7041]) is received.\ndCSF-FDI is cleared when no such GFP client management frame is received in N x 1000 ms (a value of 3 is suggested for N), a valid GFP client data frame is received, or a GFP client management frame with the DCI UPI is received.\ndCSF-LOS: GFP client signal fail-loss of signal is raised when a GFP client management frame with the LOS UPI (as defined in Table 6-4 of [ITU-T G.7041]) is received.\ndCSF-LOS is cleared when no such GFP client management frame is received in N x 1000 ms (a value of 3 is suggested for N), a valid GFP client data frame is received, or a GFP client management frame with the DCI UPI is received." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -146,6 +155,7 @@ lex:tapi-eth-eth-alarm-condition-name-csf
 lex:tapi-eth-eth-alarm-condition-name-degraded
     a lex:ReferenceEntry ;
     skos:prefLabel "ETH_ALARM_CONDITION_NAME_DEGRADED" ;
+    # source: http://example.org/ontology/identity/tapi-eth/ETH_ALARM_CONDITION_NAME_DEGRADED
     skos:definition "G.8021: The defect is detected if there are MI_LM_DEGM (lmDegm of EthMepSink) consecutive bad seconds and cleared if there are MI_LM_M (lmM of EthMepSink) consecutive good seconds.\nIn order to declare a bad second the number of transmitted frames must exceed a threshold (MI_LM_TFMIN, lmTfMin of EthMepSink).\nFurthermore, if the frame loss ratio (lost frames/transmitted frames) is greater than MI_LM_DEGTHR (lmDegThr of EthMepSink), a bad second is declared.\nThis defect is only defined for point-to-point ETH connections. It monitors the connectivity of an ETH trail.\n" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -154,6 +164,7 @@ lex:tapi-eth-eth-alarm-condition-name-degraded
 lex:tapi-eth-eth-alarm-condition-name-exm
     a lex:ReferenceEntry ;
     skos:prefLabel "ETH_ALARM_CONDITION_NAME_EXM" ;
+    # source: http://example.org/ontology/identity/tapi-eth/ETH_ALARM_CONDITION_NAME_EXM
     skos:definition "G.806 - Common GFP sink processes: GFP extension header mismatch (dEXM) is raised when the accepted EXI (AcEXI) is different from the expected EXI.\ndEXM is cleared when AcEXI matches the expected EXI or GFP_SF is active." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -162,6 +173,7 @@ lex:tapi-eth-eth-alarm-condition-name-exm
 lex:tapi-eth-eth-alarm-condition-name-lfd
     a lex:ReferenceEntry ;
     skos:prefLabel "ETH_ALARM_CONDITION_NAME_LFD" ;
+    # source: http://example.org/ontology/identity/tapi-eth/ETH_ALARM_CONDITION_NAME_LFD
     skos:definition "G.806 - Server layer-specific GFP sink processes: GFP loss of frame delineation (dLFD) is raised when the frame delineation process (clause 6.3.1 of [ITU-T G.7041]) is not in the 'SYNC' state.\ndLFD is cleared when the frame delineation process is in the 'SYNC' state." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -170,6 +182,7 @@ lex:tapi-eth-eth-alarm-condition-name-lfd
 lex:tapi-eth-eth-alarm-condition-name-locked
     a lex:ReferenceEntry ;
     skos:prefLabel "ETH_ALARM_CONDITION_NAME_LOCKED" ;
+    # source: http://example.org/ontology/identity/tapi-eth/ETH_ALARM_CONDITION_NAME_LOCKED
     skos:definition "G.8021: Reception of a LCK frame." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -178,6 +191,7 @@ lex:tapi-eth-eth-alarm-condition-name-locked
 lex:tapi-eth-eth-alarm-condition-name-loss-of-continuity
     a lex:ReferenceEntry ;
     skos:prefLabel "ETH_ALARM_CONDITION_NAME_LOSS_OF_CONTINUITY" ;
+    # source: http://example.org/ontology/identity/tapi-eth/ETH_ALARM_CONDITION_NAME_LOSS_OF_CONTINUITY
     skos:definition "G.8021: The loss of continuity defect is calculated at the ETH layer. It monitors the presence of continuity in ETH trails." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -186,6 +200,7 @@ lex:tapi-eth-eth-alarm-condition-name-loss-of-continuity
 lex:tapi-eth-eth-alarm-condition-name-mismerge-unexpected-meg
     a lex:ReferenceEntry ;
     skos:prefLabel "ETH_ALARM_CONDITION_NAME_MISMERGE_UNEXPECTED_MEG" ;
+    # source: http://example.org/ontology/identity/tapi-eth/ETH_ALARM_CONDITION_NAME_MISMERGE_UNEXPECTED_MEG
     skos:definition "G.8021: Reception of a CCM frame with an invalid MEG value, but with a valid MEL value.\nMonitoring of the connectivity in a maintenance entity group.\n" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -194,6 +209,7 @@ lex:tapi-eth-eth-alarm-condition-name-mismerge-unexpected-meg
 lex:tapi-eth-eth-alarm-condition-name-partial-link-loss
     a lex:ReferenceEntry ;
     skos:prefLabel "ETH_ALARM_CONDITION_NAME_PARTIAL_LINK_LOSS" ;
+    # source: http://example.org/ontology/identity/tapi-eth/ETH_ALARM_CONDITION_NAME_PARTIAL_LINK_LOSS
     skos:definition "G.8021: LAG - fault cause shall be raised if the number of active ports is less than the provisioned threshold." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -202,6 +218,7 @@ lex:tapi-eth-eth-alarm-condition-name-partial-link-loss
 lex:tapi-eth-eth-alarm-condition-name-plm
     a lex:ReferenceEntry ;
     skos:prefLabel "ETH_ALARM_CONDITION_NAME_PLM" ;
+    # source: http://example.org/ontology/identity/tapi-eth/ETH_ALARM_CONDITION_NAME_PLM
     skos:definition "G.806: The payload label mismatch defect (dPLM) shall be detected if the 'accepted TSL' code does not match the 'expected TSL' code. If the 'accepted TSL' is 'equipped non-specific', the mismatch is not detected (TSL: Trail Signal Label).\nPayload type supervision checks that compatible adaptation functions are used at the source and the sink.\nThis is normally done by adding a signal type identifier at the source adaptation function and comparing it with the expected identifier at the sink.\nIf they do not match, a payload mismatch is detected." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -210,6 +227,7 @@ lex:tapi-eth-eth-alarm-condition-name-plm
 lex:tapi-eth-eth-alarm-condition-name-rdi
     a lex:ReferenceEntry ;
     skos:prefLabel "ETH_ALARM_CONDITION_NAME_RDI" ;
+    # source: http://example.org/ontology/identity/tapi-eth/ETH_ALARM_CONDITION_NAME_RDI
     skos:definition "G.8021: Remote defect indicator defect, reception by an MEP (indexed by 'i', this index not included in the 'cause' cRDI) of a CCM frame with valid MEL, MEG, MEP and periodicity values and the RDI flag set to x; where x=0 (remote defect clear) and x=1 (remote defect set)." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -218,6 +236,7 @@ lex:tapi-eth-eth-alarm-condition-name-rdi
 lex:tapi-eth-eth-alarm-condition-name-total-link-loss
     a lex:ReferenceEntry ;
     skos:prefLabel "ETH_ALARM_CONDITION_NAME_TOTAL_LINK_LOSS" ;
+    # source: http://example.org/ontology/identity/tapi-eth/ETH_ALARM_CONDITION_NAME_TOTAL_LINK_LOSS
     skos:definition "G.8021: LAG - fault cause will be raised if no ports are active for an aggregator." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -226,6 +245,7 @@ lex:tapi-eth-eth-alarm-condition-name-total-link-loss
 lex:tapi-eth-eth-alarm-condition-name-unexpected-mel
     a lex:ReferenceEntry ;
     skos:prefLabel "ETH_ALARM_CONDITION_NAME_UNEXPECTED_MEL" ;
+    # source: http://example.org/ontology/identity/tapi-eth/ETH_ALARM_CONDITION_NAME_UNEXPECTED_MEL
     skos:definition "G.8021: Reception of a CCM frame with an invalid MEL value.\nMonitoring of the connectivity in a maintenance entity group." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -234,6 +254,7 @@ lex:tapi-eth-eth-alarm-condition-name-unexpected-mel
 lex:tapi-eth-eth-alarm-condition-name-unexpected-mep
     a lex:ReferenceEntry ;
     skos:prefLabel "ETH_ALARM_CONDITION_NAME_UNEXPECTED_MEP" ;
+    # source: http://example.org/ontology/identity/tapi-eth/ETH_ALARM_CONDITION_NAME_UNEXPECTED_MEP
     skos:definition "G.8021: Reception of a CCM frame with an invalid MEP value, but with valid MEL and MEG values.\nMonitoring of the connectivity in a maintenance entity group.\n" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -242,6 +263,7 @@ lex:tapi-eth-eth-alarm-condition-name-unexpected-mep
 lex:tapi-eth-eth-alarm-condition-name-unexpected-periodicity
     a lex:ReferenceEntry ;
     skos:prefLabel "ETH_ALARM_CONDITION_NAME_UNEXPECTED_PERIODICITY" ;
+    # source: http://example.org/ontology/identity/tapi-eth/ETH_ALARM_CONDITION_NAME_UNEXPECTED_PERIODICITY
     skos:definition "G.8021: Reception of a CCM frame with an invalid periodicity value, but with valid MEL, MEG and MEP values.\nIt detects the configuration of different periodicities at different MEPs belonging to the same MEG.\n" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -250,6 +272,7 @@ lex:tapi-eth-eth-alarm-condition-name-unexpected-periodicity
 lex:tapi-eth-eth-alarm-condition-name-unexpected-priority
     a lex:ReferenceEntry ;
     skos:prefLabel "ETH_ALARM_CONDITION_NAME_UNEXPECTED_PRIORITY" ;
+    # source: http://example.org/ontology/identity/tapi-eth/ETH_ALARM_CONDITION_NAME_UNEXPECTED_PRIORITY
     skos:definition "G.8021: Reception of a CCM frame with an invalid priority value, but with valid MEL, MEG, MEP and periodicity values.\nIt detects the configuration of different priorities for CCM at different MEPs belonging to the same MEG.\n" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -258,6 +281,7 @@ lex:tapi-eth-eth-alarm-condition-name-unexpected-priority
 lex:tapi-eth-eth-alarm-condition-name-upm
     a lex:ReferenceEntry ;
     skos:prefLabel "ETH_ALARM_CONDITION_NAME_UPM" ;
+    # source: http://example.org/ontology/identity/tapi-eth/ETH_ALARM_CONDITION_NAME_UPM
     skos:definition "G.806 - Client-specific GFP-F (Frame) and GFP-T (Transparent) sink processes: GFP user payload mismatch (dUPM) is raised when the accepted UPI (AcUPI) is different from the expected UPI.\ndUPM is cleared when AcUPI matches the expected UPI or GFP_SF is active." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -266,8 +290,8 @@ lex:tapi-eth-eth-alarm-condition-name-upm
 lex:tapi-eth-eth-cfm-link-trace-pac
     a lex:ReferenceEntry ;
     skos:prefLabel "eth-cfm-link-trace-pac" ;
+    # source: http://example.org/ontology/grouping/tapi-eth/eth-cfm-link-trace-pac
     skos:definition "Grouping definition: eth-cfm-link-trace-pac" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-eth/eth-cfm-link-trace-pac> .
@@ -275,7 +299,9 @@ lex:tapi-eth-eth-cfm-link-trace-pac
 lex:tapi-eth-eth-cfm-link-trace-result-data
     a lex:ReferenceEntry ;
     skos:prefLabel "eth-cfm-link-trace-result-data" ;
+    # source: http://example.org/ontology/grouping/tapi-eth/eth-cfm-link-trace-result-data
     skos:definition "Grouping definition: eth-cfm-link-trace-result-data" ;
+    # source: http://example.org/ontology/grouping/tapi-eth/eth-cfm-link-trace-result-data
     skos:scopeNote "IEEE P802.1Qcx/D0.3:\nMEF 38:\nAn index to distinguish among multiple LTRs with the same LTR  transaction-id field value.\nAssigned sequentially from 1, in the order that the Linktrace Initiator received the LTRs.\n" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -284,7 +310,9 @@ lex:tapi-eth-eth-cfm-link-trace-result-data
 lex:tapi-eth-eth-cfm-maintenance-association
     a lex:ReferenceEntry ;
     skos:prefLabel "eth-cfm-maintenance-association" ;
+    # source: http://example.org/ontology/grouping/tapi-eth/eth-cfm-maintenance-association
     skos:definition "Grouping definition: eth-cfm-maintenance-association" ;
+    # source: http://example.org/ontology/grouping/tapi-eth/eth-cfm-maintenance-association
     skos:scopeNote "IEEE CFM parameters applicable to the composing class.\nIEEE P802.1Qcx/D0.3:\nProvides configuration and operational data for the Maintenance Associations.\nA Maintenance Association is a set of MEPs, each configured with the same MAID and MD level, established to verify the integrity of a single service instance.\nA Maintenance Association can be thought of as a full mesh of Maintenance Entities among a set of MEPs so configured." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -293,7 +321,9 @@ lex:tapi-eth-eth-cfm-maintenance-association
 lex:tapi-eth-eth-cfm-maintenance-domain
     a lex:ReferenceEntry ;
     skos:prefLabel "eth-cfm-maintenance-domain" ;
+    # source: http://example.org/ontology/grouping/tapi-eth/eth-cfm-maintenance-domain
     skos:definition "Grouping definition: eth-cfm-maintenance-domain" ;
+    # source: http://example.org/ontology/grouping/tapi-eth/eth-cfm-maintenance-domain
     skos:scopeNote "IEEE CFM parameters applicable to the composing class.\nIEEE P802.1Qcx/D0.3:\nMEF 38:\nA Maintenance Domain is the network or the part of the network for which faults in connectivity can be managed.\nA Maintenance Domain object is required in order to create an MA with a Maintenance Association Identifier (MAID) that includes that Maintenance Domains Name.\nFrom this Maintenance Domain managed object, all Maintenance Association managed objects associated with that Maintenance Domain managed object can be accessed, and thus controlled." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -302,8 +332,8 @@ lex:tapi-eth-eth-cfm-maintenance-domain
 lex:tapi-eth-eth-connection-end-point-spec
     a lex:ReferenceEntry ;
     skos:prefLabel "eth-connection-end-point-spec" ;
+    # source: http://example.org/ontology/grouping/tapi-eth/eth-connection-end-point-spec
     skos:definition "Grouping definition: eth-connection-end-point-spec" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-eth/eth-connection-end-point-spec> .
@@ -311,8 +341,8 @@ lex:tapi-eth-eth-connection-end-point-spec
 lex:tapi-eth-eth-connectivity-service
     a lex:ReferenceEntry ;
     skos:prefLabel "eth-connectivity-service" ;
+    # source: http://example.org/ontology/grouping/tapi-eth/eth-connectivity-service
     skos:definition "Grouping definition: eth-connectivity-service" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-eth/eth-connectivity-service> .
@@ -320,8 +350,8 @@ lex:tapi-eth-eth-connectivity-service
 lex:tapi-eth-eth-connectivity-service-end-point-spec
     a lex:ReferenceEntry ;
     skos:prefLabel "eth-connectivity-service-end-point-spec" ;
+    # source: http://example.org/ontology/grouping/tapi-eth/eth-connectivity-service-end-point-spec
     skos:definition "Grouping definition: eth-connectivity-service-end-point-spec" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-eth/eth-connectivity-service-end-point-spec> .
@@ -329,8 +359,8 @@ lex:tapi-eth-eth-connectivity-service-end-point-spec
 lex:tapi-eth-eth-ctp-common-pac
     a lex:ReferenceEntry ;
     skos:prefLabel "eth-ctp-common-pac" ;
+    # source: http://example.org/ontology/grouping/tapi-eth/eth-ctp-common-pac
     skos:definition "Grouping definition: eth-ctp-common-pac" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-eth/eth-ctp-common-pac> .
@@ -338,8 +368,8 @@ lex:tapi-eth-eth-ctp-common-pac
 lex:tapi-eth-eth-ctp-pac
     a lex:ReferenceEntry ;
     skos:prefLabel "eth-ctp-pac" ;
+    # source: http://example.org/ontology/grouping/tapi-eth/eth-ctp-pac
     skos:definition "Grouping definition: eth-ctp-pac" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-eth/eth-ctp-pac> .
@@ -347,7 +377,9 @@ lex:tapi-eth-eth-ctp-pac
 lex:tapi-eth-eth-link-trace-job
     a lex:ReferenceEntry ;
     skos:prefLabel "eth-link-trace-job" ;
+    # source: http://example.org/ontology/grouping/tapi-eth/eth-link-trace-job
     skos:definition "Grouping definition: eth-link-trace-job" ;
+    # source: http://example.org/ontology/grouping/tapi-eth/eth-link-trace-job
     skos:scopeNote "This class represents the Link Trace (LT) process for fault localization or for discovering the intermediate MIPs along the link from the MEP Source to a target MEP or MIP. An LTM frame will be sent from the MEP source to the target MEP/MIP.\nThe termination occurs at specified stop time (schedule attribute of OamJob)." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -356,8 +388,8 @@ lex:tapi-eth-eth-link-trace-job
 lex:tapi-eth-eth-link-trace-result-data
     a lex:ReferenceEntry ;
     skos:prefLabel "eth-link-trace-result-data" ;
+    # source: http://example.org/ontology/grouping/tapi-eth/eth-link-trace-result-data
     skos:definition "Grouping definition: eth-link-trace-result-data" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-eth/eth-link-trace-result-data> .
@@ -365,7 +397,9 @@ lex:tapi-eth-eth-link-trace-result-data
 lex:tapi-eth-eth-loopback-job
     a lex:ReferenceEntry ;
     skos:prefLabel "eth-loopback-job" ;
+    # source: http://example.org/ontology/grouping/tapi-eth/eth-loopback-job
     skos:definition "Grouping definition: eth-loopback-job" ;
+    # source: http://example.org/ontology/grouping/tapi-eth/eth-loopback-job
     skos:scopeNote "This class represents the Loopback (LB) process (send a series of LB messages carrying a test pattern to a particular MEP). The termination occurs at specified stop time (schedule attribute of OamJob).\nThis class models also the 'loopback discover' process, when destinationAddress is multicast.\nWhen number is greater than 1, then the process is to perform a Loopback (LB) Series process (send a series of N LB messages to a particular MEP/MIP. " ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -374,8 +408,8 @@ lex:tapi-eth-eth-loopback-job
 lex:tapi-eth-eth-loopback-result-data
     a lex:ReferenceEntry ;
     skos:prefLabel "eth-loopback-result-data" ;
+    # source: http://example.org/ontology/grouping/tapi-eth/eth-loopback-result-data
     skos:definition "Grouping definition: eth-loopback-result-data" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-eth/eth-loopback-result-data> .
@@ -383,7 +417,9 @@ lex:tapi-eth-eth-loopback-result-data
 lex:tapi-eth-eth-measurement-job-control-common
     a lex:ReferenceEntry ;
     skos:prefLabel "eth-measurement-job-control-common" ;
+    # source: http://example.org/ontology/grouping/tapi-eth/eth-measurement-job-control-common
     skos:definition "Grouping definition: eth-measurement-job-control-common" ;
+    # source: http://example.org/ontology/grouping/tapi-eth/eth-measurement-job-control-common
     skos:scopeNote "Time length over which each Availability Frame Loss Ratio value is calculated. This parameter allows to generalize SES and UAS.\nMEF 35.1:\n[R78]/[CR58] [O8] A SOAM PM Implementation MUST support a configurable parameter for the length of time over which each Availability flr value is calculated, with a range of 1s – 300s.  This parameter is equivalent to delta-t as specified by MEF 10.3.\n[R79]/[CR59] [O8] The length of time over which each Availability flr value is calculated (delta-t) MUST be an integer multiple of the interval between each SLM/1SL frame transmission.\n[D31]/[CD16] [O8] The default length of time over which each Availability flr value is calculated SHOULD be 1s." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -392,8 +428,8 @@ lex:tapi-eth-eth-measurement-job-control-common
 lex:tapi-eth-eth-meg-common
     a lex:ReferenceEntry ;
     skos:prefLabel "eth-meg-common" ;
+    # source: http://example.org/ontology/grouping/tapi-eth/eth-meg-common
     skos:definition "Grouping definition: eth-meg-common" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-eth/eth-meg-common> .
@@ -401,8 +437,8 @@ lex:tapi-eth-eth-meg-common
 lex:tapi-eth-eth-meg-spec
     a lex:ReferenceEntry ;
     skos:prefLabel "eth-meg-spec" ;
+    # source: http://example.org/ontology/grouping/tapi-eth/eth-meg-spec
     skos:definition "Grouping definition: eth-meg-spec" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-eth/eth-meg-spec> .
@@ -410,7 +446,9 @@ lex:tapi-eth-eth-meg-spec
 lex:tapi-eth-eth-mep-common
     a lex:ReferenceEntry ;
     skos:prefLabel "eth-mep-common" ;
+    # source: http://example.org/ontology/grouping/tapi-eth/eth-mep-common
     skos:definition "Basic attributes: adminState, clientMel, megIdentifier, mepMac\nContinuity Check Process related attributes: ccPeriod, ccPriority, isCcEnabled\nLock Process related attributes: lckPeriod, lckPriority\nThis object class models the MEP functions that are common to MEP Sink and MEP Source." ;
+    # source: http://example.org/ontology/grouping/tapi-eth/eth-mep-common
     skos:scopeNote "Grouping definition: eth-mep-common" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -419,7 +457,9 @@ lex:tapi-eth-eth-mep-common
 lex:tapi-eth-eth-mep-sink
     a lex:ReferenceEntry ;
     skos:prefLabel "eth-mep-sink" ;
+    # source: http://example.org/ontology/grouping/tapi-eth/eth-mep-sink
     skos:definition "1DM related attribute: 1DmPriority\nAIS Process related attributes: aisPeriod, aisPriority\nBandwidth notification Process related attribute: bandwidthReport\nBasic attribute: peerMepRefList\nCSF Process related attributes: isCsfRdiFdiEnabled, isCsfReported\nDefect correlation Process related attribute: currentProblemList\nThis object class models the MEP sink function. Instance of this object class can be created and contained by ETH CTP or TTP objects.\nIt also provides the management of the dual-ended maintenance job, such as test.\nThis object contains the configuration parameters for detecting 'degraded signal' (DEG)." ;
+    # source: http://example.org/ontology/grouping/tapi-eth/eth-mep-sink
     skos:scopeNote "Grouping definition: eth-mep-sink" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -428,7 +468,9 @@ lex:tapi-eth-eth-mep-sink
 lex:tapi-eth-eth-mep-source
     a lex:ReferenceEntry ;
     skos:prefLabel "eth-mep-source" ;
+    # source: http://example.org/ontology/grouping/tapi-eth/eth-mep-source
     skos:definition "APS Process related attribute: apsPriority\nBasic attribute: mepIdentifier\nCSF Process related attributes: csfConfig, csfPeriod, csfPriority\nLink trace related operation: linkTrace\nLoopback related operations: loopbackDiscover, loopbackSeries, loopbackTest, loopbackTestTerminate\nOn demand measurement job control related operation: establishOnDemandDualEndedMeasurementJobSource\nProactive measurement job control related operation: establishProActiveDualEndedMeasurementJobSource\nTest related operations: testInitiatorStart, testInitiatorTerminate\nThis object class models the MEP source function. Instance of this object class can be created and contained by ETH CTP or TTP objects.\nIt also provides the management of single-ended maintenance jobs, such as loopback test, loopback discover, loopback series, link trace, and dual-ended maintenance job, such as test." ;
+    # source: http://example.org/ontology/grouping/tapi-eth/eth-mep-source
     skos:scopeNote "Grouping definition: eth-mep-source" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -437,8 +479,8 @@ lex:tapi-eth-eth-mep-source
 lex:tapi-eth-eth-mep-spec
     a lex:ReferenceEntry ;
     skos:prefLabel "eth-mep-spec" ;
+    # source: http://example.org/ontology/grouping/tapi-eth/eth-mep-spec
     skos:definition "Grouping definition: eth-mep-spec" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-eth/eth-mep-spec> .
@@ -446,8 +488,8 @@ lex:tapi-eth-eth-mep-spec
 lex:tapi-eth-eth-mip-common
     a lex:ReferenceEntry ;
     skos:prefLabel "eth-mip-common" ;
+    # source: http://example.org/ontology/grouping/tapi-eth/eth-mip-common
     skos:definition "Grouping definition: eth-mip-common" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-eth/eth-mip-common> .
@@ -455,8 +497,8 @@ lex:tapi-eth-eth-mip-common
 lex:tapi-eth-eth-mip-spec
     a lex:ReferenceEntry ;
     skos:prefLabel "eth-mip-spec" ;
+    # source: http://example.org/ontology/grouping/tapi-eth/eth-mip-spec
     skos:definition "Grouping definition: eth-mip-spec" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-eth/eth-mip-spec> .
@@ -464,87 +506,89 @@ lex:tapi-eth-eth-mip-spec
 lex:tapi-eth-eth-oam-job-type
     a lex:ReferenceEntry ;
     skos:prefLabel "ETH_OAM_JOB_TYPE" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-eth/ETH_OAM_JOB_TYPE> .
 
 lex:tapi-eth-eth-oam-job-type-eth-1dm
     a lex:ReferenceEntry ;
     skos:prefLabel "ETH_OAM_JOB_TYPE_ETH_1DM" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-eth/ETH_OAM_JOB_TYPE_ETH_1DM> .
 
 lex:tapi-eth-eth-oam-job-type-eth-1slm
     a lex:ReferenceEntry ;
     skos:prefLabel "ETH_OAM_JOB_TYPE_ETH_1SLM" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-eth/ETH_OAM_JOB_TYPE_ETH_1SLM> .
 
 lex:tapi-eth-eth-oam-job-type-eth-dm
     a lex:ReferenceEntry ;
     skos:prefLabel "ETH_OAM_JOB_TYPE_ETH_DM" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-eth/ETH_OAM_JOB_TYPE_ETH_DM> .
 
 lex:tapi-eth-eth-oam-job-type-eth-lbk
     a lex:ReferenceEntry ;
     skos:prefLabel "ETH_OAM_JOB_TYPE_ETH_LBK" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-eth/ETH_OAM_JOB_TYPE_ETH_LBK> .
 
 lex:tapi-eth-eth-oam-job-type-eth-lm-ccm
     a lex:ReferenceEntry ;
     skos:prefLabel "ETH_OAM_JOB_TYPE_ETH_LM_CCM" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-eth/ETH_OAM_JOB_TYPE_ETH_LM_CCM> .
 
 lex:tapi-eth-eth-oam-job-type-eth-lm-lmm
     a lex:ReferenceEntry ;
     skos:prefLabel "ETH_OAM_JOB_TYPE_ETH_LM_LMM" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-eth/ETH_OAM_JOB_TYPE_ETH_LM_LMM> .
 
 lex:tapi-eth-eth-oam-job-type-eth-ltc
     a lex:ReferenceEntry ;
     skos:prefLabel "ETH_OAM_JOB_TYPE_ETH_LTC" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-eth/ETH_OAM_JOB_TYPE_ETH_LTC> .
 
 lex:tapi-eth-eth-oam-job-type-eth-slm
     a lex:ReferenceEntry ;
     skos:prefLabel "ETH_OAM_JOB_TYPE_ETH_SLM" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-eth/ETH_OAM_JOB_TYPE_ETH_SLM> .
 
 lex:tapi-eth-eth-oam-job-type-eth-test
     a lex:ReferenceEntry ;
     skos:prefLabel "ETH_OAM_JOB_TYPE_ETH_TEST" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-eth/ETH_OAM_JOB_TYPE_ETH_TEST> .
 
 lex:tapi-eth-eth-oam-mep-service-point
     a lex:ReferenceEntry ;
     skos:prefLabel "eth-oam-mep-service-point" ;
+    # source: http://example.org/ontology/grouping/tapi-eth/eth-oam-mep-service-point
     skos:definition "Grouping definition: eth-oam-mep-service-point" ;
+    # source: http://example.org/ontology/grouping/tapi-eth/eth-oam-mep-service-point
     skos:scopeNote "This class defines the common parameters for configuration of Sink and/or Source MEP." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -553,7 +597,9 @@ lex:tapi-eth-eth-oam-mep-service-point
 lex:tapi-eth-eth-oam-mip-service-point
     a lex:ReferenceEntry ;
     skos:prefLabel "eth-oam-mip-service-point" ;
+    # source: http://example.org/ontology/grouping/tapi-eth/eth-oam-mip-service-point
     skos:definition "Grouping definition: eth-oam-mip-service-point" ;
+    # source: http://example.org/ontology/grouping/tapi-eth/eth-oam-mip-service-point
     skos:scopeNote "This class defines the common parameters for configuration of MIP." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -562,7 +608,9 @@ lex:tapi-eth-eth-oam-mip-service-point
 lex:tapi-eth-eth-oam-service
     a lex:ReferenceEntry ;
     skos:prefLabel "eth-oam-service" ;
+    # source: http://example.org/ontology/grouping/tapi-eth/eth-oam-service
     skos:definition "Grouping definition: eth-oam-service" ;
+    # source: http://example.org/ontology/grouping/tapi-eth/eth-oam-service
     skos:scopeNote "This class defines the parameters for configuration of MEG." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -571,8 +619,8 @@ lex:tapi-eth-eth-oam-service
 lex:tapi-eth-eth-oam-test-loopback-common-pac
     a lex:ReferenceEntry ;
     skos:prefLabel "eth-oam-test-loopback-common-pac" ;
+    # source: http://example.org/ontology/grouping/tapi-eth/eth-oam-test-loopback-common-pac
     skos:definition "Grouping definition: eth-oam-test-loopback-common-pac" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-eth/eth-oam-test-loopback-common-pac> .
@@ -580,8 +628,8 @@ lex:tapi-eth-eth-oam-test-loopback-common-pac
 lex:tapi-eth-eth-on-demand-1-dm-performance-data
     a lex:ReferenceEntry ;
     skos:prefLabel "eth-on-demand-1-dm-performance-data" ;
+    # source: http://example.org/ontology/grouping/tapi-eth/eth-on-demand-1-dm-performance-data
     skos:definition "Grouping definition: eth-on-demand-1-dm-performance-data" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-eth/eth-on-demand-1-dm-performance-data> .
@@ -589,8 +637,8 @@ lex:tapi-eth-eth-on-demand-1-dm-performance-data
 lex:tapi-eth-eth-on-demand-1-dm-source-performance-data
     a lex:ReferenceEntry ;
     skos:prefLabel "eth-on-demand-1-dm-source-performance-data" ;
+    # source: http://example.org/ontology/grouping/tapi-eth/eth-on-demand-1-dm-source-performance-data
     skos:definition "Grouping definition: eth-on-demand-1-dm-source-performance-data" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-eth/eth-on-demand-1-dm-source-performance-data> .
@@ -598,8 +646,8 @@ lex:tapi-eth-eth-on-demand-1-dm-source-performance-data
 lex:tapi-eth-eth-on-demand-1-lm-performance-data
     a lex:ReferenceEntry ;
     skos:prefLabel "eth-on-demand-1-lm-performance-data" ;
+    # source: http://example.org/ontology/grouping/tapi-eth/eth-on-demand-1-lm-performance-data
     skos:definition "Grouping definition: eth-on-demand-1-lm-performance-data" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-eth/eth-on-demand-1-lm-performance-data> .
@@ -607,8 +655,8 @@ lex:tapi-eth-eth-on-demand-1-lm-performance-data
 lex:tapi-eth-eth-on-demand-1-lm-source-performance-data
     a lex:ReferenceEntry ;
     skos:prefLabel "eth-on-demand-1-lm-source-performance-data" ;
+    # source: http://example.org/ontology/grouping/tapi-eth/eth-on-demand-1-lm-source-performance-data
     skos:definition "Grouping definition: eth-on-demand-1-lm-source-performance-data" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-eth/eth-on-demand-1-lm-source-performance-data> .
@@ -616,8 +664,8 @@ lex:tapi-eth-eth-on-demand-1-lm-source-performance-data
 lex:tapi-eth-eth-on-demand-dm-performance-data
     a lex:ReferenceEntry ;
     skos:prefLabel "eth-on-demand-dm-performance-data" ;
+    # source: http://example.org/ontology/grouping/tapi-eth/eth-on-demand-dm-performance-data
     skos:definition "Grouping definition: eth-on-demand-dm-performance-data" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-eth/eth-on-demand-dm-performance-data> .
@@ -625,8 +673,8 @@ lex:tapi-eth-eth-on-demand-dm-performance-data
 lex:tapi-eth-eth-on-demand-dual-ended-measurement-job
     a lex:ReferenceEntry ;
     skos:prefLabel "eth-on-demand-dual-ended-measurement-job" ;
+    # source: http://example.org/ontology/grouping/tapi-eth/eth-on-demand-dual-ended-measurement-job
     skos:definition "Grouping definition: eth-on-demand-dual-ended-measurement-job" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-eth/eth-on-demand-dual-ended-measurement-job> .
@@ -634,8 +682,8 @@ lex:tapi-eth-eth-on-demand-dual-ended-measurement-job
 lex:tapi-eth-eth-on-demand-lm-performance-data
     a lex:ReferenceEntry ;
     skos:prefLabel "eth-on-demand-lm-performance-data" ;
+    # source: http://example.org/ontology/grouping/tapi-eth/eth-on-demand-lm-performance-data
     skos:definition "Grouping definition: eth-on-demand-lm-performance-data" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-eth/eth-on-demand-lm-performance-data> .
@@ -643,7 +691,9 @@ lex:tapi-eth-eth-on-demand-lm-performance-data
 lex:tapi-eth-eth-on-demand-measurement-job-control-sink
     a lex:ReferenceEntry ;
     skos:prefLabel "eth-on-demand-measurement-job-control-sink" ;
+    # source: http://example.org/ontology/grouping/tapi-eth/eth-on-demand-measurement-job-control-sink
     skos:definition "Grouping definition: eth-on-demand-measurement-job-control-sink" ;
+    # source: http://example.org/ontology/grouping/tapi-eth/eth-on-demand-measurement-job-control-sink
     skos:scopeNote "This object class represents an on-demand measurement job controller sink for 1-way measurements. It is created as a result of an establishOnDemandDualEndedMeasurementJobSink() operation. It is deleted either automatically after the measurement job has completed (stop time reached) and the performance data AVC notification has been sent, or by an explicit abortOnDemandMeasurementJob() operation when the measurement job is running." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -652,7 +702,9 @@ lex:tapi-eth-eth-on-demand-measurement-job-control-sink
 lex:tapi-eth-eth-on-demand-measurement-job-control-source
     a lex:ReferenceEntry ;
     skos:prefLabel "eth-on-demand-measurement-job-control-source" ;
+    # source: http://example.org/ontology/grouping/tapi-eth/eth-on-demand-measurement-job-control-source
     skos:definition "Basic attributes: destinationAddress, priority\nMeasurement configuration related attributes: oamPduGenerationType, startTime, stopTime, messagePeriod, repetitionPeriod, measurementInterval\nOptional attributes: dataTlvLength, testIdentifier\nThis object class represents an on-demand measurement job controller source for 1-way measurements. It is created as a result of an establishOnDemandDualEndedMeasurementJobSource() operation. It is deleted either automatically after the measurement job has completed (stop time reached), or by an explicit abortOnDemandMeasurementJob() operation while the measurement job is running." ;
+    # source: http://example.org/ontology/grouping/tapi-eth/eth-on-demand-measurement-job-control-source
     skos:scopeNote "Grouping definition: eth-on-demand-measurement-job-control-source" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -661,8 +713,8 @@ lex:tapi-eth-eth-on-demand-measurement-job-control-source
 lex:tapi-eth-eth-on-demand-single-ended-measurement-job
     a lex:ReferenceEntry ;
     skos:prefLabel "eth-on-demand-single-ended-measurement-job" ;
+    # source: http://example.org/ontology/grouping/tapi-eth/eth-on-demand-single-ended-measurement-job
     skos:definition "Grouping definition: eth-on-demand-single-ended-measurement-job" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-eth/eth-on-demand-single-ended-measurement-job> .
@@ -670,22 +722,23 @@ lex:tapi-eth-eth-on-demand-single-ended-measurement-job
 lex:tapi-eth-eth-pm-parameter-name
     a lex:ReferenceEntry ;
     skos:prefLabel "ETH_PM_PARAMETER_NAME" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-eth/ETH_PM_PARAMETER_NAME> .
 
 lex:tapi-eth-eth-pm-parameter-name-average-frame-delay
     a lex:ReferenceEntry ;
     skos:prefLabel "ETH_PM_PARAMETER_NAME_AVERAGE_FRAME_DELAY" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-eth/ETH_PM_PARAMETER_NAME_AVERAGE_FRAME_DELAY> .
 
 lex:tapi-eth-eth-pm-parameter-name-average-frame-delay-variation
     a lex:ReferenceEntry ;
     skos:prefLabel "ETH_PM_PARAMETER_NAME_AVERAGE_FRAME_DELAY_VARIATION" ;
+    # source: http://example.org/ontology/identity/tapi-eth/ETH_PM_PARAMETER_NAME_AVERAGE_FRAME_DELAY_VARIATION
     skos:definition "This attribute contains the average frame delay variation measured in units of ns (nano second, 1x10e-9 seconds).\nY.1563:\nThe 2-point frame delay variation (vk) for an Ethernet frame k between SRC and DST is the difference between the absolute Ethernet frame transfer delay (xk) of frame k and a defined reference Ethernet frame transfer delay, d1,2, between those same MPs:  vk = xk – d1,2." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -694,14 +747,15 @@ lex:tapi-eth-eth-pm-parameter-name-average-frame-delay-variation
 lex:tapi-eth-eth-pm-parameter-name-average-frame-loss-ratio
     a lex:ReferenceEntry ;
     skos:prefLabel "ETH_PM_PARAMETER_NAME_AVERAGE_FRAME_LOSS_RATIO" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-eth/ETH_PM_PARAMETER_NAME_AVERAGE_FRAME_LOSS_RATIO> .
 
 lex:tapi-eth-eth-pm-parameter-name-average-inter-frame-delay-variation
     a lex:ReferenceEntry ;
     skos:prefLabel "ETH_PM_PARAMETER_NAME_AVERAGE_INTER_FRAME_DELAY_VARIATION" ;
+    # source: http://example.org/ontology/identity/tapi-eth/ETH_PM_PARAMETER_NAME_AVERAGE_INTER_FRAME_DELAY_VARIATION
     skos:definition "This attribute contains the average frame delay variation measured in units of ns (nano second, 1x10e-9 seconds).\nG.8013/Y.1731:\nFrame delay variation is a measure of the variations in the frame delay between a pair of service frames" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -710,22 +764,23 @@ lex:tapi-eth-eth-pm-parameter-name-average-inter-frame-delay-variation
 lex:tapi-eth-eth-pm-parameter-name-high-loss-intervals
     a lex:ReferenceEntry ;
     skos:prefLabel "ETH_PM_PARAMETER_NAME_HIGH_LOSS_INTERVALS" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-eth/ETH_PM_PARAMETER_NAME_HIGH_LOSS_INTERVALS> .
 
 lex:tapi-eth-eth-pm-parameter-name-maximum-frame-delay
     a lex:ReferenceEntry ;
     skos:prefLabel "ETH_PM_PARAMETER_NAME_MAXIMUM_FRAME_DELAY" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-eth/ETH_PM_PARAMETER_NAME_MAXIMUM_FRAME_DELAY> .
 
 lex:tapi-eth-eth-pm-parameter-name-maximum-frame-delay-variation
     a lex:ReferenceEntry ;
     skos:prefLabel "ETH_PM_PARAMETER_NAME_MAXIMUM_FRAME_DELAY_VARIATION" ;
+    # source: http://example.org/ontology/identity/tapi-eth/ETH_PM_PARAMETER_NAME_MAXIMUM_FRAME_DELAY_VARIATION
     skos:definition "This attribute contains the maximum frame delay variation measured in units of ns (nano second, 1x10e-9 seconds).\nY.1563:\nThe 2-point frame delay variation (vk) for an Ethernet frame k between SRC and DST is the difference between the absolute Ethernet frame transfer delay (xk) of frame k and a defined reference Ethernet frame transfer delay, d1,2, between those same MPs:  vk = xk – d1,2." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -734,14 +789,15 @@ lex:tapi-eth-eth-pm-parameter-name-maximum-frame-delay-variation
 lex:tapi-eth-eth-pm-parameter-name-maximum-frame-loss-ratio
     a lex:ReferenceEntry ;
     skos:prefLabel "ETH_PM_PARAMETER_NAME_MAXIMUM_FRAME_LOSS_RATIO" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-eth/ETH_PM_PARAMETER_NAME_MAXIMUM_FRAME_LOSS_RATIO> .
 
 lex:tapi-eth-eth-pm-parameter-name-maximum-inter-frame-delay-variation
     a lex:ReferenceEntry ;
     skos:prefLabel "ETH_PM_PARAMETER_NAME_MAXIMUM_INTER_FRAME_DELAY_VARIATION" ;
+    # source: http://example.org/ontology/identity/tapi-eth/ETH_PM_PARAMETER_NAME_MAXIMUM_INTER_FRAME_DELAY_VARIATION
     skos:definition "This attribute contains the maximum frame delay variation measured in units of ns (nano second, 1x10e-9 seconds).\nG.8013/Y.1731:\nFrame delay variation is a measure of the variations in the frame delay between a pair of service frames" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -750,14 +806,15 @@ lex:tapi-eth-eth-pm-parameter-name-maximum-inter-frame-delay-variation
 lex:tapi-eth-eth-pm-parameter-name-minimum-frame-delay
     a lex:ReferenceEntry ;
     skos:prefLabel "ETH_PM_PARAMETER_NAME_MINIMUM_FRAME_DELAY" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-eth/ETH_PM_PARAMETER_NAME_MINIMUM_FRAME_DELAY> .
 
 lex:tapi-eth-eth-pm-parameter-name-minimum-frame-delay-variation
     a lex:ReferenceEntry ;
     skos:prefLabel "ETH_PM_PARAMETER_NAME_MINIMUM_FRAME_DELAY_VARIATION" ;
+    # source: http://example.org/ontology/identity/tapi-eth/ETH_PM_PARAMETER_NAME_MINIMUM_FRAME_DELAY_VARIATION
     skos:definition "This attribute contains the minimum frame delay variation measured in units of ns (nano second, 1x10e-9 seconds).\nY.1563:\nThe 2-point frame delay variation (vk) for an Ethernet frame k between SRC and DST is the difference between the absolute Ethernet frame transfer delay (xk) of frame k and a defined reference Ethernet frame transfer delay, d1,2, between those same MPs:  vk = xk – d1,2." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -766,14 +823,15 @@ lex:tapi-eth-eth-pm-parameter-name-minimum-frame-delay-variation
 lex:tapi-eth-eth-pm-parameter-name-minimum-frame-loss-ratio
     a lex:ReferenceEntry ;
     skos:prefLabel "ETH_PM_PARAMETER_NAME_MINIMUM_FRAME_LOSS_RATIO" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-eth/ETH_PM_PARAMETER_NAME_MINIMUM_FRAME_LOSS_RATIO> .
 
 lex:tapi-eth-eth-pm-parameter-name-minimum-inter-frame-delay-variation
     a lex:ReferenceEntry ;
     skos:prefLabel "ETH_PM_PARAMETER_NAME_MINIMUM_INTER_FRAME_DELAY_VARIATION" ;
+    # source: http://example.org/ontology/identity/tapi-eth/ETH_PM_PARAMETER_NAME_MINIMUM_INTER_FRAME_DELAY_VARIATION
     skos:definition "This attribute contains the minimum frame delay variation measured in units of ns (nano second, 1x10e-9 seconds).\nG.8013/Y.1731:\nFrame delay variation is a measure of the variations in the frame delay between a pair of service frames" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -782,15 +840,17 @@ lex:tapi-eth-eth-pm-parameter-name-minimum-inter-frame-delay-variation
 lex:tapi-eth-eth-pm-parameter-name-unavailable-intervals
     a lex:ReferenceEntry ;
     skos:prefLabel "ETH_PM_PARAMETER_NAME_UNAVAILABLE_INTERVALS" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-eth/ETH_PM_PARAMETER_NAME_UNAVAILABLE_INTERVALS> .
 
 lex:tapi-eth-eth-pro-active-1-dm-performance-data
     a lex:ReferenceEntry ;
     skos:prefLabel "eth-pro-active-1-dm-performance-data" ;
+    # source: http://example.org/ontology/grouping/tapi-eth/eth-pro-active-1-dm-performance-data
     skos:definition "Grouping definition: eth-pro-active-1-dm-performance-data" ;
+    # source: http://example.org/ontology/grouping/tapi-eth/eth-pro-active-1-dm-performance-data
     skos:scopeNote "This object class represents the PM current data collected in a pro-active delay measurement job (using 1DM)." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -799,7 +859,9 @@ lex:tapi-eth-eth-pro-active-1-dm-performance-data
 lex:tapi-eth-eth-pro-active-1-dm-source-performance-data
     a lex:ReferenceEntry ;
     skos:prefLabel "eth-pro-active-1-dm-source-performance-data" ;
+    # source: http://example.org/ontology/grouping/tapi-eth/eth-pro-active-1-dm-source-performance-data
     skos:definition "Grouping definition: eth-pro-active-1-dm-source-performance-data" ;
+    # source: http://example.org/ontology/grouping/tapi-eth/eth-pro-active-1-dm-source-performance-data
     skos:scopeNote "This object class represents the PM current data collected in a pro-active delay measurement job (using 1DM), on the source or controller MEP." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -808,7 +870,9 @@ lex:tapi-eth-eth-pro-active-1-dm-source-performance-data
 lex:tapi-eth-eth-pro-active-1-lm-performance-data
     a lex:ReferenceEntry ;
     skos:prefLabel "eth-pro-active-1-lm-performance-data" ;
+    # source: http://example.org/ontology/grouping/tapi-eth/eth-pro-active-1-lm-performance-data
     skos:definition "Grouping definition: eth-pro-active-1-lm-performance-data" ;
+    # source: http://example.org/ontology/grouping/tapi-eth/eth-pro-active-1-lm-performance-data
     skos:scopeNote "This object class represents the PM current data collected in a pro-active loss measurement job (using 1SL)." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -817,7 +881,9 @@ lex:tapi-eth-eth-pro-active-1-lm-performance-data
 lex:tapi-eth-eth-pro-active-1-lm-source-performance-data
     a lex:ReferenceEntry ;
     skos:prefLabel "eth-pro-active-1-lm-source-performance-data" ;
+    # source: http://example.org/ontology/grouping/tapi-eth/eth-pro-active-1-lm-source-performance-data
     skos:definition "Grouping definition: eth-pro-active-1-lm-source-performance-data" ;
+    # source: http://example.org/ontology/grouping/tapi-eth/eth-pro-active-1-lm-source-performance-data
     skos:scopeNote "This object class represents the PM current data collected in a pro-active loss measurement job (using 1SL), on the source or controller MEP." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -826,7 +892,9 @@ lex:tapi-eth-eth-pro-active-1-lm-source-performance-data
 lex:tapi-eth-eth-pro-active-dm-performance-data
     a lex:ReferenceEntry ;
     skos:prefLabel "eth-pro-active-dm-performance-data" ;
+    # source: http://example.org/ontology/grouping/tapi-eth/eth-pro-active-dm-performance-data
     skos:definition "Grouping definition: eth-pro-active-dm-performance-data" ;
+    # source: http://example.org/ontology/grouping/tapi-eth/eth-pro-active-dm-performance-data
     skos:scopeNote "This object class represents the PM current data collected in a pro-active delay measurement job (using DMM/DMR)." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -835,8 +903,8 @@ lex:tapi-eth-eth-pro-active-dm-performance-data
 lex:tapi-eth-eth-pro-active-dual-ended-measurement-job
     a lex:ReferenceEntry ;
     skos:prefLabel "eth-pro-active-dual-ended-measurement-job" ;
+    # source: http://example.org/ontology/grouping/tapi-eth/eth-pro-active-dual-ended-measurement-job
     skos:definition "Grouping definition: eth-pro-active-dual-ended-measurement-job" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-eth/eth-pro-active-dual-ended-measurement-job> .
@@ -844,7 +912,9 @@ lex:tapi-eth-eth-pro-active-dual-ended-measurement-job
 lex:tapi-eth-eth-pro-active-lm-performance-data
     a lex:ReferenceEntry ;
     skos:prefLabel "eth-pro-active-lm-performance-data" ;
+    # source: http://example.org/ontology/grouping/tapi-eth/eth-pro-active-lm-performance-data
     skos:definition "Grouping definition: eth-pro-active-lm-performance-data" ;
+    # source: http://example.org/ontology/grouping/tapi-eth/eth-pro-active-lm-performance-data
     skos:scopeNote "This object class represents the PM current data collected in a pro-active loss measurement job (using LMM/LMR or SLM/SLR)." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -853,7 +923,9 @@ lex:tapi-eth-eth-pro-active-lm-performance-data
 lex:tapi-eth-eth-pro-active-measurement-job-control-sink
     a lex:ReferenceEntry ;
     skos:prefLabel "eth-pro-active-measurement-job-control-sink" ;
+    # source: http://example.org/ontology/grouping/tapi-eth/eth-pro-active-measurement-job-control-sink
     skos:definition "Grouping definition: eth-pro-active-measurement-job-control-sink" ;
+    # source: http://example.org/ontology/grouping/tapi-eth/eth-pro-active-measurement-job-control-sink
     skos:scopeNote "This object class allows the control of the proactive 1-way measurement. It is created as a part of an establishProActiveDualEndedMeasurementJobSink() operation. Lifecycle: A pre-condition of deleting the object is that the Enable attribute should have the value FALSE." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -862,7 +934,9 @@ lex:tapi-eth-eth-pro-active-measurement-job-control-sink
 lex:tapi-eth-eth-pro-active-measurement-job-control-source
     a lex:ReferenceEntry ;
     skos:prefLabel "eth-pro-active-measurement-job-control-source" ;
+    # source: http://example.org/ontology/grouping/tapi-eth/eth-pro-active-measurement-job-control-source
     skos:definition "Grouping definition: eth-pro-active-measurement-job-control-source" ;
+    # source: http://example.org/ontology/grouping/tapi-eth/eth-pro-active-measurement-job-control-source
     skos:scopeNote "This object class represents a proactive measurement job controller source for 1way measurements. It is created as a part of an establishProactiveDualEndedMeasurementJobSource() operation." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -871,8 +945,8 @@ lex:tapi-eth-eth-pro-active-measurement-job-control-source
 lex:tapi-eth-eth-pro-active-single-ended-measurement-job
     a lex:ReferenceEntry ;
     skos:prefLabel "eth-pro-active-single-ended-measurement-job" ;
+    # source: http://example.org/ontology/grouping/tapi-eth/eth-pro-active-single-ended-measurement-job
     skos:definition "Grouping definition: eth-pro-active-single-ended-measurement-job" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-eth/eth-pro-active-single-ended-measurement-job> .
@@ -880,8 +954,8 @@ lex:tapi-eth-eth-pro-active-single-ended-measurement-job
 lex:tapi-eth-eth-service-inteface-point-spec
     a lex:ReferenceEntry ;
     skos:prefLabel "eth-service-inteface-point-spec" ;
+    # source: http://example.org/ontology/grouping/tapi-eth/eth-service-inteface-point-spec
     skos:definition "Grouping definition: eth-service-inteface-point-spec" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-eth/eth-service-inteface-point-spec> .
@@ -889,8 +963,8 @@ lex:tapi-eth-eth-service-inteface-point-spec
 lex:tapi-eth-eth-termination-common-pac
     a lex:ReferenceEntry ;
     skos:prefLabel "eth-termination-common-pac" ;
+    # source: http://example.org/ontology/grouping/tapi-eth/eth-termination-common-pac
     skos:definition "Grouping definition: eth-termination-common-pac" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-eth/eth-termination-common-pac> .
@@ -898,7 +972,9 @@ lex:tapi-eth-eth-termination-common-pac
 lex:tapi-eth-eth-termination-pac
     a lex:ReferenceEntry ;
     skos:prefLabel "eth-termination-pac" ;
+    # source: http://example.org/ontology/grouping/tapi-eth/eth-termination-pac
     skos:definition "Grouping definition: eth-termination-pac" ;
+    # source: http://example.org/ontology/grouping/tapi-eth/eth-termination-pac
     skos:scopeNote "This object class models the Ethernet Flow Termination function located at a layer boundary." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -907,7 +983,9 @@ lex:tapi-eth-eth-termination-pac
 lex:tapi-eth-eth-test-job
     a lex:ReferenceEntry ;
     skos:prefLabel "eth-test-job" ;
+    # source: http://example.org/ontology/grouping/tapi-eth/eth-test-job
     skos:definition "Grouping definition: eth-test-job" ;
+    # source: http://example.org/ontology/grouping/tapi-eth/eth-test-job
     skos:scopeNote "This class represents the 1-way on-demand in-service or out-of-service diagnostic test. The diagnostic test includes verifying bandwidth throughput, frame loss, bit errors, etc. TST frames are transmitted.\nThe termination occurs at specified stop time (schedule attribute of OamJob)." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -916,8 +994,8 @@ lex:tapi-eth-eth-test-job
 lex:tapi-eth-eth-test-job-sink-point
     a lex:ReferenceEntry ;
     skos:prefLabel "eth-test-job-sink-point" ;
+    # source: http://example.org/ontology/grouping/tapi-eth/eth-test-job-sink-point
     skos:definition "Grouping definition: eth-test-job-sink-point" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-eth/eth-test-job-sink-point> .
@@ -925,8 +1003,8 @@ lex:tapi-eth-eth-test-job-sink-point
 lex:tapi-eth-eth-test-result-data
     a lex:ReferenceEntry ;
     skos:prefLabel "eth-test-result-data" ;
+    # source: http://example.org/ontology/grouping/tapi-eth/eth-test-result-data
     skos:definition "Grouping definition: eth-test-result-data" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-eth/eth-test-result-data> .
@@ -934,8 +1012,8 @@ lex:tapi-eth-eth-test-result-data
 lex:tapi-eth-ety-pac
     a lex:ReferenceEntry ;
     skos:prefLabel "ety-pac" ;
+    # source: http://example.org/ontology/grouping/tapi-eth/ety-pac
     skos:definition "Grouping definition: ety-pac" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-eth/ety-pac> .
@@ -943,16 +1021,16 @@ lex:tapi-eth-ety-pac
 lex:tapi-eth-ety-phy-type
     a lex:ReferenceEntry ;
     skos:prefLabel "ety-phy-type" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:EnumeratedKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/types/tapi-eth/ety-phy-type> .
 
 lex:tapi-eth-ety-termination-common-pac
     a lex:ReferenceEntry ;
     skos:prefLabel "ety-termination-common-pac" ;
+    # source: http://example.org/ontology/grouping/tapi-eth/ety-termination-common-pac
     skos:definition "Grouping definition: ety-termination-common-pac" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-eth/ety-termination-common-pac> .
@@ -960,8 +1038,8 @@ lex:tapi-eth-ety-termination-common-pac
 lex:tapi-eth-ety-termination-pac
     a lex:ReferenceEntry ;
     skos:prefLabel "ety-termination-pac" ;
+    # source: http://example.org/ontology/grouping/tapi-eth/ety-termination-pac
     skos:definition "Grouping definition: ety-termination-pac" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-eth/ety-termination-pac> .
@@ -969,22 +1047,23 @@ lex:tapi-eth-ety-termination-pac
 lex:tapi-eth-frame-type
     a lex:ReferenceEntry ;
     skos:prefLabel "frame-type" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:EnumeratedKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/types/tapi-eth/frame-type> .
 
 lex:tapi-eth-link-trace-egress-action-field-value
     a lex:ReferenceEntry ;
     skos:prefLabel "LINK_TRACE_EGRESS_ACTION_FIELD_VALUE" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-eth/LINK_TRACE_EGRESS_ACTION_FIELD_VALUE> .
 
 lex:tapi-eth-link-trace-egress-action-field-value-egress-blocked
     a lex:ReferenceEntry ;
     skos:prefLabel "LINK_TRACE_EGRESS_ACTION_FIELD_VALUE_EGRESS_BLOCKED" ;
+    # source: http://example.org/ontology/identity/tapi-eth/LINK_TRACE_EGRESS_ACTION_FIELD_VALUE_EGRESS_BLOCKED
     skos:definition "The Egress Port can be identified, but the data frame would not pass through the Egress Port due to active topology management (i.e., the Bridge Port is not in the Forwarding state)." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -993,6 +1072,7 @@ lex:tapi-eth-link-trace-egress-action-field-value-egress-blocked
 lex:tapi-eth-link-trace-egress-action-field-value-egress-down
     a lex:ReferenceEntry ;
     skos:prefLabel "LINK_TRACE_EGRESS_ACTION_FIELD_VALUE_EGRESS_DOWN" ;
+    # source: http://example.org/ontology/identity/tapi-eth/LINK_TRACE_EGRESS_ACTION_FIELD_VALUE_EGRESS_DOWN
     skos:definition "The Egress Port can be identified, but that Bridge Port MAC_Operational parameter is false." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -1001,6 +1081,7 @@ lex:tapi-eth-link-trace-egress-action-field-value-egress-down
 lex:tapi-eth-link-trace-egress-action-field-value-egress-no-tlv
     a lex:ReferenceEntry ;
     skos:prefLabel "LINK_TRACE_EGRESS_ACTION_FIELD_VALUE_EGRESS_NO_TLV" ;
+    # source: http://example.org/ontology/identity/tapi-eth/LINK_TRACE_EGRESS_ACTION_FIELD_VALUE_EGRESS_NO_TLV
     skos:definition "Indicates that no Reply Egress TLV was returned in the LTM." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -1009,6 +1090,7 @@ lex:tapi-eth-link-trace-egress-action-field-value-egress-no-tlv
 lex:tapi-eth-link-trace-egress-action-field-value-egress-ok
     a lex:ReferenceEntry ;
     skos:prefLabel "LINK_TRACE_EGRESS_ACTION_FIELD_VALUE_EGRESS_OK" ;
+    # source: http://example.org/ontology/identity/tapi-eth/LINK_TRACE_EGRESS_ACTION_FIELD_VALUE_EGRESS_OK
     skos:definition "The targeted data frame would be forwarded." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -1017,6 +1099,7 @@ lex:tapi-eth-link-trace-egress-action-field-value-egress-ok
 lex:tapi-eth-link-trace-egress-action-field-value-egress-vid
     a lex:ReferenceEntry ;
     skos:prefLabel "LINK_TRACE_EGRESS_ACTION_FIELD_VALUE_EGRESS_VID" ;
+    # source: http://example.org/ontology/identity/tapi-eth/LINK_TRACE_EGRESS_ACTION_FIELD_VALUE_EGRESS_VID
     skos:definition "The Egress Port can be identified, but the Bridge Port is not in the LTMs VIDs member set, so would be filtered by egress filtering." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -1025,14 +1108,15 @@ lex:tapi-eth-link-trace-egress-action-field-value-egress-vid
 lex:tapi-eth-link-trace-ingress-action-field-value
     a lex:ReferenceEntry ;
     skos:prefLabel "LINK_TRACE_INGRESS_ACTION_FIELD_VALUE" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-eth/LINK_TRACE_INGRESS_ACTION_FIELD_VALUE> .
 
 lex:tapi-eth-link-trace-ingress-action-field-value-ingress-blocked
     a lex:ReferenceEntry ;
     skos:prefLabel "LINK_TRACE_INGRESS_ACTION_FIELD_VALUE_INGRESS_BLOCKED" ;
+    # source: http://example.org/ontology/identity/tapi-eth/LINK_TRACE_INGRESS_ACTION_FIELD_VALUE_INGRESS_BLOCKED
     skos:definition "The target data frame would not be forwarded if received on this Port due to active topology enforcement." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -1041,6 +1125,7 @@ lex:tapi-eth-link-trace-ingress-action-field-value-ingress-blocked
 lex:tapi-eth-link-trace-ingress-action-field-value-ingress-down
     a lex:ReferenceEntry ;
     skos:prefLabel "LINK_TRACE_INGRESS_ACTION_FIELD_VALUE_INGRESS_DOWN" ;
+    # source: http://example.org/ontology/identity/tapi-eth/LINK_TRACE_INGRESS_ACTION_FIELD_VALUE_INGRESS_DOWN
     skos:definition "The Bridge Ports MAC_Operational parameter is false." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -1049,6 +1134,7 @@ lex:tapi-eth-link-trace-ingress-action-field-value-ingress-down
 lex:tapi-eth-link-trace-ingress-action-field-value-ingress-no-tlv
     a lex:ReferenceEntry ;
     skos:prefLabel "LINK_TRACE_INGRESS_ACTION_FIELD_VALUE_INGRESS_NO_TLV" ;
+    # source: http://example.org/ontology/identity/tapi-eth/LINK_TRACE_INGRESS_ACTION_FIELD_VALUE_INGRESS_NO_TLV
     skos:definition "Indicates that no Reply Ingress TLV was returned in the LTM." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -1057,6 +1143,7 @@ lex:tapi-eth-link-trace-ingress-action-field-value-ingress-no-tlv
 lex:tapi-eth-link-trace-ingress-action-field-value-ingress-ok
     a lex:ReferenceEntry ;
     skos:prefLabel "LINK_TRACE_INGRESS_ACTION_FIELD_VALUE_INGRESS_OK" ;
+    # source: http://example.org/ontology/identity/tapi-eth/LINK_TRACE_INGRESS_ACTION_FIELD_VALUE_INGRESS_OK
     skos:definition "The target data frame would be passed through to the MAC Relay Entity." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -1065,6 +1152,7 @@ lex:tapi-eth-link-trace-ingress-action-field-value-ingress-ok
 lex:tapi-eth-link-trace-ingress-action-field-value-ingress-vid
     a lex:ReferenceEntry ;
     skos:prefLabel "LINK_TRACE_INGRESS_ACTION_FIELD_VALUE_INGRESS_VID" ;
+    # source: http://example.org/ontology/identity/tapi-eth/LINK_TRACE_INGRESS_ACTION_FIELD_VALUE_INGRESS_VID
     skos:definition "The ingress port is not in the member set of the LTMs VID, and ingress filtering is enabled, so the target data frame would be filtered by ingress filtering." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -1073,14 +1161,15 @@ lex:tapi-eth-link-trace-ingress-action-field-value-ingress-vid
 lex:tapi-eth-link-trace-relay-action-field-value
     a lex:ReferenceEntry ;
     skos:prefLabel "LINK_TRACE_RELAY_ACTION_FIELD_VALUE" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-eth/LINK_TRACE_RELAY_ACTION_FIELD_VALUE> .
 
 lex:tapi-eth-link-trace-relay-action-field-value-relay-fdb
     a lex:ReferenceEntry ;
     skos:prefLabel "LINK_TRACE_RELAY_ACTION_FIELD_VALUE_RELAY_FDB" ;
+    # source: http://example.org/ontology/identity/tapi-eth/LINK_TRACE_RELAY_ACTION_FIELD_VALUE_RELAY_FDB
     skos:definition "The Egress Port was determined by consulting the Filtering Database." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -1089,6 +1178,7 @@ lex:tapi-eth-link-trace-relay-action-field-value-relay-fdb
 lex:tapi-eth-link-trace-relay-action-field-value-relay-hit
     a lex:ReferenceEntry ;
     skos:prefLabel "LINK_TRACE_RELAY_ACTION_FIELD_VALUE_RELAY_HIT" ;
+    # source: http://example.org/ontology/identity/tapi-eth/LINK_TRACE_RELAY_ACTION_FIELD_VALUE_RELAY_HIT
     skos:definition "The LTM reached a Maintenance Point whose MAC address matches the target address." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -1097,6 +1187,7 @@ lex:tapi-eth-link-trace-relay-action-field-value-relay-hit
 lex:tapi-eth-link-trace-relay-action-field-value-relay-mpdb
     a lex:ReferenceEntry ;
     skos:prefLabel "LINK_TRACE_RELAY_ACTION_FIELD_VALUE_RELAY_MPDB" ;
+    # source: http://example.org/ontology/identity/tapi-eth/LINK_TRACE_RELAY_ACTION_FIELD_VALUE_RELAY_MPDB
     skos:definition "The Egress Port was determined by consulting the MIP CCM Database." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -1105,7 +1196,9 @@ lex:tapi-eth-link-trace-relay-action-field-value-relay-mpdb
 lex:tapi-eth-link-trace-result
     a lex:ReferenceEntry ;
     skos:prefLabel "link-trace-result" ;
+    # source: http://example.org/ontology/grouping/tapi-eth/link-trace-result
     skos:definition "G.8052: This data type contains the result from an individual LTR frame." ;
+    # source: http://example.org/ontology/grouping/tapi-eth/link-trace-result
     skos:scopeNote "Grouping definition: link-trace-result" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -1114,7 +1207,9 @@ lex:tapi-eth-link-trace-result
 lex:tapi-eth-lldp-chassis-id-subtype
     a lex:ReferenceEntry ;
     skos:prefLabel "lldp-chassis-id-subtype" ;
+    # source: http://example.org/ontology/grouping/tapi-eth/lldp-chassis-id-subtype
     skos:definition "Grouping definition: lldp-chassis-id-subtype" ;
+    # source: http://example.org/ontology/grouping/tapi-eth/lldp-chassis-id-subtype
     skos:scopeNote "MEF 38:\nThe chassis-id-subtype contains the chassis ID entity that is listed in the chassis ID field. This is a combination of the 'Chassis ID Subtype' and 'chassis ID' fields.\n" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -1123,7 +1218,9 @@ lex:tapi-eth-lldp-chassis-id-subtype
 lex:tapi-eth-lldp-port-id-subtype
     a lex:ReferenceEntry ;
     skos:prefLabel "lldp-port-id-subtype" ;
+    # source: http://example.org/ontology/grouping/tapi-eth/lldp-port-id-subtype
     skos:definition "Grouping definition: lldp-port-id-subtype" ;
+    # source: http://example.org/ontology/grouping/tapi-eth/lldp-port-id-subtype
     skos:scopeNote "IEEE P802.1Qcx/D0.3:\nThe source of a particular type of port identifier used in the LLDP YANG module.\nMEF 38:\nData definitions associated with the Port ID TLV." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -1132,14 +1229,15 @@ lex:tapi-eth-lldp-port-id-subtype
 lex:tapi-eth-ltmflags
     a lex:ReferenceEntry ;
     skos:prefLabel "LTMFLAGS" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-eth/LTMFLAGS> .
 
 lex:tapi-eth-ltmflags-use-fdb-only
     a lex:ReferenceEntry ;
     skos:prefLabel "LTMFLAGS_USE_FDB_ONLY" ;
+    # source: http://example.org/ontology/identity/tapi-eth/LTMFLAGS_USE_FDB_ONLY
     skos:definition "IEEE 802.1Q 2018:\nIf set, indicates that only MAC addresses learned in a Bridge’s FDB, and not information saved in the MIP CCM Database, is to be used to determine the Egress Port.\nBit 8 (MSB)." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -1148,8 +1246,8 @@ lex:tapi-eth-ltmflags-use-fdb-only
 lex:tapi-eth-maintenance-association-name
     a lex:ReferenceEntry ;
     skos:prefLabel "maintenance-association-name" ;
+    # source: http://example.org/ontology/grouping/tapi-eth/maintenance-association-name
     skos:definition "Grouping definition: maintenance-association-name" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-eth/maintenance-association-name> .
@@ -1157,6 +1255,7 @@ lex:tapi-eth-maintenance-association-name
 lex:tapi-eth-maintenance-domain-id-permission-types
     a lex:ReferenceEntry ;
     skos:prefLabel "maintenance-domain-id-permission-types" ;
+    # source: http://example.org/ontology/types/tapi-eth/maintenance-domain-id-permission-types
     skos:definition "IEEE P802.1Qcx/D0.3:\nMEF 38:\nIndicates what, if anything, is to be included in the Sender ID TLV transmitted in CCMs, LBMs, LTMs, and LTRs." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:EnumeratedKind ;
@@ -1165,14 +1264,15 @@ lex:tapi-eth-maintenance-domain-id-permission-types
 lex:tapi-eth-maintenance-domain-name-type
     a lex:ReferenceEntry ;
     skos:prefLabel "MAINTENANCE_DOMAIN_NAME_TYPE" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-eth/MAINTENANCE_DOMAIN_NAME_TYPE> .
 
 lex:tapi-eth-maintenance-domain-name-type-domain-name
     a lex:ReferenceEntry ;
     skos:prefLabel "MAINTENANCE_DOMAIN_NAME_TYPE_DOMAIN_NAME" ;
+    # source: http://example.org/ontology/identity/tapi-eth/MAINTENANCE_DOMAIN_NAME_TYPE_DOMAIN_NAME
     skos:definition "IEEE P802.1Qcx/D0.3:\nMEF 38:\nDomain Name like string, globally unique text string derived from a DNS name." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -1181,6 +1281,7 @@ lex:tapi-eth-maintenance-domain-name-type-domain-name
 lex:tapi-eth-maintenance-domain-name-type-mac-addr-and-uint
     a lex:ReferenceEntry ;
     skos:prefLabel "MAINTENANCE_DOMAIN_NAME_TYPE_MAC_ADDR_AND_UINT_" ;
+    # source: http://example.org/ontology/identity/tapi-eth/MAINTENANCE_DOMAIN_NAME_TYPE_MAC_ADDR_AND_UINT_
     skos:definition "IEEE P802.1Qcx/D0.3:\nMEF 38:\nMAC address + 2-octet (unsigned) integer." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -1189,6 +1290,7 @@ lex:tapi-eth-maintenance-domain-name-type-mac-addr-and-uint
 lex:tapi-eth-maintenance-domain-name-type-none
     a lex:ReferenceEntry ;
     skos:prefLabel "MAINTENANCE_DOMAIN_NAME_TYPE_NONE" ;
+    # source: http://example.org/ontology/identity/tapi-eth/MAINTENANCE_DOMAIN_NAME_TYPE_NONE
     skos:definition "IEEE P802.1Qcx/D0.3:\nNo format specified, usually because there is not a Maintenance Domain Name. In this case, a zero length OCTET string for the Domain name field is acceptable.\nMEF 38:\nNo format specified." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -1197,6 +1299,7 @@ lex:tapi-eth-maintenance-domain-name-type-none
 lex:tapi-eth-maintenance-domain-name-type-string
     a lex:ReferenceEntry ;
     skos:prefLabel "MAINTENANCE_DOMAIN_NAME_TYPE_STRING" ;
+    # source: http://example.org/ontology/identity/tapi-eth/MAINTENANCE_DOMAIN_NAME_TYPE_STRING
     skos:definition "IEEE P802.1Qcx/D0.3:\nMEF 38:\nRFC2579 DisplayString, except that the character codes 0-31 (decimal) are not used.\n" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -1205,6 +1308,7 @@ lex:tapi-eth-maintenance-domain-name-type-string
 lex:tapi-eth-message-period
     a lex:ReferenceEntry ;
     skos:prefLabel "message-period" ;
+    # source: http://example.org/ontology/types/tapi-eth/message-period
     skos:definition "This enumeration defines the allowed values for the message period in on-demand measurements.\nNotes:\nThe value 10ms is only used in synthetic loss measurements.\nThe value 0 means that the value is not relevant." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:EnumeratedKind ;
@@ -1213,6 +1317,7 @@ lex:tapi-eth-message-period
 lex:tapi-eth-oam-pdu-generation-type
     a lex:ReferenceEntry ;
     skos:prefLabel "oam-pdu-generation-type" ;
+    # source: http://example.org/ontology/types/tapi-eth/oam-pdu-generation-type
     skos:definition "This enumeration defines the generation pattern of the on-demand OAM PDUs (messages). " ;
     lex:canonicalExample "" ;
     lex:entityClass lex:EnumeratedKind ;
@@ -1221,6 +1326,7 @@ lex:tapi-eth-oam-pdu-generation-type
 lex:tapi-eth-oam-period
     a lex:ReferenceEntry ;
     skos:prefLabel "oam-period" ;
+    # source: http://example.org/ontology/types/tapi-eth/oam-period
     skos:definition "Provides the frequency for the OAM PDU insertion." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:EnumeratedKind ;
@@ -1229,6 +1335,7 @@ lex:tapi-eth-oam-period
 lex:tapi-eth-pcp-coding
     a lex:ReferenceEntry ;
     skos:prefLabel "pcp-coding" ;
+    # source: http://example.org/ontology/types/tapi-eth/pcp-coding
     skos:definition "This enum models the coding of the Priority Code Point as defined in section 'Priority Code Point encoding' of IEEE 802.1Q." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:EnumeratedKind ;
@@ -1237,8 +1344,8 @@ lex:tapi-eth-pcp-coding
 lex:tapi-eth-priority-configuration
     a lex:ReferenceEntry ;
     skos:prefLabel "priority-configuration" ;
+    # source: http://example.org/ontology/grouping/tapi-eth/priority-configuration
     skos:definition "Grouping definition: priority-configuration" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-eth/priority-configuration> .
@@ -1246,7 +1353,9 @@ lex:tapi-eth-priority-configuration
 lex:tapi-eth-priority-mapping
     a lex:ReferenceEntry ;
     skos:prefLabel "priority-mapping" ;
+    # source: http://example.org/ontology/grouping/tapi-eth/priority-mapping
     skos:definition "Grouping definition: priority-mapping" ;
+    # source: http://example.org/ontology/grouping/tapi-eth/priority-mapping
     skos:scopeNote "This data type provides the priority mapping done in the 'P Regenerate' process defined in G.8021." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -1255,8 +1364,8 @@ lex:tapi-eth-priority-mapping
 lex:tapi-eth-queue-configuration
     a lex:ReferenceEntry ;
     skos:prefLabel "queue-configuration" ;
+    # source: http://example.org/ontology/grouping/tapi-eth/queue-configuration
     skos:definition "Grouping definition: queue-configuration" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-eth/queue-configuration> .
@@ -1264,6 +1373,7 @@ lex:tapi-eth-queue-configuration
 lex:tapi-eth-repetition-period
     a lex:ReferenceEntry ;
     skos:prefLabel "repetition-period" ;
+    # source: http://example.org/ontology/types/tapi-eth/repetition-period
     skos:definition "This enumeration defines the allowed values for the repetition period in on-demand measurements.\nNote: The value 0 means that the value is not relevant." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:EnumeratedKind ;
@@ -1272,7 +1382,9 @@ lex:tapi-eth-repetition-period
 lex:tapi-eth-samples-dm-performance-parameters
     a lex:ReferenceEntry ;
     skos:prefLabel "samples-dm-performance-parameters" ;
+    # source: http://example.org/ontology/grouping/tapi-eth/samples-dm-performance-parameters
     skos:definition "Grouping definition: samples-dm-performance-parameters" ;
+    # source: http://example.org/ontology/grouping/tapi-eth/samples-dm-performance-parameters
     skos:scopeNote "This data type contains the results of an on-demand delay measurement job." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -1281,7 +1393,9 @@ lex:tapi-eth-samples-dm-performance-parameters
 lex:tapi-eth-statistical-dm-performance-parameters
     a lex:ReferenceEntry ;
     skos:prefLabel "statistical-dm-performance-parameters" ;
+    # source: http://example.org/ontology/grouping/tapi-eth/statistical-dm-performance-parameters
     skos:definition "Grouping definition: statistical-dm-performance-parameters" ;
+    # source: http://example.org/ontology/grouping/tapi-eth/statistical-dm-performance-parameters
     skos:scopeNote "This data type contains the statistical delay measurement performance parameters." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -1290,7 +1404,9 @@ lex:tapi-eth-statistical-dm-performance-parameters
 lex:tapi-eth-statistical-lm-performance-parameters
     a lex:ReferenceEntry ;
     skos:prefLabel "statistical-lm-performance-parameters" ;
+    # source: http://example.org/ontology/grouping/tapi-eth/statistical-lm-performance-parameters
     skos:definition "Grouping definition: statistical-lm-performance-parameters" ;
+    # source: http://example.org/ontology/grouping/tapi-eth/statistical-lm-performance-parameters
     skos:scopeNote "This data type contains the statistical loss measurement performance parameters." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -1299,47 +1415,49 @@ lex:tapi-eth-statistical-lm-performance-parameters
 lex:tapi-eth-test-pattern
     a lex:ReferenceEntry ;
     skos:prefLabel "TEST_PATTERN" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-eth/TEST_PATTERN> .
 
 lex:tapi-eth-test-pattern-null-signal-with-crc-32
     a lex:ReferenceEntry ;
     skos:prefLabel "TEST_PATTERN_NULL_SIGNAL_WITH_CRC_32" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-eth/TEST_PATTERN_NULL_SIGNAL_WITH_CRC_32> .
 
 lex:tapi-eth-test-pattern-null-signal-without-crc-32
     a lex:ReferenceEntry ;
     skos:prefLabel "TEST_PATTERN_NULL_SIGNAL_WITHOUT_CRC_32" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-eth/TEST_PATTERN_NULL_SIGNAL_WITHOUT_CRC_32> .
 
 lex:tapi-eth-test-pattern-prbs-2-31-1-with-crc-32
     a lex:ReferenceEntry ;
     skos:prefLabel "TEST_PATTERN_PRBS_2_31_1_WITH_CRC_32" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-eth/TEST_PATTERN_PRBS_2_31_1_WITH_CRC_32> .
 
 lex:tapi-eth-test-pattern-prbs-2-31-1-without-crc-32
     a lex:ReferenceEntry ;
     skos:prefLabel "TEST_PATTERN_PRBS_2_31_1_WITHOUT_CRC_32" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-eth/TEST_PATTERN_PRBS_2_31_1_WITHOUT_CRC_32> .
 
 lex:tapi-eth-total-counters-lm-performance-parameters
     a lex:ReferenceEntry ;
     skos:prefLabel "total-counters-lm-performance-parameters" ;
+    # source: http://example.org/ontology/grouping/tapi-eth/total-counters-lm-performance-parameters
     skos:definition "Grouping definition: total-counters-lm-performance-parameters" ;
+    # source: http://example.org/ontology/grouping/tapi-eth/total-counters-lm-performance-parameters
     skos:scopeNote "This data type contains the results of an on-demand loss measurement job." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -1348,8 +1466,8 @@ lex:tapi-eth-total-counters-lm-performance-parameters
 lex:tapi-eth-traffic-conditioning-configuration
     a lex:ReferenceEntry ;
     skos:prefLabel "traffic-conditioning-configuration" ;
+    # source: http://example.org/ontology/grouping/tapi-eth/traffic-conditioning-configuration
     skos:definition "Grouping definition: traffic-conditioning-configuration" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-eth/traffic-conditioning-configuration> .
@@ -1357,7 +1475,9 @@ lex:tapi-eth-traffic-conditioning-configuration
 lex:tapi-eth-traffic-conditioning-pac
     a lex:ReferenceEntry ;
     skos:prefLabel "traffic-conditioning-pac" ;
+    # source: http://example.org/ontology/grouping/tapi-eth/traffic-conditioning-pac
     skos:definition "Grouping definition: traffic-conditioning-pac" ;
+    # source: http://example.org/ontology/grouping/tapi-eth/traffic-conditioning-pac
     skos:scopeNote "This object class models the ETH traffic conditioning function as defined in G.8021.\nBasic attributes: codirectional, condConfigList, prioConfigList" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -1366,7 +1486,9 @@ lex:tapi-eth-traffic-conditioning-pac
 lex:tapi-eth-traffic-shaping-pac
     a lex:ReferenceEntry ;
     skos:prefLabel "traffic-shaping-pac" ;
+    # source: http://example.org/ontology/grouping/tapi-eth/traffic-shaping-pac
     skos:definition "Grouping definition: traffic-shaping-pac" ;
+    # source: http://example.org/ontology/grouping/tapi-eth/traffic-shaping-pac
     skos:scopeNote "This object class models the ETH traffic shaping function as defined in G.8021.\nBasic attribute: codirectional, prioConfigList, queueConfigList, schedConfig" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -1375,6 +1497,7 @@ lex:tapi-eth-traffic-shaping-pac
 lex:tapi-eth-vlan-type
     a lex:ReferenceEntry ;
     skos:prefLabel "vlan-type" ;
+    # source: http://example.org/ontology/types/tapi-eth/vlan-type
     skos:definition "This enumeration contains the Ethertypes defined in IEEE 802.1Q." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:EnumeratedKind ;

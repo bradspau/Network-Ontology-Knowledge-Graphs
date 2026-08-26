@@ -14,6 +14,7 @@
 lex:ietf-l2-topology-duplex-mode
     a lex:ReferenceEntry ;
     skos:prefLabel "duplex-mode" ;
+    # source: http://example.org/ontology/types/ietf-l2-topology/duplex-mode
     skos:definition "Indicates the type of the duplex mode." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:EnumeratedKind ;
@@ -22,6 +23,7 @@ lex:ietf-l2-topology-duplex-mode
 lex:ietf-l2-topology-eth-encapsulation-type
     a lex:ReferenceEntry ;
     skos:prefLabel "eth-encapsulation-type" ;
+    # source: http://example.org/ontology/identity/ietf-l2-topology/eth-encapsulation-type
     skos:definition "Base identity from which specific Ethernet\nencapsulation types are derived." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -30,6 +32,7 @@ lex:ietf-l2-topology-eth-encapsulation-type
 lex:ietf-l2-topology-ethernet
     a lex:ReferenceEntry ;
     skos:prefLabel "ethernet" ;
+    # source: http://example.org/ontology/identity/ietf-l2-topology/ethernet
     skos:definition "Native Ethernet encapsulation." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -38,6 +41,7 @@ lex:ietf-l2-topology-ethernet
 lex:ietf-l2-topology-flag-identity
     a lex:ReferenceEntry ;
     skos:prefLabel "flag-identity" ;
+    # source: http://example.org/ontology/identity/ietf-l2-topology/flag-identity
     skos:definition "Base type for flags." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -46,7 +50,9 @@ lex:ietf-l2-topology-flag-identity
 lex:ietf-l2-topology-l2-link-attributes
     a lex:ReferenceEntry ;
     skos:prefLabel "l2-link-attributes" ;
+    # source: http://example.org/ontology/grouping/ietf-l2-topology/l2-link-attributes
     skos:definition "Grouping definition: l2-link-attributes" ;
+    # source: http://example.org/ontology/grouping/ietf-l2-topology/l2-link-attributes
     skos:scopeNote "L2 link attributes." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -55,6 +61,7 @@ lex:ietf-l2-topology-l2-link-attributes
 lex:ietf-l2-topology-l2-network-event-type
     a lex:ReferenceEntry ;
     skos:prefLabel "l2-network-event-type" ;
+    # source: http://example.org/ontology/types/ietf-l2-topology/l2-network-event-type
     skos:definition "Layer 2 network event type for notifications." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:EnumeratedKind ;
@@ -63,7 +70,9 @@ lex:ietf-l2-topology-l2-network-event-type
 lex:ietf-l2-topology-l2-network-type
     a lex:ReferenceEntry ;
     skos:prefLabel "l2-network-type" ;
+    # source: http://example.org/ontology/grouping/ietf-l2-topology/l2-network-type
     skos:definition "Grouping definition: l2-network-type" ;
+    # source: http://example.org/ontology/grouping/ietf-l2-topology/l2-network-type
     skos:scopeNote "Indicates the topology type to be L2." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -72,7 +81,9 @@ lex:ietf-l2-topology-l2-network-type
 lex:ietf-l2-topology-l2-node-attributes
     a lex:ReferenceEntry ;
     skos:prefLabel "l2-node-attributes" ;
+    # source: http://example.org/ontology/grouping/ietf-l2-topology/l2-node-attributes
     skos:definition "Grouping definition: l2-node-attributes" ;
+    # source: http://example.org/ontology/grouping/ietf-l2-topology/l2-node-attributes
     skos:scopeNote "L2 node attributes." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -81,7 +92,9 @@ lex:ietf-l2-topology-l2-node-attributes
 lex:ietf-l2-topology-l2-termination-point-attributes
     a lex:ReferenceEntry ;
     skos:prefLabel "l2-termination-point-attributes" ;
+    # source: http://example.org/ontology/grouping/ietf-l2-topology/l2-termination-point-attributes
     skos:definition "Grouping definition: l2-termination-point-attributes" ;
+    # source: http://example.org/ontology/grouping/ietf-l2-topology/l2-termination-point-attributes
     skos:scopeNote "L2 termination point attributes." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -90,7 +103,9 @@ lex:ietf-l2-topology-l2-termination-point-attributes
 lex:ietf-l2-topology-l2-topology-attributes
     a lex:ReferenceEntry ;
     skos:prefLabel "l2-topology-attributes" ;
+    # source: http://example.org/ontology/grouping/ietf-l2-topology/l2-topology-attributes
     skos:definition "Grouping definition: l2-topology-attributes" ;
+    # source: http://example.org/ontology/grouping/ietf-l2-topology/l2-topology-attributes
     skos:scopeNote "L2 topology scope attributes." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -99,6 +114,7 @@ lex:ietf-l2-topology-l2-topology-attributes
 lex:ietf-l2-topology-pbb
     a lex:ReferenceEntry ;
     skos:prefLabel "pbb" ;
+    # source: http://example.org/ontology/identity/ietf-l2-topology/pbb
     skos:definition "Provider Backbone Bridging (PBB) encapsulation.\nThe PBB functions are developed in IEEE 802.1ah." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -107,6 +123,7 @@ lex:ietf-l2-topology-pbb
 lex:ietf-l2-topology-qinq
     a lex:ReferenceEntry ;
     skos:prefLabel "qinq" ;
+    # source: http://example.org/ontology/identity/ietf-l2-topology/qinq
     skos:definition "QinQ encapsulation." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -115,6 +132,7 @@ lex:ietf-l2-topology-qinq
 lex:ietf-l2-topology-trill
     a lex:ReferenceEntry ;
     skos:prefLabel "trill" ;
+    # source: http://example.org/ontology/identity/ietf-l2-topology/trill
     skos:definition "Transparent Interconnection of Lots of Links (TRILL)\nencapsulation." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -123,6 +141,7 @@ lex:ietf-l2-topology-trill
 lex:ietf-l2-topology-vlan
     a lex:ReferenceEntry ;
     skos:prefLabel "vlan" ;
+    # source: http://example.org/ontology/identity/ietf-l2-topology/vlan
     skos:definition "VLAN encapsulation." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -131,6 +150,7 @@ lex:ietf-l2-topology-vlan
 lex:ietf-l2-topology-vpls
     a lex:ReferenceEntry ;
     skos:prefLabel "vpls" ;
+    # source: http://example.org/ontology/identity/ietf-l2-topology/vpls
     skos:definition "Ethernet Virtual Private LAN Service (VPLS)\ninterface encapsulation." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -139,15 +159,11 @@ lex:ietf-l2-topology-vpls
 lex:ietf-l2-topology-vxlan
     a lex:ReferenceEntry ;
     skos:prefLabel "vxlan" ;
-    skos:definition "VXLAN Media Access Control (MAC) in UDP encapsulation." ;
+    # source: http://example.org/ontology/identity/ietf-l2-topology/vxlan
+    skos:scopeNote "VXLAN Media Access Control (MAC) in UDP encapsulation." ;
+    # source: http://example.org/ontology/ietf-l2-topology/ietf-network-state/networks/network/node/termination-point/l2-termination-point-attributes/vxlan
+    skos:scopeNote "Vxlan encapsulation type." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
-    prov:wasDerivedFrom <http://example.org/ontology/identity/ietf-l2-topology/vxlan> .
-
-lex:ietf-l2-topology-vxlan-l2-termination-point-attributes
-    a lex:ReferenceEntry ;
-    skos:prefLabel "vxlan" ;
-    skos:definition "Vxlan encapsulation type." ;
-    lex:canonicalExample "" ;
-    lex:entityClass lex:StructuralKind ;
-    prov:wasDerivedFrom <http://example.org/ontology/ietf-l2-topology/ietf-network-state/networks/network/node/termination-point/l2-termination-point-attributes/vxlan> .
+    prov:wasDerivedFrom <http://example.org/ontology/identity/ietf-l2-topology/vxlan> ,
+                        <http://example.org/ontology/ietf-l2-topology/ietf-network-state/networks/network/node/termination-point/l2-termination-point-attributes/vxlan> .

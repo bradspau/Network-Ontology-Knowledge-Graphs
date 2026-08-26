@@ -14,6 +14,7 @@
 lex:ietf-l2-topology-state-vxlan
     a lex:ReferenceEntry ;
     skos:prefLabel "vxlan" ;
+    # source: http://example.org/ontology/ietf-l2-topology-state/ietf-network-state/networks/network/node/termination-point/l2-termination-point-attributes/vxlan
     skos:definition "Vxlan encapsulation type." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:StructuralKind ;

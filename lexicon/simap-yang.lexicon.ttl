@@ -14,6 +14,7 @@
 lex:simap-yang-link-direction
     a lex:ReferenceEntry ;
     skos:prefLabel "link-direction" ;
+    # source: http://example.org/ontology/identity/simap-yang/link-direction
     skos:definition "Base identity for link directionality." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -22,6 +23,7 @@ lex:simap-yang-link-direction
 lex:simap-yang-link-direction-bi
     a lex:ReferenceEntry ;
     skos:prefLabel "link-direction-bi" ;
+    # source: http://example.org/ontology/identity/simap-yang/link-direction-bi
     skos:definition "Bidirectional link." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -30,6 +32,7 @@ lex:simap-yang-link-direction-bi
 lex:simap-yang-link-direction-uni
     a lex:ReferenceEntry ;
     skos:prefLabel "link-direction-uni" ;
+    # source: http://example.org/ontology/identity/simap-yang/link-direction-uni
     skos:definition "Unidirectional link." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -38,6 +41,7 @@ lex:simap-yang-link-direction-uni
 lex:simap-yang-link-type
     a lex:ReferenceEntry ;
     skos:prefLabel "link-type" ;
+    # source: http://example.org/ontology/identity/simap-yang/link-type
     skos:definition "Base identity for internal structure of the link." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -46,6 +50,7 @@ lex:simap-yang-link-type
 lex:simap-yang-link-type-mp2mp
     a lex:ReferenceEntry ;
     skos:prefLabel "link-type-mp2mp" ;
+    # source: http://example.org/ontology/identity/simap-yang/link-type-mp2mp
     skos:definition "Multi-point to multi-point link." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -54,6 +59,7 @@ lex:simap-yang-link-type-mp2mp
 lex:simap-yang-link-type-p2mp
     a lex:ReferenceEntry ;
     skos:prefLabel "link-type-p2mp" ;
+    # source: http://example.org/ontology/identity/simap-yang/link-type-p2mp
     skos:definition "Point to multi-point link." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -62,6 +68,7 @@ lex:simap-yang-link-type-p2mp
 lex:simap-yang-link-type-p2p
     a lex:ReferenceEntry ;
     skos:prefLabel "link-type-p2p" ;
+    # source: http://example.org/ontology/identity/simap-yang/link-type-p2p
     skos:definition "Point to point link." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -70,6 +77,7 @@ lex:simap-yang-link-type-p2p
 lex:simap-yang-network-category
     a lex:ReferenceEntry ;
     skos:prefLabel "network-category" ;
+    # source: http://example.org/ontology/identity/simap-yang/network-category
     skos:definition "Base identity for the network category" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -78,6 +86,7 @@ lex:simap-yang-network-category
 lex:simap-yang-network-category-intended
     a lex:ReferenceEntry ;
     skos:prefLabel "network-category-intended" ;
+    # source: http://example.org/ontology/identity/simap-yang/network-category-intended
     skos:definition "Intended topology, not necessarily discovered." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -86,6 +95,7 @@ lex:simap-yang-network-category-intended
 lex:simap-yang-network-category-live
     a lex:ReferenceEntry ;
     skos:prefLabel "network-category-live" ;
+    # source: http://example.org/ontology/identity/simap-yang/network-category-live
     skos:definition "Live topology, typically only one instance." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -94,6 +104,7 @@ lex:simap-yang-network-category-live
 lex:simap-yang-network-category-none
     a lex:ReferenceEntry ;
     skos:prefLabel "network-category-none" ;
+    # source: http://example.org/ontology/identity/simap-yang/network-category-none
     skos:definition "Default value when endpoint selection determines category." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -102,6 +113,7 @@ lex:simap-yang-network-category-none
 lex:simap-yang-network-category-potential
     a lex:ReferenceEntry ;
     skos:prefLabel "network-category-potential" ;
+    # source: http://example.org/ontology/identity/simap-yang/network-category-potential
     skos:definition "Potential topology for what-if scenarios." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -110,7 +122,6 @@ lex:simap-yang-network-category-potential
 lex:simap-yang-network-history
     a lex:ReferenceEntry ;
     skos:prefLabel "network-history" ;
-    skos:definition "TODO: no YANG description was available to seed this definition." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:StructuralKind ;
     lex:needsCuration true ;
@@ -119,6 +130,7 @@ lex:simap-yang-network-history
 lex:simap-yang-networks-history
     a lex:ReferenceEntry ;
     skos:prefLabel "networks-history" ;
+    # source: http://example.org/ontology/simap-yang/networks-history
     skos:definition "Retrieval of historical topology snapshots." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:StructuralKind ;
@@ -127,7 +139,9 @@ lex:simap-yang-networks-history
 lex:simap-yang-simap-common
     a lex:ReferenceEntry ;
     skos:prefLabel "simap-common" ;
+    # source: http://example.org/ontology/grouping/simap-yang/simap-common
     skos:definition "Grouping definition: simap-common" ;
+    # source: http://example.org/ontology/grouping/simap-yang/simap-common
     skos:scopeNote "Reusable set of optional extensions." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -136,6 +150,7 @@ lex:simap-yang-simap-common
 lex:simap-yang-tp-direction
     a lex:ReferenceEntry ;
     skos:prefLabel "tp-direction" ;
+    # source: http://example.org/ontology/identity/simap-yang/tp-direction
     skos:definition "Base identity for directionality of the tp." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -144,6 +159,7 @@ lex:simap-yang-tp-direction
 lex:simap-yang-tp-direction-destination
     a lex:ReferenceEntry ;
     skos:prefLabel "tp-direction-destination" ;
+    # source: http://example.org/ontology/identity/simap-yang/tp-direction-destination
     skos:definition "TP is the destination in the link." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -152,6 +168,7 @@ lex:simap-yang-tp-direction-destination
 lex:simap-yang-tp-direction-source
     a lex:ReferenceEntry ;
     skos:prefLabel "tp-direction-source" ;
+    # source: http://example.org/ontology/identity/simap-yang/tp-direction-source
     skos:definition "TP is the source in the link." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -160,6 +177,7 @@ lex:simap-yang-tp-direction-source
 lex:simap-yang-tp-direction-symmetric
     a lex:ReferenceEntry ;
     skos:prefLabel "tp-direction-symmetric" ;
+    # source: http://example.org/ontology/identity/simap-yang/tp-direction-symmetric
     skos:definition "TP in a bidirectional link." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -168,6 +186,7 @@ lex:simap-yang-tp-direction-symmetric
 lex:simap-yang-tp-role
     a lex:ReferenceEntry ;
     skos:prefLabel "tp-role" ;
+    # source: http://example.org/ontology/identity/simap-yang/tp-role
     skos:definition "Base identity for termination point roles." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;

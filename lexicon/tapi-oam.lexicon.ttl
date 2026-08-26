@@ -14,8 +14,8 @@
 lex:tapi-oam-cep-fm-data
     a lex:ReferenceEntry ;
     skos:prefLabel "cep-fm-data" ;
+    # source: http://example.org/ontology/grouping/tapi-oam/cep-fm-data
     skos:definition "Grouping definition: cep-fm-data" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-oam/cep-fm-data> .
@@ -23,8 +23,8 @@ lex:tapi-oam-cep-fm-data
 lex:tapi-oam-cep-pm-data
     a lex:ReferenceEntry ;
     skos:prefLabel "cep-pm-data" ;
+    # source: http://example.org/ontology/grouping/tapi-oam/cep-pm-data
     skos:definition "Grouping definition: cep-pm-data" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-oam/cep-pm-data> .
@@ -32,8 +32,8 @@ lex:tapi-oam-cep-pm-data
 lex:tapi-oam-cep-pm-data-ref
     a lex:ReferenceEntry ;
     skos:prefLabel "cep-pm-data-ref" ;
+    # source: http://example.org/ontology/grouping/tapi-oam/cep-pm-data-ref
     skos:definition "Grouping definition: cep-pm-data-ref" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-oam/cep-pm-data-ref> .
@@ -41,7 +41,9 @@ lex:tapi-oam-cep-pm-data-ref
 lex:tapi-oam-connectivity-oam-job-service
     a lex:ReferenceEntry ;
     skos:prefLabel "connectivity-oam-job-service" ;
+    # source: http://example.org/ontology/grouping/tapi-oam/connectivity-oam-job-service
     skos:definition "Grouping definition: connectivity-oam-job-service" ;
+    # source: http://example.org/ontology/grouping/tapi-oam/connectivity-oam-job-service
     skos:scopeNote "This class augments the ConnectivityService class to associate OAM job provisioning to ConnectivityService provisioning." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -50,8 +52,8 @@ lex:tapi-oam-connectivity-oam-job-service
 lex:tapi-oam-connectivity-oam-service
     a lex:ReferenceEntry ;
     skos:prefLabel "connectivity-oam-service" ;
+    # source: http://example.org/ontology/grouping/tapi-oam/connectivity-oam-service
     skos:definition "Grouping definition: connectivity-oam-service" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-oam/connectivity-oam-service> .
@@ -59,7 +61,9 @@ lex:tapi-oam-connectivity-oam-service
 lex:tapi-oam-current-data
     a lex:ReferenceEntry ;
     skos:prefLabel "current-data" ;
+    # source: http://example.org/ontology/grouping/tapi-oam/current-data
     skos:definition "Grouping definition: current-data" ;
+    # source: http://example.org/ontology/grouping/tapi-oam/current-data
     skos:scopeNote "The CurrentData class. The PM metrics/types can be specified in technology specific augmentations of this class.\nITU-T Q.822: This object contains the measurements for the resource being monitored for a specified time interval (measurement interval time / granularity period)." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -68,8 +72,8 @@ lex:tapi-oam-current-data
 lex:tapi-oam-current-data-ref
     a lex:ReferenceEntry ;
     skos:prefLabel "current-data-ref" ;
+    # source: http://example.org/ontology/grouping/tapi-oam/current-data-ref
     skos:definition "Grouping definition: current-data-ref" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-oam/current-data-ref> .
@@ -77,7 +81,9 @@ lex:tapi-oam-current-data-ref
 lex:tapi-oam-history-data
     a lex:ReferenceEntry ;
     skos:prefLabel "history-data" ;
+    # source: http://example.org/ontology/grouping/tapi-oam/history-data
     skos:definition "Grouping definition: history-data" ;
+    # source: http://example.org/ontology/grouping/tapi-oam/history-data
     skos:scopeNote "The HistoryData class. The PM metrics/types can be specified in technology specific augmentations of this class.\nITU-T Q.822: This object will contain a copy of the performance management and other selected attributes that are present in the CurrentData object at the end of the current interval (measurement interval time / granularity period).\nA new instance of this object class is created at the end of each interval." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -86,8 +92,8 @@ lex:tapi-oam-history-data
 lex:tapi-oam-history-data-ref
     a lex:ReferenceEntry ;
     skos:prefLabel "history-data-ref" ;
+    # source: http://example.org/ontology/grouping/tapi-oam/history-data-ref
     skos:definition "Grouping definition: history-data-ref" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-oam/history-data-ref> .
@@ -95,7 +101,9 @@ lex:tapi-oam-history-data-ref
 lex:tapi-oam-meg
     a lex:ReferenceEntry ;
     skos:prefLabel "meg" ;
+    # source: http://example.org/ontology/grouping/tapi-oam/meg
     skos:definition "Grouping definition: meg" ;
+    # source: http://example.org/ontology/grouping/tapi-oam/meg
     skos:scopeNote "The Maintenance Entity Group.\nITU-T G.8001: A group defined, for the purpose of fragment or connection monitoring, between a set of flow or connection points within a fragment/connection.\nThis set of flow or connection points may be located at the boundary of one administrative domain or a protection domain, or at the boundaries of two adjacent administrative domains.\nThe maintenance entity group consists of one or more maintenance entities (the entity between two of the flow/connection points in a maintenance entity group)." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -104,8 +112,8 @@ lex:tapi-oam-meg
 lex:tapi-oam-meg-ref
     a lex:ReferenceEntry ;
     skos:prefLabel "meg-ref" ;
+    # source: http://example.org/ontology/grouping/tapi-oam/meg-ref
     skos:definition "Grouping definition: meg-ref" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-oam/meg-ref> .
@@ -113,7 +121,9 @@ lex:tapi-oam-meg-ref
 lex:tapi-oam-mep
     a lex:ReferenceEntry ;
     skos:prefLabel "mep" ;
+    # source: http://example.org/ontology/grouping/tapi-oam/mep
     skos:definition "Grouping definition: mep" ;
+    # source: http://example.org/ontology/grouping/tapi-oam/mep
     skos:scopeNote "The Maintenance Entity group end Point.\nITU-T G.8001: maintenance entity group end point compound sink function: A compound transport processing function that accepts the characteristic information of the layer network at its input,\nextracts and processes the OAM information related to the monitoring of the maintenance entity group, filters the OAM information from within to the maintenance entity group,\nadapts the information and presents it as the characteristic information of the layer or a client layer at its output, potentially as a (client) layer maintenance signal (e.g., AIS).\nITU-T G.8001: maintenance entity group end point compound source function: A compound transport processing function that accepts the characteristic information of the layer or a client layer network at its input,\nadapts that information, filters it for OAM information interfering with its own OAM information, adds OAM information to allow the maintenance entity group to be monitored and presents the resulting information at its output." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -122,7 +132,9 @@ lex:tapi-oam-mep
 lex:tapi-oam-mep-mip-list
     a lex:ReferenceEntry ;
     skos:prefLabel "mep-mip-list" ;
+    # source: http://example.org/ontology/grouping/tapi-oam/mep-mip-list
     skos:definition "Grouping definition: mep-mip-list" ;
+    # source: http://example.org/ontology/grouping/tapi-oam/mep-mip-list
     skos:scopeNote "This augment allows CEP and NEP to refer to their MEPs/MIPs despite TapiOam model does not import resp. TapiConnectivity and TapiTopology models." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -131,8 +143,8 @@ lex:tapi-oam-mep-mip-list
 lex:tapi-oam-mep-pm-data
     a lex:ReferenceEntry ;
     skos:prefLabel "mep-pm-data" ;
+    # source: http://example.org/ontology/grouping/tapi-oam/mep-pm-data
     skos:definition "Grouping definition: mep-pm-data" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-oam/mep-pm-data> .
@@ -140,8 +152,8 @@ lex:tapi-oam-mep-pm-data
 lex:tapi-oam-mep-pm-data-ref
     a lex:ReferenceEntry ;
     skos:prefLabel "mep-pm-data-ref" ;
+    # source: http://example.org/ontology/grouping/tapi-oam/mep-pm-data-ref
     skos:definition "Grouping definition: mep-pm-data-ref" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-oam/mep-pm-data-ref> .
@@ -149,8 +161,8 @@ lex:tapi-oam-mep-pm-data-ref
 lex:tapi-oam-mep-ref
     a lex:ReferenceEntry ;
     skos:prefLabel "mep-ref" ;
+    # source: http://example.org/ontology/grouping/tapi-oam/mep-ref
     skos:definition "Grouping definition: mep-ref" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-oam/mep-ref> .
@@ -158,7 +170,9 @@ lex:tapi-oam-mep-ref
 lex:tapi-oam-mip
     a lex:ReferenceEntry ;
     skos:prefLabel "mip" ;
+    # source: http://example.org/ontology/grouping/tapi-oam/mip
     skos:definition "Grouping definition: mip" ;
+    # source: http://example.org/ontology/grouping/tapi-oam/mip
     skos:scopeNote "The Maintenance entity group Intermediate Point.\nITU-T G.8001: maintenance entity group intermediate point compound function: A compound transport processing function that accepts the characteristic information of the layer network at its input,\nreacts to OAM information related to on-demand monitoring of a maintenance entity group and presents the characteristic information without the OAM to which it reacted at its output." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -167,8 +181,8 @@ lex:tapi-oam-mip
 lex:tapi-oam-mip-pm-data
     a lex:ReferenceEntry ;
     skos:prefLabel "mip-pm-data" ;
+    # source: http://example.org/ontology/grouping/tapi-oam/mip-pm-data
     skos:definition "Grouping definition: mip-pm-data" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-oam/mip-pm-data> .
@@ -176,8 +190,8 @@ lex:tapi-oam-mip-pm-data
 lex:tapi-oam-mip-pm-data-ref
     a lex:ReferenceEntry ;
     skos:prefLabel "mip-pm-data-ref" ;
+    # source: http://example.org/ontology/grouping/tapi-oam/mip-pm-data-ref
     skos:definition "Grouping definition: mip-pm-data-ref" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-oam/mip-pm-data-ref> .
@@ -185,8 +199,8 @@ lex:tapi-oam-mip-pm-data-ref
 lex:tapi-oam-mip-ref
     a lex:ReferenceEntry ;
     skos:prefLabel "mip-ref" ;
+    # source: http://example.org/ontology/grouping/tapi-oam/mip-ref
     skos:definition "Grouping definition: mip-ref" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-oam/mip-ref> .
@@ -194,7 +208,9 @@ lex:tapi-oam-mip-ref
 lex:tapi-oam-oam-context
     a lex:ReferenceEntry ;
     skos:prefLabel "oam-context" ;
+    # source: http://example.org/ontology/grouping/tapi-oam/oam-context
     skos:definition "Grouping definition: oam-context" ;
+    # source: http://example.org/ontology/grouping/tapi-oam/oam-context
     skos:scopeNote "This object class represents the scope of control that a particular SDN controller has with respect to a particular network, specifically regarding the OAM description.\nAn instance of this class includes its OamService, OamJob and Meg object instances." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -203,7 +219,9 @@ lex:tapi-oam-oam-context
 lex:tapi-oam-oam-job
     a lex:ReferenceEntry ;
     skos:prefLabel "oam-job" ;
+    # source: http://example.org/ontology/grouping/tapi-oam/oam-job
     skos:definition "Grouping definition: oam-job" ;
+    # source: http://example.org/ontology/grouping/tapi-oam/oam-job
     skos:scopeNote "This class allows the provisioning of performance monitoring functions on specified resources." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -212,8 +230,8 @@ lex:tapi-oam-oam-job
 lex:tapi-oam-oam-job-descriptor
     a lex:ReferenceEntry ;
     skos:prefLabel "oam-job-descriptor" ;
+    # source: http://example.org/ontology/grouping/tapi-oam/oam-job-descriptor
     skos:definition "Grouping definition: oam-job-descriptor" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-oam/oam-job-descriptor> .
@@ -221,8 +239,8 @@ lex:tapi-oam-oam-job-descriptor
 lex:tapi-oam-oam-job-descriptor-ref
     a lex:ReferenceEntry ;
     skos:prefLabel "oam-job-descriptor-ref" ;
+    # source: http://example.org/ontology/grouping/tapi-oam/oam-job-descriptor-ref
     skos:definition "Grouping definition: oam-job-descriptor-ref" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-oam/oam-job-descriptor-ref> .
@@ -230,8 +248,8 @@ lex:tapi-oam-oam-job-descriptor-ref
 lex:tapi-oam-oam-job-ref
     a lex:ReferenceEntry ;
     skos:prefLabel "oam-job-ref" ;
+    # source: http://example.org/ontology/grouping/tapi-oam/oam-job-ref
     skos:definition "Grouping definition: oam-job-ref" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-oam/oam-job-ref> .
@@ -239,8 +257,8 @@ lex:tapi-oam-oam-job-ref
 lex:tapi-oam-oam-job-service
     a lex:ReferenceEntry ;
     skos:prefLabel "oam-job-service" ;
+    # source: http://example.org/ontology/grouping/tapi-oam/oam-job-service
     skos:definition "Grouping definition: oam-job-service" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-oam/oam-job-service> .
@@ -248,46 +266,47 @@ lex:tapi-oam-oam-job-service
 lex:tapi-oam-oam-job-state
     a lex:ReferenceEntry ;
     skos:prefLabel "OAM_JOB_STATE" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-oam/OAM_JOB_STATE> .
 
 lex:tapi-oam-oam-job-state-active
     a lex:ReferenceEntry ;
     skos:prefLabel "OAM_JOB_STATE_ACTIVE" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-oam/OAM_JOB_STATE_ACTIVE> .
 
 lex:tapi-oam-oam-job-state-concluded
     a lex:ReferenceEntry ;
     skos:prefLabel "OAM_JOB_STATE_CONCLUDED" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-oam/OAM_JOB_STATE_CONCLUDED> .
 
 lex:tapi-oam-oam-job-state-not-active
     a lex:ReferenceEntry ;
     skos:prefLabel "OAM_JOB_STATE_NOT_ACTIVE" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-oam/OAM_JOB_STATE_NOT_ACTIVE> .
 
 lex:tapi-oam-oam-job-type
     a lex:ReferenceEntry ;
     skos:prefLabel "OAM_JOB_TYPE" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-oam/OAM_JOB_TYPE> .
 
 lex:tapi-oam-oam-job-type-loopback-facility
     a lex:ReferenceEntry ;
     skos:prefLabel "OAM_JOB_TYPE_LOOPBACK_FACILITY" ;
+    # source: http://example.org/ontology/identity/tapi-oam/OAM_JOB_TYPE_LOOPBACK_FACILITY
     skos:definition "External / Line Loopback." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -296,6 +315,7 @@ lex:tapi-oam-oam-job-type-loopback-facility
 lex:tapi-oam-oam-job-type-loopback-terminal
     a lex:ReferenceEntry ;
     skos:prefLabel "OAM_JOB_TYPE_LOOPBACK_TERMINAL" ;
+    # source: http://example.org/ontology/identity/tapi-oam/OAM_JOB_TYPE_LOOPBACK_TERMINAL
     skos:definition "Internal / Device Loopback." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -304,22 +324,23 @@ lex:tapi-oam-oam-job-type-loopback-terminal
 lex:tapi-oam-oam-object-type
     a lex:ReferenceEntry ;
     skos:prefLabel "OAM_OBJECT_TYPE" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-oam/OAM_OBJECT_TYPE> .
 
 lex:tapi-oam-oam-object-type-cep-pm-data
     a lex:ReferenceEntry ;
     skos:prefLabel "OAM_OBJECT_TYPE_CEP_PM_DATA" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-oam/OAM_OBJECT_TYPE_CEP_PM_DATA> .
 
 lex:tapi-oam-oam-object-type-current-data
     a lex:ReferenceEntry ;
     skos:prefLabel "OAM_OBJECT_TYPE_CURRENT_DATA" ;
+    # source: http://example.org/ontology/identity/tapi-oam/OAM_OBJECT_TYPE_CURRENT_DATA
     skos:definition "The CurrentData class." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -328,6 +349,7 @@ lex:tapi-oam-oam-object-type-current-data
 lex:tapi-oam-oam-object-type-history-data
     a lex:ReferenceEntry ;
     skos:prefLabel "OAM_OBJECT_TYPE_HISTORY_DATA" ;
+    # source: http://example.org/ontology/identity/tapi-oam/OAM_OBJECT_TYPE_HISTORY_DATA
     skos:definition "The HistoryData class." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -336,6 +358,7 @@ lex:tapi-oam-oam-object-type-history-data
 lex:tapi-oam-oam-object-type-meg
     a lex:ReferenceEntry ;
     skos:prefLabel "OAM_OBJECT_TYPE_MEG" ;
+    # source: http://example.org/ontology/identity/tapi-oam/OAM_OBJECT_TYPE_MEG
     skos:definition "The Meg class." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -344,6 +367,7 @@ lex:tapi-oam-oam-object-type-meg
 lex:tapi-oam-oam-object-type-mep
     a lex:ReferenceEntry ;
     skos:prefLabel "OAM_OBJECT_TYPE_MEP" ;
+    # source: http://example.org/ontology/identity/tapi-oam/OAM_OBJECT_TYPE_MEP
     skos:definition "The Mep class." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -352,14 +376,15 @@ lex:tapi-oam-oam-object-type-mep
 lex:tapi-oam-oam-object-type-mep-pm-data
     a lex:ReferenceEntry ;
     skos:prefLabel "OAM_OBJECT_TYPE_MEP_PM_DATA" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-oam/OAM_OBJECT_TYPE_MEP_PM_DATA> .
 
 lex:tapi-oam-oam-object-type-mip
     a lex:ReferenceEntry ;
     skos:prefLabel "OAM_OBJECT_TYPE_MIP" ;
+    # source: http://example.org/ontology/identity/tapi-oam/OAM_OBJECT_TYPE_MIP
     skos:definition "The Mip class." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -368,14 +393,15 @@ lex:tapi-oam-oam-object-type-mip
 lex:tapi-oam-oam-object-type-mip-pm-data
     a lex:ReferenceEntry ;
     skos:prefLabel "OAM_OBJECT_TYPE_MIP_PM_DATA" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-oam/OAM_OBJECT_TYPE_MIP_PM_DATA> .
 
 lex:tapi-oam-oam-object-type-oam-job
     a lex:ReferenceEntry ;
     skos:prefLabel "OAM_OBJECT_TYPE_OAM_JOB" ;
+    # source: http://example.org/ontology/identity/tapi-oam/OAM_OBJECT_TYPE_OAM_JOB
     skos:definition "The OamJob class." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -384,30 +410,31 @@ lex:tapi-oam-oam-object-type-oam-job
 lex:tapi-oam-oam-object-type-oam-job-descriptor
     a lex:ReferenceEntry ;
     skos:prefLabel "OAM_OBJECT_TYPE_OAM_JOB_DESCRIPTOR" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-oam/OAM_OBJECT_TYPE_OAM_JOB_DESCRIPTOR> .
 
 lex:tapi-oam-oam-object-type-oam-job-service
     a lex:ReferenceEntry ;
     skos:prefLabel "OAM_OBJECT_TYPE_OAM_JOB_SERVICE" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-oam/OAM_OBJECT_TYPE_OAM_JOB_SERVICE> .
 
 lex:tapi-oam-oam-object-type-oam-pm-data
     a lex:ReferenceEntry ;
     skos:prefLabel "OAM_OBJECT_TYPE_OAM_PM_DATA" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-oam/OAM_OBJECT_TYPE_OAM_PM_DATA> .
 
 lex:tapi-oam-oam-object-type-oam-profile
     a lex:ReferenceEntry ;
     skos:prefLabel "OAM_OBJECT_TYPE_OAM_PROFILE" ;
+    # source: http://example.org/ontology/identity/tapi-oam/OAM_OBJECT_TYPE_OAM_PROFILE
     skos:definition "The OamProfile class." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -416,6 +443,7 @@ lex:tapi-oam-oam-object-type-oam-profile
 lex:tapi-oam-oam-object-type-oam-service
     a lex:ReferenceEntry ;
     skos:prefLabel "OAM_OBJECT_TYPE_OAM_SERVICE" ;
+    # source: http://example.org/ontology/identity/tapi-oam/OAM_OBJECT_TYPE_OAM_SERVICE
     skos:definition "The OamService class." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -424,6 +452,7 @@ lex:tapi-oam-oam-object-type-oam-service
 lex:tapi-oam-oam-object-type-oam-service-point
     a lex:ReferenceEntry ;
     skos:prefLabel "OAM_OBJECT_TYPE_OAM_SERVICE_POINT" ;
+    # source: http://example.org/ontology/identity/tapi-oam/OAM_OBJECT_TYPE_OAM_SERVICE_POINT
     skos:definition "The OamServicePoint (OSP) class." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -432,6 +461,7 @@ lex:tapi-oam-oam-object-type-oam-service-point
 lex:tapi-oam-oam-object-type-pm-data
     a lex:ReferenceEntry ;
     skos:prefLabel "OAM_OBJECT_TYPE_PM_DATA" ;
+    # source: http://example.org/ontology/identity/tapi-oam/OAM_OBJECT_TYPE_PM_DATA
     skos:definition "The PmThresholdData class." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -440,16 +470,16 @@ lex:tapi-oam-oam-object-type-pm-data
 lex:tapi-oam-oam-object-type-pm-parameter-config
     a lex:ReferenceEntry ;
     skos:prefLabel "OAM_OBJECT_TYPE_PM_PARAMETER_CONFIG" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-oam/OAM_OBJECT_TYPE_PM_PARAMETER_CONFIG> .
 
 lex:tapi-oam-oam-pm-data
     a lex:ReferenceEntry ;
     skos:prefLabel "oam-pm-data" ;
+    # source: http://example.org/ontology/grouping/tapi-oam/oam-pm-data
     skos:definition "Grouping definition: oam-pm-data" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-oam/oam-pm-data> .
@@ -457,7 +487,9 @@ lex:tapi-oam-oam-pm-data
 lex:tapi-oam-oam-profile
     a lex:ReferenceEntry ;
     skos:prefLabel "oam-profile" ;
+    # source: http://example.org/ontology/grouping/tapi-oam/oam-profile
     skos:definition "Grouping definition: oam-profile" ;
+    # source: http://example.org/ontology/grouping/tapi-oam/oam-profile
     skos:scopeNote "The OamProfile allows centralization of OAM provisioning aspects, e.g. the PM parameters and their threshold values." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -466,8 +498,8 @@ lex:tapi-oam-oam-profile
 lex:tapi-oam-oam-profile-ref
     a lex:ReferenceEntry ;
     skos:prefLabel "oam-profile-ref" ;
+    # source: http://example.org/ontology/grouping/tapi-oam/oam-profile-ref
     skos:definition "Grouping definition: oam-profile-ref" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-oam/oam-profile-ref> .
@@ -475,23 +507,25 @@ lex:tapi-oam-oam-profile-ref
 lex:tapi-oam-oam-profile-type
     a lex:ReferenceEntry ;
     skos:prefLabel "OAM_PROFILE_TYPE" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-oam/OAM_PROFILE_TYPE> .
 
 lex:tapi-oam-oam-profile-type-oam
     a lex:ReferenceEntry ;
     skos:prefLabel "OAM_PROFILE_TYPE_OAM" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-oam/OAM_PROFILE_TYPE_OAM> .
 
 lex:tapi-oam-oam-service
     a lex:ReferenceEntry ;
     skos:prefLabel "oam-service" ;
+    # source: http://example.org/ontology/grouping/tapi-oam/oam-service
     skos:definition "An OamService represents an 'intent-like' request for OAM functions between two or more OamServicePoint (OSP) instances. The OamService is a container for OAM request details and is distinct from the Meg that realize the request." ;
+    # source: http://example.org/ontology/grouping/tapi-oam/oam-service
     skos:scopeNote "Grouping definition: oam-service" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -500,7 +534,9 @@ lex:tapi-oam-oam-service
 lex:tapi-oam-oam-service-point
     a lex:ReferenceEntry ;
     skos:prefLabel "oam-service-point" ;
+    # source: http://example.org/ontology/grouping/tapi-oam/oam-service-point
     skos:definition "Grouping definition: oam-service-point" ;
+    # source: http://example.org/ontology/grouping/tapi-oam/oam-service-point
     skos:scopeNote "The OamServicePoint (OSP) is a container for OAM request details and is distinct from the Mep and/or Mip instances that realize the request." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -509,8 +545,8 @@ lex:tapi-oam-oam-service-point
 lex:tapi-oam-oam-service-point-ref
     a lex:ReferenceEntry ;
     skos:prefLabel "oam-service-point-ref" ;
+    # source: http://example.org/ontology/grouping/tapi-oam/oam-service-point-ref
     skos:definition "Grouping definition: oam-service-point-ref" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-oam/oam-service-point-ref> .
@@ -518,8 +554,8 @@ lex:tapi-oam-oam-service-point-ref
 lex:tapi-oam-oam-service-ref
     a lex:ReferenceEntry ;
     skos:prefLabel "oam-service-ref" ;
+    # source: http://example.org/ontology/grouping/tapi-oam/oam-service-ref
     skos:definition "Grouping definition: oam-service-ref" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-oam/oam-service-ref> .
@@ -527,7 +563,9 @@ lex:tapi-oam-oam-service-ref
 lex:tapi-oam-pm-data
     a lex:ReferenceEntry ;
     skos:prefLabel "pm-data" ;
+    # source: http://example.org/ontology/grouping/tapi-oam/pm-data
     skos:definition "Grouping definition: pm-data" ;
+    # source: http://example.org/ontology/grouping/tapi-oam/pm-data
     skos:scopeNote "The PM threshold information associated to an OamProfile instance.\nIt defines a set of PM metrics, their threshold values, the granularity period or measurement interval time for these PM metrics, the stateful or stateless types of related threshold crossing alert (TCA) reporting." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -536,7 +574,9 @@ lex:tapi-oam-pm-data
 lex:tapi-oam-pm-data-pac
     a lex:ReferenceEntry ;
     skos:prefLabel "pm-data-pac" ;
+    # source: http://example.org/ontology/grouping/tapi-oam/pm-data-pac
     skos:definition "Grouping definition: pm-data-pac" ;
+    # source: http://example.org/ontology/grouping/tapi-oam/pm-data-pac
     skos:scopeNote "Parameters specific to Performance Monitoring functions." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -545,7 +585,9 @@ lex:tapi-oam-pm-data-pac
 lex:tapi-oam-pm-parameter
     a lex:ReferenceEntry ;
     skos:prefLabel "pm-parameter" ;
+    # source: http://example.org/ontology/grouping/tapi-oam/pm-parameter
     skos:definition "Grouping definition: pm-parameter" ;
+    # source: http://example.org/ontology/grouping/tapi-oam/pm-parameter
     skos:scopeNote "PM metrics, their locations and threshold values." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -554,7 +596,9 @@ lex:tapi-oam-pm-parameter
 lex:tapi-oam-pm-parameter-config
     a lex:ReferenceEntry ;
     skos:prefLabel "pm-parameter-config" ;
+    # source: http://example.org/ontology/grouping/tapi-oam/pm-parameter-config
     skos:definition "Grouping definition: pm-parameter-config" ;
+    # source: http://example.org/ontology/grouping/tapi-oam/pm-parameter-config
     skos:scopeNote "Two PmParameterConfig instances with same granularityPeriod and isTransient and codirectional attribute values must not list the same pmParameter-name more than once." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -563,8 +607,8 @@ lex:tapi-oam-pm-parameter-config
 lex:tapi-oam-pm-threshold-data-ref
     a lex:ReferenceEntry ;
     skos:prefLabel "pm-threshold-data-ref" ;
+    # source: http://example.org/ontology/grouping/tapi-oam/pm-threshold-data-ref
     skos:definition "Grouping definition: pm-threshold-data-ref" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-oam/pm-threshold-data-ref> .
@@ -572,8 +616,8 @@ lex:tapi-oam-pm-threshold-data-ref
 lex:tapi-oam-threshold-config
     a lex:ReferenceEntry ;
     skos:prefLabel "threshold-config" ;
+    # source: http://example.org/ontology/grouping/tapi-oam/threshold-config
     skos:definition "Grouping definition: threshold-config" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-oam/threshold-config> .
@@ -581,6 +625,7 @@ lex:tapi-oam-threshold-config
 lex:tapi-oam-threshold-crossing-qualifier
     a lex:ReferenceEntry ;
     skos:prefLabel "threshold-crossing-qualifier" ;
+    # source: http://example.org/ontology/types/tapi-oam/threshold-crossing-qualifier
     skos:definition "Threshold crossing location or qualifier." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:EnumeratedKind ;
@@ -589,55 +634,55 @@ lex:tapi-oam-threshold-crossing-qualifier
 lex:tapi-oam-threshold-type
     a lex:ReferenceEntry ;
     skos:prefLabel "THRESHOLD_TYPE" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-oam/THRESHOLD_TYPE> .
 
 lex:tapi-oam-threshold-type-lower
     a lex:ReferenceEntry ;
     skos:prefLabel "THRESHOLD_TYPE_LOWER" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-oam/THRESHOLD_TYPE_LOWER> .
 
 lex:tapi-oam-threshold-type-negative-delta
     a lex:ReferenceEntry ;
     skos:prefLabel "THRESHOLD_TYPE_NEGATIVE_DELTA" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-oam/THRESHOLD_TYPE_NEGATIVE_DELTA> .
 
 lex:tapi-oam-threshold-type-positive-delta
     a lex:ReferenceEntry ;
     skos:prefLabel "THRESHOLD_TYPE_POSITIVE_DELTA" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-oam/THRESHOLD_TYPE_POSITIVE_DELTA> .
 
 lex:tapi-oam-threshold-type-tidemark
     a lex:ReferenceEntry ;
     skos:prefLabel "THRESHOLD_TYPE_TIDEMARK" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-oam/THRESHOLD_TYPE_TIDEMARK> .
 
 lex:tapi-oam-threshold-type-upper
     a lex:ReferenceEntry ;
     skos:prefLabel "THRESHOLD_TYPE_UPPER" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-oam/THRESHOLD_TYPE_UPPER> .
 
 lex:tapi-oam-thrs-add-qualif
     a lex:ReferenceEntry ;
     skos:prefLabel "THRS_ADD_QUALIF" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-oam/THRS_ADD_QUALIF> .

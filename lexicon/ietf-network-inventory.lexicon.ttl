@@ -14,23 +14,19 @@
 lex:ietf-network-inventory-a-end
     a lex:ReferenceEntry ;
     skos:prefLabel "a-end" ;
+    # source: http://example.org/ontology/ietf-network-inventory/network-inventory/cable/a-end
     skos:definition "A-end device reference" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:StructuralKind ;
-    prov:wasDerivedFrom <http://example.org/ontology/ietf-network-inventory/network-inventory/cable/a-end> .
-
-lex:ietf-network-inventory-a-end-child-cable
-    a lex:ReferenceEntry ;
-    skos:prefLabel "a-end" ;
-    skos:definition "A-end device reference" ;
-    lex:canonicalExample "" ;
-    lex:entityClass lex:StructuralKind ;
-    prov:wasDerivedFrom <http://example.org/ontology/ietf-network-inventory/network-inventory/cable/child-cable/a-end> .
+    prov:wasDerivedFrom <http://example.org/ontology/ietf-network-inventory/network-inventory/cable/a-end> ,
+                        <http://example.org/ontology/ietf-network-inventory/network-inventory/cable/child-cable/a-end> .
 
 lex:ietf-network-inventory-basic-common-entity-attributes
     a lex:ReferenceEntry ;
     skos:prefLabel "basic-common-entity-attributes" ;
+    # source: http://example.org/ontology/grouping/ietf-network-inventory/basic-common-entity-attributes
     skos:definition "Grouping definition: basic-common-entity-attributes" ;
+    # source: http://example.org/ontology/grouping/ietf-network-inventory/basic-common-entity-attributes
     skos:scopeNote "The set of basic attributes which are common to all the\nentities (e.g., component, network elements, location, passive\nentities) defined in this module and in other inventory\nmodules." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -39,6 +35,7 @@ lex:ietf-network-inventory-basic-common-entity-attributes
 lex:ietf-network-inventory-cable
     a lex:ReferenceEntry ;
     skos:prefLabel "cable" ;
+    # source: http://example.org/ontology/ietf-network-inventory/network-inventory/cable
     skos:definition "List of cables." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:StructuralKind ;
@@ -47,6 +44,7 @@ lex:ietf-network-inventory-cable
 lex:ietf-network-inventory-child-cable
     a lex:ReferenceEntry ;
     skos:prefLabel "child-cable" ;
+    # source: http://example.org/ontology/ietf-network-inventory/network-inventory/cable/child-cable
     skos:definition "Ordered list of concatenated child cables." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:StructuralKind ;
@@ -55,6 +53,7 @@ lex:ietf-network-inventory-child-cable
 lex:ietf-network-inventory-component
     a lex:ReferenceEntry ;
     skos:prefLabel "component" ;
+    # source: http://example.org/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component
     skos:definition "The list of components within a network element." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:StructuralKind ;
@@ -63,7 +62,9 @@ lex:ietf-network-inventory-component
 lex:ietf-network-inventory-component-attributes
     a lex:ReferenceEntry ;
     skos:prefLabel "component-attributes" ;
+    # source: http://example.org/ontology/grouping/ietf-network-inventory/component-attributes
     skos:definition "Grouping definition: component-attributes" ;
+    # source: http://example.org/ontology/grouping/ietf-network-inventory/component-attributes
     skos:scopeNote "The set of common attributes of a component.\n\nThis grouping is intended also to be re-used by data models\nthat need to report the common attributes of a component." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -72,7 +73,9 @@ lex:ietf-network-inventory-component-attributes
 lex:ietf-network-inventory-component-ref
     a lex:ReferenceEntry ;
     skos:prefLabel "component-ref" ;
+    # source: http://example.org/ontology/grouping/ietf-network-inventory/component-ref
     skos:definition "Grouping definition: component-ref" ;
+    # source: http://example.org/ontology/grouping/ietf-network-inventory/component-ref
     skos:scopeNote "This grouping is intended to be used by data models that need\nto reference a component within a Network Element." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -81,6 +84,7 @@ lex:ietf-network-inventory-component-ref
 lex:ietf-network-inventory-components
     a lex:ReferenceEntry ;
     skos:prefLabel "components" ;
+    # source: http://example.org/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components
     skos:definition "The top-level container for the list of components\nwithin a network element." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:StructuralKind ;
@@ -89,6 +93,7 @@ lex:ietf-network-inventory-components
 lex:ietf-network-inventory-contained-chassis
     a lex:ReferenceEntry ;
     skos:prefLabel "contained-chassis" ;
+    # source: http://example.org/ontology/ietf-network-inventory/network-inventory/locations/racks/rack/contained-chassis
     skos:definition "The list of chassis within a rack." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:StructuralKind ;
@@ -97,6 +102,7 @@ lex:ietf-network-inventory-contained-chassis
 lex:ietf-network-inventory-geo-location
     a lex:ReferenceEntry ;
     skos:prefLabel "geo-location" ;
+    # source: http://example.org/ontology/ietf-network-inventory/network-inventory/locations/location/geo-location
     skos:definition "A location on an astronomical body (e.g., 'earth')\nsomewhere in a universe." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:StructuralKind ;
@@ -105,6 +111,7 @@ lex:ietf-network-inventory-geo-location
 lex:ietf-network-inventory-geodetic-system
     a lex:ReferenceEntry ;
     skos:prefLabel "geodetic-system" ;
+    # source: http://example.org/ontology/ietf-network-inventory/network-inventory/locations/location/geo-location/reference-frame/geodetic-system
     skos:definition "The geodetic system of the location data." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:StructuralKind ;
@@ -113,6 +120,7 @@ lex:ietf-network-inventory-geodetic-system
 lex:ietf-network-inventory-location
     a lex:ReferenceEntry ;
     skos:prefLabel "location" ;
+    # source: http://example.org/ontology/ietf-network-inventory/network-inventory/locations/location
     skos:definition "The list of locations within the network." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:StructuralKind ;
@@ -121,23 +129,21 @@ lex:ietf-network-inventory-location
 lex:ietf-network-inventory-locations
     a lex:ReferenceEntry ;
     skos:prefLabel "locations" ;
-    skos:definition "The container for the location." ;
+    # source: http://example.org/ontology/ietf-network-inventory/network-inventory/locations
+    skos:scopeNote "The container for the NE location information." ;
+    # source: http://example.org/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/locations
+    skos:scopeNote "The container for the location." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:StructuralKind ;
-    prov:wasDerivedFrom <http://example.org/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/locations> .
-
-lex:ietf-network-inventory-locations-network-inventory
-    a lex:ReferenceEntry ;
-    skos:prefLabel "locations" ;
-    skos:definition "The container for the NE location information." ;
-    lex:canonicalExample "" ;
-    lex:entityClass lex:StructuralKind ;
-    prov:wasDerivedFrom <http://example.org/ontology/ietf-network-inventory/network-inventory/locations> .
+    prov:wasDerivedFrom <http://example.org/ontology/ietf-network-inventory/network-inventory/locations> ,
+                        <http://example.org/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/locations> .
 
 lex:ietf-network-inventory-ne-component-common-entity-attributes
     a lex:ReferenceEntry ;
     skos:prefLabel "ne-component-common-entity-attributes" ;
+    # source: http://example.org/ontology/grouping/ietf-network-inventory/ne-component-common-entity-attributes
     skos:definition "Grouping definition: ne-component-common-entity-attributes" ;
+    # source: http://example.org/ontology/grouping/ietf-network-inventory/ne-component-common-entity-attributes
     skos:scopeNote "The set of attributes which are common to all the entities\n(e.g., component, network elements) defined in this module." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -146,6 +152,7 @@ lex:ietf-network-inventory-ne-component-common-entity-attributes
 lex:ietf-network-inventory-ne-physical
     a lex:ReferenceEntry ;
     skos:prefLabel "ne-physical" ;
+    # source: http://example.org/ontology/identity/ietf-network-inventory/ne-physical
     skos:definition "A physical network element (NE). " ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -154,6 +161,7 @@ lex:ietf-network-inventory-ne-physical
 lex:ietf-network-inventory-ne-type
     a lex:ReferenceEntry ;
     skos:prefLabel "ne-type" ;
+    # source: http://example.org/ontology/identity/ietf-network-inventory/ne-type
     skos:definition "Base identity for network element (NE) types." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -162,7 +170,9 @@ lex:ietf-network-inventory-ne-type
 lex:ietf-network-inventory-network-element
     a lex:ReferenceEntry ;
     skos:prefLabel "network-element" ;
+    # source: http://example.org/ontology/ietf-network-inventory/network-inventory/network-elements/network-element
     skos:definition "Augment network element with location information." ;
+    # source: http://example.org/ontology/ietf-network-inventory/network-inventory/network-elements/network-element
     skos:scopeNote "The list of network elements within the network." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:StructuralKind ;
@@ -171,6 +181,7 @@ lex:ietf-network-inventory-network-element
 lex:ietf-network-inventory-network-elements
     a lex:ReferenceEntry ;
     skos:prefLabel "network-elements" ;
+    # source: http://example.org/ontology/ietf-network-inventory/network-inventory/network-elements
     skos:definition "The top-level container for the list of network elements\nwithin the network." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:StructuralKind ;
@@ -179,8 +190,11 @@ lex:ietf-network-inventory-network-elements
 lex:ietf-network-inventory-network-inventory
     a lex:ReferenceEntry ;
     skos:prefLabel "network-inventory" ;
+    # source: http://example.org/ontology/ietf-network-inventory/network-inventory
     skos:definition "Augment network inventory with information\nfor optical cables and passive devices." ;
+    # source: http://example.org/ontology/ietf-network-inventory/network-inventory
     skos:scopeNote "Provides location information for network inventory." ;
+    # source: http://example.org/ontology/ietf-network-inventory/network-inventory
     skos:scopeNote "Top-level container for network inventory." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:StructuralKind ;
@@ -189,6 +203,7 @@ lex:ietf-network-inventory-network-inventory
 lex:ietf-network-inventory-non-hardware-component-class
     a lex:ReferenceEntry ;
     skos:prefLabel "non-hardware-component-class" ;
+    # source: http://example.org/ontology/identity/ietf-network-inventory/non-hardware-component-class
     skos:definition "Base identity for non hardware components (e.g., software\ncomponents) in a managed device." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -197,6 +212,7 @@ lex:ietf-network-inventory-non-hardware-component-class
 lex:ietf-network-inventory-optical-cable
     a lex:ReferenceEntry ;
     skos:prefLabel "optical-cable" ;
+    # source: http://example.org/ontology/ietf-network-inventory/network-inventory/cable/optical-cable
     skos:definition "Container for attributes associated with fiber\noptic cables." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:StructuralKind ;
@@ -205,6 +221,7 @@ lex:ietf-network-inventory-optical-cable
 lex:ietf-network-inventory-passive-device
     a lex:ReferenceEntry ;
     skos:prefLabel "passive-device" ;
+    # source: http://example.org/ontology/ietf-network-inventory/network-inventory/passive-device
     skos:definition "List of passive devices." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:StructuralKind ;
@@ -213,6 +230,7 @@ lex:ietf-network-inventory-passive-device
 lex:ietf-network-inventory-passive-port
     a lex:ReferenceEntry ;
     skos:prefLabel "passive-port" ;
+    # source: http://example.org/ontology/ietf-network-inventory/network-inventory/passive-device/passive-port
     skos:definition "List of ports on a passive device." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:StructuralKind ;
@@ -221,22 +239,17 @@ lex:ietf-network-inventory-passive-port
 lex:ietf-network-inventory-patch
     a lex:ReferenceEntry ;
     skos:prefLabel "patch" ;
+    # source: http://example.org/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component/software-rev/patch
     skos:definition "The list of software patches configured to be active for\nthe software module." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:StructuralKind ;
-    prov:wasDerivedFrom <http://example.org/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component/software-rev/patch> .
-
-lex:ietf-network-inventory-patch-software-rev
-    a lex:ReferenceEntry ;
-    skos:prefLabel "patch" ;
-    skos:definition "The list of software patches configured to be active for\nthe software module." ;
-    lex:canonicalExample "" ;
-    lex:entityClass lex:StructuralKind ;
-    prov:wasDerivedFrom <http://example.org/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/software-rev/patch> .
+    prov:wasDerivedFrom <http://example.org/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component/software-rev/patch> ,
+                        <http://example.org/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/software-rev/patch> .
 
 lex:ietf-network-inventory-physical-address
     a lex:ReferenceEntry ;
     skos:prefLabel "physical-address" ;
+    # source: http://example.org/ontology/ietf-network-inventory/network-inventory/locations/location/physical-address
     skos:definition "Top level container for the physical address." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:StructuralKind ;
@@ -245,7 +258,9 @@ lex:ietf-network-inventory-physical-address
 lex:ietf-network-inventory-port-ref
     a lex:ReferenceEntry ;
     skos:prefLabel "port-ref" ;
+    # source: http://example.org/ontology/grouping/ietf-network-inventory/port-ref
     skos:definition "Grouping definition: port-ref" ;
+    # source: http://example.org/ontology/grouping/ietf-network-inventory/port-ref
     skos:scopeNote "This grouping is intended to be used by data models that need\nto reference a port component within a Network Element." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -254,6 +269,7 @@ lex:ietf-network-inventory-port-ref
 lex:ietf-network-inventory-rack
     a lex:ReferenceEntry ;
     skos:prefLabel "rack" ;
+    # source: http://example.org/ontology/ietf-network-inventory/network-inventory/locations/racks/rack
     skos:definition "The list of racks within a location,\ne.g. equipment room." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:StructuralKind ;
@@ -262,6 +278,7 @@ lex:ietf-network-inventory-rack
 lex:ietf-network-inventory-rack-location
     a lex:ReferenceEntry ;
     skos:prefLabel "rack-location" ;
+    # source: http://example.org/ontology/ietf-network-inventory/network-inventory/locations/racks/rack/rack-location
     skos:definition "The location information of the rack, which\ncomprises the name of the location, row number, and\ncolumn number." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:StructuralKind ;
@@ -270,6 +287,7 @@ lex:ietf-network-inventory-rack-location
 lex:ietf-network-inventory-racks
     a lex:ReferenceEntry ;
     skos:prefLabel "racks" ;
+    # source: http://example.org/ontology/ietf-network-inventory/network-inventory/locations/racks
     skos:definition "Top level container for the list of racks." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:StructuralKind ;
@@ -278,6 +296,7 @@ lex:ietf-network-inventory-racks
 lex:ietf-network-inventory-reference-frame
     a lex:ReferenceEntry ;
     skos:prefLabel "reference-frame" ;
+    # source: http://example.org/ontology/ietf-network-inventory/network-inventory/locations/location/geo-location/reference-frame
     skos:definition "The Frame of Reference for the location values." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:StructuralKind ;
@@ -286,22 +305,17 @@ lex:ietf-network-inventory-reference-frame
 lex:ietf-network-inventory-software-rev
     a lex:ReferenceEntry ;
     skos:prefLabel "software-rev" ;
+    # source: http://example.org/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component/software-rev
     skos:definition "The list of the software modules representing the software\nimages intended to be running within the entity\n(e.g., component)." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:StructuralKind ;
-    prov:wasDerivedFrom <http://example.org/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component/software-rev> .
-
-lex:ietf-network-inventory-software-rev-network-element
-    a lex:ReferenceEntry ;
-    skos:prefLabel "software-rev" ;
-    skos:definition "The list of the software modules representing the software\nimages intended to be running within the entity\n(e.g., component)." ;
-    lex:canonicalExample "" ;
-    lex:entityClass lex:StructuralKind ;
-    prov:wasDerivedFrom <http://example.org/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/software-rev> .
+    prov:wasDerivedFrom <http://example.org/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/components/component/software-rev> ,
+                        <http://example.org/ontology/ietf-network-inventory/network-inventory/network-elements/network-element/software-rev> .
 
 lex:ietf-network-inventory-velocity
     a lex:ReferenceEntry ;
     skos:prefLabel "velocity" ;
+    # source: http://example.org/ontology/ietf-network-inventory/network-inventory/locations/location/geo-location/velocity
     skos:definition "If the object is in motion, the velocity vector describes\nthis motion at the time given by the timestamp.  For a\nformula to convert these values to speed and heading, see\nRFC 9179." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:StructuralKind ;
@@ -310,15 +324,9 @@ lex:ietf-network-inventory-velocity
 lex:ietf-network-inventory-z-end
     a lex:ReferenceEntry ;
     skos:prefLabel "z-end" ;
+    # source: http://example.org/ontology/ietf-network-inventory/network-inventory/cable/child-cable/z-end
     skos:definition "Z-end device reference" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:StructuralKind ;
-    prov:wasDerivedFrom <http://example.org/ontology/ietf-network-inventory/network-inventory/cable/child-cable/z-end> .
-
-lex:ietf-network-inventory-z-end-cable
-    a lex:ReferenceEntry ;
-    skos:prefLabel "z-end" ;
-    skos:definition "Z-end device reference" ;
-    lex:canonicalExample "" ;
-    lex:entityClass lex:StructuralKind ;
-    prov:wasDerivedFrom <http://example.org/ontology/ietf-network-inventory/network-inventory/cable/z-end> .
+    prov:wasDerivedFrom <http://example.org/ontology/ietf-network-inventory/network-inventory/cable/child-cable/z-end> ,
+                        <http://example.org/ontology/ietf-network-inventory/network-inventory/cable/z-end> .

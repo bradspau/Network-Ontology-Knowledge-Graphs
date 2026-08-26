@@ -14,6 +14,7 @@
 lex:ietf-routing-types-entropy-label-indicator
     a lex:ReferenceEntry ;
     skos:prefLabel "entropy-label-indicator" ;
+    # source: http://example.org/ontology/identity/ietf-routing-types/entropy-label-indicator
     skos:definition "This identity represents the Entropy Label Indicator." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -22,6 +23,7 @@ lex:ietf-routing-types-entropy-label-indicator
 lex:ietf-routing-types-extension-label
     a lex:ReferenceEntry ;
     skos:prefLabel "extension-label" ;
+    # source: http://example.org/ontology/identity/ietf-routing-types/extension-label
     skos:definition "This identity represents the Extension Label." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -30,6 +32,7 @@ lex:ietf-routing-types-extension-label
 lex:ietf-routing-types-gal-label
     a lex:ReferenceEntry ;
     skos:prefLabel "gal-label" ;
+    # source: http://example.org/ontology/identity/ietf-routing-types/gal-label
     skos:definition "This identity represents the Generic Associated Channel\n(G-ACh) Label (GAL)." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -38,6 +41,7 @@ lex:ietf-routing-types-gal-label
 lex:ietf-routing-types-implicit-null-label
     a lex:ReferenceEntry ;
     skos:prefLabel "implicit-null-label" ;
+    # source: http://example.org/ontology/identity/ietf-routing-types/implicit-null-label
     skos:definition "This identity represents the Implicit NULL Label." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -46,6 +50,7 @@ lex:ietf-routing-types-implicit-null-label
 lex:ietf-routing-types-ipv4-explicit-null-label
     a lex:ReferenceEntry ;
     skos:prefLabel "ipv4-explicit-null-label" ;
+    # source: http://example.org/ontology/identity/ietf-routing-types/ipv4-explicit-null-label
     skos:definition "This identity represents the IPv4 Explicit NULL Label." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -54,6 +59,7 @@ lex:ietf-routing-types-ipv4-explicit-null-label
 lex:ietf-routing-types-ipv6-explicit-null-label
     a lex:ReferenceEntry ;
     skos:prefLabel "ipv6-explicit-null-label" ;
+    # source: http://example.org/ontology/identity/ietf-routing-types/ipv6-explicit-null-label
     skos:definition "This identity represents the IPv6 Explicit NULL Label." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -62,6 +68,7 @@ lex:ietf-routing-types-ipv6-explicit-null-label
 lex:ietf-routing-types-link-access-type
     a lex:ReferenceEntry ;
     skos:prefLabel "link-access-type" ;
+    # source: http://example.org/ontology/types/ietf-routing-types/link-access-type
     skos:definition "Link access type." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:EnumeratedKind ;
@@ -71,6 +78,7 @@ lex:ietf-routing-types-link-access-type
 lex:ietf-routing-types-mpls-label-special-purpose-value
     a lex:ReferenceEntry ;
     skos:prefLabel "mpls-label-special-purpose-value" ;
+    # source: http://example.org/ontology/identity/ietf-routing-types/mpls-label-special-purpose-value
     skos:definition "Base identity for deriving identities describing\nspecial-purpose Multiprotocol Label Switching (MPLS) label\nvalues." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -79,7 +87,9 @@ lex:ietf-routing-types-mpls-label-special-purpose-value
 lex:ietf-routing-types-mpls-label-stack
     a lex:ReferenceEntry ;
     skos:prefLabel "mpls-label-stack" ;
+    # source: http://example.org/ontology/grouping/ietf-routing-types/mpls-label-stack
     skos:definition "Grouping definition: mpls-label-stack" ;
+    # source: http://example.org/ontology/grouping/ietf-routing-types/mpls-label-stack
     skos:scopeNote "This grouping specifies an MPLS label stack.  The label\nstack is encoded as a list of label stack entries.  The\nlist key is an identifier that indicates the relative\nordering of each entry, with the lowest-value identifier\ncorresponding to the top of the label stack." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -88,6 +98,7 @@ lex:ietf-routing-types-mpls-label-stack
 lex:ietf-routing-types-oam-alert-label
     a lex:ReferenceEntry ;
     skos:prefLabel "oam-alert-label" ;
+    # source: http://example.org/ontology/identity/ietf-routing-types/oam-alert-label
     skos:definition "This identity represents the OAM Alert Label." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -96,6 +107,7 @@ lex:ietf-routing-types-oam-alert-label
 lex:ietf-routing-types-route-target-type
     a lex:ReferenceEntry ;
     skos:prefLabel "route-target-type" ;
+    # source: http://example.org/ontology/types/ietf-routing-types/route-target-type
     skos:definition "Indicates the role a Route Target takes in route filtering." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:EnumeratedKind ;
@@ -104,6 +116,7 @@ lex:ietf-routing-types-route-target-type
 lex:ietf-routing-types-router-alert-label
     a lex:ReferenceEntry ;
     skos:prefLabel "router-alert-label" ;
+    # source: http://example.org/ontology/identity/ietf-routing-types/router-alert-label
     skos:definition "This identity represents the Router Alert Label." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -112,7 +125,9 @@ lex:ietf-routing-types-router-alert-label
 lex:ietf-routing-types-vpn-route-targets
     a lex:ReferenceEntry ;
     skos:prefLabel "vpn-route-targets" ;
+    # source: http://example.org/ontology/grouping/ietf-routing-types/vpn-route-targets
     skos:definition "A grouping that specifies Route Target import-export rules\nused in BGP-enabled VPNs." ;
+    # source: http://example.org/ontology/grouping/ietf-routing-types/vpn-route-targets
     skos:scopeNote "Grouping definition: vpn-route-targets" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;

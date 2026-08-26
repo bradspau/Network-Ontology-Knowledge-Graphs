@@ -14,7 +14,9 @@
 lex:ietf-ni-location-txt-locations
     a lex:ReferenceEntry ;
     skos:prefLabel "locations" ;
+    # source: http://example.org/ontology/grouping/ietf-ni-location-txt/locations
     skos:definition "Grouping definition: locations" ;
+    # source: http://example.org/ontology/grouping/ietf-ni-location-txt/locations
     skos:scopeNote "The grouping of the locations." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -23,7 +25,9 @@ lex:ietf-ni-location-txt-locations
 lex:ietf-ni-location-txt-locations-ref
     a lex:ReferenceEntry ;
     skos:prefLabel "locations-ref" ;
+    # source: http://example.org/ontology/grouping/ietf-ni-location-txt/locations-ref
     skos:definition "Grouping definition: locations-ref" ;
+    # source: http://example.org/ontology/grouping/ietf-ni-location-txt/locations-ref
     skos:scopeNote "The attributes of the locations." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -32,7 +36,9 @@ lex:ietf-ni-location-txt-locations-ref
 lex:ietf-ni-location-txt-physical-address
     a lex:ReferenceEntry ;
     skos:prefLabel "physical-address" ;
+    # source: http://example.org/ontology/grouping/ietf-ni-location-txt/physical-address
     skos:definition "Grouping definition: physical-address" ;
+    # source: http://example.org/ontology/grouping/ietf-ni-location-txt/physical-address
     skos:scopeNote "The grouping of the physical address." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -41,7 +47,9 @@ lex:ietf-ni-location-txt-physical-address
 lex:ietf-ni-location-txt-racks
     a lex:ReferenceEntry ;
     skos:prefLabel "racks" ;
+    # source: http://example.org/ontology/grouping/ietf-ni-location-txt/racks
     skos:definition "Grouping definition: racks" ;
+    # source: http://example.org/ontology/grouping/ietf-ni-location-txt/racks
     skos:scopeNote "The attributes of the rack." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;

@@ -14,7 +14,9 @@
 lex:tapi-equipment-abstract-strand
     a lex:ReferenceEntry ;
     skos:prefLabel "abstract-strand" ;
+    # source: http://example.org/ontology/grouping/tapi-equipment/abstract-strand
     skos:definition "Grouping definition: abstract-strand" ;
+    # source: http://example.org/ontology/grouping/tapi-equipment/abstract-strand
     skos:scopeNote "This object represents an abstraction of one or more strands in series that provides sufficient detail to enable appropriate engineering.\nA strand represents a continuous long, thin piece of a medium such as glass fiber or copper wire.\nIn this model a Strand:\n- a strand has two ends\n- a splice can only be between 2 strands.\n- the end of a strand may have a splice, a connector or be hidden\n- only one end can be hidden in an equipment\n- where a cable has more than two end each strand only goes between two of the ends\nThis model does NOT account for multiple copper strands being spliced." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -23,8 +25,8 @@ lex:tapi-equipment-abstract-strand
 lex:tapi-equipment-abstract-strand-ref
     a lex:ReferenceEntry ;
     skos:prefLabel "abstract-strand-ref" ;
+    # source: http://example.org/ontology/grouping/tapi-equipment/abstract-strand-ref
     skos:definition "Grouping definition: abstract-strand-ref" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-equipment/abstract-strand-ref> .
@@ -32,7 +34,9 @@ lex:tapi-equipment-abstract-strand-ref
 lex:tapi-equipment-access-port
     a lex:ReferenceEntry ;
     skos:prefLabel "access-port" ;
+    # source: http://example.org/ontology/grouping/tapi-equipment/access-port
     skos:definition "A group of pins that together support a signal group where any one pin removed from the group will prevent all signals of the signal group from flowing successfully.\nIn some cases the AccessPort may simply reference a single connector (e.g., where the pin-connector association is simple such that the AccessPort references all pins of one connector)." ;
+    # source: http://example.org/ontology/grouping/tapi-equipment/access-port
     skos:scopeNote "Grouping definition: access-port" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -41,8 +45,8 @@ lex:tapi-equipment-access-port
 lex:tapi-equipment-access-port-ref
     a lex:ReferenceEntry ;
     skos:prefLabel "access-port-ref" ;
+    # source: http://example.org/ontology/grouping/tapi-equipment/access-port-ref
     skos:definition "Grouping definition: access-port-ref" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-equipment/access-port-ref> .
@@ -50,7 +54,9 @@ lex:tapi-equipment-access-port-ref
 lex:tapi-equipment-access-port-supports-nep
     a lex:ReferenceEntry ;
     skos:prefLabel "access-port-supports-nep" ;
+    # source: http://example.org/ontology/grouping/tapi-equipment/access-port-supports-nep
     skos:definition "Grouping definition: access-port-supports-nep" ;
+    # source: http://example.org/ontology/grouping/tapi-equipment/access-port-supports-nep
     skos:scopeNote "The AccessPort supporting this NEP. More NEPs can be supported by the same AccessPort.\nThis augment allows NEP to refer to its AccessPort despite TapiTopology model does not import TapiEquipment model." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -59,7 +65,9 @@ lex:tapi-equipment-access-port-supports-nep
 lex:tapi-equipment-access-port-supports-sip
     a lex:ReferenceEntry ;
     skos:prefLabel "access-port-supports-sip" ;
+    # source: http://example.org/ontology/grouping/tapi-equipment/access-port-supports-sip
     skos:definition "Grouping definition: access-port-supports-sip" ;
+    # source: http://example.org/ontology/grouping/tapi-equipment/access-port-supports-sip
     skos:scopeNote "The AccessPort supporting this SIP. More SIPs can be supported by the same AccessPort.\nThis augment allows SIP to refer to its AccessPort despite TapiTopology model does not import TapiEquipment model." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -68,7 +76,9 @@ lex:tapi-equipment-access-port-supports-sip
 lex:tapi-equipment-actual-equipment
     a lex:ReferenceEntry ;
     skos:prefLabel "actual-equipment" ;
+    # source: http://example.org/ontology/grouping/tapi-equipment/actual-equipment
     skos:definition "Grouping definition: actual-equipment" ;
+    # source: http://example.org/ontology/grouping/tapi-equipment/actual-equipment
     skos:scopeNote "The equipment that is actually present in the physical network.\nIt will expose all dynamic properties and some critical static properties." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -77,7 +87,9 @@ lex:tapi-equipment-actual-equipment
 lex:tapi-equipment-actual-holder
     a lex:ReferenceEntry ;
     skos:prefLabel "actual-holder" ;
+    # source: http://example.org/ontology/grouping/tapi-equipment/actual-holder
     skos:definition "A holder in the ActualEquipment." ;
+    # source: http://example.org/ontology/grouping/tapi-equipment/actual-holder
     skos:scopeNote "Grouping definition: actual-holder" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -86,7 +98,9 @@ lex:tapi-equipment-actual-holder
 lex:tapi-equipment-actual-non-field-replaceable-module
     a lex:ReferenceEntry ;
     skos:prefLabel "actual-non-field-replaceable-module" ;
+    # source: http://example.org/ontology/grouping/tapi-equipment/actual-non-field-replaceable-module
     skos:definition "A structure that represents an actual equipment that cannot be replaced in the field.\nIs simply a subordinate part of an ActualEquipment (FRU).\nDoes not have any exposed holders (any associated holders are assumed to belong to the containing FRU).\nDoes not have any connectors (any associated connectors are assumed to belong to the containing FRU).\n" ;
+    # source: http://example.org/ontology/grouping/tapi-equipment/actual-non-field-replaceable-module
     skos:scopeNote "Grouping definition: actual-non-field-replaceable-module" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -95,7 +109,9 @@ lex:tapi-equipment-actual-non-field-replaceable-module
 lex:tapi-equipment-common-actual-properties
     a lex:ReferenceEntry ;
     skos:prefLabel "common-actual-properties" ;
+    # source: http://example.org/ontology/grouping/tapi-equipment/common-actual-properties
     skos:definition "Grouping definition: common-actual-properties" ;
+    # source: http://example.org/ontology/grouping/tapi-equipment/common-actual-properties
     skos:scopeNote "Properties common to actual Equipment instance." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -104,7 +120,9 @@ lex:tapi-equipment-common-actual-properties
 lex:tapi-equipment-common-equipment-properties
     a lex:ReferenceEntry ;
     skos:prefLabel "common-equipment-properties" ;
+    # source: http://example.org/ontology/grouping/tapi-equipment/common-equipment-properties
     skos:definition "Grouping definition: common-equipment-properties" ;
+    # source: http://example.org/ontology/grouping/tapi-equipment/common-equipment-properties
     skos:scopeNote "Properties common to all equipments." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -113,7 +131,9 @@ lex:tapi-equipment-common-equipment-properties
 lex:tapi-equipment-common-holder-properties
     a lex:ReferenceEntry ;
     skos:prefLabel "common-holder-properties" ;
+    # source: http://example.org/ontology/grouping/tapi-equipment/common-holder-properties
     skos:definition "Grouping definition: common-holder-properties" ;
+    # source: http://example.org/ontology/grouping/tapi-equipment/common-holder-properties
     skos:scopeNote "Properties common to all holders." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -122,14 +142,15 @@ lex:tapi-equipment-common-holder-properties
 lex:tapi-equipment-connector-and-pin-orientation
     a lex:ReferenceEntry ;
     skos:prefLabel "CONNECTOR_AND_PIN_ORIENTATION" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-equipment/CONNECTOR_AND_PIN_ORIENTATION> .
 
 lex:tapi-equipment-connector-and-pin-orientation-female
     a lex:ReferenceEntry ;
     skos:prefLabel "CONNECTOR_AND_PIN_ORIENTATION_FEMALE" ;
+    # source: http://example.org/ontology/identity/tapi-equipment/CONNECTOR_AND_PIN_ORIENTATION_FEMALE
     skos:definition "The connecting elements are dominantly indentations." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -138,6 +159,7 @@ lex:tapi-equipment-connector-and-pin-orientation-female
 lex:tapi-equipment-connector-and-pin-orientation-male
     a lex:ReferenceEntry ;
     skos:prefLabel "CONNECTOR_AND_PIN_ORIENTATION_MALE" ;
+    # source: http://example.org/ontology/identity/tapi-equipment/CONNECTOR_AND_PIN_ORIENTATION_MALE
     skos:definition "The connecting elements are dominantly protrusions." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -146,6 +168,7 @@ lex:tapi-equipment-connector-and-pin-orientation-male
 lex:tapi-equipment-connector-and-pin-orientation-symmetric-neutral
     a lex:ReferenceEntry ;
     skos:prefLabel "CONNECTOR_AND_PIN_ORIENTATION_SYMMETRIC_NEUTRAL" ;
+    # source: http://example.org/ontology/identity/tapi-equipment/CONNECTOR_AND_PIN_ORIENTATION_SYMMETRIC_NEUTRAL
     skos:definition "The pin (and housing) orientation combination is such that it is symmetric so a connector is compatible with itself.\nThe connecting element may be a surface rather than protrusions or indentations." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -154,7 +177,9 @@ lex:tapi-equipment-connector-and-pin-orientation-symmetric-neutral
 lex:tapi-equipment-connector-pin-address
     a lex:ReferenceEntry ;
     skos:prefLabel "connector-pin-address" ;
+    # source: http://example.org/ontology/grouping/tapi-equipment/connector-pin-address
     skos:definition "Grouping definition: connector-pin-address" ;
+    # source: http://example.org/ontology/grouping/tapi-equipment/connector-pin-address
     skos:scopeNote "The identification of the location of the Connector and/or Pin." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -163,7 +188,9 @@ lex:tapi-equipment-connector-pin-address
 lex:tapi-equipment-device
     a lex:ReferenceEntry ;
     skos:prefLabel "device" ;
+    # source: http://example.org/ontology/grouping/tapi-equipment/device
     skos:definition "A logical grouping of Equipments and AccessPorts that are closely located and form a support a coherent system of related functions." ;
+    # source: http://example.org/ontology/grouping/tapi-equipment/device
     skos:scopeNote "Grouping definition: device" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -172,8 +199,8 @@ lex:tapi-equipment-device
 lex:tapi-equipment-device-ref
     a lex:ReferenceEntry ;
     skos:prefLabel "device-ref" ;
+    # source: http://example.org/ontology/grouping/tapi-equipment/device-ref
     skos:definition "Grouping definition: device-ref" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-equipment/device-ref> .
@@ -181,7 +208,9 @@ lex:tapi-equipment-device-ref
 lex:tapi-equipment-device-supports-node
     a lex:ReferenceEntry ;
     skos:prefLabel "device-supports-node" ;
+    # source: http://example.org/ontology/grouping/tapi-equipment/device-supports-node
     skos:definition "Grouping definition: device-supports-node" ;
+    # source: http://example.org/ontology/grouping/tapi-equipment/device-supports-node
     skos:scopeNote "This augment allows Node to refer to its supporting device despite that TapiTopology model does not import TapiEquipment model (as this would cause a loop)." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -190,7 +219,9 @@ lex:tapi-equipment-device-supports-node
 lex:tapi-equipment-equipment
     a lex:ReferenceEntry ;
     skos:prefLabel "equipment" ;
+    # source: http://example.org/ontology/grouping/tapi-equipment/equipment
     skos:definition "Grouping definition: equipment" ;
+    # source: http://example.org/ontology/grouping/tapi-equipment/equipment
     skos:scopeNote "Represents any relevant physical thing. May be only expectation, only actual or both expectation and actual.\nRepresents a field replaceable unit. May include non-field-replaceable details." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -199,14 +230,15 @@ lex:tapi-equipment-equipment
 lex:tapi-equipment-equipment-category
     a lex:ReferenceEntry ;
     skos:prefLabel "EQUIPMENT_CATEGORY" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-equipment/EQUIPMENT_CATEGORY> .
 
 lex:tapi-equipment-equipment-category-circuit-pack
     a lex:ReferenceEntry ;
     skos:prefLabel "EQUIPMENT_CATEGORY_CIRCUIT_PACK" ;
+    # source: http://example.org/ontology/identity/tapi-equipment/EQUIPMENT_CATEGORY_CIRCUIT_PACK
     skos:definition "An assembly with connectors compatible with those in a holder.\nThe assembly is designed to be mounted in a holder (SLOT) of a SUBRACK.\nMay also support holders (SLOTs) for SMALL_FORMFACTOR_PLUGGABLEs." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -215,6 +247,7 @@ lex:tapi-equipment-equipment-category-circuit-pack
 lex:tapi-equipment-equipment-category-rack
     a lex:ReferenceEntry ;
     skos:prefLabel "EQUIPMENT_CATEGORY_RACK" ;
+    # source: http://example.org/ontology/identity/tapi-equipment/EQUIPMENT_CATEGORY_RACK
     skos:definition "A mechanical assembly with cabling and predefined mounting points for particular SUBRACK types.\nThe assembly is designed to be mounted on the floor in a row with other RACKs." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -223,6 +256,7 @@ lex:tapi-equipment-equipment-category-rack
 lex:tapi-equipment-equipment-category-small-formfactor-pluggable
     a lex:ReferenceEntry ;
     skos:prefLabel "EQUIPMENT_CATEGORY_SMALL_FORMFACTOR_PLUGGABLE" ;
+    # source: http://example.org/ontology/identity/tapi-equipment/EQUIPMENT_CATEGORY_SMALL_FORMFACTOR_PLUGGABLE
     skos:definition "A small assembly (compared to a CIRCUIT_PACK) with connectors compatible with those in a holder.\nThe assembly is designed to be mounted in a holder (SLOT) of a CIRCUIT_PACK or STAND_ALONE_UNIT." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -231,6 +265,7 @@ lex:tapi-equipment-equipment-category-small-formfactor-pluggable
 lex:tapi-equipment-equipment-category-stand-alone-unit
     a lex:ReferenceEntry ;
     skos:prefLabel "EQUIPMENT_CATEGORY_STAND_ALONE_UNIT" ;
+    # source: http://example.org/ontology/identity/tapi-equipment/EQUIPMENT_CATEGORY_STAND_ALONE_UNIT
     skos:definition "An assembly with connectors for cabling and potentially with holders.\nThe assembly is designed to be mounted in a freeform environment (on a table or simple mechanical cabinet).\nMay support holders (SLOTs) for CIRCUIT_PACKs or for SMALL_FORMFACTOR_PLUGGABLEs." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -239,6 +274,7 @@ lex:tapi-equipment-equipment-category-stand-alone-unit
 lex:tapi-equipment-equipment-category-subrack
     a lex:ReferenceEntry ;
     skos:prefLabel "EQUIPMENT_CATEGORY_SUBRACK" ;
+    # source: http://example.org/ontology/identity/tapi-equipment/EQUIPMENT_CATEGORY_SUBRACK
     skos:definition "An assembly with holders designed to accommodate CIRCUIT_PACKs.\nThe assembly is designed to be mounted in a RACK." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -247,8 +283,8 @@ lex:tapi-equipment-equipment-category-subrack
 lex:tapi-equipment-equipment-holder-ref
     a lex:ReferenceEntry ;
     skos:prefLabel "equipment-holder-ref" ;
+    # source: http://example.org/ontology/grouping/tapi-equipment/equipment-holder-ref
     skos:definition "Grouping definition: equipment-holder-ref" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-equipment/equipment-holder-ref> .
@@ -256,88 +292,88 @@ lex:tapi-equipment-equipment-holder-ref
 lex:tapi-equipment-equipment-object-type
     a lex:ReferenceEntry ;
     skos:prefLabel "EQUIPMENT_OBJECT_TYPE" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-equipment/EQUIPMENT_OBJECT_TYPE> .
 
 lex:tapi-equipment-equipment-object-type-abstract-strand
     a lex:ReferenceEntry ;
     skos:prefLabel "EQUIPMENT_OBJECT_TYPE_ABSTRACT_STRAND" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-equipment/EQUIPMENT_OBJECT_TYPE_ABSTRACT_STRAND> .
 
 lex:tapi-equipment-equipment-object-type-access-port
     a lex:ReferenceEntry ;
     skos:prefLabel "EQUIPMENT_OBJECT_TYPE_ACCESS_PORT" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-equipment/EQUIPMENT_OBJECT_TYPE_ACCESS_PORT> .
 
 lex:tapi-equipment-equipment-object-type-device
     a lex:ReferenceEntry ;
     skos:prefLabel "EQUIPMENT_OBJECT_TYPE_DEVICE" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-equipment/EQUIPMENT_OBJECT_TYPE_DEVICE> .
 
 lex:tapi-equipment-equipment-object-type-equipment
     a lex:ReferenceEntry ;
     skos:prefLabel "EQUIPMENT_OBJECT_TYPE_EQUIPMENT" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-equipment/EQUIPMENT_OBJECT_TYPE_EQUIPMENT> .
 
 lex:tapi-equipment-equipment-object-type-holder
     a lex:ReferenceEntry ;
     skos:prefLabel "EQUIPMENT_OBJECT_TYPE_HOLDER" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-equipment/EQUIPMENT_OBJECT_TYPE_HOLDER> .
 
 lex:tapi-equipment-equipment-object-type-physical-route
     a lex:ReferenceEntry ;
     skos:prefLabel "EQUIPMENT_OBJECT_TYPE_PHYSICAL_ROUTE" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-equipment/EQUIPMENT_OBJECT_TYPE_PHYSICAL_ROUTE> .
 
 lex:tapi-equipment-equipment-object-type-physical-route-element
     a lex:ReferenceEntry ;
     skos:prefLabel "EQUIPMENT_OBJECT_TYPE_PHYSICAL_ROUTE_ELEMENT" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-equipment/EQUIPMENT_OBJECT_TYPE_PHYSICAL_ROUTE_ELEMENT> .
 
 lex:tapi-equipment-equipment-object-type-physical-span
     a lex:ReferenceEntry ;
     skos:prefLabel "EQUIPMENT_OBJECT_TYPE_PHYSICAL_SPAN" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-equipment/EQUIPMENT_OBJECT_TYPE_PHYSICAL_SPAN> .
 
 lex:tapi-equipment-equipment-object-type-strand-joint
     a lex:ReferenceEntry ;
     skos:prefLabel "EQUIPMENT_OBJECT_TYPE_STRAND_JOINT" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-equipment/EQUIPMENT_OBJECT_TYPE_STRAND_JOINT> .
 
 lex:tapi-equipment-equipment-ref
     a lex:ReferenceEntry ;
     skos:prefLabel "equipment-ref" ;
+    # source: http://example.org/ontology/grouping/tapi-equipment/equipment-ref
     skos:definition "Grouping definition: equipment-ref" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-equipment/equipment-ref> .
@@ -345,7 +381,9 @@ lex:tapi-equipment-equipment-ref
 lex:tapi-equipment-expected-equipment
     a lex:ReferenceEntry ;
     skos:prefLabel "expected-equipment" ;
+    # source: http://example.org/ontology/grouping/tapi-equipment/expected-equipment
     skos:definition "A definition of the restrictions on the equipment that is expected to be present in the physical network at a particular 'place'.\nThe expected equipment will state the type and may constrain any other invariant properties.\nIt may also provide desired ranges for dynamic properties." ;
+    # source: http://example.org/ontology/grouping/tapi-equipment/expected-equipment
     skos:scopeNote "Grouping definition: expected-equipment" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -354,7 +392,9 @@ lex:tapi-equipment-expected-equipment
 lex:tapi-equipment-expected-holder
     a lex:ReferenceEntry ;
     skos:prefLabel "expected-holder" ;
+    # source: http://example.org/ontology/grouping/tapi-equipment/expected-holder
     skos:definition "A definition of a holder expected in the ActualEquipment (i.e., an ActualHolder) as part of the constraints provided by the ExpectedEquipment." ;
+    # source: http://example.org/ontology/grouping/tapi-equipment/expected-holder
     skos:scopeNote "Grouping definition: expected-holder" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -363,7 +403,9 @@ lex:tapi-equipment-expected-holder
 lex:tapi-equipment-expected-non-field-replaceable-module
     a lex:ReferenceEntry ;
     skos:prefLabel "expected-non-field-replaceable-module" ;
+    # source: http://example.org/ontology/grouping/tapi-equipment/expected-non-field-replaceable-module
     skos:definition "A structure that represents an expected equipment that cannot be replaced in the field.\nIs simply a subordinate part of an ExpectedEquipment (FRU).\nDoes not have any exposed holders (any associated holders are assumed to belong to the containing FRU).\nDoes not have any connectors (any associated connectors are assumed to belong to the containing FRU).\n" ;
+    # source: http://example.org/ontology/grouping/tapi-equipment/expected-non-field-replaceable-module
     skos:scopeNote "Grouping definition: expected-non-field-replaceable-module" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -372,14 +414,15 @@ lex:tapi-equipment-expected-non-field-replaceable-module
 lex:tapi-equipment-flow-direction
     a lex:ReferenceEntry ;
     skos:prefLabel "FLOW_DIRECTION" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-equipment/FLOW_DIRECTION> .
 
 lex:tapi-equipment-flow-direction-both
     a lex:ReferenceEntry ;
     skos:prefLabel "FLOW_DIRECTION_BOTH" ;
+    # source: http://example.org/ontology/identity/tapi-equipment/FLOW_DIRECTION_BOTH
     skos:definition "The strand joint statement applies to both normal and contra flow." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -388,6 +431,7 @@ lex:tapi-equipment-flow-direction-both
 lex:tapi-equipment-flow-direction-contra-flow
     a lex:ReferenceEntry ;
     skos:prefLabel "FLOW_DIRECTION_CONTRA_FLOW" ;
+    # source: http://example.org/ontology/identity/tapi-equipment/FLOW_DIRECTION_CONTRA_FLOW
     skos:definition "The reverse of the NORMAL_FLOW.\nThe light flows to the strand that references the strand joint with 'to strand joint'." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -396,6 +440,7 @@ lex:tapi-equipment-flow-direction-contra-flow
 lex:tapi-equipment-flow-direction-normal-flow
     a lex:ReferenceEntry ;
     skos:prefLabel "FLOW_DIRECTION_NORMAL_FLOW" ;
+    # source: http://example.org/ontology/identity/tapi-equipment/FLOW_DIRECTION_NORMAL_FLOW
     skos:definition "Applies to the normal flow of light through the strand joint as expressed via the 'to strand joint' statement of a strand." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -404,7 +449,9 @@ lex:tapi-equipment-flow-direction-normal-flow
 lex:tapi-equipment-geolocation
     a lex:ReferenceEntry ;
     skos:prefLabel "geolocation" ;
+    # source: http://example.org/ontology/grouping/tapi-equipment/geolocation
     skos:definition "GPS location." ;
+    # source: http://example.org/ontology/grouping/tapi-equipment/geolocation
     skos:scopeNote "Grouping definition: geolocation" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -413,7 +460,9 @@ lex:tapi-equipment-geolocation
 lex:tapi-equipment-holder
     a lex:ReferenceEntry ;
     skos:prefLabel "holder" ;
+    # source: http://example.org/ontology/grouping/tapi-equipment/holder
     skos:definition "Grouping definition: holder" ;
+    # source: http://example.org/ontology/grouping/tapi-equipment/holder
     skos:scopeNote "Represents a space in an equipment in which another equipment can be fitted in the field.\nIt must have at least one of actual holder or expected holder (and may have both)." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -422,14 +471,15 @@ lex:tapi-equipment-holder
 lex:tapi-equipment-holder-category
     a lex:ReferenceEntry ;
     skos:prefLabel "HOLDER_CATEGORY" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-equipment/HOLDER_CATEGORY> .
 
 lex:tapi-equipment-holder-category-slot
     a lex:ReferenceEntry ;
     skos:prefLabel "HOLDER_CATEGORY_SLOT" ;
+    # source: http://example.org/ontology/identity/tapi-equipment/HOLDER_CATEGORY_SLOT
     skos:definition "A guided holder with fixed connectors.\nThe guided holder is designed to take a particular form of CIRCUIT_PACK or SMALL_FORMFACTOR_PLUGGABLE" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -438,7 +488,9 @@ lex:tapi-equipment-holder-category-slot
 lex:tapi-equipment-physical-context
     a lex:ReferenceEntry ;
     skos:prefLabel "physical-context" ;
+    # source: http://example.org/ontology/grouping/tapi-equipment/physical-context
     skos:definition "Grouping definition: physical-context" ;
+    # source: http://example.org/ontology/grouping/tapi-equipment/physical-context
     skos:scopeNote "The collection of all physical things to be described." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -447,7 +499,9 @@ lex:tapi-equipment-physical-context
 lex:tapi-equipment-physical-route
     a lex:ReferenceEntry ;
     skos:prefLabel "physical-route" ;
+    # source: http://example.org/ontology/grouping/tapi-equipment/physical-route
     skos:definition "Grouping definition: physical-route" ;
+    # source: http://example.org/ontology/grouping/tapi-equipment/physical-route
     skos:scopeNote "The physical route of a connection is modeled as an ordered sequence of physical route element instances.\nThe physical route is a description dedicated to the connection." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -456,7 +510,9 @@ lex:tapi-equipment-physical-route
 lex:tapi-equipment-physical-route-element
     a lex:ReferenceEntry ;
     skos:prefLabel "physical-route-element" ;
+    # source: http://example.org/ontology/grouping/tapi-equipment/physical-route-element
     skos:definition "A PhysicalRouteElement describes equipment, connectors on those equipments and pins of those connectors that are involved in the physical route of the connection.\nThe description may be in terms of access port or connector pin in route (at least one of access port or connector pin in route must be provided) or both.\nWhere access port is provided alone, this may be because all pins in the connectors of the access port are used, because the connector pin detail id not known the and to its subset of connectorPins which are involved in the physical route.\nAn access port may include connectorPins of more Equipments, e.g., in case of bidirectional access port shared by two 'unidirectional'; Equipments.\nConnector pin details may be provided alone without an access port where there are no access ports modelled." ;
+    # source: http://example.org/ontology/grouping/tapi-equipment/physical-route-element
     skos:scopeNote "Grouping definition: physical-route-element" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -465,7 +521,9 @@ lex:tapi-equipment-physical-route-element
 lex:tapi-equipment-physical-route-list
     a lex:ReferenceEntry ;
     skos:prefLabel "physical-route-list" ;
+    # source: http://example.org/ontology/grouping/tapi-equipment/physical-route-list
     skos:definition "Grouping definition: physical-route-list" ;
+    # source: http://example.org/ontology/grouping/tapi-equipment/physical-route-list
     skos:scopeNote "The list of the PhysicalRoutes of a Connection." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -474,14 +532,15 @@ lex:tapi-equipment-physical-route-list
 lex:tapi-equipment-physical-route-state
     a lex:ReferenceEntry ;
     skos:prefLabel "PHYSICAL_ROUTE_STATE" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-equipment/PHYSICAL_ROUTE_STATE> .
 
 lex:tapi-equipment-physical-route-state-current
     a lex:ReferenceEntry ;
     skos:prefLabel "PHYSICAL_ROUTE_STATE_CURRENT" ;
+    # source: http://example.org/ontology/identity/tapi-equipment/PHYSICAL_ROUTE_STATE_CURRENT
     skos:definition "The PhysicalRoute instance identified is the current PhysicalRoute, i.e., is the one that is active and selected to support service." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -490,6 +549,7 @@ lex:tapi-equipment-physical-route-state-current
 lex:tapi-equipment-physical-route-state-not-current
     a lex:ReferenceEntry ;
     skos:prefLabel "PHYSICAL_ROUTE_STATE_NOT_CURRENT" ;
+    # source: http://example.org/ontology/identity/tapi-equipment/PHYSICAL_ROUTE_STATE_NOT_CURRENT
     skos:definition "The PhysicalRoute instance is not the one supporting the service." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -498,6 +558,7 @@ lex:tapi-equipment-physical-route-state-not-current
 lex:tapi-equipment-physical-route-state-unknown
     a lex:ReferenceEntry ;
     skos:prefLabel "PHYSICAL_ROUTE_STATE_UNKNOWN" ;
+    # source: http://example.org/ontology/identity/tapi-equipment/PHYSICAL_ROUTE_STATE_UNKNOWN
     skos:definition "The PhysicalRoute state is unknown." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -506,7 +567,9 @@ lex:tapi-equipment-physical-route-state-unknown
 lex:tapi-equipment-physical-span
     a lex:ReferenceEntry ;
     skos:prefLabel "physical-span" ;
+    # source: http://example.org/ontology/grouping/tapi-equipment/physical-span
     skos:definition "An adjacency between AccessPorts.\nThe adjacency is supported by a group of strands between pins of the AccessPorts.\nThis is a physical abstraction." ;
+    # source: http://example.org/ontology/grouping/tapi-equipment/physical-span
     skos:scopeNote "Grouping definition: physical-span" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -515,8 +578,8 @@ lex:tapi-equipment-physical-span
 lex:tapi-equipment-physical-span-ref
     a lex:ReferenceEntry ;
     skos:prefLabel "physical-span-ref" ;
+    # source: http://example.org/ontology/grouping/tapi-equipment/physical-span-ref
     skos:definition "Grouping definition: physical-span-ref" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-equipment/physical-span-ref> .
@@ -524,7 +587,9 @@ lex:tapi-equipment-physical-span-ref
 lex:tapi-equipment-pin-and-role
     a lex:ReferenceEntry ;
     skos:prefLabel "pin-and-role" ;
+    # source: http://example.org/ontology/grouping/tapi-equipment/pin-and-role
     skos:definition "Grouping definition: pin-and-role" ;
+    # source: http://example.org/ontology/grouping/tapi-equipment/pin-and-role
     skos:scopeNote "Provides an opportunity, for a pin, to give the location of the pin and the role of the pin." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -533,7 +598,9 @@ lex:tapi-equipment-pin-and-role
 lex:tapi-equipment-strand-joint
     a lex:ReferenceEntry ;
     skos:prefLabel "strand-joint" ;
+    # source: http://example.org/ontology/grouping/tapi-equipment/strand-joint
     skos:definition "Grouping definition: strand-joint" ;
+    # source: http://example.org/ontology/grouping/tapi-equipment/strand-joint
     skos:scopeNote "Represents a flow opportunity through a joint.\nCan represent flow opportunity through:\n- a connector\n- a splice\n- etc.\nAllows augmentation with impairments and other properties of the joint.\nCan be used:\n- as a single instance alone to represent properties that apply equally to each direction of flow\n- in combinations of multiple instances to represent impairments that are different for normal flow, reverse flow and reflections.\n" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -542,8 +609,8 @@ lex:tapi-equipment-strand-joint
 lex:tapi-equipment-strand-joint-ref
     a lex:ReferenceEntry ;
     skos:prefLabel "strand-joint-ref" ;
+    # source: http://example.org/ontology/grouping/tapi-equipment/strand-joint-ref
     skos:definition "Grouping definition: strand-joint-ref" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-equipment/strand-joint-ref> .
@@ -551,7 +618,9 @@ lex:tapi-equipment-strand-joint-ref
 lex:tapi-equipment-supporting-physical-span
     a lex:ReferenceEntry ;
     skos:prefLabel "supporting-physical-span" ;
+    # source: http://example.org/ontology/grouping/tapi-equipment/supporting-physical-span
     skos:definition "Grouping definition: supporting-physical-span" ;
+    # source: http://example.org/ontology/grouping/tapi-equipment/supporting-physical-span
     skos:scopeNote "The PhysicalSpan supporting this Link. More Links can be supported by the same PhysicalSpan.\nThis augment allows Link to refer to its PhysicalSpans despite TapiTopology model does not import TapiEquipment model." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;

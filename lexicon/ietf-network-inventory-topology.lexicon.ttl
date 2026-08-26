@@ -14,6 +14,7 @@
 lex:ietf-network-inventory-topology-breakout-channel
     a lex:ReferenceEntry ;
     skos:prefLabel "breakout-channel" ;
+    # source: http://example.org/ontology/ietf-network-inventory-topology/ietf-network-state/networks/network/node/termination-point/inventory-mapping-attributes/port-breakout/breakout-channel
     skos:definition "List of breakout channels available on this port.\nEach entry represents an independent lane or sub-port\nthat can be used for channelized interfaces." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:StructuralKind ;
@@ -22,7 +23,9 @@ lex:ietf-network-inventory-topology-breakout-channel
 lex:ietf-network-inventory-topology-link-inventory-mapping-attributes
     a lex:ReferenceEntry ;
     skos:prefLabel "link-inventory-mapping-attributes" ;
+    # source: http://example.org/ontology/grouping/ietf-network-inventory-topology/link-inventory-mapping-attributes
     skos:definition "Attributes for classifying link media type.\nDetailed inventory reference is intentionally omitted from\nthis model; implementations should use the appropriate\nspecialized inventory modules based on the indicated\nlink-type." ;
+    # source: http://example.org/ontology/grouping/ietf-network-inventory-topology/link-inventory-mapping-attributes
     skos:scopeNote "Grouping definition: link-inventory-mapping-attributes" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -31,7 +34,9 @@ lex:ietf-network-inventory-topology-link-inventory-mapping-attributes
 lex:ietf-network-inventory-topology-node-inventory-mapping-attributes
     a lex:ReferenceEntry ;
     skos:prefLabel "node-inventory-mapping-attributes" ;
+    # source: http://example.org/ontology/grouping/ietf-network-inventory-topology/node-inventory-mapping-attributes
     skos:definition "Attributes for mapping a topology node to a Network Element\n(NE) in the physical inventory." ;
+    # source: http://example.org/ontology/grouping/ietf-network-inventory-topology/node-inventory-mapping-attributes
     skos:scopeNote "Grouping definition: node-inventory-mapping-attributes" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -40,6 +45,7 @@ lex:ietf-network-inventory-topology-node-inventory-mapping-attributes
 lex:ietf-network-inventory-topology-port-breakout
     a lex:ReferenceEntry ;
     skos:prefLabel "port-breakout" ;
+    # source: http://example.org/ontology/ietf-network-inventory-topology/ietf-network-state/networks/network/node/termination-point/inventory-mapping-attributes/port-breakout
     skos:definition "Breakout capability of the physical port represented by\nthis TP. One TP maps to one physical port; channels are\nlisted here. This container is present only when the\nunderlying hardware supports partitioning the port into\nmultiple independent channels (e.g., 400G to 4x100G)." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:StructuralKind ;
@@ -48,7 +54,9 @@ lex:ietf-network-inventory-topology-port-breakout
 lex:ietf-network-inventory-topology-tp-inventory-mapping-attributes
     a lex:ReferenceEntry ;
     skos:prefLabel "tp-inventory-mapping-attributes" ;
+    # source: http://example.org/ontology/grouping/ietf-network-inventory-topology/tp-inventory-mapping-attributes
     skos:definition "Attributes for mapping a topology termination point (TP)\nto a physical port in the network inventory." ;
+    # source: http://example.org/ontology/grouping/ietf-network-inventory-topology/tp-inventory-mapping-attributes
     skos:scopeNote "Grouping definition: tp-inventory-mapping-attributes" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;

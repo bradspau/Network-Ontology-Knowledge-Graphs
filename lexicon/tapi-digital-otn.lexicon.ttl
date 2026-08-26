@@ -14,7 +14,9 @@
 lex:tapi-digital-otn-deg-thr
     a lex:ReferenceEntry ;
     skos:prefLabel "deg-thr" ;
+    # source: http://example.org/ontology/grouping/tapi-digital-otn/deg-thr
     skos:definition "Degraded Threshold, specify either the percentage or the number of Errored Blocks in the defined interval.\n1) degThrValue when type is PERCENTAGE: percentageGranularity is used to indicate the number of decimal points.\nSo if percentageGranularity is ones, a value of 1 in degThrValue would indicate 1%, a value of 10 = 10%, a value of 100 = 100%.\nSo if percentageGranularity is thousandths a value of 1 in degThrValue would indicate 0.001%, a value of 1000 = 1%, a value of 1000000 = 100%.\n2) degThrValue when type is NUMBER_ERROR_BLOCKS: Number of Errored Blocks is captured in an integer value." ;
+    # source: http://example.org/ontology/grouping/tapi-digital-otn/deg-thr
     skos:scopeNote "Grouping definition: deg-thr" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -23,6 +25,7 @@ lex:tapi-digital-otn-deg-thr
 lex:tapi-digital-otn-deg-thr-type
     a lex:ReferenceEntry ;
     skos:prefLabel "deg-thr-type" ;
+    # source: http://example.org/ontology/types/tapi-digital-otn/deg-thr-type
     skos:definition "The value of the threshold can be provisioned in terms of number of errored blocks or in terms of percentage of errored blocks. For percentage-based specification, in order to support provision of less than 1%, the specification consists of two fields. The first field indicates the granularity of percentage. For examples, in 1%, in 0.1%, or in 0.01%, etc. The second field indicates the multiple of the granularity. For number of errored block based, the value is a positive integer." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:EnumeratedKind ;
@@ -31,7 +34,9 @@ lex:tapi-digital-otn-deg-thr-type
 lex:tapi-digital-otn-fec-type
     a lex:ReferenceEntry ;
     skos:prefLabel "fec-type" ;
+    # source: http://example.org/ontology/grouping/tapi-digital-otn/fec-type
     skos:definition "Grouping definition: fec-type" ;
+    # source: http://example.org/ontology/grouping/tapi-digital-otn/fec-type
     skos:scopeNote "The specification of OTU FEC Type.\nThe standardFecType and proprietaryFecType attributes are mutually exclusive." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -40,15 +45,17 @@ lex:tapi-digital-otn-fec-type
 lex:tapi-digital-otn-mapping-type
     a lex:ReferenceEntry ;
     skos:prefLabel "mapping-type" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:EnumeratedKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/types/tapi-digital-otn/mapping-type> .
 
 lex:tapi-digital-otn-odu-cn-csep-ttp-pac
     a lex:ReferenceEntry ;
     skos:prefLabel "odu-cn-csep-ttp-pac" ;
+    # source: http://example.org/ontology/grouping/tapi-digital-otn/odu-cn-csep-ttp-pac
     skos:definition "Grouping definition: odu-cn-csep-ttp-pac" ;
+    # source: http://example.org/ontology/grouping/tapi-digital-otn/odu-cn-csep-ttp-pac
     skos:scopeNote "When otuType=OTU_CN then OduCnCsepTtpPac must be instantiated." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -57,8 +64,8 @@ lex:tapi-digital-otn-odu-cn-csep-ttp-pac
 lex:tapi-digital-otn-odu-common-pac
     a lex:ReferenceEntry ;
     skos:prefLabel "odu-common-pac" ;
+    # source: http://example.org/ontology/grouping/tapi-digital-otn/odu-common-pac
     skos:definition "Grouping definition: odu-common-pac" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-digital-otn/odu-common-pac> .
@@ -66,8 +73,8 @@ lex:tapi-digital-otn-odu-common-pac
 lex:tapi-digital-otn-odu-connection-end-point-spec
     a lex:ReferenceEntry ;
     skos:prefLabel "odu-connection-end-point-spec" ;
+    # source: http://example.org/ontology/grouping/tapi-digital-otn/odu-connection-end-point-spec
     skos:definition "Grouping definition: odu-connection-end-point-spec" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-digital-otn/odu-connection-end-point-spec> .
@@ -75,8 +82,8 @@ lex:tapi-digital-otn-odu-connection-end-point-spec
 lex:tapi-digital-otn-odu-connectivity-service-end-point-spec
     a lex:ReferenceEntry ;
     skos:prefLabel "odu-connectivity-service-end-point-spec" ;
+    # source: http://example.org/ontology/grouping/tapi-digital-otn/odu-connectivity-service-end-point-spec
     skos:definition "Grouping definition: odu-connectivity-service-end-point-spec" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-digital-otn/odu-connectivity-service-end-point-spec> .
@@ -84,7 +91,9 @@ lex:tapi-digital-otn-odu-connectivity-service-end-point-spec
 lex:tapi-digital-otn-odu-csep-common-pac
     a lex:ReferenceEntry ;
     skos:prefLabel "odu-csep-common-pac" ;
+    # source: http://example.org/ontology/grouping/tapi-digital-otn/odu-csep-common-pac
     skos:definition "Grouping definition: odu-csep-common-pac" ;
+    # source: http://example.org/ontology/grouping/tapi-digital-otn/odu-csep-common-pac
     skos:scopeNote "Note that the OduType ODU_CN does not apply to OduCsepCommonPac package, as ODUCn is always and only defined within OTU CSEP. " ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -93,8 +102,8 @@ lex:tapi-digital-otn-odu-csep-common-pac
 lex:tapi-digital-otn-odu-csep-ctp-pac
     a lex:ReferenceEntry ;
     skos:prefLabel "odu-csep-ctp-pac" ;
+    # source: http://example.org/ontology/grouping/tapi-digital-otn/odu-csep-ctp-pac
     skos:definition "Grouping definition: odu-csep-ctp-pac" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-digital-otn/odu-csep-ctp-pac> .
@@ -102,8 +111,8 @@ lex:tapi-digital-otn-odu-csep-ctp-pac
 lex:tapi-digital-otn-odu-csep-ttp-pac
     a lex:ReferenceEntry ;
     skos:prefLabel "odu-csep-ttp-pac" ;
+    # source: http://example.org/ontology/grouping/tapi-digital-otn/odu-csep-ttp-pac
     skos:definition "Grouping definition: odu-csep-ttp-pac" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-digital-otn/odu-csep-ttp-pac> .
@@ -111,7 +120,9 @@ lex:tapi-digital-otn-odu-csep-ttp-pac
 lex:tapi-digital-otn-odu-ctp-pac
     a lex:ReferenceEntry ;
     skos:prefLabel "odu-ctp-pac" ;
+    # source: http://example.org/ontology/grouping/tapi-digital-otn/odu-ctp-pac
     skos:definition "Grouping definition: odu-ctp-pac" ;
+    # source: http://example.org/ontology/grouping/tapi-digital-otn/odu-ctp-pac
     skos:scopeNote "This Pac contains the attributes associated with the CTP\nIt is present only if the CEP contains a CTP" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -120,8 +131,8 @@ lex:tapi-digital-otn-odu-ctp-pac
 lex:tapi-digital-otn-odu-delay-performance-data
     a lex:ReferenceEntry ;
     skos:prefLabel "odu-delay-performance-data" ;
+    # source: http://example.org/ontology/grouping/tapi-digital-otn/odu-delay-performance-data
     skos:definition "Grouping definition: odu-delay-performance-data" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-digital-otn/odu-delay-performance-data> .
@@ -129,7 +140,9 @@ lex:tapi-digital-otn-odu-delay-performance-data
 lex:tapi-digital-otn-odu-mep
     a lex:ReferenceEntry ;
     skos:prefLabel "odu-mep" ;
+    # source: http://example.org/ontology/grouping/tapi-digital-otn/odu-mep
     skos:definition "Grouping definition: odu-mep" ;
+    # source: http://example.org/ontology/grouping/tapi-digital-otn/odu-mep
     skos:scopeNote "If the CSEP is OTU CSEP, then\n1) OTU only: OtuMep,\n2) OTU and ODUCn: both OtuCep and OduMep." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -138,8 +151,8 @@ lex:tapi-digital-otn-odu-mep
 lex:tapi-digital-otn-odu-mep-status
     a lex:ReferenceEntry ;
     skos:prefLabel "odu-mep-status" ;
+    # source: http://example.org/ontology/grouping/tapi-digital-otn/odu-mep-status
     skos:definition "Grouping definition: odu-mep-status" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-digital-otn/odu-mep-status> .
@@ -147,8 +160,8 @@ lex:tapi-digital-otn-odu-mep-status
 lex:tapi-digital-otn-odu-mip
     a lex:ReferenceEntry ;
     skos:prefLabel "odu-mip" ;
+    # source: http://example.org/ontology/grouping/tapi-digital-otn/odu-mip
     skos:definition "Grouping definition: odu-mip" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-digital-otn/odu-mip> .
@@ -156,8 +169,8 @@ lex:tapi-digital-otn-odu-mip
 lex:tapi-digital-otn-odu-mip-status
     a lex:ReferenceEntry ;
     skos:prefLabel "odu-mip-status" ;
+    # source: http://example.org/ontology/grouping/tapi-digital-otn/odu-mip-status
     skos:definition "Grouping definition: odu-mip-status" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-digital-otn/odu-mip-status> .
@@ -165,39 +178,41 @@ lex:tapi-digital-otn-odu-mip-status
 lex:tapi-digital-otn-odu-named-payload-type
     a lex:ReferenceEntry ;
     skos:prefLabel "odu-named-payload-type" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:EnumeratedKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/types/tapi-digital-otn/odu-named-payload-type> .
 
 lex:tapi-digital-otn-odu-oam-job-type
     a lex:ReferenceEntry ;
     skos:prefLabel "ODU_OAM_JOB_TYPE" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-digital-otn/ODU_OAM_JOB_TYPE> .
 
 lex:tapi-digital-otn-odu-oam-job-type-ncm
     a lex:ReferenceEntry ;
     skos:prefLabel "ODU_OAM_JOB_TYPE_NCM" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-digital-otn/ODU_OAM_JOB_TYPE_NCM> .
 
 lex:tapi-digital-otn-odu-oam-job-type-tcm
     a lex:ReferenceEntry ;
     skos:prefLabel "ODU_OAM_JOB_TYPE_TCM" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-digital-otn/ODU_OAM_JOB_TYPE_TCM> .
 
 lex:tapi-digital-otn-odu-payload-type
     a lex:ReferenceEntry ;
     skos:prefLabel "odu-payload-type" ;
+    # source: http://example.org/ontology/grouping/tapi-digital-otn/odu-payload-type
     skos:definition "Grouping definition: odu-payload-type" ;
+    # source: http://example.org/ontology/grouping/tapi-digital-otn/odu-payload-type
     skos:scopeNote "This type includes is a 2-digit Hex code that indicates the new accepted payload type.\nValid values are defined in Table 15-9 of ITU-T Recommendation G.709 with one additional value UNINTERPRETABLE." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -206,8 +221,8 @@ lex:tapi-digital-otn-odu-payload-type
 lex:tapi-digital-otn-odu-protection-pac
     a lex:ReferenceEntry ;
     skos:prefLabel "odu-protection-pac" ;
+    # source: http://example.org/ontology/grouping/tapi-digital-otn/odu-protection-pac
     skos:definition "Grouping definition: odu-protection-pac" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-digital-otn/odu-protection-pac> .
@@ -215,16 +230,16 @@ lex:tapi-digital-otn-odu-protection-pac
 lex:tapi-digital-otn-odu-slot-size
     a lex:ReferenceEntry ;
     skos:prefLabel "odu-slot-size" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:EnumeratedKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/types/tapi-digital-otn/odu-slot-size> .
 
 lex:tapi-digital-otn-odu-tcm-meg
     a lex:ReferenceEntry ;
     skos:prefLabel "odu-tcm-meg" ;
+    # source: http://example.org/ontology/grouping/tapi-digital-otn/odu-tcm-meg
     skos:definition "Grouping definition: odu-tcm-meg" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-digital-otn/odu-tcm-meg> .
@@ -232,8 +247,8 @@ lex:tapi-digital-otn-odu-tcm-meg
 lex:tapi-digital-otn-odu-tcm-mep
     a lex:ReferenceEntry ;
     skos:prefLabel "odu-tcm-mep" ;
+    # source: http://example.org/ontology/grouping/tapi-digital-otn/odu-tcm-mep
     skos:definition "Grouping definition: odu-tcm-mep" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-digital-otn/odu-tcm-mep> .
@@ -241,8 +256,8 @@ lex:tapi-digital-otn-odu-tcm-mep
 lex:tapi-digital-otn-odu-tcm-mep-status
     a lex:ReferenceEntry ;
     skos:prefLabel "odu-tcm-mep-status" ;
+    # source: http://example.org/ontology/grouping/tapi-digital-otn/odu-tcm-mep-status
     skos:definition "Grouping definition: odu-tcm-mep-status" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-digital-otn/odu-tcm-mep-status> .
@@ -250,8 +265,8 @@ lex:tapi-digital-otn-odu-tcm-mep-status
 lex:tapi-digital-otn-odu-tcm-mip
     a lex:ReferenceEntry ;
     skos:prefLabel "odu-tcm-mip" ;
+    # source: http://example.org/ontology/grouping/tapi-digital-otn/odu-tcm-mip
     skos:definition "Grouping definition: odu-tcm-mip" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-digital-otn/odu-tcm-mip> .
@@ -259,8 +274,8 @@ lex:tapi-digital-otn-odu-tcm-mip
 lex:tapi-digital-otn-odu-tcm-mip-status
     a lex:ReferenceEntry ;
     skos:prefLabel "odu-tcm-mip-status" ;
+    # source: http://example.org/ontology/grouping/tapi-digital-otn/odu-tcm-mip-status
     skos:definition "Grouping definition: odu-tcm-mip-status" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-digital-otn/odu-tcm-mip-status> .
@@ -268,8 +283,8 @@ lex:tapi-digital-otn-odu-tcm-mip-status
 lex:tapi-digital-otn-odu-tcm-oam-service
     a lex:ReferenceEntry ;
     skos:prefLabel "odu-tcm-oam-service" ;
+    # source: http://example.org/ontology/grouping/tapi-digital-otn/odu-tcm-oam-service
     skos:definition "Grouping definition: odu-tcm-oam-service" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-digital-otn/odu-tcm-oam-service> .
@@ -277,7 +292,9 @@ lex:tapi-digital-otn-odu-tcm-oam-service
 lex:tapi-digital-otn-odu-termination-and-client-adaptation-pac
     a lex:ReferenceEntry ;
     skos:prefLabel "odu-termination-and-client-adaptation-pac" ;
+    # source: http://example.org/ontology/grouping/tapi-digital-otn/odu-termination-and-client-adaptation-pac
     skos:definition "Grouping definition: odu-termination-and-client-adaptation-pac" ;
+    # source: http://example.org/ontology/grouping/tapi-digital-otn/odu-termination-and-client-adaptation-pac
     skos:scopeNote "This Pac contains the attributes associated with the client adaptation function of the server layer TTP\nIt is present only if the CEP contains a TTP" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -286,79 +303,81 @@ lex:tapi-digital-otn-odu-termination-and-client-adaptation-pac
 lex:tapi-digital-otn-odu-type
     a lex:ReferenceEntry ;
     skos:prefLabel "ODU_TYPE" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-digital-otn/ODU_TYPE> .
 
 lex:tapi-digital-otn-odu-type-odu-cn
     a lex:ReferenceEntry ;
     skos:prefLabel "ODU_TYPE_ODU_CN" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-digital-otn/ODU_TYPE_ODU_CN> .
 
 lex:tapi-digital-otn-odu-type-odu-flex
     a lex:ReferenceEntry ;
     skos:prefLabel "ODU_TYPE_ODU_FLEX" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-digital-otn/ODU_TYPE_ODU_FLEX> .
 
 lex:tapi-digital-otn-odu-type-odu0
     a lex:ReferenceEntry ;
     skos:prefLabel "ODU_TYPE_ODU0" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-digital-otn/ODU_TYPE_ODU0> .
 
 lex:tapi-digital-otn-odu-type-odu1
     a lex:ReferenceEntry ;
     skos:prefLabel "ODU_TYPE_ODU1" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-digital-otn/ODU_TYPE_ODU1> .
 
 lex:tapi-digital-otn-odu-type-odu2
     a lex:ReferenceEntry ;
     skos:prefLabel "ODU_TYPE_ODU2" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-digital-otn/ODU_TYPE_ODU2> .
 
 lex:tapi-digital-otn-odu-type-odu2e
     a lex:ReferenceEntry ;
     skos:prefLabel "ODU_TYPE_ODU2E" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-digital-otn/ODU_TYPE_ODU2E> .
 
 lex:tapi-digital-otn-odu-type-odu3
     a lex:ReferenceEntry ;
     skos:prefLabel "ODU_TYPE_ODU3" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-digital-otn/ODU_TYPE_ODU3> .
 
 lex:tapi-digital-otn-odu-type-odu4
     a lex:ReferenceEntry ;
     skos:prefLabel "ODU_TYPE_ODU4" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-digital-otn/ODU_TYPE_ODU4> .
 
 lex:tapi-digital-otn-otn-cn-error-performance-data
     a lex:ReferenceEntry ;
     skos:prefLabel "otn-cn-error-performance-data" ;
+    # source: http://example.org/ontology/grouping/tapi-digital-otn/otn-cn-error-performance-data
     skos:definition "Grouping definition: otn-cn-error-performance-data" ;
+    # source: http://example.org/ontology/grouping/tapi-digital-otn/otn-cn-error-performance-data
     skos:scopeNote "The ODUk contains one instance of ODU PM overhead.\nThe ODUCn contains n instances of the ODU PM overhead, numbered 1 to n (PM #1 to PM #n).\nThe PM #2 to #n fields contain the following subfields:\n- bit interleaved parity (BIP-8)\n- backward error indication (BEI)\nThe ODUk contains one instance of ODU TCM1 to TCM6 overhead.\nThe ODUCn contains n instances of the ODU TCM1 to TCM6 overhead, numbered 1 to n (TCMi #1 to TCMi #n).\nEach TCMi #2 to #n field contains the following subfields (see Figure 15-19):\n- bit interleaved parity 8 (BIP-8);\n- backward error indication and backward incoming alignment error (BEI/BIAE)" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -367,8 +386,8 @@ lex:tapi-digital-otn-otn-cn-error-performance-data
 lex:tapi-digital-otn-otn-counters
     a lex:ReferenceEntry ;
     skos:prefLabel "otn-counters" ;
+    # source: http://example.org/ontology/grouping/tapi-digital-otn/otn-counters
     skos:definition "Grouping definition: otn-counters" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-digital-otn/otn-counters> .
@@ -376,7 +395,9 @@ lex:tapi-digital-otn-otn-counters
 lex:tapi-digital-otn-otn-error-performance-data
     a lex:ReferenceEntry ;
     skos:prefLabel "otn-error-performance-data" ;
+    # source: http://example.org/ontology/grouping/tapi-digital-otn/otn-error-performance-data
     skos:definition "Grouping definition: otn-error-performance-data" ;
+    # source: http://example.org/ontology/grouping/tapi-digital-otn/otn-error-performance-data
     skos:scopeNote "ODU/OTU PM Metrics." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -385,14 +406,15 @@ lex:tapi-digital-otn-otn-error-performance-data
 lex:tapi-digital-otn-otn-fault-condition-determination
     a lex:ReferenceEntry ;
     skos:prefLabel "OTN_FAULT_CONDITION_DETERMINATION" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-digital-otn/OTN_FAULT_CONDITION_DETERMINATION> .
 
 lex:tapi-digital-otn-otn-fault-condition-determination-non-intrusive-client
     a lex:ReferenceEntry ;
     skos:prefLabel "OTN_FAULT_CONDITION_DETERMINATION_NON_INTRUSIVE_CLIENT" ;
+    # source: http://example.org/ontology/identity/tapi-digital-otn/OTN_FAULT_CONDITION_DETERMINATION_NON_INTRUSIVE_CLIENT
     skos:definition "Non-intrusive monitoring of Client signal fail" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -401,6 +423,7 @@ lex:tapi-digital-otn-otn-fault-condition-determination-non-intrusive-client
 lex:tapi-digital-otn-otn-fault-condition-determination-non-intrusive-e2e
     a lex:ReferenceEntry ;
     skos:prefLabel "OTN_FAULT_CONDITION_DETERMINATION_NON_INTRUSIVE_E2E" ;
+    # source: http://example.org/ontology/identity/tapi-digital-otn/OTN_FAULT_CONDITION_DETERMINATION_NON_INTRUSIVE_E2E
     skos:definition "Non-intrusive end-to-end monitoring" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -409,6 +432,7 @@ lex:tapi-digital-otn-otn-fault-condition-determination-non-intrusive-e2e
 lex:tapi-digital-otn-otn-fault-condition-determination-non-intrusive-sublayer
     a lex:ReferenceEntry ;
     skos:prefLabel "OTN_FAULT_CONDITION_DETERMINATION_NON_INTRUSIVE_SUBLAYER" ;
+    # source: http://example.org/ontology/identity/tapi-digital-otn/OTN_FAULT_CONDITION_DETERMINATION_NON_INTRUSIVE_SUBLAYER
     skos:definition "Non-intrusive Sublayer monitoring" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -417,32 +441,32 @@ lex:tapi-digital-otn-otn-fault-condition-determination-non-intrusive-sublayer
 lex:tapi-digital-otn-otn-gen-oam-type
     a lex:ReferenceEntry ;
     skos:prefLabel "OTN_GEN_OAM_TYPE" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-digital-otn/OTN_GEN_OAM_TYPE> .
 
 lex:tapi-digital-otn-otn-gen-oam-type-enable-all-nim
     a lex:ReferenceEntry ;
     skos:prefLabel "OTN_GEN_OAM_TYPE_ENABLE_ALL_NIM" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-digital-otn/OTN_GEN_OAM_TYPE_ENABLE_ALL_NIM> .
 
 lex:tapi-digital-otn-otn-gen-oam-type-enable-e2e-ncm
     a lex:ReferenceEntry ;
     skos:prefLabel "OTN_GEN_OAM_TYPE_ENABLE_E2E_NCM" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-digital-otn/OTN_GEN_OAM_TYPE_ENABLE_E2E_NCM> .
 
 lex:tapi-digital-otn-otn-generic-oam-service
     a lex:ReferenceEntry ;
     skos:prefLabel "otn-generic-oam-service" ;
+    # source: http://example.org/ontology/grouping/tapi-digital-otn/otn-generic-oam-service
     skos:definition "Grouping definition: otn-generic-oam-service" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-digital-otn/otn-generic-oam-service> .
@@ -450,8 +474,8 @@ lex:tapi-digital-otn-otn-generic-oam-service
 lex:tapi-digital-otn-otn-meg-spec
     a lex:ReferenceEntry ;
     skos:prefLabel "otn-meg-spec" ;
+    # source: http://example.org/ontology/grouping/tapi-digital-otn/otn-meg-spec
     skos:definition "Grouping definition: otn-meg-spec" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-digital-otn/otn-meg-spec> .
@@ -459,8 +483,8 @@ lex:tapi-digital-otn-otn-meg-spec
 lex:tapi-digital-otn-otn-mep-spec
     a lex:ReferenceEntry ;
     skos:prefLabel "otn-mep-spec" ;
+    # source: http://example.org/ontology/grouping/tapi-digital-otn/otn-mep-spec
     skos:definition "Grouping definition: otn-mep-spec" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-digital-otn/otn-mep-spec> .
@@ -468,8 +492,8 @@ lex:tapi-digital-otn-otn-mep-spec
 lex:tapi-digital-otn-otn-mip-spec
     a lex:ReferenceEntry ;
     skos:prefLabel "otn-mip-spec" ;
+    # source: http://example.org/ontology/grouping/tapi-digital-otn/otn-mip-spec
     skos:definition "Grouping definition: otn-mip-spec" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-digital-otn/otn-mip-spec> .
@@ -477,7 +501,9 @@ lex:tapi-digital-otn-otn-mip-spec
 lex:tapi-digital-otn-otn-oam-common
     a lex:ReferenceEntry ;
     skos:prefLabel "otn-oam-common" ;
+    # source: http://example.org/ontology/grouping/tapi-digital-otn/otn-oam-common
     skos:definition "Common ODU OAM parameters.\nNote that the object is read/write or read-only depending on the context, i.e. if is part of CSEP is R/W, while if is part of CEP is read-only.\nNote that both the ODUk and ODUCn contain only one instance of ODU PM TTI overhead and ODU PM DMp overhead.\nNote that the ODUCn contains n instances of the ODU PM overhead: The OduOamCommon degThr and degM apply to the n instances of ODUCn PM OH." ;
+    # source: http://example.org/ontology/grouping/tapi-digital-otn/otn-oam-common
     skos:scopeNote "Grouping definition: otn-oam-common" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -486,7 +512,9 @@ lex:tapi-digital-otn-otn-oam-common
 lex:tapi-digital-otn-otn-oam-mep-service-point
     a lex:ReferenceEntry ;
     skos:prefLabel "otn-oam-mep-service-point" ;
+    # source: http://example.org/ontology/grouping/tapi-digital-otn/otn-oam-mep-service-point
     skos:definition "Grouping definition: otn-oam-mep-service-point" ;
+    # source: http://example.org/ontology/grouping/tapi-digital-otn/otn-oam-mep-service-point
     skos:scopeNote "Two alternative provisioning scenarios:\n1) Oam provisioning through CSEPs for 'service' related OAM (QoS) - provisioning joint to ConnectivityService.\nIn this case the ODU MEP and MIP parameters are included (composed) in resp. ODU CEP TTP and CTP instances, i.e. no distinct ODU MEP/MIP instances.\nThis provisioning scenario could apply for:\na) NCM MEPs on terminated OTU\nb) NCM MEPs on terminated ODUCn\nc) NCM MEPs on terminated ODU/Flex\nd) NCM MEP and NCM NIM/MIP on semi-terminated ODU/Flex\ne) TCM MEPs on semi-terminated and non terminated ODU/Flex\nThe Meg related attributes are distributed also to Mep/Mip for this provisioning scenario which does not involve OtnOamService/ServicePoints.\n2) Oam provisioning through OtnOamService/ServicePoints for 'maintenance' related OAM.\nIn this case the distinct ODU MEP and MIP instances are created, referred (by name) by resp. ODU CEP TTP and CTP.\nThis provisioning scenario could apply for TCM or NIM at any segment of the Service." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -495,7 +523,9 @@ lex:tapi-digital-otn-otn-oam-mep-service-point
 lex:tapi-digital-otn-otn-oam-mip-service-point
     a lex:ReferenceEntry ;
     skos:prefLabel "otn-oam-mip-service-point" ;
+    # source: http://example.org/ontology/grouping/tapi-digital-otn/otn-oam-mip-service-point
     skos:definition "Grouping definition: otn-oam-mip-service-point" ;
+    # source: http://example.org/ontology/grouping/tapi-digital-otn/otn-oam-mip-service-point
     skos:scopeNote "See OtnOamMepService point comment." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -504,7 +534,9 @@ lex:tapi-digital-otn-otn-oam-mip-service-point
 lex:tapi-digital-otn-otn-oam-service
     a lex:ReferenceEntry ;
     skos:prefLabel "otn-oam-service" ;
+    # source: http://example.org/ontology/grouping/tapi-digital-otn/otn-oam-service
     skos:definition "Grouping definition: otn-oam-service" ;
+    # source: http://example.org/ontology/grouping/tapi-digital-otn/otn-oam-service
     skos:scopeNote "OduOamService class is used for TCM provisioning." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -513,8 +545,8 @@ lex:tapi-digital-otn-otn-oam-service
 lex:tapi-digital-otn-otsia-mep
     a lex:ReferenceEntry ;
     skos:prefLabel "otsia-mep" ;
+    # source: http://example.org/ontology/grouping/tapi-digital-otn/otsia-mep
     skos:definition "Grouping definition: otsia-mep" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-digital-otn/otsia-mep> .
@@ -522,7 +554,9 @@ lex:tapi-digital-otn-otsia-mep
 lex:tapi-digital-otn-otu-connection-end-point-spec
     a lex:ReferenceEntry ;
     skos:prefLabel "otu-connection-end-point-spec" ;
+    # source: http://example.org/ontology/grouping/tapi-digital-otn/otu-connection-end-point-spec
     skos:definition "Grouping definition: otu-connection-end-point-spec" ;
+    # source: http://example.org/ontology/grouping/tapi-digital-otn/otu-connection-end-point-spec
     skos:scopeNote "Note that the OTU CEP includes OTSiA 'termination&adaptation'." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -531,8 +565,8 @@ lex:tapi-digital-otn-otu-connection-end-point-spec
 lex:tapi-digital-otn-otu-connectivity-service-end-point-spec
     a lex:ReferenceEntry ;
     skos:prefLabel "otu-connectivity-service-end-point-spec" ;
+    # source: http://example.org/ontology/grouping/tapi-digital-otn/otu-connectivity-service-end-point-spec
     skos:definition "Grouping definition: otu-connectivity-service-end-point-spec" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-digital-otn/otu-connectivity-service-end-point-spec> .
@@ -540,8 +574,8 @@ lex:tapi-digital-otn-otu-connectivity-service-end-point-spec
 lex:tapi-digital-otn-otu-csep-ttp-pac
     a lex:ReferenceEntry ;
     skos:prefLabel "otu-csep-ttp-pac" ;
+    # source: http://example.org/ontology/grouping/tapi-digital-otn/otu-csep-ttp-pac
     skos:definition "Grouping definition: otu-csep-ttp-pac" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-digital-otn/otu-csep-ttp-pac> .
@@ -549,7 +583,9 @@ lex:tapi-digital-otn-otu-csep-ttp-pac
 lex:tapi-digital-otn-otu-fec-performance-data
     a lex:ReferenceEntry ;
     skos:prefLabel "otu-fec-performance-data" ;
+    # source: http://example.org/ontology/grouping/tapi-digital-otn/otu-fec-performance-data
     skos:definition "Grouping definition: otu-fec-performance-data" ;
+    # source: http://example.org/ontology/grouping/tapi-digital-otn/otu-fec-performance-data
     skos:scopeNote "The OTU FEC PM Metrics." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -558,7 +594,9 @@ lex:tapi-digital-otn-otu-fec-performance-data
 lex:tapi-digital-otn-otu-mep
     a lex:ReferenceEntry ;
     skos:prefLabel "otu-mep" ;
+    # source: http://example.org/ontology/grouping/tapi-digital-otn/otu-mep
     skos:definition "Grouping definition: otu-mep" ;
+    # source: http://example.org/ontology/grouping/tapi-digital-otn/otu-mep
     skos:scopeNote "If the CSEP is OTU CSEP, then\n1) OTU only: OtuMep\n2) OTU and ODUCn: both OtuCep and OduMep" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -567,8 +605,8 @@ lex:tapi-digital-otn-otu-mep
 lex:tapi-digital-otn-otu-mep-status
     a lex:ReferenceEntry ;
     skos:prefLabel "otu-mep-status" ;
+    # source: http://example.org/ontology/grouping/tapi-digital-otn/otu-mep-status
     skos:definition "Grouping definition: otu-mep-status" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-digital-otn/otu-mep-status> .
@@ -576,8 +614,8 @@ lex:tapi-digital-otn-otu-mep-status
 lex:tapi-digital-otn-otu-ttp-pac
     a lex:ReferenceEntry ;
     skos:prefLabel "otu-ttp-pac" ;
+    # source: http://example.org/ontology/grouping/tapi-digital-otn/otu-ttp-pac
     skos:definition "Grouping definition: otu-ttp-pac" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-digital-otn/otu-ttp-pac> .
@@ -585,86 +623,87 @@ lex:tapi-digital-otn-otu-ttp-pac
 lex:tapi-digital-otn-otu-type
     a lex:ReferenceEntry ;
     skos:prefLabel "OTU_TYPE" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-digital-otn/OTU_TYPE> .
 
 lex:tapi-digital-otn-otu-type-otu-cn
     a lex:ReferenceEntry ;
     skos:prefLabel "OTU_TYPE_OTU_CN" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-digital-otn/OTU_TYPE_OTU_CN> .
 
 lex:tapi-digital-otn-otu-type-otu1
     a lex:ReferenceEntry ;
     skos:prefLabel "OTU_TYPE_OTU1" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-digital-otn/OTU_TYPE_OTU1> .
 
 lex:tapi-digital-otn-otu-type-otu2
     a lex:ReferenceEntry ;
     skos:prefLabel "OTU_TYPE_OTU2" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-digital-otn/OTU_TYPE_OTU2> .
 
 lex:tapi-digital-otn-otu-type-otu3
     a lex:ReferenceEntry ;
     skos:prefLabel "OTU_TYPE_OTU3" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-digital-otn/OTU_TYPE_OTU3> .
 
 lex:tapi-digital-otn-otu-type-otu4
     a lex:ReferenceEntry ;
     skos:prefLabel "OTU_TYPE_OTU4" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-digital-otn/OTU_TYPE_OTU4> .
 
 lex:tapi-digital-otn-percentage-granularity
     a lex:ReferenceEntry ;
     skos:prefLabel "percentage-granularity" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:EnumeratedKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/types/tapi-digital-otn/percentage-granularity> .
 
 lex:tapi-digital-otn-standard-fec-type
     a lex:ReferenceEntry ;
     skos:prefLabel "STANDARD_FEC_TYPE" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-digital-otn/STANDARD_FEC_TYPE> .
 
 lex:tapi-digital-otn-standard-fec-type-reed-solomon
     a lex:ReferenceEntry ;
     skos:prefLabel "STANDARD_FEC_TYPE_REED_SOLOMON" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-digital-otn/STANDARD_FEC_TYPE_REED_SOLOMON> .
 
 lex:tapi-digital-otn-tcm-extension
     a lex:ReferenceEntry ;
     skos:prefLabel "tcm-extension" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:EnumeratedKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/types/tapi-digital-otn/tcm-extension> .
 
 lex:tapi-digital-otn-tcm-mode
     a lex:ReferenceEntry ;
     skos:prefLabel "tcm-mode" ;
+    # source: http://example.org/ontology/types/tapi-digital-otn/tcm-mode
     skos:definition "List of value modes for the sink side of the tandem connection monitoring function." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:EnumeratedKind ;
@@ -673,6 +712,7 @@ lex:tapi-digital-otn-tcm-mode
 lex:tapi-digital-otn-tcm-monitoring
     a lex:ReferenceEntry ;
     skos:prefLabel "tcm-monitoring" ;
+    # source: http://example.org/ontology/types/tapi-digital-otn/tcm-monitoring
     skos:definition "Monitoring types for the tandem connection monitoring function." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:EnumeratedKind ;
@@ -681,6 +721,7 @@ lex:tapi-digital-otn-tcm-monitoring
 lex:tapi-digital-otn-tcm-status
     a lex:ReferenceEntry ;
     skos:prefLabel "tcm-status" ;
+    # source: http://example.org/ontology/types/tapi-digital-otn/tcm-status
     skos:definition "See Table 15-5/G.709/Y.1331 " ;
     lex:canonicalExample "" ;
     lex:entityClass lex:EnumeratedKind ;
@@ -689,6 +730,7 @@ lex:tapi-digital-otn-tcm-status
 lex:tapi-digital-otn-tim-det-mo
     a lex:ReferenceEntry ;
     skos:prefLabel "tim-det-mo" ;
+    # source: http://example.org/ontology/types/tapi-digital-otn/tim-det-mo
     skos:definition "List of modes for trace identifier mismatch detection." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:EnumeratedKind ;
@@ -697,7 +739,9 @@ lex:tapi-digital-otn-tim-det-mo
 lex:tapi-digital-otn-uas-choice
     a lex:ReferenceEntry ;
     skos:prefLabel "uas-choice" ;
+    # source: http://example.org/ontology/grouping/tapi-digital-otn/uas-choice
     skos:definition "Grouping definition: uas-choice" ;
+    # source: http://example.org/ontology/grouping/tapi-digital-otn/uas-choice
     skos:scopeNote "If bidirectional is TRUE then use the uas attribute, if bidirectional is FALSE use the nuas, and fuas attributes." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;

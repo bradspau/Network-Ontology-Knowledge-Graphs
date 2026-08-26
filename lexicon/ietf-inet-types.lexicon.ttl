@@ -14,6 +14,7 @@
 lex:ietf-inet-types-ip-version
     a lex:ReferenceEntry ;
     skos:prefLabel "ip-version" ;
+    # source: http://example.org/ontology/types/ietf-inet-types/ip-version
     skos:definition "This value represents the version of the IP protocol.\n\nIn the value set and its semantics, this type is equivalent\nto the InetVersion textual convention of the SMIv2." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:EnumeratedKind ;

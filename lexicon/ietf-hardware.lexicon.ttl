@@ -14,6 +14,7 @@
 lex:ietf-hardware-admin-state
     a lex:ReferenceEntry ;
     skos:prefLabel "admin-state" ;
+    # source: http://example.org/ontology/types/ietf-hardware/admin-state
     skos:definition "Represents the various possible administrative states." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:EnumeratedKind ;
@@ -22,6 +23,7 @@ lex:ietf-hardware-admin-state
 lex:ietf-hardware-component
     a lex:ReferenceEntry ;
     skos:prefLabel "component" ;
+    # source: http://example.org/ontology/ietf-hardware/hardware/component
     skos:definition "List of components.\n\nWhen the server detects a new hardware component, it\ninitializes a list entry in the operational state.\n\nIf the server does not support configuration of hardware\ncomponents, list entries in the operational state are\ninitialized with values for all nodes as detected by the\nimplementation.\n\nOtherwise, this procedure is followed:\n\n  1. If there is an entry in the '/hardware/component' list\n     in the intended configuration with values for the nodes\n     'class', 'parent', and 'parent-rel-pos' that are equal\n     to the detected values, then the list entry in the\n     operational state is initialized with the configured\n     values, including the 'name'.\n\n  2. Otherwise (i.e., there is no matching configuration\n     entry), the list entry in the operational state is\n     initialized with values for all nodes as detected by\n     the implementation.\n\nIf the '/hardware/component' list in the intended\nconfiguration is modified, then the system MUST behave as if\nit re-initializes itself and follow the procedure in (1)." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:StructuralKind ;
@@ -30,6 +32,7 @@ lex:ietf-hardware-component
 lex:ietf-hardware-hardware
     a lex:ReferenceEntry ;
     skos:prefLabel "hardware" ;
+    # source: http://example.org/ontology/ietf-hardware/hardware
     skos:definition "Data nodes representing components.\n\nIf the server supports configuration of hardware components,\nthen this data model is instantiated in the configuration\ndatastores supported by the server.  The leaf-list 'datastore'\nfor the module 'ietf-hardware' in the YANG library provides\nthis information." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:StructuralKind ;
@@ -38,6 +41,7 @@ lex:ietf-hardware-hardware
 lex:ietf-hardware-oper-state
     a lex:ReferenceEntry ;
     skos:prefLabel "oper-state" ;
+    # source: http://example.org/ontology/types/ietf-hardware/oper-state
     skos:definition "Represents the possible values of operational states." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:EnumeratedKind ;
@@ -46,6 +50,7 @@ lex:ietf-hardware-oper-state
 lex:ietf-hardware-sensor-data
     a lex:ReferenceEntry ;
     skos:prefLabel "sensor-data" ;
+    # source: http://example.org/ontology/ietf-hardware/hardware/component/sensor-data
     skos:definition "Sensor-related nodes." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:StructuralKind ;
@@ -54,6 +59,7 @@ lex:ietf-hardware-sensor-data
 lex:ietf-hardware-sensor-status
     a lex:ReferenceEntry ;
     skos:prefLabel "sensor-status" ;
+    # source: http://example.org/ontology/types/ietf-hardware/sensor-status
     skos:definition "A node using this data type represents the operational status\nof a physical sensor." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:EnumeratedKind ;
@@ -62,6 +68,7 @@ lex:ietf-hardware-sensor-status
 lex:ietf-hardware-sensor-value-scale
     a lex:ReferenceEntry ;
     skos:prefLabel "sensor-value-scale" ;
+    # source: http://example.org/ontology/types/ietf-hardware/sensor-value-scale
     skos:definition "A node using this data type represents a data scaling factor,\nrepresented with an International System of Units (SI) prefix.\nThe actual data units are determined by examining a node of\nthis type together with the associated sensor-value-type.\n\nA node of this type SHOULD be defined together with nodes of\ntype sensor-value-type and type sensor-value-precision.\nTogether, associated nodes of these three types are used to\nidentify the semantics of a node of type sensor-value." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:EnumeratedKind ;
@@ -70,6 +77,7 @@ lex:ietf-hardware-sensor-value-scale
 lex:ietf-hardware-sensor-value-type
     a lex:ReferenceEntry ;
     skos:prefLabel "sensor-value-type" ;
+    # source: http://example.org/ontology/types/ietf-hardware/sensor-value-type
     skos:definition "A node using this data type represents the sensor measurement\ndata type associated with a physical sensor value.  The actual\ndata units are determined by examining a node of this type\ntogether with the associated sensor-value-scale node.\n\nA node of this type SHOULD be defined together with nodes of\ntype sensor-value-scale and type sensor-value-precision.\nThese three types are used to identify the semantics of a node\nof type sensor-value." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:EnumeratedKind ;
@@ -78,6 +86,7 @@ lex:ietf-hardware-sensor-value-type
 lex:ietf-hardware-standby-state
     a lex:ReferenceEntry ;
     skos:prefLabel "standby-state" ;
+    # source: http://example.org/ontology/types/ietf-hardware/standby-state
     skos:definition "Represents the possible values of standby states." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:EnumeratedKind ;
@@ -86,6 +95,7 @@ lex:ietf-hardware-standby-state
 lex:ietf-hardware-state
     a lex:ReferenceEntry ;
     skos:prefLabel "state" ;
+    # source: http://example.org/ontology/ietf-hardware/hardware/component/state
     skos:definition "State-related nodes" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:StructuralKind ;
@@ -94,6 +104,7 @@ lex:ietf-hardware-state
 lex:ietf-hardware-usage-state
     a lex:ReferenceEntry ;
     skos:prefLabel "usage-state" ;
+    # source: http://example.org/ontology/types/ietf-hardware/usage-state
     skos:definition "Represents the possible values of usage states." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:EnumeratedKind ;

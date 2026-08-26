@@ -14,6 +14,7 @@
 lex:iana-hardware-backplane
     a lex:ReferenceEntry ;
     skos:prefLabel "backplane" ;
+    # source: http://example.org/ontology/identity/iana-hardware/backplane
     skos:definition "This identity is applicable if the hardware class is some sort\nof device for aggregating and forwarding networking traffic,\nsuch as a shared backplane in a modular ethernet switch.  Note\nthat an implementation may model a backplane as a single\nphysical component, which is actually implemented as multiple\ndiscrete physical components (within a chassis or stack)." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -22,6 +23,7 @@ lex:iana-hardware-backplane
 lex:iana-hardware-battery
     a lex:ReferenceEntry ;
     skos:prefLabel "battery" ;
+    # source: http://example.org/ontology/identity/iana-hardware/battery
     skos:definition "This identity is applicable if the hardware class is some sort\nof battery." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -30,6 +32,7 @@ lex:iana-hardware-battery
 lex:iana-hardware-chassis
     a lex:ReferenceEntry ;
     skos:prefLabel "chassis" ;
+    # source: http://example.org/ontology/identity/iana-hardware/chassis
     skos:definition "This identity is applicable if the hardware class is an\noverall container for networking equipment.  Any class of\nphysical component, except a stack, may be contained within a\nchassis; a chassis may only be contained within a stack." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -38,6 +41,7 @@ lex:iana-hardware-chassis
 lex:iana-hardware-container
     a lex:ReferenceEntry ;
     skos:prefLabel "container" ;
+    # source: http://example.org/ontology/identity/iana-hardware/container
     skos:definition "This identity is applicable if the hardware class is capable\nof containing one or more removable physical entities,\npossibly of different types.  For example, each (empty or\nfull) slot in a chassis will be modeled as a container.  Note\nthat all removable physical components should be modeled\nwithin a container component, such as field-replaceable\nmodules, fans, or power supplies.  Note that all known\ncontainers should be modeled by the agent, including empty\ncontainers." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -46,6 +50,7 @@ lex:iana-hardware-container
 lex:iana-hardware-cpu
     a lex:ReferenceEntry ;
     skos:prefLabel "cpu" ;
+    # source: http://example.org/ontology/identity/iana-hardware/cpu
     skos:definition "This identity is applicable if the hardware class is some sort\nof central processing unit." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -54,6 +59,7 @@ lex:iana-hardware-cpu
 lex:iana-hardware-energy-object
     a lex:ReferenceEntry ;
     skos:prefLabel "energy-object" ;
+    # source: http://example.org/ontology/identity/iana-hardware/energy-object
     skos:definition "This identity is applicable if the hardware class is some sort\nof energy object, i.e., it is a piece of equipment that is\npart of or attached to a communications network that is\nmonitored, it is controlled, or it aids in the management of\nanother device for Energy Management." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -62,6 +68,7 @@ lex:iana-hardware-energy-object
 lex:iana-hardware-fan
     a lex:ReferenceEntry ;
     skos:prefLabel "fan" ;
+    # source: http://example.org/ontology/identity/iana-hardware/fan
     skos:definition "This identity is applicable if the hardware class is a fan or\nother heat-reduction component." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -70,6 +77,7 @@ lex:iana-hardware-fan
 lex:iana-hardware-hardware-class
     a lex:ReferenceEntry ;
     skos:prefLabel "hardware-class" ;
+    # source: http://example.org/ontology/identity/iana-hardware/hardware-class
     skos:definition "This identity is the base for all hardware class\nidentifiers." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -78,6 +86,7 @@ lex:iana-hardware-hardware-class
 lex:iana-hardware-module
     a lex:ReferenceEntry ;
     skos:prefLabel "module" ;
+    # source: http://example.org/ontology/identity/iana-hardware/module
     skos:definition "This identity is applicable if the hardware class is some sort\nof self-contained sub-system.  If a module component is\nremovable, then it should be modeled within a container\ncomponent; otherwise, it should be modeled directly within\nanother physical component (e.g., a chassis or another\nmodule)." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -86,6 +95,7 @@ lex:iana-hardware-module
 lex:iana-hardware-port
     a lex:ReferenceEntry ;
     skos:prefLabel "port" ;
+    # source: http://example.org/ontology/identity/iana-hardware/port
     skos:definition "This identity is applicable if the hardware class is some sort\nof networking port capable of receiving and/or transmitting\nnetworking traffic." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -94,6 +104,7 @@ lex:iana-hardware-port
 lex:iana-hardware-power-supply
     a lex:ReferenceEntry ;
     skos:prefLabel "power-supply" ;
+    # source: http://example.org/ontology/identity/iana-hardware/power-supply
     skos:definition "This identity is applicable if the hardware class is a\npower-supplying component." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -102,6 +113,7 @@ lex:iana-hardware-power-supply
 lex:iana-hardware-sensor
     a lex:ReferenceEntry ;
     skos:prefLabel "sensor" ;
+    # source: http://example.org/ontology/identity/iana-hardware/sensor
     skos:definition "This identity is applicable if the hardware class is some sort\nof sensor, such as a temperature sensor within a router\nchassis." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -110,6 +122,7 @@ lex:iana-hardware-sensor
 lex:iana-hardware-stack
     a lex:ReferenceEntry ;
     skos:prefLabel "stack" ;
+    # source: http://example.org/ontology/identity/iana-hardware/stack
     skos:definition "This identity is applicable if the hardware class is some sort\nof super-container (possibly virtual) intended to group\ntogether multiple chassis entities.  A stack may be realized\nby a virtual cable, a real interconnect cable attached to\nmultiple chassis, or multiple interconnect cables.  A stack\nshould not be modeled within any other physical components,\nbut a stack may be contained within another stack.  Only\nchassis components should be contained within a stack." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -118,6 +131,7 @@ lex:iana-hardware-stack
 lex:iana-hardware-storage-drive
     a lex:ReferenceEntry ;
     skos:prefLabel "storage-drive" ;
+    # source: http://example.org/ontology/identity/iana-hardware/storage-drive
     skos:definition "This identity is applicable if the hardware class is some sort\nof component with data storage capability as its main\nfunctionality, e.g., hard disk drive (HDD), solid-state device\n(SSD), solid-state hybrid drive (SSHD), object storage device\n(OSD), or other." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -126,6 +140,7 @@ lex:iana-hardware-storage-drive
 lex:iana-hardware-unknown
     a lex:ReferenceEntry ;
     skos:prefLabel "unknown" ;
+    # source: http://example.org/ontology/identity/iana-hardware/unknown
     skos:definition "This identity is applicable if the hardware class is unknown\nto the server." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;

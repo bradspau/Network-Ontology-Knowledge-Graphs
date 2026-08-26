@@ -14,7 +14,9 @@
 lex:ietf-geo-location-geo-location
     a lex:ReferenceEntry ;
     skos:prefLabel "geo-location" ;
+    # source: http://example.org/ontology/grouping/ietf-geo-location/geo-location
     skos:definition "Grouping definition: geo-location" ;
+    # source: http://example.org/ontology/grouping/ietf-geo-location/geo-location
     skos:scopeNote "Grouping to identify a location on an astronomical object." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;

@@ -14,6 +14,7 @@
 lex:ietf-nwi-passive-inventory-access
     a lex:ReferenceEntry ;
     skos:prefLabel "access" ;
+    # source: http://example.org/ontology/identity/ietf-nwi-passive-inventory/access
     skos:definition "Access cable." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -22,6 +23,7 @@ lex:ietf-nwi-passive-inventory-access
 lex:ietf-nwi-passive-inventory-active-device
     a lex:ReferenceEntry ;
     skos:prefLabel "active-device" ;
+    # source: http://example.org/ontology/identity/ietf-nwi-passive-inventory/active-device
     skos:definition "Active device, e.g. network element." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -30,6 +32,7 @@ lex:ietf-nwi-passive-inventory-active-device
 lex:ietf-nwi-passive-inventory-aggregation
     a lex:ReferenceEntry ;
     skos:prefLabel "aggregation" ;
+    # source: http://example.org/ontology/identity/ietf-nwi-passive-inventory/aggregation
     skos:definition "Aggregation cable." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -38,6 +41,7 @@ lex:ietf-nwi-passive-inventory-aggregation
 lex:ietf-nwi-passive-inventory-atb
     a lex:ReferenceEntry ;
     skos:prefLabel "ATB" ;
+    # source: http://example.org/ontology/identity/ietf-nwi-passive-inventory/ATB
     skos:definition "Access Terminal Box." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -46,6 +50,7 @@ lex:ietf-nwi-passive-inventory-atb
 lex:ietf-nwi-passive-inventory-backbone
     a lex:ReferenceEntry ;
     skos:prefLabel "backbone" ;
+    # source: http://example.org/ontology/identity/ietf-nwi-passive-inventory/backbone
     skos:definition "Backbone cable." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -54,6 +59,7 @@ lex:ietf-nwi-passive-inventory-backbone
 lex:ietf-nwi-passive-inventory-branch
     a lex:ReferenceEntry ;
     skos:prefLabel "branch" ;
+    # source: http://example.org/ontology/identity/ietf-nwi-passive-inventory/branch
     skos:definition "Branch cable." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -62,7 +68,9 @@ lex:ietf-nwi-passive-inventory-branch
 lex:ietf-nwi-passive-inventory-cable-attributes
     a lex:ReferenceEntry ;
     skos:prefLabel "cable-attributes" ;
+    # source: http://example.org/ontology/grouping/ietf-nwi-passive-inventory/cable-attributes
     skos:definition "Attributes of cables." ;
+    # source: http://example.org/ontology/grouping/ietf-nwi-passive-inventory/cable-attributes
     skos:scopeNote "Grouping definition: cable-attributes" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -71,6 +79,7 @@ lex:ietf-nwi-passive-inventory-cable-attributes
 lex:ietf-nwi-passive-inventory-cable-role
     a lex:ReferenceEntry ;
     skos:prefLabel "cable-role" ;
+    # source: http://example.org/ontology/identity/ietf-nwi-passive-inventory/cable-role
     skos:definition "Base identity for cable roles." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -79,6 +88,7 @@ lex:ietf-nwi-passive-inventory-cable-role
 lex:ietf-nwi-passive-inventory-cable-type
     a lex:ReferenceEntry ;
     skos:prefLabel "cable-type" ;
+    # source: http://example.org/ontology/identity/ietf-nwi-passive-inventory/cable-type
     skos:definition "Base identity for cable types." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -87,7 +97,9 @@ lex:ietf-nwi-passive-inventory-cable-type
 lex:ietf-nwi-passive-inventory-cables
     a lex:ReferenceEntry ;
     skos:prefLabel "cables" ;
+    # source: http://example.org/ontology/grouping/ietf-nwi-passive-inventory/cables
     skos:definition "Attributes applicable to cables." ;
+    # source: http://example.org/ontology/grouping/ietf-nwi-passive-inventory/cables
     skos:scopeNote "Grouping definition: cables" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -96,7 +108,9 @@ lex:ietf-nwi-passive-inventory-cables
 lex:ietf-nwi-passive-inventory-child-cables
     a lex:ReferenceEntry ;
     skos:prefLabel "child-cables" ;
+    # source: http://example.org/ontology/grouping/ietf-nwi-passive-inventory/child-cables
     skos:definition "Attributes applicable to child cables that are concatnated\nto form the cable." ;
+    # source: http://example.org/ontology/grouping/ietf-nwi-passive-inventory/child-cables
     skos:scopeNote "Grouping definition: child-cables" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -105,6 +119,7 @@ lex:ietf-nwi-passive-inventory-child-cables
 lex:ietf-nwi-passive-inventory-coaxial-cable
     a lex:ReferenceEntry ;
     skos:prefLabel "coaxial-cable" ;
+    # source: http://example.org/ontology/identity/ietf-nwi-passive-inventory/coaxial-cable
     skos:definition "Coaxial cable." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -114,7 +129,9 @@ lex:ietf-nwi-passive-inventory-coaxial-cable
 lex:ietf-nwi-passive-inventory-common-cable-attributes
     a lex:ReferenceEntry ;
     skos:prefLabel "common-cable-attributes" ;
+    # source: http://example.org/ontology/grouping/ietf-nwi-passive-inventory/common-cable-attributes
     skos:definition "Common attributes of cables applicable to the cable\nand its child cables." ;
+    # source: http://example.org/ontology/grouping/ietf-nwi-passive-inventory/common-cable-attributes
     skos:scopeNote "Grouping definition: common-cable-attributes" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -123,7 +140,9 @@ lex:ietf-nwi-passive-inventory-common-cable-attributes
 lex:ietf-nwi-passive-inventory-connected-device-end
     a lex:ReferenceEntry ;
     skos:prefLabel "connected-device-end" ;
+    # source: http://example.org/ontology/grouping/ietf-nwi-passive-inventory/connected-device-end
     skos:definition "Attributes applicable to connected device end." ;
+    # source: http://example.org/ontology/grouping/ietf-nwi-passive-inventory/connected-device-end
     skos:scopeNote "Grouping definition: connected-device-end" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -132,7 +151,9 @@ lex:ietf-nwi-passive-inventory-connected-device-end
 lex:ietf-nwi-passive-inventory-connected-device-ref
     a lex:ReferenceEntry ;
     skos:prefLabel "connected-device-ref" ;
+    # source: http://example.org/ontology/grouping/ietf-nwi-passive-inventory/connected-device-ref
     skos:definition "Attributes applicable to connected devices." ;
+    # source: http://example.org/ontology/grouping/ietf-nwi-passive-inventory/connected-device-ref
     skos:scopeNote "Grouping definition: connected-device-ref" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -141,6 +162,7 @@ lex:ietf-nwi-passive-inventory-connected-device-ref
 lex:ietf-nwi-passive-inventory-connected-device-type
     a lex:ReferenceEntry ;
     skos:prefLabel "connected-device-type" ;
+    # source: http://example.org/ontology/identity/ietf-nwi-passive-inventory/connected-device-type
     skos:definition "Base identity for connected device types." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -149,6 +171,7 @@ lex:ietf-nwi-passive-inventory-connected-device-type
 lex:ietf-nwi-passive-inventory-distribution
     a lex:ReferenceEntry ;
     skos:prefLabel "distribution" ;
+    # source: http://example.org/ontology/identity/ietf-nwi-passive-inventory/distribution
     skos:definition "Distribution cable." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -157,6 +180,7 @@ lex:ietf-nwi-passive-inventory-distribution
 lex:ietf-nwi-passive-inventory-electrical-cable
     a lex:ReferenceEntry ;
     skos:prefLabel "electrical-cable" ;
+    # source: http://example.org/ontology/identity/ietf-nwi-passive-inventory/electrical-cable
     skos:definition "Electrical cable." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -166,6 +190,7 @@ lex:ietf-nwi-passive-inventory-electrical-cable
 lex:ietf-nwi-passive-inventory-fat
     a lex:ReferenceEntry ;
     skos:prefLabel "FAT" ;
+    # source: http://example.org/ontology/identity/ietf-nwi-passive-inventory/FAT
     skos:definition "Fiber Access Terminal." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -174,6 +199,7 @@ lex:ietf-nwi-passive-inventory-fat
 lex:ietf-nwi-passive-inventory-fdt
     a lex:ReferenceEntry ;
     skos:prefLabel "FDT" ;
+    # source: http://example.org/ontology/identity/ietf-nwi-passive-inventory/FDT
     skos:definition "Fiber Distribution Terminal." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -182,6 +208,7 @@ lex:ietf-nwi-passive-inventory-fdt
 lex:ietf-nwi-passive-inventory-fiber-type
     a lex:ReferenceEntry ;
     skos:prefLabel "fiber-type" ;
+    # source: http://example.org/ontology/identity/ietf-nwi-passive-inventory/fiber-type
     skos:definition "Base identity for fiber types." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -190,6 +217,7 @@ lex:ietf-nwi-passive-inventory-fiber-type
 lex:ietf-nwi-passive-inventory-g652a
     a lex:ReferenceEntry ;
     skos:prefLabel "G652A" ;
+    # source: http://example.org/ontology/identity/ietf-nwi-passive-inventory/G652A
     skos:definition "ITU-T G.652A fiber." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -198,6 +226,7 @@ lex:ietf-nwi-passive-inventory-g652a
 lex:ietf-nwi-passive-inventory-g652b
     a lex:ReferenceEntry ;
     skos:prefLabel "G652B" ;
+    # source: http://example.org/ontology/identity/ietf-nwi-passive-inventory/G652B
     skos:definition "ITU-T G.652B fiber." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -206,6 +235,7 @@ lex:ietf-nwi-passive-inventory-g652b
 lex:ietf-nwi-passive-inventory-g652c
     a lex:ReferenceEntry ;
     skos:prefLabel "G652C" ;
+    # source: http://example.org/ontology/identity/ietf-nwi-passive-inventory/G652C
     skos:definition "ITU-T G.652C fiber." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -214,6 +244,7 @@ lex:ietf-nwi-passive-inventory-g652c
 lex:ietf-nwi-passive-inventory-g652d
     a lex:ReferenceEntry ;
     skos:prefLabel "G652D" ;
+    # source: http://example.org/ontology/identity/ietf-nwi-passive-inventory/G652D
     skos:definition "ITU-T G.652D fiber." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -222,6 +253,7 @@ lex:ietf-nwi-passive-inventory-g652d
 lex:ietf-nwi-passive-inventory-g653
     a lex:ReferenceEntry ;
     skos:prefLabel "G653" ;
+    # source: http://example.org/ontology/identity/ietf-nwi-passive-inventory/G653
     skos:definition "ITU-T G.653 fiber." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -230,6 +262,7 @@ lex:ietf-nwi-passive-inventory-g653
 lex:ietf-nwi-passive-inventory-g654
     a lex:ReferenceEntry ;
     skos:prefLabel "G654" ;
+    # source: http://example.org/ontology/identity/ietf-nwi-passive-inventory/G654
     skos:definition "ITU-T G.654 fiber." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -238,6 +271,7 @@ lex:ietf-nwi-passive-inventory-g654
 lex:ietf-nwi-passive-inventory-g655
     a lex:ReferenceEntry ;
     skos:prefLabel "G655" ;
+    # source: http://example.org/ontology/identity/ietf-nwi-passive-inventory/G655
     skos:definition "ITU-T G.655 fiber." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -246,6 +280,7 @@ lex:ietf-nwi-passive-inventory-g655
 lex:ietf-nwi-passive-inventory-g656
     a lex:ReferenceEntry ;
     skos:prefLabel "G656" ;
+    # source: http://example.org/ontology/identity/ietf-nwi-passive-inventory/G656
     skos:definition "ITU-T G.656 fiber." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -254,6 +289,7 @@ lex:ietf-nwi-passive-inventory-g656
 lex:ietf-nwi-passive-inventory-g657a1
     a lex:ReferenceEntry ;
     skos:prefLabel "G657A1" ;
+    # source: http://example.org/ontology/identity/ietf-nwi-passive-inventory/G657A1
     skos:definition "ITU-T G.657A1 fiber." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -262,6 +298,7 @@ lex:ietf-nwi-passive-inventory-g657a1
 lex:ietf-nwi-passive-inventory-g657a2
     a lex:ReferenceEntry ;
     skos:prefLabel "G657A2" ;
+    # source: http://example.org/ontology/identity/ietf-nwi-passive-inventory/G657A2
     skos:definition "ITU-T G.657A2 fiber." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -270,6 +307,7 @@ lex:ietf-nwi-passive-inventory-g657a2
 lex:ietf-nwi-passive-inventory-g657b
     a lex:ReferenceEntry ;
     skos:prefLabel "G657B" ;
+    # source: http://example.org/ontology/identity/ietf-nwi-passive-inventory/G657B
     skos:definition "ITU-T G.657B fiber." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -278,6 +316,7 @@ lex:ietf-nwi-passive-inventory-g657b
 lex:ietf-nwi-passive-inventory-input-port
     a lex:ReferenceEntry ;
     skos:prefLabel "input-port" ;
+    # source: http://example.org/ontology/identity/ietf-nwi-passive-inventory/input-port
     skos:definition "Input port." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -287,6 +326,7 @@ lex:ietf-nwi-passive-inventory-input-port
 lex:ietf-nwi-passive-inventory-odf
     a lex:ReferenceEntry ;
     skos:prefLabel "ODF" ;
+    # source: http://example.org/ontology/identity/ietf-nwi-passive-inventory/ODF
     skos:definition "Optical Distribution Frame." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -295,7 +335,9 @@ lex:ietf-nwi-passive-inventory-odf
 lex:ietf-nwi-passive-inventory-optical-cable-attributes
     a lex:ReferenceEntry ;
     skos:prefLabel "optical-cable-attributes" ;
+    # source: http://example.org/ontology/grouping/ietf-nwi-passive-inventory/optical-cable-attributes
     skos:definition "Attributes applicable to fiber optic cables." ;
+    # source: http://example.org/ontology/grouping/ietf-nwi-passive-inventory/optical-cable-attributes
     skos:scopeNote "Grouping definition: optical-cable-attributes" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -304,6 +346,7 @@ lex:ietf-nwi-passive-inventory-optical-cable-attributes
 lex:ietf-nwi-passive-inventory-optical-fiber
     a lex:ReferenceEntry ;
     skos:prefLabel "optical-fiber" ;
+    # source: http://example.org/ontology/identity/ietf-nwi-passive-inventory/optical-fiber
     skos:definition "Fiber optic cable." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -312,6 +355,7 @@ lex:ietf-nwi-passive-inventory-optical-fiber
 lex:ietf-nwi-passive-inventory-other
     a lex:ReferenceEntry ;
     skos:prefLabel "other" ;
+    # source: http://example.org/ontology/identity/ietf-nwi-passive-inventory/other
     skos:definition "Other type of fiber." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -320,6 +364,7 @@ lex:ietf-nwi-passive-inventory-other
 lex:ietf-nwi-passive-inventory-output-port
     a lex:ReferenceEntry ;
     skos:prefLabel "output-port" ;
+    # source: http://example.org/ontology/identity/ietf-nwi-passive-inventory/output-port
     skos:definition "Output port." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -329,6 +374,7 @@ lex:ietf-nwi-passive-inventory-output-port
 lex:ietf-nwi-passive-inventory-p2mp-port
     a lex:ReferenceEntry ;
     skos:prefLabel "p2mp-port" ;
+    # source: http://example.org/ontology/identity/ietf-nwi-passive-inventory/p2mp-port
     skos:definition "Input port." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -337,6 +383,7 @@ lex:ietf-nwi-passive-inventory-p2mp-port
 lex:ietf-nwi-passive-inventory-passive-device
     a lex:ReferenceEntry ;
     skos:prefLabel "passive-device" ;
+    # source: http://example.org/ontology/identity/ietf-nwi-passive-inventory/passive-device
     skos:definition "Passive/unmanaged device." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -345,7 +392,9 @@ lex:ietf-nwi-passive-inventory-passive-device
 lex:ietf-nwi-passive-inventory-passive-device-ports
     a lex:ReferenceEntry ;
     skos:prefLabel "passive-device-ports" ;
+    # source: http://example.org/ontology/grouping/ietf-nwi-passive-inventory/passive-device-ports
     skos:definition "Attributes applicable to passive device ports." ;
+    # source: http://example.org/ontology/grouping/ietf-nwi-passive-inventory/passive-device-ports
     skos:scopeNote "Grouping definition: passive-device-ports" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -354,6 +403,7 @@ lex:ietf-nwi-passive-inventory-passive-device-ports
 lex:ietf-nwi-passive-inventory-passive-device-type
     a lex:ReferenceEntry ;
     skos:prefLabel "passive-device-type" ;
+    # source: http://example.org/ontology/identity/ietf-nwi-passive-inventory/passive-device-type
     skos:definition "Base identity for passive device types." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -362,7 +412,9 @@ lex:ietf-nwi-passive-inventory-passive-device-type
 lex:ietf-nwi-passive-inventory-passive-devices
     a lex:ReferenceEntry ;
     skos:prefLabel "passive-devices" ;
+    # source: http://example.org/ontology/grouping/ietf-nwi-passive-inventory/passive-devices
     skos:definition "Attributes applicable to passive devices." ;
+    # source: http://example.org/ontology/grouping/ietf-nwi-passive-inventory/passive-devices
     skos:scopeNote "Grouping definition: passive-devices" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -371,6 +423,7 @@ lex:ietf-nwi-passive-inventory-passive-devices
 lex:ietf-nwi-passive-inventory-passive-port-type
     a lex:ReferenceEntry ;
     skos:prefLabel "passive-port-type" ;
+    # source: http://example.org/ontology/identity/ietf-nwi-passive-inventory/passive-port-type
     skos:definition "Base identity for passive port types." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -379,6 +432,7 @@ lex:ietf-nwi-passive-inventory-passive-port-type
 lex:ietf-nwi-passive-inventory-service-port
     a lex:ReferenceEntry ;
     skos:prefLabel "service-port" ;
+    # source: http://example.org/ontology/identity/ietf-nwi-passive-inventory/service-port
     skos:definition "Service port." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -388,6 +442,7 @@ lex:ietf-nwi-passive-inventory-service-port
 lex:ietf-nwi-passive-inventory-trunk
     a lex:ReferenceEntry ;
     skos:prefLabel "trunk" ;
+    # source: http://example.org/ontology/identity/ietf-nwi-passive-inventory/trunk
     skos:definition "Trunk cable." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -396,6 +451,7 @@ lex:ietf-nwi-passive-inventory-trunk
 lex:ietf-nwi-passive-inventory-wdm
     a lex:ReferenceEntry ;
     skos:prefLabel "WDM" ;
+    # source: http://example.org/ontology/identity/ietf-nwi-passive-inventory/WDM
     skos:definition "Wavelength Division Multiplexer." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;

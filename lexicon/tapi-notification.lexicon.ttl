@@ -14,7 +14,9 @@
 lex:tapi-notification-attribute-value-change
     a lex:ReferenceEntry ;
     skos:prefLabel "attribute-value-change" ;
+    # source: http://example.org/ontology/grouping/tapi-notification/attribute-value-change
     skos:definition "Grouping definition: attribute-value-change" ;
+    # source: http://example.org/ontology/grouping/tapi-notification/attribute-value-change
     skos:scopeNote "Object notification related information." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -23,7 +25,9 @@ lex:tapi-notification-attribute-value-change
 lex:tapi-notification-event-notification
     a lex:ReferenceEntry ;
     skos:prefLabel "event-notification" ;
+    # source: http://example.org/ontology/grouping/tapi-notification/event-notification
     skos:definition "Grouping definition: event-notification" ;
+    # source: http://example.org/ontology/grouping/tapi-notification/event-notification
     skos:scopeNote "The Notification signal.\nOMG UML(R) Version 2.5.1: 'A Signal is a specification of a kind of communication between objects in which a reaction is asynchronously triggered in the receiver without a reply.\nThe data carried by the communication are represented as attributes of the Signal.'" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -32,8 +36,8 @@ lex:tapi-notification-event-notification
 lex:tapi-notification-event-notification-ref
     a lex:ReferenceEntry ;
     skos:prefLabel "event-notification-ref" ;
+    # source: http://example.org/ontology/grouping/tapi-notification/event-notification-ref
     skos:definition "Grouping definition: event-notification-ref" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-notification/event-notification-ref> .
@@ -41,7 +45,9 @@ lex:tapi-notification-event-notification-ref
 lex:tapi-notification-name-and-value-change
     a lex:ReferenceEntry ;
     skos:prefLabel "name-and-value-change" ;
+    # source: http://example.org/ontology/grouping/tapi-notification/name-and-value-change
     skos:definition "A scoped name-value triple, including old value and new value." ;
+    # source: http://example.org/ontology/grouping/tapi-notification/name-and-value-change
     skos:scopeNote "Grouping definition: name-and-value-change" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -50,7 +56,9 @@ lex:tapi-notification-name-and-value-change
 lex:tapi-notification-notification
     a lex:ReferenceEntry ;
     skos:prefLabel "notification" ;
+    # source: http://example.org/ontology/grouping/tapi-notification/notification
     skos:definition "Grouping definition: notification" ;
+    # source: http://example.org/ontology/grouping/tapi-notification/notification
     skos:scopeNote "The Notification signal.\nOMG UML(R) Version 2.5.1: 'A Signal is a specification of a kind of communication between objects in which a reaction is asynchronously triggered in the receiver without a reply.\nThe data carried by the communication are represented as attributes of the Signal.'" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -59,7 +67,9 @@ lex:tapi-notification-notification
 lex:tapi-notification-notification-channel
     a lex:ReferenceEntry ;
     skos:prefLabel "notification-channel" ;
+    # source: http://example.org/ontology/grouping/tapi-notification/notification-channel
     skos:definition "Grouping definition: notification-channel" ;
+    # source: http://example.org/ontology/grouping/tapi-notification/notification-channel
     skos:scopeNote "The channel/stream to which the subscribed notifications are published." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -68,7 +78,9 @@ lex:tapi-notification-notification-channel
 lex:tapi-notification-notification-context
     a lex:ReferenceEntry ;
     skos:prefLabel "notification-context" ;
+    # source: http://example.org/ontology/grouping/tapi-notification/notification-context
     skos:definition "Grouping definition: notification-context" ;
+    # source: http://example.org/ontology/grouping/tapi-notification/notification-context
     skos:scopeNote "This object class represents the scope of control that a particular SDN controller has with respect to a particular network, specifically regarding the notification description.\nAn instance of this class includes its NotificationSubscriptionService, (legacy) Notification and EventNotification instances." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -77,14 +89,15 @@ lex:tapi-notification-notification-context
 lex:tapi-notification-notification-object-type
     a lex:ReferenceEntry ;
     skos:prefLabel "NOTIFICATION_OBJECT_TYPE" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-notification/NOTIFICATION_OBJECT_TYPE> .
 
 lex:tapi-notification-notification-object-type-notification-subscription-service
     a lex:ReferenceEntry ;
     skos:prefLabel "NOTIFICATION_OBJECT_TYPE_NOTIFICATION_SUBSCRIPTION_SERVICE" ;
+    # source: http://example.org/ontology/identity/tapi-notification/NOTIFICATION_OBJECT_TYPE_NOTIFICATION_SUBSCRIPTION_SERVICE
     skos:definition "The NotificationSubscriptionService class." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -93,8 +106,8 @@ lex:tapi-notification-notification-object-type-notification-subscription-service
 lex:tapi-notification-notification-ref
     a lex:ReferenceEntry ;
     skos:prefLabel "notification-ref" ;
+    # source: http://example.org/ontology/grouping/tapi-notification/notification-ref
     skos:definition "Grouping definition: notification-ref" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-notification/notification-ref> .
@@ -102,7 +115,9 @@ lex:tapi-notification-notification-ref
 lex:tapi-notification-notification-subscription-service
     a lex:ReferenceEntry ;
     skos:prefLabel "notification-subscription-service" ;
+    # source: http://example.org/ontology/grouping/tapi-notification/notification-subscription-service
     skos:definition "A NotificationSubscriptionService represents an 'intent-like' request for the notification subscription.\nThe NotificationSubscriptionService is a container for subscription request details." ;
+    # source: http://example.org/ontology/grouping/tapi-notification/notification-subscription-service
     skos:scopeNote "Grouping definition: notification-subscription-service" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -111,14 +126,15 @@ lex:tapi-notification-notification-subscription-service
 lex:tapi-notification-notification-type
     a lex:ReferenceEntry ;
     skos:prefLabel "NOTIFICATION_TYPE" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-notification/NOTIFICATION_TYPE> .
 
 lex:tapi-notification-notification-type-attribute-value-change
     a lex:ReferenceEntry ;
     skos:prefLabel "NOTIFICATION_TYPE_ATTRIBUTE_VALUE_CHANGE" ;
+    # source: http://example.org/ontology/identity/tapi-notification/NOTIFICATION_TYPE_ATTRIBUTE_VALUE_CHANGE
     skos:definition "The notification of an attribute value change event." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -127,6 +143,7 @@ lex:tapi-notification-notification-type-attribute-value-change
 lex:tapi-notification-notification-type-object-creation
     a lex:ReferenceEntry ;
     skos:prefLabel "NOTIFICATION_TYPE_OBJECT_CREATION" ;
+    # source: http://example.org/ontology/identity/tapi-notification/NOTIFICATION_TYPE_OBJECT_CREATION
     skos:definition "The notification of an object instance creation event." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -135,6 +152,7 @@ lex:tapi-notification-notification-type-object-creation
 lex:tapi-notification-notification-type-object-deletion
     a lex:ReferenceEntry ;
     skos:prefLabel "NOTIFICATION_TYPE_OBJECT_DELETION" ;
+    # source: http://example.org/ontology/identity/tapi-notification/NOTIFICATION_TYPE_OBJECT_DELETION
     skos:definition "The notification of an object instance deletion event." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -143,6 +161,7 @@ lex:tapi-notification-notification-type-object-deletion
 lex:tapi-notification-source-indicator
     a lex:ReferenceEntry ;
     skos:prefLabel "source-indicator" ;
+    # source: http://example.org/ontology/types/tapi-notification/source-indicator
     skos:definition "The possible source of the notification." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:EnumeratedKind ;
@@ -151,7 +170,9 @@ lex:tapi-notification-source-indicator
 lex:tapi-notification-subscription-filter
     a lex:ReferenceEntry ;
     skos:prefLabel "subscription-filter" ;
+    # source: http://example.org/ontology/grouping/tapi-notification/subscription-filter
     skos:definition "A SubscriptionFilter represents an 'intent-like' request for the filters of the related notification subscription.\nThe SubscriptionFilter is a container for filter request details." ;
+    # source: http://example.org/ontology/grouping/tapi-notification/subscription-filter
     skos:scopeNote "Grouping definition: subscription-filter" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -160,6 +181,7 @@ lex:tapi-notification-subscription-filter
 lex:tapi-notification-subscription-state
     a lex:ReferenceEntry ;
     skos:prefLabel "subscription-state" ;
+    # source: http://example.org/ontology/types/tapi-notification/subscription-state
     skos:definition "The SubscriptionState types." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:EnumeratedKind ;

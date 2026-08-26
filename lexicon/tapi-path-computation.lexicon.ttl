@@ -14,8 +14,8 @@
 lex:tapi-path-computation-adopt-orphan-path
     a lex:ReferenceEntry ;
     skos:prefLabel "adopt-orphan-path" ;
+    # source: http://example.org/ontology/grouping/tapi-path-computation/adopt-orphan-path
     skos:definition "Grouping definition: adopt-orphan-path" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-path-computation/adopt-orphan-path> .
@@ -23,30 +23,31 @@ lex:tapi-path-computation-adopt-orphan-path
 lex:tapi-path-computation-corouting-policy
     a lex:ReferenceEntry ;
     skos:prefLabel "COROUTING_POLICY" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-path-computation/COROUTING_POLICY> .
 
 lex:tapi-path-computation-corouting-policy-node
     a lex:ReferenceEntry ;
     skos:prefLabel "COROUTING_POLICY_NODE" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-path-computation/COROUTING_POLICY_NODE> .
 
 lex:tapi-path-computation-corouting-policy-srg
     a lex:ReferenceEntry ;
     skos:prefLabel "COROUTING_POLICY_SRG" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-path-computation/COROUTING_POLICY_SRG> .
 
 lex:tapi-path-computation-diversity-policy
     a lex:ReferenceEntry ;
     skos:prefLabel "diversity-policy" ;
+    # source: http://example.org/ontology/types/tapi-path-computation/diversity-policy
     skos:definition "The types of routing diversity policies." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:EnumeratedKind ;
@@ -55,14 +56,15 @@ lex:tapi-path-computation-diversity-policy
 lex:tapi-path-computation-grades-of-impact
     a lex:ReferenceEntry ;
     skos:prefLabel "GRADES_OF_IMPACT" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-path-computation/GRADES_OF_IMPACT> .
 
 lex:tapi-path-computation-grades-of-impact-hitless
     a lex:ReferenceEntry ;
     skos:prefLabel "GRADES_OF_IMPACT_HITLESS" ;
+    # source: http://example.org/ontology/identity/tapi-path-computation/GRADES_OF_IMPACT_HITLESS
     skos:definition "No impact on traffic." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -71,6 +73,7 @@ lex:tapi-path-computation-grades-of-impact-hitless
 lex:tapi-path-computation-grades-of-impact-long-impact
     a lex:ReferenceEntry ;
     skos:prefLabel "GRADES_OF_IMPACT_LONG_IMPACT" ;
+    # source: http://example.org/ontology/identity/tapi-path-computation/GRADES_OF_IMPACT_LONG_IMPACT
     skos:definition "Impact order of magnitude: several minutes to hours." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -79,6 +82,7 @@ lex:tapi-path-computation-grades-of-impact-long-impact
 lex:tapi-path-computation-grades-of-impact-major-impact
     a lex:ReferenceEntry ;
     skos:prefLabel "GRADES_OF_IMPACT_MAJOR_IMPACT" ;
+    # source: http://example.org/ontology/identity/tapi-path-computation/GRADES_OF_IMPACT_MAJOR_IMPACT
     skos:definition "Impact order of magnitude: several seconds to minutes." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -87,6 +91,7 @@ lex:tapi-path-computation-grades-of-impact-major-impact
 lex:tapi-path-computation-grades-of-impact-minor-impact
     a lex:ReferenceEntry ;
     skos:prefLabel "GRADES_OF_IMPACT_MINOR_IMPACT" ;
+    # source: http://example.org/ontology/identity/tapi-path-computation/GRADES_OF_IMPACT_MINOR_IMPACT
     skos:definition "Impact less or equal to 50ms." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -95,8 +100,8 @@ lex:tapi-path-computation-grades-of-impact-minor-impact
 lex:tapi-path-computation-link-and-partition
     a lex:ReferenceEntry ;
     skos:prefLabel "link-and-partition" ;
+    # source: http://example.org/ontology/grouping/tapi-path-computation/link-and-partition
     skos:definition "Grouping definition: link-and-partition" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-path-computation/link-and-partition> .
@@ -104,8 +109,8 @@ lex:tapi-path-computation-link-and-partition
 lex:tapi-path-computation-nep-and-partition
     a lex:ReferenceEntry ;
     skos:prefLabel "nep-and-partition" ;
+    # source: http://example.org/ontology/grouping/tapi-path-computation/nep-and-partition
     skos:definition "Grouping definition: nep-and-partition" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-path-computation/nep-and-partition> .
@@ -113,39 +118,41 @@ lex:tapi-path-computation-nep-and-partition
 lex:tapi-path-computation-partition-type
     a lex:ReferenceEntry ;
     skos:prefLabel "PARTITION_TYPE" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-path-computation/PARTITION_TYPE> .
 
 lex:tapi-path-computation-partition-type-frequency-spectrum
     a lex:ReferenceEntry ;
     skos:prefLabel "PARTITION_TYPE_FREQUENCY_SPECTRUM" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-path-computation/PARTITION_TYPE_FREQUENCY_SPECTRUM> .
 
 lex:tapi-path-computation-partition-type-label-vlan-id
     a lex:ReferenceEntry ;
     skos:prefLabel "PARTITION_TYPE_LABEL_VLAN_ID" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-path-computation/PARTITION_TYPE_LABEL_VLAN_ID> .
 
 lex:tapi-path-computation-partition-type-time-slot
     a lex:ReferenceEntry ;
     skos:prefLabel "PARTITION_TYPE_TIME_SLOT" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-path-computation/PARTITION_TYPE_TIME_SLOT> .
 
 lex:tapi-path-computation-path
     a lex:ReferenceEntry ;
     skos:prefLabel "path" ;
+    # source: http://example.org/ontology/grouping/tapi-path-computation/path
     skos:definition "Grouping definition: path" ;
+    # source: http://example.org/ontology/grouping/tapi-path-computation/path
     skos:scopeNote "The Path is described by an ordered list of (TE) Links. A (TE) Link is conceptually defined by a pair of Node/NodeEdgePoint IDs.\nA Connection is realized by concatenating link resources (associated with a Link) and the lower-level Connections (e.g. cross-connections) in the different Nodes." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -154,8 +161,8 @@ lex:tapi-path-computation-path
 lex:tapi-path-computation-path-as-constraint
     a lex:ReferenceEntry ;
     skos:prefLabel "path-as-constraint" ;
+    # source: http://example.org/ontology/grouping/tapi-path-computation/path-as-constraint
     skos:definition "Grouping definition: path-as-constraint" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-path-computation/path-as-constraint> .
@@ -163,7 +170,9 @@ lex:tapi-path-computation-path-as-constraint
 lex:tapi-path-computation-path-computation-context
     a lex:ReferenceEntry ;
     skos:prefLabel "path-computation-context" ;
+    # source: http://example.org/ontology/grouping/tapi-path-computation/path-computation-context
     skos:definition "Grouping definition: path-computation-context" ;
+    # source: http://example.org/ontology/grouping/tapi-path-computation/path-computation-context
     skos:scopeNote "This object class represents the scope of control that a particular SDN controller has with respect to a particular network, specifically regarding the path computation description.\nAn instance of this class includes its PathComputationService and Path object instances." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -172,14 +181,15 @@ lex:tapi-path-computation-path-computation-context
 lex:tapi-path-computation-path-computation-object-type
     a lex:ReferenceEntry ;
     skos:prefLabel "PATH_COMPUTATION_OBJECT_TYPE" ;
-    skos:definition "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
+    lex:needsCuration true ;
     prov:wasDerivedFrom <http://example.org/ontology/identity/tapi-path-computation/PATH_COMPUTATION_OBJECT_TYPE> .
 
 lex:tapi-path-computation-path-computation-object-type-path
     a lex:ReferenceEntry ;
     skos:prefLabel "PATH_COMPUTATION_OBJECT_TYPE_PATH" ;
+    # source: http://example.org/ontology/identity/tapi-path-computation/PATH_COMPUTATION_OBJECT_TYPE_PATH
     skos:definition "The Path class." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -188,6 +198,7 @@ lex:tapi-path-computation-path-computation-object-type-path
 lex:tapi-path-computation-path-computation-object-type-path-comp-path-service-end-point
     a lex:ReferenceEntry ;
     skos:prefLabel "PATH_COMPUTATION_OBJECT_TYPE_PATH_COMP_PATH_SERVICE_END_POINT" ;
+    # source: http://example.org/ontology/identity/tapi-path-computation/PATH_COMPUTATION_OBJECT_TYPE_PATH_COMP_PATH_SERVICE_END_POINT
     skos:definition "The PathServiceEndPoint (PSEP) class." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -196,6 +207,7 @@ lex:tapi-path-computation-path-computation-object-type-path-comp-path-service-en
 lex:tapi-path-computation-path-computation-object-type-path-computation-service
     a lex:ReferenceEntry ;
     skos:prefLabel "PATH_COMPUTATION_OBJECT_TYPE_PATH_COMPUTATION_SERVICE" ;
+    # source: http://example.org/ontology/identity/tapi-path-computation/PATH_COMPUTATION_OBJECT_TYPE_PATH_COMPUTATION_SERVICE
     skos:definition "The PathComputationService class." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -204,6 +216,7 @@ lex:tapi-path-computation-path-computation-object-type-path-computation-service
 lex:tapi-path-computation-path-computation-object-type-path-objective-function
     a lex:ReferenceEntry ;
     skos:prefLabel "PATH_COMPUTATION_OBJECT_TYPE_PATH_OBJECTIVE_FUNCTION" ;
+    # source: http://example.org/ontology/identity/tapi-path-computation/PATH_COMPUTATION_OBJECT_TYPE_PATH_OBJECTIVE_FUNCTION
     skos:definition "The PathObjectiveFunction class." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -212,6 +225,7 @@ lex:tapi-path-computation-path-computation-object-type-path-objective-function
 lex:tapi-path-computation-path-computation-object-type-path-optimization-constraint
     a lex:ReferenceEntry ;
     skos:prefLabel "PATH_COMPUTATION_OBJECT_TYPE_PATH_OPTIMIZATION_CONSTRAINT" ;
+    # source: http://example.org/ontology/identity/tapi-path-computation/PATH_COMPUTATION_OBJECT_TYPE_PATH_OPTIMIZATION_CONSTRAINT
     skos:definition "The PathOptimizationConstraint class." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -220,6 +234,7 @@ lex:tapi-path-computation-path-computation-object-type-path-optimization-constra
 lex:tapi-path-computation-path-computation-object-type-topology-constraint
     a lex:ReferenceEntry ;
     skos:prefLabel "PATH_COMPUTATION_OBJECT_TYPE_TOPOLOGY_CONSTRAINT" ;
+    # source: http://example.org/ontology/identity/tapi-path-computation/PATH_COMPUTATION_OBJECT_TYPE_TOPOLOGY_CONSTRAINT
     skos:definition "The TopologyConstraint class." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -228,7 +243,9 @@ lex:tapi-path-computation-path-computation-object-type-topology-constraint
 lex:tapi-path-computation-path-computation-service
     a lex:ReferenceEntry ;
     skos:prefLabel "path-computation-service" ;
+    # source: http://example.org/ontology/grouping/tapi-path-computation/path-computation-service
     skos:definition "A PathComputationService represents an 'intent-like' request for connectivity between two or more PathServiceEndPoint (PSEP) instances. The PathComputationService is a container for connectivity request details and is distinct from the Path(s) that realize the request." ;
+    # source: http://example.org/ontology/grouping/tapi-path-computation/path-computation-service
     skos:scopeNote "Grouping definition: path-computation-service" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -237,8 +254,8 @@ lex:tapi-path-computation-path-computation-service
 lex:tapi-path-computation-path-constraint
     a lex:ReferenceEntry ;
     skos:prefLabel "path-constraint" ;
+    # source: http://example.org/ontology/grouping/tapi-path-computation/path-constraint
     skos:definition "Grouping definition: path-constraint" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-path-computation/path-constraint> .
@@ -246,7 +263,9 @@ lex:tapi-path-computation-path-constraint
 lex:tapi-path-computation-path-objective-function
     a lex:ReferenceEntry ;
     skos:prefLabel "path-objective-function" ;
+    # source: http://example.org/ontology/grouping/tapi-path-computation/path-objective-function
     skos:definition "Grouping definition: path-objective-function" ;
+    # source: http://example.org/ontology/grouping/tapi-path-computation/path-objective-function
     skos:scopeNote "The parameters defining the objective functions." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -255,7 +274,9 @@ lex:tapi-path-computation-path-objective-function
 lex:tapi-path-computation-path-optimization-constraint
     a lex:ReferenceEntry ;
     skos:prefLabel "path-optimization-constraint" ;
+    # source: http://example.org/ontology/grouping/tapi-path-computation/path-optimization-constraint
     skos:definition "Grouping definition: path-optimization-constraint" ;
+    # source: http://example.org/ontology/grouping/tapi-path-computation/path-optimization-constraint
     skos:scopeNote "The parameters defining the optimization constraints." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -264,8 +285,8 @@ lex:tapi-path-computation-path-optimization-constraint
 lex:tapi-path-computation-path-ref
     a lex:ReferenceEntry ;
     skos:prefLabel "path-ref" ;
+    # source: http://example.org/ontology/grouping/tapi-path-computation/path-ref
     skos:definition "Grouping definition: path-ref" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-path-computation/path-ref> .
@@ -273,7 +294,9 @@ lex:tapi-path-computation-path-ref
 lex:tapi-path-computation-path-service-end-point
     a lex:ReferenceEntry ;
     skos:prefLabel "path-service-end-point" ;
+    # source: http://example.org/ontology/grouping/tapi-path-computation/path-service-end-point
     skos:definition "Grouping definition: path-service-end-point" ;
+    # source: http://example.org/ontology/grouping/tapi-path-computation/path-service-end-point
     skos:scopeNote "The PathServiceEndPoint (PSEP) encapsulates information related to a PathComputationService at the ingress/egress points of that PathComputationService." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -282,8 +305,8 @@ lex:tapi-path-computation-path-service-end-point
 lex:tapi-path-computation-path-set
     a lex:ReferenceEntry ;
     skos:prefLabel "path-set" ;
+    # source: http://example.org/ontology/grouping/tapi-path-computation/path-set
     skos:definition "Grouping definition: path-set" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-path-computation/path-set> .
@@ -291,8 +314,8 @@ lex:tapi-path-computation-path-set
 lex:tapi-path-computation-path-set-constraint
     a lex:ReferenceEntry ;
     skos:prefLabel "path-set-constraint" ;
+    # source: http://example.org/ontology/grouping/tapi-path-computation/path-set-constraint
     skos:definition "Grouping definition: path-set-constraint" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-path-computation/path-set-constraint> .
@@ -300,8 +323,8 @@ lex:tapi-path-computation-path-set-constraint
 lex:tapi-path-computation-path-set-ref
     a lex:ReferenceEntry ;
     skos:prefLabel "path-set-ref" ;
+    # source: http://example.org/ontology/grouping/tapi-path-computation/path-set-ref
     skos:definition "Grouping definition: path-set-ref" ;
-    skos:scopeNote "none" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
     prov:wasDerivedFrom <http://example.org/ontology/grouping/tapi-path-computation/path-set-ref> .
@@ -309,6 +332,7 @@ lex:tapi-path-computation-path-set-ref
 lex:tapi-path-computation-route-objective-function
     a lex:ReferenceEntry ;
     skos:prefLabel "route-objective-function" ;
+    # source: http://example.org/ontology/types/tapi-path-computation/route-objective-function
     skos:definition "The types of route objective function." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:EnumeratedKind ;
@@ -317,7 +341,9 @@ lex:tapi-path-computation-route-objective-function
 lex:tapi-path-computation-routing-constraint
     a lex:ReferenceEntry ;
     skos:prefLabel "routing-constraint" ;
+    # source: http://example.org/ontology/grouping/tapi-path-computation/routing-constraint
     skos:definition "Grouping definition: routing-constraint" ;
+    # source: http://example.org/ontology/grouping/tapi-path-computation/routing-constraint
     skos:scopeNote "The parameters of the routing constraints." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -326,7 +352,9 @@ lex:tapi-path-computation-routing-constraint
 lex:tapi-path-computation-topology-constraint
     a lex:ReferenceEntry ;
     skos:prefLabel "topology-constraint" ;
+    # source: http://example.org/ontology/grouping/tapi-path-computation/topology-constraint
     skos:definition "Grouping definition: topology-constraint" ;
+    # source: http://example.org/ontology/grouping/tapi-path-computation/topology-constraint
     skos:scopeNote "The TopologyConstraint class allows to specify topology entities in order to impose specific constraints (as denoted by the attribute name) on ConnectivityService/PathComputationService realization.\nThe topology entities are specified by their instance UUID rather than using references/path (to allow for mapping to Yang 1.0).\nThis loose typing and reference necessitates that implementations validate not only the presence of the instance, but also that it is of the correct type as implied by the attribute name.\nIf this validation fails, then the implementation is expected to return an error.\n" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -335,7 +363,9 @@ lex:tapi-path-computation-topology-constraint
 lex:tapi-path-computation-value-or-priority
     a lex:ReferenceEntry ;
     skos:prefLabel "value-or-priority" ;
+    # source: http://example.org/ontology/grouping/tapi-path-computation/value-or-priority
     skos:definition "Grouping definition: value-or-priority" ;
+    # source: http://example.org/ontology/grouping/tapi-path-computation/value-or-priority
     skos:scopeNote "Quantitative target: when a value is specified it is intended as mandatory for fulfilment. If value is specified, priority is not considered.\nQualitative target: when priority is specified. Zero means 'unspecified', 1 is highest priority, then 2 has lower priority than 1, 3 has lower priority than 2, etc." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;

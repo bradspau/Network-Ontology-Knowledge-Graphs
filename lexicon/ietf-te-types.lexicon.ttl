@@ -14,6 +14,7 @@
 lex:ietf-te-types-action-exercise
     a lex:ReferenceEntry ;
     skos:prefLabel "action-exercise" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/action-exercise
     skos:definition "An action that starts testing whether or not APS communication\nis operating correctly.  It is of lower priority than any\nother state or command." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -22,6 +23,7 @@ lex:ietf-te-types-action-exercise
 lex:ietf-te-types-action-forced-switch
     a lex:ReferenceEntry ;
     skos:prefLabel "action-forced-switch" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/action-forced-switch
     skos:definition "A switchover action initiated by an operator command to switch\nthe Extra-Traffic signal, the normal traffic signal, or the\nnull signal to the protection transport entity, unless a\nswitchover command of equal or higher priority is in effect." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -30,6 +32,7 @@ lex:ietf-te-types-action-forced-switch
 lex:ietf-te-types-action-freeze
     a lex:ReferenceEntry ;
     skos:prefLabel "action-freeze" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/action-freeze
     skos:definition "A temporary configuration action initiated by an operator\ncommand that prevents any switchover action from being taken\nand, as such, freezes the current state." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -38,6 +41,7 @@ lex:ietf-te-types-action-freeze
 lex:ietf-te-types-action-lockout-of-normal
     a lex:ReferenceEntry ;
     skos:prefLabel "action-lockout-of-normal" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/action-lockout-of-normal
     skos:definition "A temporary configuration action initiated by an operator\ncommand to ensure that the normal traffic is not allowed\nto use the protection transport entity." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -46,6 +50,7 @@ lex:ietf-te-types-action-lockout-of-normal
 lex:ietf-te-types-action-lockout-of-protection
     a lex:ReferenceEntry ;
     skos:prefLabel "action-lockout-of-protection" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/action-lockout-of-protection
     skos:definition "A temporary configuration action initiated by an operator\ncommand to ensure that the protection transport entity is\ntemporarily not available to transport a traffic signal\n(either normal or Extra-Traffic)." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -54,6 +59,7 @@ lex:ietf-te-types-action-lockout-of-protection
 lex:ietf-te-types-action-manual-switch
     a lex:ReferenceEntry ;
     skos:prefLabel "action-manual-switch" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/action-manual-switch
     skos:definition "A switchover action initiated by an operator command to switch\nthe Extra-Traffic signal, the normal traffic signal, or\nthe null signal to the protection transport entity, unless\na fault condition exists on other transport entities or a\nswitchover command of equal or higher priority is in effect." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -62,6 +68,7 @@ lex:ietf-te-types-action-manual-switch
 lex:ietf-te-types-association-type
     a lex:ReferenceEntry ;
     skos:prefLabel "association-type" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/association-type
     skos:definition "Base identity for the tunnel association." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -70,6 +77,7 @@ lex:ietf-te-types-association-type
 lex:ietf-te-types-association-type-double-sided-bidir
     a lex:ReferenceEntry ;
     skos:prefLabel "association-type-double-sided-bidir" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/association-type-double-sided-bidir
     skos:definition "Association type for double-sided bidirectional LSPs,\nused to associate two LSPs of two tunnels that are\nindependently configured on either endpoint." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -78,6 +86,7 @@ lex:ietf-te-types-association-type-double-sided-bidir
 lex:ietf-te-types-association-type-recovery
     a lex:ReferenceEntry ;
     skos:prefLabel "association-type-recovery" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/association-type-recovery
     skos:definition "Association type for recovery, used to associate LSPs of the\nsame tunnel for recovery." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -86,6 +95,7 @@ lex:ietf-te-types-association-type-recovery
 lex:ietf-te-types-association-type-resource-sharing
     a lex:ReferenceEntry ;
     skos:prefLabel "association-type-resource-sharing" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/association-type-resource-sharing
     skos:definition "Association type for resource sharing, used to enable\nresource sharing during make-before-break." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -94,6 +104,7 @@ lex:ietf-te-types-association-type-resource-sharing
 lex:ietf-te-types-association-type-single-sided-bidir
     a lex:ReferenceEntry ;
     skos:prefLabel "association-type-single-sided-bidir" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/association-type-single-sided-bidir
     skos:definition "Association type for single-sided bidirectional LSPs,\nused to associate two LSPs of two tunnels, where one\ntunnel is configured on one side/endpoint and the other\ntunnel is dynamically created on the other endpoint." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -102,6 +113,7 @@ lex:ietf-te-types-association-type-single-sided-bidir
 lex:ietf-te-types-bandwidth-protection-desired
     a lex:ReferenceEntry ;
     skos:prefLabel "bandwidth-protection-desired" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/bandwidth-protection-desired
     skos:definition "Requests FRR bandwidth protection on LSRs, if present." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -110,6 +122,7 @@ lex:ietf-te-types-bandwidth-protection-desired
 lex:ietf-te-types-boundary-rerouting-desired
     a lex:ReferenceEntry ;
     skos:prefLabel "boundary-rerouting-desired" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/boundary-rerouting-desired
     skos:definition "Indicates boundary rerouting behavior for an LSP undergoing\nestablishment.  This MAY also be used to specify\nsegment-based LSP recovery through nested crankback for\nestablished LSPs.  The boundary Area Border Router (ABR) /\nAutonomous System Border Router (ASBR) can decide to forward\nthe PathErr message upstream to either an upstream boundary\nABR/ASBR or the ingress LSR.  Alternatively, it can try to\nselect another egress boundary LSR." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -118,6 +131,7 @@ lex:ietf-te-types-boundary-rerouting-desired
 lex:ietf-te-types-clear
     a lex:ReferenceEntry ;
     skos:prefLabel "clear" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/clear
     skos:definition "An action that clears the active near-end lockout of a\nprotection, forced switchover, manual switchover, WTR state,\nor exercise command." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -126,6 +140,7 @@ lex:ietf-te-types-clear
 lex:ietf-te-types-clear-freeze
     a lex:ReferenceEntry ;
     skos:prefLabel "clear-freeze" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/clear-freeze
     skos:definition "An action that clears the active freeze state." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -134,6 +149,7 @@ lex:ietf-te-types-clear-freeze
 lex:ietf-te-types-clear-lockout-of-normal
     a lex:ReferenceEntry ;
     skos:prefLabel "clear-lockout-of-normal" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/clear-lockout-of-normal
     skos:definition "An action that clears the active lockout of the\nnormal state." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -142,7 +158,9 @@ lex:ietf-te-types-clear-lockout-of-normal
 lex:ietf-te-types-common-constraints
     a lex:ReferenceEntry ;
     skos:prefLabel "common-constraints" ;
+    # source: http://example.org/ontology/grouping/ietf-te-types/common-constraints
     skos:definition "Common constraints grouping that can be set on\na constraint set or directly on the tunnel." ;
+    # source: http://example.org/ontology/grouping/ietf-te-types/common-constraints
     skos:scopeNote "Grouping definition: common-constraints" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -151,7 +169,9 @@ lex:ietf-te-types-common-constraints
 lex:ietf-te-types-common-path-constraints-attributes
     a lex:ReferenceEntry ;
     skos:prefLabel "common-path-constraints-attributes" ;
+    # source: http://example.org/ontology/grouping/ietf-te-types/common-path-constraints-attributes
     skos:definition "Common path constraints configuration grouping." ;
+    # source: http://example.org/ontology/grouping/ietf-te-types/common-path-constraints-attributes
     skos:scopeNote "Grouping definition: common-path-constraints-attributes" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -160,6 +180,7 @@ lex:ietf-te-types-common-path-constraints-attributes
 lex:ietf-te-types-contiguous-lsp-desired
     a lex:ReferenceEntry ;
     skos:prefLabel "contiguous-lsp-desired" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/contiguous-lsp-desired
     skos:definition "Indicates that a contiguous LSP is desired." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -168,6 +189,7 @@ lex:ietf-te-types-contiguous-lsp-desired
 lex:ietf-te-types-cost
     a lex:ReferenceEntry ;
     skos:prefLabel "cost" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/cost
     skos:definition "Optimized on cost." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -176,6 +198,7 @@ lex:ietf-te-types-cost
 lex:ietf-te-types-delay
     a lex:ReferenceEntry ;
     skos:prefLabel "delay" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/delay
     skos:definition "Optimized on delay." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -184,6 +207,7 @@ lex:ietf-te-types-delay
 lex:ietf-te-types-do-not-revert
     a lex:ReferenceEntry ;
     skos:prefLabel "do-not-revert" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/do-not-revert
     skos:definition "A Do Not Revert (DNR) condition is active because of\nnon-revertive behavior." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -192,6 +216,7 @@ lex:ietf-te-types-do-not-revert
 lex:ietf-te-types-end-to-end-rerouting-desired
     a lex:ReferenceEntry ;
     skos:prefLabel "end-to-end-rerouting-desired" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/end-to-end-rerouting-desired
     skos:definition "Indicates end-to-end rerouting behavior for an LSP\nundergoing establishment.  This MAY also be used to\nspecify the behavior of end-to-end LSP recovery for\nestablished LSPs." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -200,6 +225,7 @@ lex:ietf-te-types-end-to-end-rerouting-desired
 lex:ietf-te-types-entropy-label-capability
     a lex:ReferenceEntry ;
     skos:prefLabel "entropy-label-capability" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/entropy-label-capability
     skos:definition "Indicates entropy label capability." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -208,7 +234,9 @@ lex:ietf-te-types-entropy-label-capability
 lex:ietf-te-types-explicit-route-hop
     a lex:ReferenceEntry ;
     skos:prefLabel "explicit-route-hop" ;
+    # source: http://example.org/ontology/grouping/ietf-te-types/explicit-route-hop
     skos:definition "Grouping definition: explicit-route-hop" ;
+    # source: http://example.org/ontology/grouping/ietf-te-types/explicit-route-hop
     skos:scopeNote "The explicit route entry grouping." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -217,6 +245,7 @@ lex:ietf-te-types-explicit-route-hop
 lex:ietf-te-types-failure-of-protocol
     a lex:ReferenceEntry ;
     skos:prefLabel "failure-of-protocol" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/failure-of-protocol
     skos:definition "LSP protection is not working because of a protocol failure\ncondition." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -225,6 +254,7 @@ lex:ietf-te-types-failure-of-protocol
 lex:ietf-te-types-forced-switch
     a lex:ReferenceEntry ;
     skos:prefLabel "forced-switch" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/forced-switch
     skos:definition "A forced switchover command is active." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -233,7 +263,9 @@ lex:ietf-te-types-forced-switch
 lex:ietf-te-types-generic-path-affinities
     a lex:ReferenceEntry ;
     skos:prefLabel "generic-path-affinities" ;
+    # source: http://example.org/ontology/grouping/ietf-te-types/generic-path-affinities
     skos:definition "Grouping definition: generic-path-affinities" ;
+    # source: http://example.org/ontology/grouping/ietf-te-types/generic-path-affinities
     skos:scopeNote "Path affinities grouping." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -242,7 +274,9 @@ lex:ietf-te-types-generic-path-affinities
 lex:ietf-te-types-generic-path-constraints
     a lex:ReferenceEntry ;
     skos:prefLabel "generic-path-constraints" ;
+    # source: http://example.org/ontology/grouping/ietf-te-types/generic-path-constraints
     skos:definition "Global named path constraints configuration grouping." ;
+    # source: http://example.org/ontology/grouping/ietf-te-types/generic-path-constraints
     skos:scopeNote "Grouping definition: generic-path-constraints" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -251,7 +285,9 @@ lex:ietf-te-types-generic-path-constraints
 lex:ietf-te-types-generic-path-disjointness
     a lex:ReferenceEntry ;
     skos:prefLabel "generic-path-disjointness" ;
+    # source: http://example.org/ontology/grouping/ietf-te-types/generic-path-disjointness
     skos:definition "Grouping definition: generic-path-disjointness" ;
+    # source: http://example.org/ontology/grouping/ietf-te-types/generic-path-disjointness
     skos:scopeNote "Path disjointness grouping." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -260,7 +296,9 @@ lex:ietf-te-types-generic-path-disjointness
 lex:ietf-te-types-generic-path-metric-bounds
     a lex:ReferenceEntry ;
     skos:prefLabel "generic-path-metric-bounds" ;
+    # source: http://example.org/ontology/grouping/ietf-te-types/generic-path-metric-bounds
     skos:definition "Grouping definition: generic-path-metric-bounds" ;
+    # source: http://example.org/ontology/grouping/ietf-te-types/generic-path-metric-bounds
     skos:scopeNote "TE path metric bounds grouping." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -269,7 +307,9 @@ lex:ietf-te-types-generic-path-metric-bounds
 lex:ietf-te-types-generic-path-optimization
     a lex:ReferenceEntry ;
     skos:prefLabel "generic-path-optimization" ;
+    # source: http://example.org/ontology/grouping/ietf-te-types/generic-path-optimization
     skos:definition "Grouping definition: generic-path-optimization" ;
+    # source: http://example.org/ontology/grouping/ietf-te-types/generic-path-optimization
     skos:scopeNote "TE generic path optimization grouping." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -278,7 +318,9 @@ lex:ietf-te-types-generic-path-optimization
 lex:ietf-te-types-generic-path-properties
     a lex:ReferenceEntry ;
     skos:prefLabel "generic-path-properties" ;
+    # source: http://example.org/ontology/grouping/ietf-te-types/generic-path-properties
     skos:definition "Grouping definition: generic-path-properties" ;
+    # source: http://example.org/ontology/grouping/ietf-te-types/generic-path-properties
     skos:scopeNote "TE generic path properties grouping." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -287,7 +329,9 @@ lex:ietf-te-types-generic-path-properties
 lex:ietf-te-types-generic-path-srlgs
     a lex:ReferenceEntry ;
     skos:prefLabel "generic-path-srlgs" ;
+    # source: http://example.org/ontology/grouping/ietf-te-types/generic-path-srlgs
     skos:definition "Grouping definition: generic-path-srlgs" ;
+    # source: http://example.org/ontology/grouping/ietf-te-types/generic-path-srlgs
     skos:scopeNote "Path SRLG grouping." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -296,7 +340,9 @@ lex:ietf-te-types-generic-path-srlgs
 lex:ietf-te-types-label-restriction-info
     a lex:ReferenceEntry ;
     skos:prefLabel "label-restriction-info" ;
+    # source: http://example.org/ontology/grouping/ietf-te-types/label-restriction-info
     skos:definition "Grouping definition: label-restriction-info" ;
+    # source: http://example.org/ontology/grouping/ietf-te-types/label-restriction-info
     skos:scopeNote "Label set item information." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -305,7 +351,9 @@ lex:ietf-te-types-label-restriction-info
 lex:ietf-te-types-label-set-info
     a lex:ReferenceEntry ;
     skos:prefLabel "label-set-info" ;
+    # source: http://example.org/ontology/grouping/ietf-te-types/label-set-info
     skos:definition "Grouping definition: label-set-info" ;
+    # source: http://example.org/ontology/grouping/ietf-te-types/label-set-info
     skos:scopeNote "Grouping for the list of label restrictions specifying what\nlabels may or may not be used." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -314,6 +362,7 @@ lex:ietf-te-types-label-set-info
 lex:ietf-te-types-link-protection-1-for-1
     a lex:ReferenceEntry ;
     skos:prefLabel "link-protection-1-for-1" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/link-protection-1-for-1
     skos:definition "One-for-one (1:1) protected link type." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -322,6 +371,7 @@ lex:ietf-te-types-link-protection-1-for-1
 lex:ietf-te-types-link-protection-1-plus-1
     a lex:ReferenceEntry ;
     skos:prefLabel "link-protection-1-plus-1" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/link-protection-1-plus-1
     skos:definition "One-plus-one (1+1) protected link type." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -330,6 +380,7 @@ lex:ietf-te-types-link-protection-1-plus-1
 lex:ietf-te-types-link-protection-enhanced
     a lex:ReferenceEntry ;
     skos:prefLabel "link-protection-enhanced" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/link-protection-enhanced
     skos:definition "A compound link protection type derived from the underlay\nTE tunnel protection configuration supporting the TE link." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -338,6 +389,7 @@ lex:ietf-te-types-link-protection-enhanced
 lex:ietf-te-types-link-protection-extra-traffic
     a lex:ReferenceEntry ;
     skos:prefLabel "link-protection-extra-traffic" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/link-protection-extra-traffic
     skos:definition "Extra-Traffic protected link type." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -346,6 +398,7 @@ lex:ietf-te-types-link-protection-extra-traffic
 lex:ietf-te-types-link-protection-shared
     a lex:ReferenceEntry ;
     skos:prefLabel "link-protection-shared" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/link-protection-shared
     skos:definition "Shared protected link type." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -354,6 +407,7 @@ lex:ietf-te-types-link-protection-shared
 lex:ietf-te-types-link-protection-type
     a lex:ReferenceEntry ;
     skos:prefLabel "link-protection-type" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/link-protection-type
     skos:definition "Base identity for the link protection type." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -362,6 +416,7 @@ lex:ietf-te-types-link-protection-type
 lex:ietf-te-types-link-protection-unprotected
     a lex:ReferenceEntry ;
     skos:prefLabel "link-protection-unprotected" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/link-protection-unprotected
     skos:definition "Unprotected link type." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -370,6 +425,7 @@ lex:ietf-te-types-link-protection-unprotected
 lex:ietf-te-types-local-protection-desired
     a lex:ReferenceEntry ;
     skos:prefLabel "local-protection-desired" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/local-protection-desired
     skos:definition "Local protection is desired." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -378,6 +434,7 @@ lex:ietf-te-types-local-protection-desired
 lex:ietf-te-types-local-recording-desired
     a lex:ReferenceEntry ;
     skos:prefLabel "local-recording-desired" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/local-recording-desired
     skos:definition "Label recording is desired." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -386,6 +443,7 @@ lex:ietf-te-types-local-recording-desired
 lex:ietf-te-types-lockout-of-protection
     a lex:ReferenceEntry ;
     skos:prefLabel "lockout-of-protection" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/lockout-of-protection
     skos:definition "A Loss of Protection (LoP) command is active." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -394,6 +452,7 @@ lex:ietf-te-types-lockout-of-protection
 lex:ietf-te-types-loopback-desired
     a lex:ReferenceEntry ;
     skos:prefLabel "loopback-desired" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/loopback-desired
     skos:definition "This flag indicates that a particular node on the LSP is\nrequired to enter loopback mode.  This can also be\nused to specify the loopback state of the node." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -402,6 +461,7 @@ lex:ietf-te-types-loopback-desired
 lex:ietf-te-types-lsp-attributes-flags
     a lex:ReferenceEntry ;
     skos:prefLabel "lsp-attributes-flags" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/lsp-attributes-flags
     skos:definition "Base identity for LSP attributes flags." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -410,6 +470,7 @@ lex:ietf-te-types-lsp-attributes-flags
 lex:ietf-te-types-lsp-encoding-digital-wrapper
     a lex:ReferenceEntry ;
     skos:prefLabel "lsp-encoding-digital-wrapper" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/lsp-encoding-digital-wrapper
     skos:definition "Digital Wrapper LSP encoding." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -418,6 +479,7 @@ lex:ietf-te-types-lsp-encoding-digital-wrapper
 lex:ietf-te-types-lsp-encoding-ethernet
     a lex:ReferenceEntry ;
     skos:prefLabel "lsp-encoding-ethernet" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/lsp-encoding-ethernet
     skos:definition "Ethernet LSP encoding." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -426,6 +488,7 @@ lex:ietf-te-types-lsp-encoding-ethernet
 lex:ietf-te-types-lsp-encoding-fiber
     a lex:ReferenceEntry ;
     skos:prefLabel "lsp-encoding-fiber" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/lsp-encoding-fiber
     skos:definition "Fiber LSP encoding." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -434,6 +497,7 @@ lex:ietf-te-types-lsp-encoding-fiber
 lex:ietf-te-types-lsp-encoding-fiber-channel
     a lex:ReferenceEntry ;
     skos:prefLabel "lsp-encoding-fiber-channel" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/lsp-encoding-fiber-channel
     skos:definition "FiberChannel LSP encoding." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -442,6 +506,7 @@ lex:ietf-te-types-lsp-encoding-fiber-channel
 lex:ietf-te-types-lsp-encoding-lambda
     a lex:ReferenceEntry ;
     skos:prefLabel "lsp-encoding-lambda" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/lsp-encoding-lambda
     skos:definition "Lambda (photonic) LSP encoding." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -450,6 +515,7 @@ lex:ietf-te-types-lsp-encoding-lambda
 lex:ietf-te-types-lsp-encoding-line
     a lex:ReferenceEntry ;
     skos:prefLabel "lsp-encoding-line" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/lsp-encoding-line
     skos:definition "Line (e.g., 8B/10B) LSP encoding." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -458,6 +524,7 @@ lex:ietf-te-types-lsp-encoding-line
 lex:ietf-te-types-lsp-encoding-oduk
     a lex:ReferenceEntry ;
     skos:prefLabel "lsp-encoding-oduk" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/lsp-encoding-oduk
     skos:definition "G.709 ODUk (Digital Path) LSP encoding." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -466,6 +533,7 @@ lex:ietf-te-types-lsp-encoding-oduk
 lex:ietf-te-types-lsp-encoding-optical-channel
     a lex:ReferenceEntry ;
     skos:prefLabel "lsp-encoding-optical-channel" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/lsp-encoding-optical-channel
     skos:definition "G.709 Optical Channel LSP encoding." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -474,6 +542,7 @@ lex:ietf-te-types-lsp-encoding-optical-channel
 lex:ietf-te-types-lsp-encoding-packet
     a lex:ReferenceEntry ;
     skos:prefLabel "lsp-encoding-packet" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/lsp-encoding-packet
     skos:definition "Packet LSP encoding." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -482,6 +551,7 @@ lex:ietf-te-types-lsp-encoding-packet
 lex:ietf-te-types-lsp-encoding-pdh
     a lex:ReferenceEntry ;
     skos:prefLabel "lsp-encoding-pdh" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/lsp-encoding-pdh
     skos:definition "ANSI/ETSI PDH LSP encoding." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -490,6 +560,7 @@ lex:ietf-te-types-lsp-encoding-pdh
 lex:ietf-te-types-lsp-encoding-sdh
     a lex:ReferenceEntry ;
     skos:prefLabel "lsp-encoding-sdh" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/lsp-encoding-sdh
     skos:definition "SDH ITU-T G.707 / SONET ANSI T1.105 LSP encoding." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -498,6 +569,7 @@ lex:ietf-te-types-lsp-encoding-sdh
 lex:ietf-te-types-lsp-encoding-types
     a lex:ReferenceEntry ;
     skos:prefLabel "lsp-encoding-types" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/lsp-encoding-types
     skos:definition "Base identity for encoding types." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -506,6 +578,7 @@ lex:ietf-te-types-lsp-encoding-types
 lex:ietf-te-types-lsp-integrity-required
     a lex:ReferenceEntry ;
     skos:prefLabel "lsp-integrity-required" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/lsp-integrity-required
     skos:definition "Indicates that LSP integrity is required." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -514,6 +587,7 @@ lex:ietf-te-types-lsp-integrity-required
 lex:ietf-te-types-lsp-metric-absolute
     a lex:ReferenceEntry ;
     skos:prefLabel "lsp-metric-absolute" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/lsp-metric-absolute
     skos:definition "The metric specified for the LSPs to which this identity\nrefers is specified as an absolute value." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -522,6 +596,7 @@ lex:ietf-te-types-lsp-metric-absolute
 lex:ietf-te-types-lsp-metric-inherited
     a lex:ReferenceEntry ;
     skos:prefLabel "lsp-metric-inherited" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/lsp-metric-inherited
     skos:definition "The metric for the LSPs to which this identity refers is\nnot specified explicitly; rather, it is directly inherited\nfrom the IGP cost." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -530,6 +605,7 @@ lex:ietf-te-types-lsp-metric-inherited
 lex:ietf-te-types-lsp-metric-relative
     a lex:ReferenceEntry ;
     skos:prefLabel "lsp-metric-relative" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/lsp-metric-relative
     skos:definition "The metric specified for the LSPs to which this identity\nrefers is specified as a value relative to the IGP metric\ncost to the LSP's tail end." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -538,6 +614,7 @@ lex:ietf-te-types-lsp-metric-relative
 lex:ietf-te-types-lsp-metric-type
     a lex:ReferenceEntry ;
     skos:prefLabel "lsp-metric-type" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/lsp-metric-type
     skos:definition "Base identity for the LSP metric specification types." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -546,6 +623,7 @@ lex:ietf-te-types-lsp-metric-type
 lex:ietf-te-types-lsp-path-computation-failed
     a lex:ReferenceEntry ;
     skos:prefLabel "lsp-path-computation-failed" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/lsp-path-computation-failed
     skos:definition "State path computation failed." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -554,6 +632,7 @@ lex:ietf-te-types-lsp-path-computation-failed
 lex:ietf-te-types-lsp-path-computation-ok
     a lex:ReferenceEntry ;
     skos:prefLabel "lsp-path-computation-ok" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/lsp-path-computation-ok
     skos:definition "State path computation was successful." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -562,6 +641,7 @@ lex:ietf-te-types-lsp-path-computation-ok
 lex:ietf-te-types-lsp-path-computing
     a lex:ReferenceEntry ;
     skos:prefLabel "lsp-path-computing" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/lsp-path-computing
     skos:definition "State path computation is in progress." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -570,6 +650,7 @@ lex:ietf-te-types-lsp-path-computing
 lex:ietf-te-types-lsp-protection-1-for-1
     a lex:ReferenceEntry ;
     skos:prefLabel "lsp-protection-1-for-1" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/lsp-protection-1-for-1
     skos:definition "LSP protection '1:1 Protection Type'." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -578,6 +659,7 @@ lex:ietf-te-types-lsp-protection-1-for-1
 lex:ietf-te-types-lsp-protection-1-for-n
     a lex:ReferenceEntry ;
     skos:prefLabel "lsp-protection-1-for-n" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/lsp-protection-1-for-n
     skos:definition "'1:N Protection with Extra-Traffic' LSP protection type." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -586,6 +668,7 @@ lex:ietf-te-types-lsp-protection-1-for-n
 lex:ietf-te-types-lsp-protection-bidir-1-plus-1
     a lex:ReferenceEntry ;
     skos:prefLabel "lsp-protection-bidir-1-plus-1" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/lsp-protection-bidir-1-plus-1
     skos:definition "'1+1 Bidirectional Protection' LSP protection type." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -594,6 +677,7 @@ lex:ietf-te-types-lsp-protection-bidir-1-plus-1
 lex:ietf-te-types-lsp-protection-extra-traffic
     a lex:ReferenceEntry ;
     skos:prefLabel "lsp-protection-extra-traffic" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/lsp-protection-extra-traffic
     skos:definition "Extra-Traffic LSP protection type." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -602,6 +686,7 @@ lex:ietf-te-types-lsp-protection-extra-traffic
 lex:ietf-te-types-lsp-protection-reroute
     a lex:ReferenceEntry ;
     skos:prefLabel "lsp-protection-reroute" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/lsp-protection-reroute
     skos:definition "'Rerouting without Extra-Traffic' LSP protection type." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -610,6 +695,7 @@ lex:ietf-te-types-lsp-protection-reroute
 lex:ietf-te-types-lsp-protection-reroute-extra
     a lex:ReferenceEntry ;
     skos:prefLabel "lsp-protection-reroute-extra" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/lsp-protection-reroute-extra
     skos:definition "'(Full) Rerouting' LSP protection type." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -618,6 +704,7 @@ lex:ietf-te-types-lsp-protection-reroute-extra
 lex:ietf-te-types-lsp-protection-state
     a lex:ReferenceEntry ;
     skos:prefLabel "lsp-protection-state" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/lsp-protection-state
     skos:definition "Base identity of protection states for reporting purposes." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -626,6 +713,7 @@ lex:ietf-te-types-lsp-protection-state
 lex:ietf-te-types-lsp-protection-type
     a lex:ReferenceEntry ;
     skos:prefLabel "lsp-protection-type" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/lsp-protection-type
     skos:definition "Base identity from which LSP protection types are derived." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -634,6 +722,7 @@ lex:ietf-te-types-lsp-protection-type
 lex:ietf-te-types-lsp-protection-unidir-1-plus-1
     a lex:ReferenceEntry ;
     skos:prefLabel "lsp-protection-unidir-1-plus-1" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/lsp-protection-unidir-1-plus-1
     skos:definition "'1+1 Unidirectional Protection' LSP protection type." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -642,6 +731,7 @@ lex:ietf-te-types-lsp-protection-unidir-1-plus-1
 lex:ietf-te-types-lsp-protection-unprotected
     a lex:ReferenceEntry ;
     skos:prefLabel "lsp-protection-unprotected" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/lsp-protection-unprotected
     skos:definition "'Unprotected' LSP protection type." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -650,6 +740,7 @@ lex:ietf-te-types-lsp-protection-unprotected
 lex:ietf-te-types-lsp-restoration-restore-all
     a lex:ReferenceEntry ;
     skos:prefLabel "lsp-restoration-restore-all" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/lsp-restoration-restore-all
     skos:definition "Affected LSPs are restored after all LSPs of the tunnel are\nbroken." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -658,6 +749,7 @@ lex:ietf-te-types-lsp-restoration-restore-all
 lex:ietf-te-types-lsp-restoration-restore-any
     a lex:ReferenceEntry ;
     skos:prefLabel "lsp-restoration-restore-any" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/lsp-restoration-restore-any
     skos:definition "Any LSP affected by a failure is restored." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -666,6 +758,7 @@ lex:ietf-te-types-lsp-restoration-restore-any
 lex:ietf-te-types-lsp-restoration-type
     a lex:ReferenceEntry ;
     skos:prefLabel "lsp-restoration-type" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/lsp-restoration-type
     skos:definition "Base identity from which LSP restoration types are derived." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -674,6 +767,7 @@ lex:ietf-te-types-lsp-restoration-type
 lex:ietf-te-types-lsp-state-down
     a lex:ReferenceEntry ;
     skos:prefLabel "lsp-state-down" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/lsp-state-down
     skos:definition "State is down." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -682,6 +776,7 @@ lex:ietf-te-types-lsp-state-down
 lex:ietf-te-types-lsp-state-setting-up
     a lex:ReferenceEntry ;
     skos:prefLabel "lsp-state-setting-up" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/lsp-state-setting-up
     skos:definition "State is being set up." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -690,6 +785,7 @@ lex:ietf-te-types-lsp-state-setting-up
 lex:ietf-te-types-lsp-state-setup-failed
     a lex:ReferenceEntry ;
     skos:prefLabel "lsp-state-setup-failed" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/lsp-state-setup-failed
     skos:definition "State setup failed." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -698,6 +794,7 @@ lex:ietf-te-types-lsp-state-setup-failed
 lex:ietf-te-types-lsp-state-setup-ok
     a lex:ReferenceEntry ;
     skos:prefLabel "lsp-state-setup-ok" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/lsp-state-setup-ok
     skos:definition "State setup was successful." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -706,6 +803,7 @@ lex:ietf-te-types-lsp-state-setup-ok
 lex:ietf-te-types-lsp-state-tearing-down
     a lex:ReferenceEntry ;
     skos:prefLabel "lsp-state-tearing-down" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/lsp-state-tearing-down
     skos:definition "State is being torn down." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -714,6 +812,7 @@ lex:ietf-te-types-lsp-state-tearing-down
 lex:ietf-te-types-lsp-state-type
     a lex:ReferenceEntry ;
     skos:prefLabel "lsp-state-type" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/lsp-state-type
     skos:definition "Base identity for TE LSP states." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -722,6 +821,7 @@ lex:ietf-te-types-lsp-state-type
 lex:ietf-te-types-lsp-state-up
     a lex:ReferenceEntry ;
     skos:prefLabel "lsp-state-up" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/lsp-state-up
     skos:definition "State is up." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -730,6 +830,7 @@ lex:ietf-te-types-lsp-state-up
 lex:ietf-te-types-lsp-stitching-desired
     a lex:ReferenceEntry ;
     skos:prefLabel "lsp-stitching-desired" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/lsp-stitching-desired
     skos:definition "Indicates that LSP stitching is desired." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -738,6 +839,7 @@ lex:ietf-te-types-lsp-stitching-desired
 lex:ietf-te-types-manual-switch
     a lex:ReferenceEntry ;
     skos:prefLabel "manual-switch" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/manual-switch
     skos:definition "A manual switchover command is active." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -746,6 +848,7 @@ lex:ietf-te-types-manual-switch
 lex:ietf-te-types-node-protection-desired
     a lex:ReferenceEntry ;
     skos:prefLabel "node-protection-desired" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/node-protection-desired
     skos:definition "Requests FRR node protection on LSRs, if present." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -754,6 +857,7 @@ lex:ietf-te-types-node-protection-desired
 lex:ietf-te-types-non-php-behavior-flag
     a lex:ReferenceEntry ;
     skos:prefLabel "non-php-behavior-flag" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/non-php-behavior-flag
     skos:definition "Indicates that non-PHP (non-Penultimate Hop Popping) behavior\nfor the LSP is desired." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -762,6 +866,7 @@ lex:ietf-te-types-non-php-behavior-flag
 lex:ietf-te-types-normal
     a lex:ReferenceEntry ;
     skos:prefLabel "normal" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/normal
     skos:definition "Normal state." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -770,6 +875,7 @@ lex:ietf-te-types-normal
 lex:ietf-te-types-not-optimized
     a lex:ReferenceEntry ;
     skos:prefLabel "not-optimized" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/not-optimized
     skos:definition "Optimization is not applied." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -778,6 +884,7 @@ lex:ietf-te-types-not-optimized
 lex:ietf-te-types-oam-mep-entity-desired
     a lex:ReferenceEntry ;
     skos:prefLabel "oam-mep-entity-desired" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/oam-mep-entity-desired
     skos:definition "OAM Maintenance Entity Group End Point (MEP) entities\ndesired." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -786,6 +893,7 @@ lex:ietf-te-types-oam-mep-entity-desired
 lex:ietf-te-types-oam-mip-entity-desired
     a lex:ReferenceEntry ;
     skos:prefLabel "oam-mip-entity-desired" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/oam-mip-entity-desired
     skos:definition "OAM Maintenance Entity Group Intermediate Points (MIP)\nentities desired." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -794,6 +902,7 @@ lex:ietf-te-types-oam-mip-entity-desired
 lex:ietf-te-types-objective-function-type
     a lex:ReferenceEntry ;
     skos:prefLabel "objective-function-type" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/objective-function-type
     skos:definition "Base objective function type." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -802,6 +911,7 @@ lex:ietf-te-types-objective-function-type
 lex:ietf-te-types-of-maximize-residual-bandwidth
     a lex:ReferenceEntry ;
     skos:prefLabel "of-maximize-residual-bandwidth" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/of-maximize-residual-bandwidth
     skos:definition "Objective function for maximizing residual bandwidth." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -810,6 +920,7 @@ lex:ietf-te-types-of-maximize-residual-bandwidth
 lex:ietf-te-types-of-minimize-agg-bandwidth-consumption
     a lex:ReferenceEntry ;
     skos:prefLabel "of-minimize-agg-bandwidth-consumption" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/of-minimize-agg-bandwidth-consumption
     skos:definition "Objective function for minimizing aggregate bandwidth\nconsumption." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -818,6 +929,7 @@ lex:ietf-te-types-of-minimize-agg-bandwidth-consumption
 lex:ietf-te-types-of-minimize-cost-path
     a lex:ReferenceEntry ;
     skos:prefLabel "of-minimize-cost-path" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/of-minimize-cost-path
     skos:definition "Objective function for minimizing path cost." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -826,6 +938,7 @@ lex:ietf-te-types-of-minimize-cost-path
 lex:ietf-te-types-of-minimize-cost-path-set
     a lex:ReferenceEntry ;
     skos:prefLabel "of-minimize-cost-path-set" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/of-minimize-cost-path-set
     skos:definition "Objective function for minimizing the cost on a path set." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -834,6 +947,7 @@ lex:ietf-te-types-of-minimize-cost-path-set
 lex:ietf-te-types-of-minimize-load-most-loaded-link
     a lex:ReferenceEntry ;
     skos:prefLabel "of-minimize-load-most-loaded-link" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/of-minimize-load-most-loaded-link
     skos:definition "Objective function for minimizing the load on the link that\nis carrying the highest load." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -842,6 +956,7 @@ lex:ietf-te-types-of-minimize-load-most-loaded-link
 lex:ietf-te-types-of-minimize-load-path
     a lex:ReferenceEntry ;
     skos:prefLabel "of-minimize-load-path" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/of-minimize-load-path
     skos:definition "Objective function for minimizing the load on one or more\npaths." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -850,7 +965,9 @@ lex:ietf-te-types-of-minimize-load-path
 lex:ietf-te-types-one-way-performance-metrics
     a lex:ReferenceEntry ;
     skos:prefLabel "one-way-performance-metrics" ;
+    # source: http://example.org/ontology/grouping/ietf-te-types/one-way-performance-metrics
     skos:definition "Grouping definition: one-way-performance-metrics" ;
+    # source: http://example.org/ontology/grouping/ietf-te-types/one-way-performance-metrics
     skos:scopeNote "One-way PM throttle grouping." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -859,6 +976,7 @@ lex:ietf-te-types-one-way-performance-metrics
 lex:ietf-te-types-oob-mapping-flag
     a lex:ReferenceEntry ;
     skos:prefLabel "oob-mapping-flag" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/oob-mapping-flag
     skos:definition "Indicates that signaling of the egress binding information is\nout of band (e.g., via the Border Gateway Protocol (BGP))." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -867,7 +985,9 @@ lex:ietf-te-types-oob-mapping-flag
 lex:ietf-te-types-optimization-metric-entry
     a lex:ReferenceEntry ;
     skos:prefLabel "optimization-metric-entry" ;
+    # source: http://example.org/ontology/grouping/ietf-te-types/optimization-metric-entry
     skos:definition "Grouping definition: optimization-metric-entry" ;
+    # source: http://example.org/ontology/grouping/ietf-te-types/optimization-metric-entry
     skos:scopeNote "Optimization metrics configuration grouping." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -876,6 +996,7 @@ lex:ietf-te-types-optimization-metric-entry
 lex:ietf-te-types-p2mp-te-tree-eval-request
     a lex:ReferenceEntry ;
     skos:prefLabel "p2mp-te-tree-eval-request" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/p2mp-te-tree-eval-request
     skos:definition "P2MP-TE tree re-evaluation request." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -884,6 +1005,7 @@ lex:ietf-te-types-p2mp-te-tree-eval-request
 lex:ietf-te-types-path-computation-method
     a lex:ReferenceEntry ;
     skos:prefLabel "path-computation-method" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/path-computation-method
     skos:definition "Base identity for supported path computation mechanisms." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -892,6 +1014,7 @@ lex:ietf-te-types-path-computation-method
 lex:ietf-te-types-path-computation-srlg-type
     a lex:ReferenceEntry ;
     skos:prefLabel "path-computation-srlg-type" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/path-computation-srlg-type
     skos:definition "Base identity for SRLG path computation." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -900,7 +1023,9 @@ lex:ietf-te-types-path-computation-srlg-type
 lex:ietf-te-types-path-constraints-route-objects
     a lex:ReferenceEntry ;
     skos:prefLabel "path-constraints-route-objects" ;
+    # source: http://example.org/ontology/grouping/ietf-te-types/path-constraints-route-objects
     skos:definition "Grouping definition: path-constraints-route-objects" ;
+    # source: http://example.org/ontology/grouping/ietf-te-types/path-constraints-route-objects
     skos:scopeNote "List of route entries to be included or excluded when\nperforming the path computation." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -909,6 +1034,7 @@ lex:ietf-te-types-path-constraints-route-objects
 lex:ietf-te-types-path-explicitly-defined
     a lex:ReferenceEntry ;
     skos:prefLabel "path-explicitly-defined" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/path-explicitly-defined
     skos:definition "Constrained-path LSP in which the path is\nexplicitly specified as a collection of strict and/or loose\nhops." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -917,6 +1043,7 @@ lex:ietf-te-types-path-explicitly-defined
 lex:ietf-te-types-path-externally-queried
     a lex:ReferenceEntry ;
     skos:prefLabel "path-externally-queried" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/path-externally-queried
     skos:definition "Constrained-path LSP in which the path is obtained by\nquerying an external source, such as a PCE server.\nIn the case that an LSP is defined to be externally queried,\nit may also have associated explicit definitions (provided\nto the external source to aid computation).  The path that is\nreturned by the external source may require further local\ncomputation on the device." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -925,6 +1052,7 @@ lex:ietf-te-types-path-externally-queried
 lex:ietf-te-types-path-invalidation-action-drop
     a lex:ReferenceEntry ;
     skos:prefLabel "path-invalidation-action-drop" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/path-invalidation-action-drop
     skos:definition "Upon invalidation of the TE tunnel path, the tunnel remains\nvalid, but any packet mapped over the tunnel is dropped." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -933,6 +1061,7 @@ lex:ietf-te-types-path-invalidation-action-drop
 lex:ietf-te-types-path-invalidation-action-teardown
     a lex:ReferenceEntry ;
     skos:prefLabel "path-invalidation-action-teardown" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/path-invalidation-action-teardown
     skos:definition "TE path invalidation action teardown." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -941,6 +1070,7 @@ lex:ietf-te-types-path-invalidation-action-teardown
 lex:ietf-te-types-path-invalidation-action-type
     a lex:ReferenceEntry ;
     skos:prefLabel "path-invalidation-action-type" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/path-invalidation-action-type
     skos:definition "Base identity for TE path invalidation action types." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -949,6 +1079,7 @@ lex:ietf-te-types-path-invalidation-action-type
 lex:ietf-te-types-path-locally-computed
     a lex:ReferenceEntry ;
     skos:prefLabel "path-locally-computed" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/path-locally-computed
     skos:definition "Indicates a constrained-path LSP in which the\npath is computed by the local LER." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -957,6 +1088,7 @@ lex:ietf-te-types-path-locally-computed
 lex:ietf-te-types-path-metric-delay-average
     a lex:ReferenceEntry ;
     skos:prefLabel "path-metric-delay-average" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/path-metric-delay-average
     skos:definition "Average unidirectional link delay." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -965,6 +1097,7 @@ lex:ietf-te-types-path-metric-delay-average
 lex:ietf-te-types-path-metric-delay-minimum
     a lex:ReferenceEntry ;
     skos:prefLabel "path-metric-delay-minimum" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/path-metric-delay-minimum
     skos:definition "Minimum unidirectional link delay." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -973,6 +1106,7 @@ lex:ietf-te-types-path-metric-delay-minimum
 lex:ietf-te-types-path-metric-hop
     a lex:ReferenceEntry ;
     skos:prefLabel "path-metric-hop" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/path-metric-hop
     skos:definition "Hop path metric." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -981,6 +1115,7 @@ lex:ietf-te-types-path-metric-hop
 lex:ietf-te-types-path-metric-igp
     a lex:ReferenceEntry ;
     skos:prefLabel "path-metric-igp" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/path-metric-igp
     skos:definition "IGP path metric." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -989,6 +1124,7 @@ lex:ietf-te-types-path-metric-igp
 lex:ietf-te-types-path-metric-optimize-excludes
     a lex:ReferenceEntry ;
     skos:prefLabel "path-metric-optimize-excludes" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/path-metric-optimize-excludes
     skos:definition "A metric that optimizes to a maximum the number of excluded\nresources specified in a set." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -997,6 +1133,7 @@ lex:ietf-te-types-path-metric-optimize-excludes
 lex:ietf-te-types-path-metric-optimize-includes
     a lex:ReferenceEntry ;
     skos:prefLabel "path-metric-optimize-includes" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/path-metric-optimize-includes
     skos:definition "A metric that optimizes the number of included resources\nspecified in a set." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -1005,6 +1142,7 @@ lex:ietf-te-types-path-metric-optimize-includes
 lex:ietf-te-types-path-metric-residual-bandwidth
     a lex:ReferenceEntry ;
     skos:prefLabel "path-metric-residual-bandwidth" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/path-metric-residual-bandwidth
     skos:definition "Unidirectional Residual Bandwidth, which is defined to be\nMaximum Bandwidth (RFC 3630) minus the bandwidth currently\nallocated to LSPs." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -1013,6 +1151,7 @@ lex:ietf-te-types-path-metric-residual-bandwidth
 lex:ietf-te-types-path-metric-te
     a lex:ReferenceEntry ;
     skos:prefLabel "path-metric-te" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/path-metric-te
     skos:definition "TE path metric." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -1021,6 +1160,7 @@ lex:ietf-te-types-path-metric-te
 lex:ietf-te-types-path-metric-type
     a lex:ReferenceEntry ;
     skos:prefLabel "path-metric-type" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/path-metric-type
     skos:definition "Base identity for the path metric type." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -1029,6 +1169,7 @@ lex:ietf-te-types-path-metric-type
 lex:ietf-te-types-path-reevaluation-request
     a lex:ReferenceEntry ;
     skos:prefLabel "path-reevaluation-request" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/path-reevaluation-request
     skos:definition "This flag indicates that a path re-evaluation (of the\ncurrent path in use) is requested.  Note that this does\nnot trigger any LSP reroutes but instead just signals a\nrequest to evaluate whether a preferable path exists." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -1037,7 +1178,9 @@ lex:ietf-te-types-path-reevaluation-request
 lex:ietf-te-types-path-route-exclude-objects
     a lex:ReferenceEntry ;
     skos:prefLabel "path-route-exclude-objects" ;
+    # source: http://example.org/ontology/grouping/ietf-te-types/path-route-exclude-objects
     skos:definition "Grouping definition: path-route-exclude-objects" ;
+    # source: http://example.org/ontology/grouping/ietf-te-types/path-route-exclude-objects
     skos:scopeNote "List of route objects to be excluded when performing\nthe path computation." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -1046,7 +1189,9 @@ lex:ietf-te-types-path-route-exclude-objects
 lex:ietf-te-types-path-route-include-objects
     a lex:ReferenceEntry ;
     skos:prefLabel "path-route-include-objects" ;
+    # source: http://example.org/ontology/grouping/ietf-te-types/path-route-include-objects
     skos:definition "Grouping definition: path-route-include-objects" ;
+    # source: http://example.org/ontology/grouping/ietf-te-types/path-route-include-objects
     skos:scopeNote "List of route objects to be included when performing\nthe path computation." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -1055,6 +1200,7 @@ lex:ietf-te-types-path-route-include-objects
 lex:ietf-te-types-path-scope-end-to-end
     a lex:ReferenceEntry ;
     skos:prefLabel "path-scope-end-to-end" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/path-scope-end-to-end
     skos:definition "Path scope end to end." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -1064,6 +1210,7 @@ lex:ietf-te-types-path-scope-end-to-end
 lex:ietf-te-types-path-scope-segment
     a lex:ReferenceEntry ;
     skos:prefLabel "path-scope-segment" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/path-scope-segment
     skos:definition "Path scope segment." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -1073,6 +1220,7 @@ lex:ietf-te-types-path-scope-segment
 lex:ietf-te-types-path-scope-type
     a lex:ReferenceEntry ;
     skos:prefLabel "path-scope-type" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/path-scope-type
     skos:definition "Base identity from which specific path scope types are\nderived." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -1081,6 +1229,7 @@ lex:ietf-te-types-path-scope-type
 lex:ietf-te-types-path-setup-rsvp
     a lex:ReferenceEntry ;
     skos:prefLabel "path-setup-rsvp" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/path-setup-rsvp
     skos:definition "RSVP-TE signaling path setup." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -1089,6 +1238,7 @@ lex:ietf-te-types-path-setup-rsvp
 lex:ietf-te-types-path-setup-sr
     a lex:ReferenceEntry ;
     skos:prefLabel "path-setup-sr" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/path-setup-sr
     skos:definition "Segment-routing path setup." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -1097,6 +1247,7 @@ lex:ietf-te-types-path-setup-sr
 lex:ietf-te-types-path-setup-static
     a lex:ReferenceEntry ;
     skos:prefLabel "path-setup-static" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/path-setup-static
     skos:definition "Static LSP provisioning path setup." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -1105,6 +1256,7 @@ lex:ietf-te-types-path-setup-static
 lex:ietf-te-types-path-signaling-type
     a lex:ReferenceEntry ;
     skos:prefLabel "path-signaling-type" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/path-signaling-type
     skos:definition "Base identity from which specific LSP path setup types\nare derived." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -1113,6 +1265,7 @@ lex:ietf-te-types-path-signaling-type
 lex:ietf-te-types-path-tiebreaker-maxfill
     a lex:ReferenceEntry ;
     skos:prefLabel "path-tiebreaker-maxfill" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/path-tiebreaker-maxfill
     skos:definition "Max-Fill LSP path placement." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -1121,6 +1274,7 @@ lex:ietf-te-types-path-tiebreaker-maxfill
 lex:ietf-te-types-path-tiebreaker-minfill
     a lex:ReferenceEntry ;
     skos:prefLabel "path-tiebreaker-minfill" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/path-tiebreaker-minfill
     skos:definition "Min-Fill LSP path placement." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -1129,6 +1283,7 @@ lex:ietf-te-types-path-tiebreaker-minfill
 lex:ietf-te-types-path-tiebreaker-random
     a lex:ReferenceEntry ;
     skos:prefLabel "path-tiebreaker-random" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/path-tiebreaker-random
     skos:definition "Random LSP path placement." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -1137,6 +1292,7 @@ lex:ietf-te-types-path-tiebreaker-random
 lex:ietf-te-types-path-tiebreaker-type
     a lex:ReferenceEntry ;
     skos:prefLabel "path-tiebreaker-type" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/path-tiebreaker-type
     skos:definition "Base identity for the path tiebreaker type." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -1145,7 +1301,9 @@ lex:ietf-te-types-path-tiebreaker-type
 lex:ietf-te-types-performance-metrics-attributes
     a lex:ReferenceEntry ;
     skos:prefLabel "performance-metrics-attributes" ;
+    # source: http://example.org/ontology/grouping/ietf-te-types/performance-metrics-attributes
     skos:definition "Contains PM attributes." ;
+    # source: http://example.org/ontology/grouping/ietf-te-types/performance-metrics-attributes
     skos:scopeNote "Grouping definition: performance-metrics-attributes" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -1154,6 +1312,7 @@ lex:ietf-te-types-performance-metrics-attributes
 lex:ietf-te-types-performance-metrics-normality
     a lex:ReferenceEntry ;
     skos:prefLabel "performance-metrics-normality" ;
+    # source: http://example.org/ontology/types/ietf-te-types/performance-metrics-normality
     skos:definition "Indicates whether a performance metric is normal (anomalous\nbit not set), abnormal (anomalous bit set), or unknown." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:EnumeratedKind ;
@@ -1162,7 +1321,9 @@ lex:ietf-te-types-performance-metrics-normality
 lex:ietf-te-types-performance-metrics-one-way-bandwidth
     a lex:ReferenceEntry ;
     skos:prefLabel "performance-metrics-one-way-bandwidth" ;
+    # source: http://example.org/ontology/grouping/ietf-te-types/performance-metrics-one-way-bandwidth
     skos:definition "Grouping definition: performance-metrics-one-way-bandwidth" ;
+    # source: http://example.org/ontology/grouping/ietf-te-types/performance-metrics-one-way-bandwidth
     skos:scopeNote "PM information in real time that can be applicable to links.\nPM defined in this grouping are applicable to generic TE PM\nas well as packet TE PM." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -1171,7 +1332,9 @@ lex:ietf-te-types-performance-metrics-one-way-bandwidth
 lex:ietf-te-types-performance-metrics-one-way-delay-loss
     a lex:ReferenceEntry ;
     skos:prefLabel "performance-metrics-one-way-delay-loss" ;
+    # source: http://example.org/ontology/grouping/ietf-te-types/performance-metrics-one-way-delay-loss
     skos:definition "Grouping definition: performance-metrics-one-way-delay-loss" ;
+    # source: http://example.org/ontology/grouping/ietf-te-types/performance-metrics-one-way-delay-loss
     skos:scopeNote "Performance Metrics (PM) information in real time that can\nbe applicable to links or connections.  PM defined in this\ngrouping are applicable to generic TE PM as well as packet TE\nPM." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -1180,7 +1343,9 @@ lex:ietf-te-types-performance-metrics-one-way-delay-loss
 lex:ietf-te-types-performance-metrics-thresholds
     a lex:ReferenceEntry ;
     skos:prefLabel "performance-metrics-thresholds" ;
+    # source: http://example.org/ontology/grouping/ietf-te-types/performance-metrics-thresholds
     skos:definition "Grouping definition: performance-metrics-thresholds" ;
+    # source: http://example.org/ontology/grouping/ietf-te-types/performance-metrics-thresholds
     skos:scopeNote "Grouping for configurable thresholds for measured\nattributes." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -1189,7 +1354,9 @@ lex:ietf-te-types-performance-metrics-thresholds
 lex:ietf-te-types-performance-metrics-throttle-container
     a lex:ReferenceEntry ;
     skos:prefLabel "performance-metrics-throttle-container" ;
+    # source: http://example.org/ontology/grouping/ietf-te-types/performance-metrics-throttle-container
     skos:definition "Controls PM throttling." ;
+    # source: http://example.org/ontology/grouping/ietf-te-types/performance-metrics-throttle-container
     skos:scopeNote "Grouping definition: performance-metrics-throttle-container" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -1198,7 +1365,9 @@ lex:ietf-te-types-performance-metrics-throttle-container
 lex:ietf-te-types-performance-metrics-two-way-delay-loss
     a lex:ReferenceEntry ;
     skos:prefLabel "performance-metrics-two-way-delay-loss" ;
+    # source: http://example.org/ontology/grouping/ietf-te-types/performance-metrics-two-way-delay-loss
     skos:definition "Grouping definition: performance-metrics-two-way-delay-loss" ;
+    # source: http://example.org/ontology/grouping/ietf-te-types/performance-metrics-two-way-delay-loss
     skos:scopeNote "PM information in real time that can be applicable to links or\nconnections.  PM defined in this grouping are applicable to\ngeneric TE PM as well as packet TE PM." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -1207,6 +1376,7 @@ lex:ietf-te-types-performance-metrics-two-way-delay-loss
 lex:ietf-te-types-pre-planned-lsp-flag
     a lex:ReferenceEntry ;
     skos:prefLabel "pre-planned-lsp-flag" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/pre-planned-lsp-flag
     skos:definition "Indicates that the LSP MUST be provisioned in the\ncontrol plane only." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -1215,6 +1385,7 @@ lex:ietf-te-types-pre-planned-lsp-flag
 lex:ietf-te-types-protection-external-commands
     a lex:ReferenceEntry ;
     skos:prefLabel "protection-external-commands" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/protection-external-commands
     skos:definition "Base identity from which protection-related external commands\nused for troubleshooting purposes are derived." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -1223,7 +1394,9 @@ lex:ietf-te-types-protection-external-commands
 lex:ietf-te-types-record-route-state
     a lex:ReferenceEntry ;
     skos:prefLabel "record-route-state" ;
+    # source: http://example.org/ontology/grouping/ietf-te-types/record-route-state
     skos:definition "Grouping definition: record-route-state" ;
+    # source: http://example.org/ontology/grouping/ietf-te-types/record-route-state
     skos:scopeNote "The Record Route grouping." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -1232,6 +1405,7 @@ lex:ietf-te-types-record-route-state
 lex:ietf-te-types-resource-aff-exclude-any
     a lex:ReferenceEntry ;
     skos:prefLabel "resource-aff-exclude-any" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/resource-aff-exclude-any
     skos:definition "The set of attribute filters associated with a\ntunnel, any of which renders a link unacceptable." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -1240,6 +1414,7 @@ lex:ietf-te-types-resource-aff-exclude-any
 lex:ietf-te-types-resource-aff-include-all
     a lex:ReferenceEntry ;
     skos:prefLabel "resource-aff-include-all" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/resource-aff-include-all
     skos:definition "The set of attribute filters associated with a\ntunnel, all of which must be present for a link\nto be acceptable." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -1248,6 +1423,7 @@ lex:ietf-te-types-resource-aff-include-all
 lex:ietf-te-types-resource-aff-include-any
     a lex:ReferenceEntry ;
     skos:prefLabel "resource-aff-include-any" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/resource-aff-include-any
     skos:definition "The set of attribute filters associated with a\ntunnel, any of which must be present for a link\nto be acceptable." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -1256,6 +1432,7 @@ lex:ietf-te-types-resource-aff-include-any
 lex:ietf-te-types-resource-affinities-type
     a lex:ReferenceEntry ;
     skos:prefLabel "resource-affinities-type" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/resource-affinities-type
     skos:definition "Base identity for resource class affinities." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -1264,6 +1441,7 @@ lex:ietf-te-types-resource-affinities-type
 lex:ietf-te-types-restoration-scheme-precomputed
     a lex:ReferenceEntry ;
     skos:prefLabel "restoration-scheme-precomputed" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/restoration-scheme-precomputed
     skos:definition "Restoration LSP is precomputed prior to the failure." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -1272,6 +1450,7 @@ lex:ietf-te-types-restoration-scheme-precomputed
 lex:ietf-te-types-restoration-scheme-preconfigured
     a lex:ReferenceEntry ;
     skos:prefLabel "restoration-scheme-preconfigured" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/restoration-scheme-preconfigured
     skos:definition "Restoration LSP is preconfigured prior to the failure." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -1280,6 +1459,7 @@ lex:ietf-te-types-restoration-scheme-preconfigured
 lex:ietf-te-types-restoration-scheme-presignaled
     a lex:ReferenceEntry ;
     skos:prefLabel "restoration-scheme-presignaled" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/restoration-scheme-presignaled
     skos:definition "Restoration LSP is presignaled prior to the failure." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -1288,6 +1468,7 @@ lex:ietf-te-types-restoration-scheme-presignaled
 lex:ietf-te-types-restoration-scheme-type
     a lex:ReferenceEntry ;
     skos:prefLabel "restoration-scheme-type" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/restoration-scheme-type
     skos:definition "Base identity for LSP restoration schemes." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -1296,6 +1477,7 @@ lex:ietf-te-types-restoration-scheme-type
 lex:ietf-te-types-route-exclude-object
     a lex:ReferenceEntry ;
     skos:prefLabel "route-exclude-object" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/route-exclude-object
     skos:definition "'Exclude route' object." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -1304,6 +1486,7 @@ lex:ietf-te-types-route-exclude-object
 lex:ietf-te-types-route-exclude-srlg
     a lex:ReferenceEntry ;
     skos:prefLabel "route-exclude-srlg" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/route-exclude-srlg
     skos:definition "Excludes SRLGs." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -1312,6 +1495,7 @@ lex:ietf-te-types-route-exclude-srlg
 lex:ietf-te-types-route-include-object
     a lex:ReferenceEntry ;
     skos:prefLabel "route-include-object" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/route-include-object
     skos:definition "'Include route' object." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -1320,6 +1504,7 @@ lex:ietf-te-types-route-include-object
 lex:ietf-te-types-route-usage-type
     a lex:ReferenceEntry ;
     skos:prefLabel "route-usage-type" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/route-usage-type
     skos:definition "Base identity for route usage." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -1328,6 +1513,7 @@ lex:ietf-te-types-route-usage-type
 lex:ietf-te-types-rtm-set-desired
     a lex:ReferenceEntry ;
     skos:prefLabel "rtm-set-desired" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/rtm-set-desired
     skos:definition "Residence Time Measurement (RTM) attribute flag requested." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -1336,6 +1522,7 @@ lex:ietf-te-types-rtm-set-desired
 lex:ietf-te-types-se-style-desired
     a lex:ReferenceEntry ;
     skos:prefLabel "se-style-desired" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/se-style-desired
     skos:definition "Shared explicit style, to allow the LSP to be established\nand share resources with the old LSP." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -1344,6 +1531,7 @@ lex:ietf-te-types-se-style-desired
 lex:ietf-te-types-segment-based-rerouting-desired
     a lex:ReferenceEntry ;
     skos:prefLabel "segment-based-rerouting-desired" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/segment-based-rerouting-desired
     skos:definition "Indicates segment-based rerouting behavior for an LSP\nundergoing establishment.  This MAY also be used to specify\nsegment-based LSP recovery for established LSPs." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -1352,6 +1540,7 @@ lex:ietf-te-types-segment-based-rerouting-desired
 lex:ietf-te-types-session-attributes-flags
     a lex:ReferenceEntry ;
     skos:prefLabel "session-attributes-flags" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/session-attributes-flags
     skos:definition "Base identity for the RSVP-TE session attributes flags." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -1360,6 +1549,7 @@ lex:ietf-te-types-session-attributes-flags
 lex:ietf-te-types-signal-degrade
     a lex:ReferenceEntry ;
     skos:prefLabel "signal-degrade" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/signal-degrade
     skos:definition "There is a signal degrade condition on either the working\npath or the protection path." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -1368,6 +1558,7 @@ lex:ietf-te-types-signal-degrade
 lex:ietf-te-types-signal-fail
     a lex:ReferenceEntry ;
     skos:prefLabel "signal-fail" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/signal-fail
     skos:definition "There is a signal fail condition on either the working path\nor the protection path." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -1376,6 +1567,7 @@ lex:ietf-te-types-signal-fail
 lex:ietf-te-types-signal-fail-of-protection
     a lex:ReferenceEntry ;
     skos:prefLabel "signal-fail-of-protection" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/signal-fail-of-protection
     skos:definition "The protection transport entity has a signal fail condition\nthat is of higher priority than the forced switchover\ncommand." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -1384,6 +1576,7 @@ lex:ietf-te-types-signal-fail-of-protection
 lex:ietf-te-types-soft-preemption-desired
     a lex:ReferenceEntry ;
     skos:prefLabel "soft-preemption-desired" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/soft-preemption-desired
     skos:definition "Soft preemption of LSP resources is desired." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -1392,6 +1585,7 @@ lex:ietf-te-types-soft-preemption-desired
 lex:ietf-te-types-srlg-collection-desired
     a lex:ReferenceEntry ;
     skos:prefLabel "srlg-collection-desired" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/srlg-collection-desired
     skos:definition "SRLG collection desired." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -1401,6 +1595,7 @@ lex:ietf-te-types-srlg-collection-desired
 lex:ietf-te-types-srlg-ignore
     a lex:ReferenceEntry ;
     skos:prefLabel "srlg-ignore" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/srlg-ignore
     skos:definition "Ignores SRLGs in the path computation." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -1409,6 +1604,7 @@ lex:ietf-te-types-srlg-ignore
 lex:ietf-te-types-srlg-preferred
     a lex:ReferenceEntry ;
     skos:prefLabel "srlg-preferred" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/srlg-preferred
     skos:definition "Includes a preferred SRLG check in the path computation." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -1417,6 +1613,7 @@ lex:ietf-te-types-srlg-preferred
 lex:ietf-te-types-srlg-strict
     a lex:ReferenceEntry ;
     skos:prefLabel "srlg-strict" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/srlg-strict
     skos:definition "Includes a strict SRLG check in the path computation." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -1425,6 +1622,7 @@ lex:ietf-te-types-srlg-strict
 lex:ietf-te-types-srlg-weighted
     a lex:ReferenceEntry ;
     skos:prefLabel "srlg-weighted" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/srlg-weighted
     skos:definition "Includes a weighted SRLG check in the path computation." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -1433,6 +1631,7 @@ lex:ietf-te-types-srlg-weighted
 lex:ietf-te-types-switching-capabilities
     a lex:ReferenceEntry ;
     skos:prefLabel "switching-capabilities" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/switching-capabilities
     skos:definition "Base identity for interface switching capabilities." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -1441,6 +1640,7 @@ lex:ietf-te-types-switching-capabilities
 lex:ietf-te-types-switching-dcsc
     a lex:ReferenceEntry ;
     skos:prefLabel "switching-dcsc" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/switching-dcsc
     skos:definition "Data Channel Switching Capable (DCSC)." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -1449,6 +1649,7 @@ lex:ietf-te-types-switching-dcsc
 lex:ietf-te-types-switching-evpl
     a lex:ReferenceEntry ;
     skos:prefLabel "switching-evpl" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/switching-evpl
     skos:definition "Ethernet Virtual Private Line (EVPL)." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -1457,6 +1658,7 @@ lex:ietf-te-types-switching-evpl
 lex:ietf-te-types-switching-fsc
     a lex:ReferenceEntry ;
     skos:prefLabel "switching-fsc" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/switching-fsc
     skos:definition "Fiber-Switch Capable (FSC)." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -1465,6 +1667,7 @@ lex:ietf-te-types-switching-fsc
 lex:ietf-te-types-switching-l2sc
     a lex:ReferenceEntry ;
     skos:prefLabel "switching-l2sc" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/switching-l2sc
     skos:definition "Layer-2 Switch Capable (L2SC)." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -1473,6 +1676,7 @@ lex:ietf-te-types-switching-l2sc
 lex:ietf-te-types-switching-lsc
     a lex:ReferenceEntry ;
     skos:prefLabel "switching-lsc" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/switching-lsc
     skos:definition "Lambda-Switch Capable (LSC)." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -1481,6 +1685,7 @@ lex:ietf-te-types-switching-lsc
 lex:ietf-te-types-switching-otn
     a lex:ReferenceEntry ;
     skos:prefLabel "switching-otn" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/switching-otn
     skos:definition "OTN-TDM capable." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -1489,6 +1694,7 @@ lex:ietf-te-types-switching-otn
 lex:ietf-te-types-switching-psc1
     a lex:ReferenceEntry ;
     skos:prefLabel "switching-psc1" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/switching-psc1
     skos:definition "Packet-Switch Capable-1 (PSC-1)." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -1497,6 +1703,7 @@ lex:ietf-te-types-switching-psc1
 lex:ietf-te-types-switching-tdm
     a lex:ReferenceEntry ;
     skos:prefLabel "switching-tdm" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/switching-tdm
     skos:definition "Time-Division-Multiplex Capable (TDM)." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -1505,6 +1712,7 @@ lex:ietf-te-types-switching-tdm
 lex:ietf-te-types-te-action-fail
     a lex:ReferenceEntry ;
     skos:prefLabel "te-action-fail" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/te-action-fail
     skos:definition "TE action failed." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -1513,6 +1721,7 @@ lex:ietf-te-types-te-action-fail
 lex:ietf-te-types-te-action-result
     a lex:ReferenceEntry ;
     skos:prefLabel "te-action-result" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/te-action-result
     skos:definition "Base identity from which specific TE action results\nare derived." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -1521,6 +1730,7 @@ lex:ietf-te-types-te-action-result
 lex:ietf-te-types-te-action-success
     a lex:ReferenceEntry ;
     skos:prefLabel "te-action-success" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/te-action-success
     skos:definition "TE action was successful." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -1529,7 +1739,9 @@ lex:ietf-te-types-te-action-success
 lex:ietf-te-types-te-bandwidth
     a lex:ReferenceEntry ;
     skos:prefLabel "te-bandwidth" ;
+    # source: http://example.org/ontology/grouping/ietf-te-types/te-bandwidth
     skos:definition "Grouping definition: te-bandwidth" ;
+    # source: http://example.org/ontology/grouping/ietf-te-types/te-bandwidth
     skos:scopeNote "This grouping defines the generic TE bandwidth.\nFor some known data-plane technologies, specific modeling\nstructures are specified.  The string-encoded 'te-bandwidth'\ntype is used for unspecified technologies.\nThe modeling structure can be augmented later for other\ntechnologies." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -1538,6 +1750,7 @@ lex:ietf-te-types-te-bandwidth
 lex:ietf-te-types-te-common-status
     a lex:ReferenceEntry ;
     skos:prefLabel "te-common-status" ;
+    # source: http://example.org/ontology/types/ietf-te-types/te-common-status
     skos:definition "Defines a type representing the common states of a TE\nresource." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:EnumeratedKind ;
@@ -1546,6 +1759,7 @@ lex:ietf-te-types-te-common-status
 lex:ietf-te-types-te-hop-type
     a lex:ReferenceEntry ;
     skos:prefLabel "te-hop-type" ;
+    # source: http://example.org/ontology/types/ietf-te-types/te-hop-type
     skos:definition "Enumerated type for specifying loose or strict paths." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:EnumeratedKind ;
@@ -1554,7 +1768,9 @@ lex:ietf-te-types-te-hop-type
 lex:ietf-te-types-te-label
     a lex:ReferenceEntry ;
     skos:prefLabel "te-label" ;
+    # source: http://example.org/ontology/grouping/ietf-te-types/te-label
     skos:definition "Grouping definition: te-label" ;
+    # source: http://example.org/ontology/grouping/ietf-te-types/te-label
     skos:scopeNote "This grouping defines the generic TE label.\nThe modeling structure can be augmented for each technology.\nFor unspecified technologies, 'rt-types:generalized-label'\nis used." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -1563,6 +1779,7 @@ lex:ietf-te-types-te-label
 lex:ietf-te-types-te-label-direction
     a lex:ReferenceEntry ;
     skos:prefLabel "te-label-direction" ;
+    # source: http://example.org/ontology/types/ietf-te-types/te-label-direction
     skos:definition "Enumerated type for specifying the forward or reverse\nlabel." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:EnumeratedKind ;
@@ -1571,6 +1788,7 @@ lex:ietf-te-types-te-label-direction
 lex:ietf-te-types-te-link-access-type
     a lex:ReferenceEntry ;
     skos:prefLabel "te-link-access-type" ;
+    # source: http://example.org/ontology/types/ietf-te-types/te-link-access-type
     skos:definition "Defines a type representing the access type of a TE link." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:EnumeratedKind ;
@@ -1579,6 +1797,7 @@ lex:ietf-te-types-te-link-access-type
 lex:ietf-te-types-te-link-direction
     a lex:ReferenceEntry ;
     skos:prefLabel "te-link-direction" ;
+    # source: http://example.org/ontology/types/ietf-te-types/te-link-direction
     skos:definition "Enumerated type for specifying the direction of a link on\na node." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:EnumeratedKind ;
@@ -1587,6 +1806,7 @@ lex:ietf-te-types-te-link-direction
 lex:ietf-te-types-te-optimization-criterion
     a lex:ReferenceEntry ;
     skos:prefLabel "te-optimization-criterion" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/te-optimization-criterion
     skos:definition "Base identity for the TE optimization criteria." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -1595,6 +1815,7 @@ lex:ietf-te-types-te-optimization-criterion
 lex:ietf-te-types-te-recovery-status
     a lex:ReferenceEntry ;
     skos:prefLabel "te-recovery-status" ;
+    # source: http://example.org/ontology/types/ietf-te-types/te-recovery-status
     skos:definition "Defines the status of a recovery action." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:EnumeratedKind ;
@@ -1603,6 +1824,7 @@ lex:ietf-te-types-te-recovery-status
 lex:ietf-te-types-te-topology-event-type
     a lex:ReferenceEntry ;
     skos:prefLabel "te-topology-event-type" ;
+    # source: http://example.org/ontology/types/ietf-te-types/te-topology-event-type
     skos:definition "TE event type for notifications." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:EnumeratedKind ;
@@ -1611,7 +1833,9 @@ lex:ietf-te-types-te-topology-event-type
 lex:ietf-te-types-te-topology-identifier
     a lex:ReferenceEntry ;
     skos:prefLabel "te-topology-identifier" ;
+    # source: http://example.org/ontology/grouping/ietf-te-types/te-topology-identifier
     skos:definition "Augmentation for a TE topology." ;
+    # source: http://example.org/ontology/grouping/ietf-te-types/te-topology-identifier
     skos:scopeNote "Grouping definition: te-topology-identifier" ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -1620,6 +1844,7 @@ lex:ietf-te-types-te-topology-identifier
 lex:ietf-te-types-te-tunnel-p2mp
     a lex:ReferenceEntry ;
     skos:prefLabel "te-tunnel-p2mp" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/te-tunnel-p2mp
     skos:definition "TE P2MP tunnel type." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -1628,6 +1853,7 @@ lex:ietf-te-types-te-tunnel-p2mp
 lex:ietf-te-types-te-tunnel-p2p
     a lex:ReferenceEntry ;
     skos:prefLabel "te-tunnel-p2p" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/te-tunnel-p2p
     skos:definition "TE Point-to-Point (P2P) tunnel type." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -1636,6 +1862,7 @@ lex:ietf-te-types-te-tunnel-p2p
 lex:ietf-te-types-te-tunnel-type
     a lex:ReferenceEntry ;
     skos:prefLabel "te-tunnel-type" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/te-tunnel-type
     skos:definition "Base identity from which specific tunnel types are derived." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -1644,6 +1871,7 @@ lex:ietf-te-types-te-tunnel-type
 lex:ietf-te-types-tunnel-action-inprogress
     a lex:ReferenceEntry ;
     skos:prefLabel "tunnel-action-inprogress" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/tunnel-action-inprogress
     skos:definition "TE action is in progress." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -1652,6 +1880,7 @@ lex:ietf-te-types-tunnel-action-inprogress
 lex:ietf-te-types-tunnel-action-reoptimize
     a lex:ReferenceEntry ;
     skos:prefLabel "tunnel-action-reoptimize" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/tunnel-action-reoptimize
     skos:definition "TE tunnel action that reoptimizes the placement of the\ntunnel LSP(s)." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -1660,6 +1889,7 @@ lex:ietf-te-types-tunnel-action-reoptimize
 lex:ietf-te-types-tunnel-action-resetup
     a lex:ReferenceEntry ;
     skos:prefLabel "tunnel-action-resetup" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/tunnel-action-resetup
     skos:definition "TE tunnel action that tears down the tunnel's current LSP\n(if any) and attempts to re-establish a new LSP." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -1668,6 +1898,7 @@ lex:ietf-te-types-tunnel-action-resetup
 lex:ietf-te-types-tunnel-action-switchpath
     a lex:ReferenceEntry ;
     skos:prefLabel "tunnel-action-switchpath" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/tunnel-action-switchpath
     skos:definition "TE tunnel action that switches the tunnel's LSP to use the\nspecified path." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -1676,6 +1907,7 @@ lex:ietf-te-types-tunnel-action-switchpath
 lex:ietf-te-types-tunnel-action-type
     a lex:ReferenceEntry ;
     skos:prefLabel "tunnel-action-type" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/tunnel-action-type
     skos:definition "Base identity from which specific tunnel action types\nare derived." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -1684,6 +1916,7 @@ lex:ietf-te-types-tunnel-action-type
 lex:ietf-te-types-tunnel-admin-state-down
     a lex:ReferenceEntry ;
     skos:prefLabel "tunnel-admin-state-down" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/tunnel-admin-state-down
     skos:definition "Tunnel's administrative state is down." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -1692,6 +1925,7 @@ lex:ietf-te-types-tunnel-admin-state-down
 lex:ietf-te-types-tunnel-admin-state-type
     a lex:ReferenceEntry ;
     skos:prefLabel "tunnel-admin-state-type" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/tunnel-admin-state-type
     skos:definition "Base identity for TE tunnel administrative states." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -1700,6 +1934,7 @@ lex:ietf-te-types-tunnel-admin-state-type
 lex:ietf-te-types-tunnel-admin-state-up
     a lex:ReferenceEntry ;
     skos:prefLabel "tunnel-admin-state-up" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/tunnel-admin-state-up
     skos:definition "Tunnel's administrative state is up." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -1708,7 +1943,9 @@ lex:ietf-te-types-tunnel-admin-state-up
 lex:ietf-te-types-tunnel-constraints
     a lex:ReferenceEntry ;
     skos:prefLabel "tunnel-constraints" ;
+    # source: http://example.org/ontology/grouping/ietf-te-types/tunnel-constraints
     skos:definition "Grouping definition: tunnel-constraints" ;
+    # source: http://example.org/ontology/grouping/ietf-te-types/tunnel-constraints
     skos:scopeNote "Tunnel constraints grouping that can be set on\na constraint set or directly on the tunnel." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -1717,6 +1954,7 @@ lex:ietf-te-types-tunnel-constraints
 lex:ietf-te-types-tunnel-state-down
     a lex:ReferenceEntry ;
     skos:prefLabel "tunnel-state-down" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/tunnel-state-down
     skos:definition "Tunnel's state is down." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -1725,6 +1963,7 @@ lex:ietf-te-types-tunnel-state-down
 lex:ietf-te-types-tunnel-state-type
     a lex:ReferenceEntry ;
     skos:prefLabel "tunnel-state-type" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/tunnel-state-type
     skos:definition "Base identity for TE tunnel states." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -1733,6 +1972,7 @@ lex:ietf-te-types-tunnel-state-type
 lex:ietf-te-types-tunnel-state-up
     a lex:ReferenceEntry ;
     skos:prefLabel "tunnel-state-up" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/tunnel-state-up
     skos:definition "Tunnel's state is up." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
@@ -1741,7 +1981,9 @@ lex:ietf-te-types-tunnel-state-up
 lex:ietf-te-types-two-way-performance-metrics
     a lex:ReferenceEntry ;
     skos:prefLabel "two-way-performance-metrics" ;
+    # source: http://example.org/ontology/grouping/ietf-te-types/two-way-performance-metrics
     skos:definition "Grouping definition: two-way-performance-metrics" ;
+    # source: http://example.org/ontology/grouping/ietf-te-types/two-way-performance-metrics
     skos:scopeNote "Two-way PM throttle grouping." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:GroupingKind ;
@@ -1750,6 +1992,7 @@ lex:ietf-te-types-two-way-performance-metrics
 lex:ietf-te-types-wait-to-restore
     a lex:ReferenceEntry ;
     skos:prefLabel "wait-to-restore" ;
+    # source: http://example.org/ontology/identity/ietf-te-types/wait-to-restore
     skos:definition "A WTR timer is running." ;
     lex:canonicalExample "" ;
     lex:entityClass lex:IdentityKind ;
