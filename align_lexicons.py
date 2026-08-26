@@ -88,6 +88,11 @@ DEFAULT_LEXICON_DIR = Path(__file__).resolve().parent / "lexicon"
 DEFAULT_MODEL = "claude-opus-5"
 DEFAULT_LABEL_THRESHOLD = 45.0
 
+# D-07/ROADMAP SC3: passed explicitly to every client.messages.parse() call
+# (confirm_pair's primary + WR-03 fallback, validate_pair's primary + WR-03
+# fallback) -- the API default silently applied before this.
+LLM_TEMPERATURE = 0
+
 # OUT-01: where correspondences.ttl lands when --emit-correspondences is
 # given with no value. A sibling of align_lexicons.py, NOT inside
 # DEFAULT_LEXICON_DIR -- write_correspondences_ttl() refuses to write into
@@ -1095,6 +1100,7 @@ def confirm_pair(client, cand: Candidate, model: str = DEFAULT_MODEL) -> MatchVe
         response = client.messages.parse(
             model=model,
             max_tokens=2048,
+            temperature=LLM_TEMPERATURE,
             system=[
                 {
                     "type": "text",
@@ -1123,6 +1129,7 @@ def confirm_pair(client, cand: Candidate, model: str = DEFAULT_MODEL) -> MatchVe
         response = client.messages.parse(
             model=model,
             max_tokens=2048,
+            temperature=LLM_TEMPERATURE,
             messages=[
                 {"role": "user", "content": SYSTEM_PROMPT},
                 {"role": "user", "content": user_content},
@@ -1147,6 +1154,7 @@ def validate_pair(
         response = client.messages.parse(
             model=model,
             max_tokens=2048,
+            temperature=LLM_TEMPERATURE,
             system=[
                 {
                     "type": "text",
@@ -1168,6 +1176,7 @@ def validate_pair(
         response = client.messages.parse(
             model=model,
             max_tokens=2048,
+            temperature=LLM_TEMPERATURE,
             messages=[
                 {"role": "user", "content": VALIDATOR_SYSTEM_PROMPT},
                 {"role": "user", "content": user_content},
