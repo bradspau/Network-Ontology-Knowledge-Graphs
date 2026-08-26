@@ -363,3 +363,84 @@ def test_main_without_emit_flag_writes_no_file(recording_client, monkeypatch, tm
     align_lexicons.main()
 
     assert not fake_default.exists()
+
+
+# ── Task 2: refuse to run against a lexicon tree whose recorded version
+# would be a lie ──────────────────────────────────────────────────────────
+
+
+def _make_throwaway_repo(tmp_path):
+    """A real, hermetic git repository built with subprocess -- never
+    asserting against the state of the real yang4owl/lexicon/, which must
+    stay clean for the pre-existing main()-level test_align_lexicons.py
+    suite. Local user.name/user.email are configured so the commit succeeds
+    on any machine."""
+    repo_dir = tmp_path / "repo"
+    lexicon_dir = repo_dir / "lexicon"
+    lexicon_dir.mkdir(parents=True)
+    (lexicon_dir / "sample.lexicon.ttl").write_text("# sample lexicon fixture\n")
+    (repo_dir / "other.py").write_text("# a file outside the lexicon dir\n")
+
+    def _run(*args):
+        subprocess.run(["git", *args], cwd=repo_dir, check=True, capture_output=True)
+
+    _run("init", "-q")
+    _run("config", "user.email", "test@example.com")
+    _run("config", "user.name", "Test")
+    _run("add", "-A")
+    _run("commit", "-q", "-m", "initial commit")
+    return repo_dir, lexicon_dir
+
+
+def test_assert_lexicon_clean_returns_when_clean(tmp_path):
+    _, lexicon_dir = _make_throwaway_repo(tmp_path)
+    align_lexicons.assert_lexicon_clean(lexicon_dir)  # must not raise
+
+
+def test_assert_lexicon_clean_raises_on_modified_tracked_file(tmp_path):
+    _, lexicon_dir = _make_throwaway_repo(tmp_path)
+    (lexicon_dir / "sample.lexicon.ttl").write_text("# modified\n")
+    with pytest.raises(align_lexicons.DirtyLexiconError, match="sample.lexicon.ttl"):
+        align_lexicons.assert_lexicon_clean(lexicon_dir)
+
+
+def test_assert_lexicon_clean_raises_on_untracked_file(tmp_path):
+    _, lexicon_dir = _make_throwaway_repo(tmp_path)
+    (lexicon_dir / "new.lexicon.ttl").write_text("# untracked new entry\n")
+    with pytest.raises(align_lexicons.DirtyLexiconError, match="new.lexicon.ttl"):
+        align_lexicons.assert_lexicon_clean(lexicon_dir)
+
+
+def test_dirty_file_outside_the_lexicon_directory_does_not_stop_the_run(tmp_path):
+    repo_dir, lexicon_dir = _make_throwaway_repo(tmp_path)
+    (repo_dir / "other.py").write_text("# modified outside the lexicon dir\n")
+    align_lexicons.assert_lexicon_clean(lexicon_dir)  # must not raise
+
+
+def test_resolve_lexicon_version_raises_outside_a_repository(tmp_path):
+    outside = tmp_path / "not-a-repo"
+    outside.mkdir()
+    with pytest.raises(align_lexicons.LexiconVersionUnavailable):
+        align_lexicons.resolve_lexicon_version(outside)
+
+
+def test_assert_lexicon_clean_raises_outside_a_repository(tmp_path):
+    outside = tmp_path / "not-a-repo"
+    outside.mkdir()
+    with pytest.raises(align_lexicons.LexiconVersionUnavailable):
+        align_lexicons.assert_lexicon_clean(outside)
+
+
+def test_dirty_lexicon_tree_hard_stops_before_any_client_call(tmp_path, recording_client, monkeypatch):
+    _, lexicon_dir = _make_throwaway_repo(tmp_path)
+    (lexicon_dir / "sample.lexicon.ttl").write_text("# dirtied before the run\n")
+
+    monkeypatch.setattr(sys, "argv", ["align_lexicons.py", "--lexicon-dir", str(lexicon_dir)])
+    monkeypatch.setattr(align_lexicons.anthropic, "Anthropic", lambda: recording_client)
+
+    with pytest.raises(align_lexicons.DirtyLexiconError):
+        align_lexicons.main()
+
+    assert recording_client.calls == [], (
+        "the dirty-tree stop must precede any billed client.messages.parse() call"
+    )
