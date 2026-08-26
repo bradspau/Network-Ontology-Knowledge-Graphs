@@ -483,7 +483,7 @@ FIXTURE_TAPI: List[FixtureRef] = [
     FixtureRef(
         source="tapi",
         file="tapi-common.lexicon.ttl",
-        lex_id="tapi-common-device-supports-node",
+        lex_id="tapi-common-connectivity-oam-service",
     ),
 ]
 FIXTURE_IETF: List[FixtureRef] = [

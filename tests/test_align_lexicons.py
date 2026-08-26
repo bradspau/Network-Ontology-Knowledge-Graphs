@@ -382,7 +382,7 @@ def _flatten(value):
 def test_handles_sparse_evidence_gracefully(fixture_entries):
     tapi_entries, ietf_entries, by_lex_id = fixture_entries
 
-    d03 = by_lex_id["tapi-common-node-edge-point-event-notification"]
+    d03 = by_lex_id["tapi-common-connectivity-oam-service"]
     assert d03.definition is None
     assert d03.scope_notes == []
     assert d03.canonical_example is None
@@ -398,7 +398,10 @@ def test_evidence_is_stable_and_deterministic(lexicon_dir, fixture_entries):
     tapi_entries, ietf_entries, by_lex_id = fixture_entries
 
     ietf_node = by_lex_id["ietf-network-node"]
-    assert len(ietf_node.scope_notes) == 2
+    # Corpus-derived: post-regeneration, ietf-network-node's concept-level
+    # merge folds in ietf-network-node-statistics's occurrence, so the real
+    # corpus now carries 4 distinct scope notes (was 2 pre-regeneration).
+    assert len(ietf_node.scope_notes) == 4
     assert ietf_node.scope_notes == sorted(ietf_node.scope_notes)
 
     tapi_node = by_lex_id["tapi-topology-node"]
@@ -513,7 +516,7 @@ def test_no_match_without_confirmation(fixture_entries, scripted_client):
             assert result.decided_by == "confirmation-pass"
             assert result.evidence_quote.strip() != ""
 
-    d03_lex_id = "tapi-common-node-edge-point-event-notification"
+    d03_lex_id = "tapi-common-connectivity-oam-service"
     d03_results = [r for r in results if r.candidate.tapi.lex_id == d03_lex_id]
     assert d03_results, "expected the D-03 entry to appear among label-pass candidates"
     for d03_result in d03_results:
@@ -655,14 +658,14 @@ def test_recovers_node_rule_group_correspondent(fixture_entries, scripted_client
     assert recovered.evidence_quote.strip() != ""
 
     # The scope-gap case: rejected everywhere, ends unmatched -- not forced.
-    service_interface_point = by_lex_id["tapi-common-service-interface-point-tapi-common"]
+    service_interface_point = by_lex_id["tapi-common-service-interface-point"]
     all_results = label_results + recovery_results
     sip_results = [r for r in all_results if r.candidate.tapi.lex_id == service_interface_point.lex_id]
     assert sip_results, "expected service-interface-point to be evaluated at least once"
     assert not any(r.verdict in ("confirm_exact_match", "confirm_close_match") for r in sip_results)
 
     # The D-03 entry is never sent to the model by the recovery pass either.
-    d03_lex_id = "tapi-common-node-edge-point-event-notification"
+    d03_lex_id = "tapi-common-connectivity-oam-service"
     recorded_calls_text = "\n".join(str(v) for call in client.calls for v in _flatten(call))
     assert d03_lex_id not in recorded_calls_text
 
@@ -857,7 +860,7 @@ def test_full_fixture_run_no_crash(recording_client, capsys, monkeypatch):
     blocks = captured.out.split("\n\n")
     d03_blocks = [
         b for b in blocks
-        if "tapi-common-node-edge-point-event-notification" in b and "candidate origin:" in b
+        if "tapi-common-connectivity-oam-service" in b and "candidate origin:" in b
     ]
     assert d03_blocks, "expected at least one transcript block for the D-03 entry"
     for block in d03_blocks:
@@ -1121,7 +1124,7 @@ def test_structural_corroboration_node_rule_group_vs_connectivity_matrix(fixture
     termination_point = by_lex_id["ietf-network-termination-point"]
     assert align_lexicons.structural_corroboration(node_edge_point, termination_point) == 0.2
 
-    service_interface_point = by_lex_id["tapi-common-service-interface-point-tapi-common"]
+    service_interface_point = by_lex_id["tapi-common-service-interface-point"]
     zero_result = align_lexicons.structural_corroboration(service_interface_point, connectivity_matrix)
     assert zero_result == 0.0
     assert zero_result is not None  # a computed-and-low signal, distinct from unavailable (None)
@@ -1419,7 +1422,7 @@ def test_gap_classification_sip_is_ontological_content(fixture_entries):
     example): ServiceInterfacePoint reaches no correspondent, decided from
     real fixture data rather than invented numbers."""
     tapi_entries, ietf_entries, by_lex_id = fixture_entries
-    sip = by_lex_id["tapi-common-service-interface-point-tapi-common"]
+    sip = by_lex_id["tapi-common-service-interface-point"]
 
     label_scores = [align_lexicons.label_score(sip.pref_label, e.pref_label) for e in ietf_entries]
     structural_scores = [
@@ -1441,7 +1444,7 @@ def test_gap_classification_undocumented_entry_is_insufficient_evidence(fixture_
     the all_insufficient branch wins even when the label/structural scores
     would otherwise have selected a different code."""
     tapi_entries, ietf_entries, by_lex_id = fixture_entries
-    d03_entry = by_lex_id["tapi-common-node-edge-point-event-notification"]
+    d03_entry = by_lex_id["tapi-common-connectivity-oam-service"]
     assert d03_entry.has_evidence is False
 
     for ietf_entry in ietf_entries:
@@ -1729,8 +1732,8 @@ def test_full_reject_run_exercises_all_four_gap_reasons(fixture_entries, scripte
         "tapi-topology-node-edge-point": "structural",
         "tapi-topology-link": "genuinely-ambiguous-lexical",
         "tapi-topology-node-rule-group": "ontological-content",
-        "tapi-common-service-interface-point-tapi-common": "ontological-content",
-        "tapi-common-node-edge-point-event-notification": "insufficient-evidence",
+        "tapi-common-service-interface-point": "ontological-content",
+        "tapi-common-connectivity-oam-service": "insufficient-evidence",
     }
     for lex_id, expected_reason in expected_reasons.items():
         assert by_lex_id[lex_id].gap_reason == expected_reason, (
