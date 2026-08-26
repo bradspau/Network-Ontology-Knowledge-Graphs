@@ -7,7 +7,10 @@ Plan 03-03 regenerates that corpus in the next wave, changing entry counts
 and placeholder shapes (CROSS_PLAN_HAZARD in 03-02-PLAN.md). The one
 exception is test_real_lexicon_dir_produces_a_row_per_file and
 test_audit_does_not_modify_any_lexicon_file, which assert only shape
-invariants that hold before and after regeneration.
+invariants that hold before and after regeneration. Since plan 03-04,
+lexicon/CURATION-AUDIT.md is committed tool output measured against the
+repaired corpus -- test_audit_does_not_modify_any_lexicon_file accounts for
+its presence rather than asserting its absence.
 
 Uses the same @prefix lex:/skos:/prov: header the real lexicon/*.lexicon.ttl
 files carry (yang4owl/lexicon/tapi-topology.lexicon.ttl:1-3), and a lazy
@@ -320,6 +323,12 @@ def test_audit_does_not_modify_any_lexicon_file(lexicon_dir, tmp_path, monkeypat
     assert before == after
     assert out_path.exists()
     assert out_path.read_text(encoding="utf-8").strip() != ""
-    # Plan 03-04 commits the report against the repaired corpus -- this
-    # plan must not drop one into the real lexicon/ directory.
-    assert not (lexicon_dir / "CURATION-AUDIT.md").exists()
+    # Plan 03-04 commits lexicon/CURATION-AUDIT.md as tool output against the
+    # repaired corpus (D-09) -- its presence there is now the intended,
+    # committed state, not a defect. This test still proves the *.lexicon.ttl
+    # scan is read-only (the `before == after` mtime/size check above) and
+    # that writing to an isolated --out path never touches the committed
+    # report: it must stay byte-identical to what main() just wrote here.
+    committed_report = lexicon_dir / "CURATION-AUDIT.md"
+    if committed_report.exists():
+        assert committed_report.read_text(encoding="utf-8") == out_path.read_text(encoding="utf-8")
