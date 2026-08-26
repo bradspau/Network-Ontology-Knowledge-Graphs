@@ -333,6 +333,19 @@ class LexiconVersionUnavailable(RuntimeError):
     proven, so resolution fails closed rather than degrading silently."""
 
 
+class DirtyLexiconError(RuntimeError):
+    """D-06: a hard stop, not a degraded run -- raised when the lexicon
+    directory has uncommitted or untracked changes at run time, before any
+    Anthropic client is constructed. Protects ROADMAP SC2/SC3: a committed
+    correspondences.ttl must cite a lexicon-version hash that actually
+    reproduces the input it was matched against. The rejected alternative
+    was a proceed-with-a-dirty-flag path (e.g. lex:lexiconDirty true) --
+    its failure mode is a committed artifact citing a version hash that
+    does not reproduce the input if the flag goes unnoticed. There is no
+    bypass: no CLI flag, environment variable, or function parameter skips
+    this check."""
+
+
 CONFIRMED_VERDICTS = ("confirm_exact_match", "confirm_close_match")
 
 # OUT-01/D-01: the compact SKOS predicate each CONFIRMED_VERDICTS member
@@ -1828,6 +1841,38 @@ def resolve_lexicon_version(lexicon_dir: Path) -> str:
     return version
 
 
+def assert_lexicon_clean(lexicon_dir: Path) -> None:
+    """D-06: hard-stops with DirtyLexiconError when lexicon_dir has
+    uncommitted or untracked changes -- porcelain status scoped to the
+    directory reports modified tracked files and untracked files alike, so
+    an untracked lexicon file blocks a run exactly as a modified one does.
+    Scoped to lexicon_dir alone (not the whole repository), so editing
+    align_lexicons.py itself never blocks a run. Cleanliness that cannot be
+    established (git missing, directory outside any repository) is not
+    cleanliness -- raises LexiconVersionUnavailable, the same fail-closed
+    exception resolve_lexicon_version() raises for the same reason."""
+    try:
+        result = _git(lexicon_dir, "status", "--porcelain", "--", ".")
+    except FileNotFoundError as exc:
+        raise LexiconVersionUnavailable(
+            f"assert_lexicon_clean: git executable not found ({exc}) -- "
+            f"cleanliness cannot be established for {lexicon_dir}"
+        ) from exc
+    if result.returncode != 0:
+        raise LexiconVersionUnavailable(
+            f"assert_lexicon_clean: git failed for {lexicon_dir} "
+            f"(exit {result.returncode}): {result.stderr.strip()}"
+        )
+    dirty = result.stdout.strip()
+    if dirty:
+        raise DirtyLexiconError(
+            f"assert_lexicon_clean: {lexicon_dir} has uncommitted or "
+            "untracked changes -- commit or stash before running so the "
+            "recorded lexicon-version hash actually matches what was "
+            f"matched against (D-06):\n{dirty}"
+        )
+
+
 # ── Correspondence artifact (OUT-01) ────────────────────────────────────
 
 
@@ -2146,10 +2191,13 @@ def main() -> None:
     )
     args = parser.parse_args()
 
-    # D-05: resolved before any LLM call is possible (the client is
-    # constructed further below, after label_pass()) -- a run whose
-    # recorded lexicon version would not describe the bytes it matched
-    # against must never happen.
+    # D-06/D-05: both run before any LLM call is possible (the client is
+    # constructed further below, after label_pass()). assert_lexicon_clean()
+    # runs on EVERY invocation, not only when --emit-correspondences is
+    # given -- D-06's wording is that the tool refuses to run, and a
+    # transcript produced against a tree whose version cannot be pinned is
+    # the same reproducibility problem one step earlier. No bypass exists.
+    assert_lexicon_clean(args.lexicon_dir)
     lexicon_version = resolve_lexicon_version(args.lexicon_dir)
 
     tapi_entries = load_fixture_entries(args.lexicon_dir, FIXTURE_TAPI)
