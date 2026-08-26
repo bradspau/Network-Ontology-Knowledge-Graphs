@@ -444,3 +444,194 @@ def test_dirty_lexicon_tree_hard_stops_before_any_client_call(tmp_path, recordin
     assert recording_client.calls == [], (
         "the dirty-tree stop must precede any billed client.messages.parse() call"
     )
+
+
+# ── Task 3: fixed temperature on every call, fixed byte order in every file
+
+
+class _SystemRejectingRecordingMessages:
+    """Rejects the system= kwarg once, then succeeds on the retry that
+    omits it -- proves the WR-03 fallback call also carries an explicit
+    temperature (D-07), mirroring test_align_lexicons.py's
+    _SystemRejectingMessages double."""
+
+    def __init__(self, verdict):
+        self._verdict = verdict
+        self.calls = []
+
+    def parse(self, **kwargs):
+        self.calls.append(kwargs)
+        if "system" in kwargs:
+            raise TypeError("parse() got an unexpected keyword argument 'system'")
+        return _FakeParsedResponse(self._verdict)
+
+
+class _FakeParsedResponse:
+    def __init__(self, parsed_output):
+        self.parsed_output = parsed_output
+
+
+class _SystemRejectingRecordingClient:
+    def __init__(self, verdict):
+        self.messages = _SystemRejectingRecordingMessages(verdict)
+
+
+def test_every_model_call_passes_an_explicit_temperature(recording_client, monkeypatch, fixture_entries):
+    monkeypatch.setattr(sys, "argv", ["align_lexicons.py"])
+    monkeypatch.setattr(align_lexicons.anthropic, "Anthropic", lambda: recording_client)
+
+    align_lexicons.main()
+
+    assert recording_client.calls, "expected at least one confirmation call in a full fixture run"
+    assert all(
+        call.get("temperature") == align_lexicons.LLM_TEMPERATURE for call in recording_client.calls
+    )
+
+    # WR-03 fallback paths (confirm_pair + validate_pair) must also carry an
+    # explicit temperature -- exercised directly, since triggering the
+    # fallback requires a client that rejects the system= kwarg.
+    _, _, by_lex_id = fixture_entries
+    candidate = align_lexicons.Candidate(
+        tapi=by_lex_id["tapi-topology-node"],
+        ietf=by_lex_id["ietf-network-node"],
+        label_score=100.0,
+        origin="label-pass",
+    )
+    match_verdict = align_lexicons.MatchVerdict(
+        verdict="confirm_exact_match", rationale="r", evidence_quote="q"
+    )
+    confirm_client = _SystemRejectingRecordingClient(match_verdict)
+    align_lexicons.confirm_pair(confirm_client, candidate)
+    assert len(confirm_client.messages.calls) == 2
+    assert confirm_client.messages.calls[1]["temperature"] == align_lexicons.LLM_TEMPERATURE
+
+    validator_verdict = align_lexicons.ValidatorVerdict(agrees=True, counter_argument="c")
+    validate_client = _SystemRejectingRecordingClient(validator_verdict)
+    align_lexicons.validate_pair(validate_client, candidate, match_verdict)
+    assert len(validate_client.messages.calls) == 2
+    assert validate_client.messages.calls[1]["temperature"] == align_lexicons.LLM_TEMPERATURE
+
+
+def test_two_renders_of_identical_results_are_byte_identical(fixture_entries):
+    _, _, by_lex_id = fixture_entries
+    exact = _pair_result(
+        by_lex_id["tapi-topology-node"], by_lex_id["ietf-network-node"], "confirm_exact_match"
+    )
+    close = _pair_result(
+        by_lex_id["tapi-topology-node-rule-group"],
+        by_lex_id["ietf-network-connectivity-matrix"],
+        "confirm_close_match",
+    )
+    triples = align_lexicons.correspondences_from_results([exact, close], FAKE_VERSION, FAKE_MODEL)
+    first = align_lexicons.render_correspondences_ttl(triples, FAKE_VERSION, FAKE_MODEL)
+    second = align_lexicons.render_correspondences_ttl(triples, FAKE_VERSION, FAKE_MODEL)
+    assert first == second
+
+
+def test_render_order_is_independent_of_input_order(fixture_entries):
+    _, _, by_lex_id = fixture_entries
+    exact = _pair_result(
+        by_lex_id["tapi-topology-node"], by_lex_id["ietf-network-node"], "confirm_exact_match"
+    )
+    close = _pair_result(
+        by_lex_id["tapi-topology-node-rule-group"],
+        by_lex_id["ietf-network-connectivity-matrix"],
+        "confirm_close_match",
+    )
+    forward = align_lexicons.correspondences_from_results([exact, close], FAKE_VERSION, FAKE_MODEL)
+    reordered = align_lexicons.correspondences_from_results([close, exact], FAKE_VERSION, FAKE_MODEL)
+    forward_text = align_lexicons.render_correspondences_ttl(forward, FAKE_VERSION, FAKE_MODEL)
+    reordered_text = align_lexicons.render_correspondences_ttl(reordered, FAKE_VERSION, FAKE_MODEL)
+    assert forward_text == reordered_text
+
+    # Directly reversing the ALREADY-SORTED triples list also renders
+    # identically -- proving the sort inside render_correspondences_ttl
+    # itself (not just correspondences_from_results' own sort) determines
+    # output order.
+    manually_reversed_text = align_lexicons.render_correspondences_ttl(
+        list(reversed(forward)), FAKE_VERSION, FAKE_MODEL
+    )
+    assert forward_text == manually_reversed_text
+
+
+def test_multiline_evidence_quote_stays_contiguous_regardless_of_order(fixture_entries):
+    _, _, by_lex_id = fixture_entries
+    multiline = _pair_result(
+        by_lex_id["tapi-topology-node"],
+        by_lex_id["ietf-network-node"],
+        "confirm_exact_match",
+        evidence_quote="line one\nline two\nline three",
+    )
+    other = _pair_result(
+        by_lex_id["tapi-topology-node-rule-group"],
+        by_lex_id["ietf-network-connectivity-matrix"],
+        "confirm_close_match",
+    )
+    forward = align_lexicons.correspondences_from_results([multiline, other], FAKE_VERSION, FAKE_MODEL)
+    reordered = align_lexicons.correspondences_from_results([other, multiline], FAKE_VERSION, FAKE_MODEL)
+    forward_text = align_lexicons.render_correspondences_ttl(forward, FAKE_VERSION, FAKE_MODEL)
+    reordered_text = align_lexicons.render_correspondences_ttl(reordered, FAKE_VERSION, FAKE_MODEL)
+    assert forward_text == reordered_text
+    assert "line one\nline two\nline three" in forward_text
+
+
+def test_adversarial_literal_cannot_inject_triples(fixture_entries):
+    _, _, by_lex_id = fixture_entries
+    payload = (
+        'has "quotes", a backslash \\, a carriage return\r, a newline\n, '
+        'an embedded triple-quote """ run, and a fragment shaped like an '
+        'injection: <<lex:evil skos:exactMatch lex:evil2>> lex:pwned "yes" . '
+        '# lex:tapi-topology-node skos:exactMatch lex:ietf-network-node .'
+    )
+    result = _pair_result(
+        by_lex_id["tapi-topology-node"],
+        by_lex_id["ietf-network-node"],
+        "confirm_exact_match",
+        evidence_quote=payload,
+        confidence=_confidence(validator_counter_argument=payload),
+    )
+    triples = align_lexicons.correspondences_from_results([result], FAKE_VERSION, FAKE_MODEL)
+    text = align_lexicons.render_correspondences_ttl(triples, FAKE_VERSION, FAKE_MODEL)
+    base_section = text.split(align_lexicons.CORRESPONDENCE_ANNOTATION_SEPARATOR)[0]
+
+    graph = Graph()
+    graph.parse(data=base_section, format="turtle")
+    match_triples = list(graph.triples((None, align_lexicons.SKOS.exactMatch, None)))
+    assert len(match_triples) == 1
+    subj, _, obj = match_triples[0]
+    assert str(subj) == "http://example.org/ontology/lexicon-vocab#tapi-topology-node"
+    assert str(obj) == "http://example.org/ontology/lexicon-vocab#ietf-network-node"
+
+
+def test_artifact_contains_no_absolute_path_or_environment_value(fixture_entries, monkeypatch):
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "sk-super-secret-value-should-never-leak")
+    _, _, by_lex_id = fixture_entries
+    exact = _pair_result(
+        by_lex_id["tapi-topology-node"], by_lex_id["ietf-network-node"], "confirm_exact_match"
+    )
+    triples = align_lexicons.correspondences_from_results([exact], FAKE_VERSION, FAKE_MODEL)
+    text = align_lexicons.render_correspondences_ttl(triples, FAKE_VERSION, FAKE_MODEL)
+
+    assert "sk-super-secret-value-should-never-leak" not in text
+    assert "ANTHROPIC_API_KEY" not in text
+    assert "/Users/" not in text
+    assert "/home/" not in text
+
+
+def test_run_stopped_early_writes_no_artifact(recording_client, monkeypatch, tmp_path, capsys):
+    output_path = tmp_path / "correspondences.ttl"
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        ["align_lexicons.py", "--max-calls", "1", "--emit-correspondences", str(output_path)],
+    )
+    monkeypatch.setattr(align_lexicons.anthropic, "Anthropic", lambda: recording_client)
+
+    with pytest.raises(SystemExit) as exc_info:
+        align_lexicons.main()
+    assert exc_info.value.code == 1
+
+    assert not output_path.exists()
+    captured = capsys.readouterr()
+    assert "=== Run summary ===" in captured.out
+    assert "STOPPED EARLY" in captured.err
