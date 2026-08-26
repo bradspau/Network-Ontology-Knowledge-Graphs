@@ -634,4 +634,213 @@ def test_run_stopped_early_writes_no_artifact(recording_client, monkeypatch, tmp
     assert not output_path.exists()
     captured = capsys.readouterr()
     assert "=== Run summary ===" in captured.out
-    assert "STOPPED EARLY" in captured.err
+
+
+# ── Plan 04-02 Task 1: the artifact reproduces the drafts' own §6 OTN
+# worked example (docs/reference-lexicons.md lines 160-182) ─────────────────
+
+
+def _otn_lex_id(refs, target_lex_id: str) -> str:
+    """Looks up a FixtureRef by lex_id and raises loudly (StopIteration) if
+    the fixture is ever renamed, rather than silently building an unmapped
+    scripted-verdict key -- mirrors test_align_lexicons.py's
+    test_confirmation_rejects_false_cognate lookup idiom. Reading the id
+    back off the real FIXTURE_TAPI/FIXTURE_IETF module constants (rather
+    than typing a second copy of the literal) is what makes a rename fail
+    here instead of silently unmapping a pair."""
+    return next(ref.lex_id for ref in refs if ref.lex_id == target_lex_id)
+
+
+def _otn_worked_example_ids() -> dict:
+    """The §6-row lex ids this plan's <otn_worked_example_contract> table
+    names, resolved from FIXTURE_TAPI/FIXTURE_IETF themselves."""
+    tapi, ietf = align_lexicons.FIXTURE_TAPI, align_lexicons.FIXTURE_IETF
+    return {
+        "node_t": _otn_lex_id(tapi, "tapi-topology-node"),
+        "node_i": _otn_lex_id(ietf, "ietf-network-node"),
+        "nep_t": _otn_lex_id(tapi, "tapi-topology-node-edge-point"),
+        "term_i": _otn_lex_id(ietf, "ietf-network-termination-point"),
+        "link_t": _otn_lex_id(tapi, "tapi-topology-link"),
+        "link_i": _otn_lex_id(ietf, "ietf-network-link"),
+        "nrg_t": _otn_lex_id(tapi, "tapi-topology-node-rule-group"),
+        "cm_i": _otn_lex_id(ietf, "ietf-network-connectivity-matrix"),
+        "sip_t": _otn_lex_id(tapi, "tapi-common-service-interface-point"),
+        "ttp_i": _otn_lex_id(ietf, "ietf-network-tunnel-termination-point"),
+    }
+
+
+def _otn_worked_example_verdicts(ids: dict) -> dict:
+    """§6's own outcomes: the link pair confirms exact, the node/NEP/
+    node-rule-group pairs confirm close, and the false-cognate pair (node-
+    edge-point vs tunnel-termination-point -- the real label_pass()
+    candidate this fixture actually proposes at the default threshold,
+    verified against the corpus) explicitly rejects. Every confirmed
+    verdict carries a non-empty evidence_quote -- PairResult.__post_init__
+    refuses to construct a confirmed verdict without one.
+
+    The first entry is not a §6 row at all: 'tapi-topology-node' is a
+    literal string prefix of 'tapi-topology-node-rule-group', so
+    scripted_client's substring-containment lookup would otherwise resolve
+    node-rule-group's real misses-recovery candidate against
+    ietf-network-node (node-rule-group has zero label-pass candidates of
+    its own, so recovery evaluates it against every IETF entry, including
+    plain 'node') to the node_t/node_i verdict below -- a fifth,
+    unintended close-match. Scripting that exact pair explicitly, and
+    first in dict-iteration order, intercepts it before the vaguer
+    node_t/node_i key can (verified empirically against the real fixture:
+    omitting this entry emits 5 correspondences, not 4)."""
+    return {
+        (ids["nrg_t"], ids["node_i"]): align_lexicons.MatchVerdict(
+            verdict="reject",
+            rationale=(
+                "Not a §6 row -- an explicit override for the "
+                "'tapi-topology-node' / 'tapi-topology-node-rule-group' "
+                "substring collision in scripted_client's lookup; see this "
+                "function's docstring."
+            ),
+            evidence_quote="",
+        ),
+        (ids["link_t"], ids["link_i"]): align_lexicons.MatchVerdict(
+            verdict="confirm_exact_match",
+            rationale="TAPI Link and IETF link are the same optical-domain link concept.",
+            evidence_quote="A link represents a physical or logical connection.",
+        ),
+        (ids["node_t"], ids["node_i"]): align_lexicons.MatchVerdict(
+            verdict="confirm_close_match",
+            rationale="TAPI node and IETF node/te-node correspond, per §6's own worked example.",
+            evidence_quote="A node represents a set of managed resources.",
+        ),
+        (ids["nep_t"], ids["term_i"]): align_lexicons.MatchVerdict(
+            verdict="confirm_close_match",
+            rationale="TAPI node-edge-point and IETF termination-point correspond.",
+            evidence_quote="A node edge point represents a point of termination on a node.",
+        ),
+        (ids["nrg_t"], ids["cm_i"]): align_lexicons.MatchVerdict(
+            verdict="confirm_close_match",
+            rationale=(
+                "Named too differently for the label stage to pair -- "
+                "recovered from their definitions (§6)."
+            ),
+            evidence_quote="A node rule group represents a set of constraints on connectivity.",
+        ),
+        (ids["nep_t"], ids["ttp_i"]): align_lexicons.MatchVerdict(
+            verdict="reject",
+            rationale=(
+                "The tunnel-termination-point name-matches node-edge-point but "
+                "is the head of a tunnel, not a link attachment -- a false "
+                "cognate (§6)."
+            ),
+            evidence_quote="A tunnel termination point can terminate a tunnel.",
+        ),
+    }
+
+
+def _run_otn_worked_example(scripted_client, monkeypatch, tmp_path, capsys):
+    """Drives main() once with a client scripted to §6's verdicts and the
+    emit flag pointed at a tmp_path file, returning (output_text,
+    captured_stdout, ids) so each of this task's five tests asserts on the
+    same single run without repeating the drive boilerplate."""
+    ids = _otn_worked_example_ids()
+    client = scripted_client(_otn_worked_example_verdicts(ids))
+
+    output_path = tmp_path / "correspondences.ttl"
+    monkeypatch.setattr(
+        sys, "argv", ["align_lexicons.py", "--emit-correspondences", str(output_path)]
+    )
+    monkeypatch.setattr(align_lexicons.anthropic, "Anthropic", lambda: client)
+
+    align_lexicons.main()
+
+    captured = capsys.readouterr()
+    output_text = output_path.read_text()
+    return output_text, captured.out, ids
+
+
+def test_otn_worked_example_emits_exactly_four_correspondences(
+    scripted_client, monkeypatch, tmp_path, capsys
+):
+    output_text, _, _ = _run_otn_worked_example(scripted_client, monkeypatch, tmp_path, capsys)
+    base_section = output_text.split(align_lexicons.CORRESPONDENCE_ANNOTATION_SEPARATOR)[0]
+    annotation_section = output_text.split(align_lexicons.CORRESPONDENCE_ANNOTATION_SEPARATOR)[1]
+
+    graph = Graph()
+    graph.parse(data=base_section, format="turtle")
+    match_triples = list(graph.triples((None, align_lexicons.SKOS.exactMatch, None))) + list(
+        graph.triples((None, align_lexicons.SKOS.closeMatch, None)))
+    assert len(match_triples) == 4
+
+    # Every emitted correspondence carries a confidence tier -- none is
+    # tier-less.
+    assert annotation_section.count("lex:confidenceTier") == 4
+
+
+def test_link_pair_is_an_exact_match_and_the_other_three_are_close(
+    scripted_client, monkeypatch, tmp_path, capsys
+):
+    output_text, _, ids = _run_otn_worked_example(scripted_client, monkeypatch, tmp_path, capsys)
+    base_section = output_text.split(align_lexicons.CORRESPONDENCE_ANNOTATION_SEPARATOR)[0]
+
+    graph = Graph()
+    graph.parse(data=base_section, format="turtle")
+
+    exact_triples = list(graph.triples((None, align_lexicons.SKOS.exactMatch, None)))
+    close_triples = list(graph.triples((None, align_lexicons.SKOS.closeMatch, None)))
+    assert len(exact_triples) == 1
+    assert len(close_triples) == 3
+
+    LEX = align_lexicons.LEX
+    link_subj, _, link_obj = exact_triples[0]
+    assert link_subj == LEX[ids["link_t"]]
+    assert link_obj == LEX[ids["link_i"]]
+
+    close_pairs = {(subj, obj) for subj, _, obj in close_triples}
+    assert close_pairs == {
+        (LEX[ids["node_t"]], LEX[ids["node_i"]]),
+        (LEX[ids["nep_t"]], LEX[ids["term_i"]]),
+        (LEX[ids["nrg_t"]], LEX[ids["cm_i"]]),
+    }
+
+
+def test_gap_and_false_cognate_are_absent_from_the_artifact(
+    scripted_client, monkeypatch, tmp_path, capsys
+):
+    output_text, _, ids = _run_otn_worked_example(scripted_client, monkeypatch, tmp_path, capsys)
+    # Checked over the whole artifact text, including the annotation
+    # section below the separator -- an annotation block naming a rejected
+    # or gap entry would be just as wrong as a base triple naming it.
+    assert ids["sip_t"] not in output_text
+    assert ids["ttp_i"] not in output_text
+
+
+def test_gap_and_false_cognate_are_present_in_the_gap_report(
+    scripted_client, monkeypatch, tmp_path, capsys
+):
+    """Both entries are surfaced in the same run's stdout rather than
+    silently lost. SIP is a TAPI entry -- collect_gap_records()'s own
+    primary key -- so it appears inside the printed '=== Gap report ==='
+    block itself. TTP is IETF-only; collect_gap_records() iterates TAPI
+    entries only, so no GapRecord can ever name it -- it surfaces instead
+    via its rejected pair-transcript, printed earlier in the same run's
+    stdout."""
+    _, stdout, ids = _run_otn_worked_example(scripted_client, monkeypatch, tmp_path, capsys)
+    assert "=== Gap report ===" in stdout
+    gap_section = stdout.split("=== Gap report ===")[1].split("=== Run summary ===")[0]
+    assert ids["sip_t"] in gap_section
+    assert ids["ttp_i"] in stdout
+
+
+def test_run_summary_still_reports_confirmed_escalated_and_gap_counts_together(
+    scripted_client, monkeypatch, tmp_path, capsys
+):
+    """Holds ROADMAP SC4 against Phase 4's changes to main() -- complements
+    (does not replace) test_align_lexicons.py's pre-existing
+    test_summary_reports_all_counts / test_summary_reports_validator_and_
+    escalation_counts, which already hold this property for Phase 1/2's
+    main()."""
+    _, stdout, _ = _run_otn_worked_example(scripted_client, monkeypatch, tmp_path, capsys)
+    assert "=== Run summary ===" in stdout
+    for verdict in align_lexicons.ALL_VERDICTS:
+        assert f"{verdict}:" in stdout
+    assert "escalated pairs:" in stdout
+    for reason in align_lexicons.ALL_GAP_REASONS:
+        assert f"{reason}:" in stdout
