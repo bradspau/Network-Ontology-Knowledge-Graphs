@@ -380,3 +380,167 @@ def test_entity_class_precedence_prefers_definitional_kind(tmp_path, monkeypatch
     out_graph.parse(str(out_dir / "tapi-common.lexicon.ttl"), format="turtle")
     subject = LEX["tapi-common-widget-thing"]
     assert out_graph.value(subject, LEX.entityClass) == LEX.GroupingKind
+
+
+# ---------------------------------------------------------------------------
+# Task 2: merge-aware, atomic write tests
+# ---------------------------------------------------------------------------
+
+
+def test_second_source_tree_run_does_not_clobber_first(tmp_path, monkeypatch):
+    """The exact real shared-module pair lexicon-69m.11's incident recorded:
+    ietf-network's base RFC 8345 node path (tree A) and an RFC 8795 TE
+    augmentation path under the same module (tree B), run separately."""
+    out_dir = tmp_path / "out"
+
+    tree_a = tmp_path / "tree_a.ttl"
+    write_ontology(
+        tree_a,
+        [(IETF_NETWORK_NODE_BASE_URI, "node", [IETF_NETWORK_NODE_BASE_DEF] + IETF_NETWORK_NODE_BASE_NOTES)],
+    )
+    run_draft_lexicon(monkeypatch, tree_a, out_dir)
+
+    tree_b = tmp_path / "tree_b.ttl"
+    write_ontology(tree_b, [(IETF_NETWORK_NODE_TE_URI, "node", [IETF_NETWORK_NODE_TE_DEF])])
+    run_draft_lexicon(monkeypatch, tree_b, out_dir)
+
+    out_graph = Graph()
+    out_graph.parse(str(out_dir / "ietf-network.lexicon.ttl"), format="turtle")
+    subject = LEX["ietf-network-node"]
+
+    prov_uris = {str(u) for u in out_graph.objects(subject, PROV.wasDerivedFrom)}
+    assert prov_uris == {IETF_NETWORK_NODE_BASE_URI, IETF_NETWORK_NODE_TE_URI}
+
+    scope_notes = {str(v) for v in out_graph.objects(subject, SKOS.scopeNote)}
+    assert IETF_NETWORK_NODE_BASE_DEF in scope_notes
+    assert IETF_NETWORK_NODE_TE_DEF in scope_notes
+    for note in IETF_NETWORK_NODE_BASE_NOTES:
+        assert note in scope_notes
+
+
+def test_second_source_tree_run_order_independent(tmp_path, monkeypatch):
+    """Running A then B produces a file byte-identical to running B then A,
+    and to running both together in one invocation."""
+    tree_a = tmp_path / "tree_a.ttl"
+    write_ontology(
+        tree_a,
+        [(IETF_NETWORK_NODE_BASE_URI, "node", [IETF_NETWORK_NODE_BASE_DEF] + IETF_NETWORK_NODE_BASE_NOTES)],
+    )
+    tree_b = tmp_path / "tree_b.ttl"
+    write_ontology(tree_b, [(IETF_NETWORK_NODE_TE_URI, "node", [IETF_NETWORK_NODE_TE_DEF])])
+
+    out_ab = tmp_path / "out_ab"
+    run_draft_lexicon(monkeypatch, tree_a, out_ab)
+    run_draft_lexicon(monkeypatch, tree_b, out_ab)
+
+    out_ba = tmp_path / "out_ba"
+    run_draft_lexicon(monkeypatch, tree_b, out_ba)
+    run_draft_lexicon(monkeypatch, tree_a, out_ba)
+
+    out_combined = tmp_path / "out_combined"
+    combined = tmp_path / "combined.ttl"
+    write_ontology(
+        combined,
+        [
+            (IETF_NETWORK_NODE_BASE_URI, "node", [IETF_NETWORK_NODE_BASE_DEF] + IETF_NETWORK_NODE_BASE_NOTES),
+            (IETF_NETWORK_NODE_TE_URI, "node", [IETF_NETWORK_NODE_TE_DEF]),
+        ],
+    )
+    run_draft_lexicon(monkeypatch, combined, out_combined)
+
+    bytes_ab = (out_ab / "ietf-network.lexicon.ttl").read_bytes()
+    bytes_ba = (out_ba / "ietf-network.lexicon.ttl").read_bytes()
+    bytes_combined = (out_combined / "ietf-network.lexicon.ttl").read_bytes()
+    assert bytes_ab == bytes_ba == bytes_combined
+
+
+def test_stale_occurrence_is_reported_and_retained(tmp_path, monkeypatch, capsys):
+    """An occurrence URI present in a prior run's output but absent from
+    every graph in the current run is retained and reported on stdout,
+    never deleted (D-08)."""
+    out_dir = tmp_path / "out"
+
+    both = tmp_path / "both.ttl"
+    write_ontology(
+        both,
+        [
+            (IETF_NETWORK_NODE_BASE_URI, "node", [IETF_NETWORK_NODE_BASE_DEF]),
+            (IETF_NETWORK_NODE_TE_URI, "node", [IETF_NETWORK_NODE_TE_DEF]),
+        ],
+    )
+    run_draft_lexicon(monkeypatch, both, out_dir)
+    capsys.readouterr()
+
+    # Second run's input no longer produces the TE-augmentation occurrence
+    # (as if that subtree were refactored away) -- it must not be deleted.
+    only_base = tmp_path / "only_base.ttl"
+    write_ontology(only_base, [(IETF_NETWORK_NODE_BASE_URI, "node", [IETF_NETWORK_NODE_BASE_DEF])])
+    run_draft_lexicon(monkeypatch, only_base, out_dir)
+    captured = capsys.readouterr()
+
+    assert any(
+        line.startswith("STALE: ") and IETF_NETWORK_NODE_TE_URI in line
+        for line in captured.out.splitlines()
+    )
+
+    out_graph = Graph()
+    out_graph.parse(str(out_dir / "ietf-network.lexicon.ttl"), format="turtle")
+    subject = LEX["ietf-network-node"]
+    prov_uris = {str(u) for u in out_graph.objects(subject, PROV.wasDerivedFrom)}
+    assert IETF_NETWORK_NODE_TE_URI in prov_uris
+    assert IETF_NETWORK_NODE_BASE_URI in prov_uris
+    scope_notes = {str(v) for v in out_graph.objects(subject, SKOS.scopeNote)}
+    assert IETF_NETWORK_NODE_TE_DEF in scope_notes
+
+
+def test_merge_is_idempotent_across_repeat_runs(tmp_path, monkeypatch):
+    """Running the same ontology twice does not duplicate any occurrence URI
+    and produces a byte-identical file the second time."""
+    ontology_path = tmp_path / "tapi.ttl"
+    write_ontology(ontology_path, ACCESS_PORT_OCCURRENCES)
+    out_dir = tmp_path / "out"
+
+    run_draft_lexicon(monkeypatch, ontology_path, out_dir)
+    first_bytes = (out_dir / "tapi-common.lexicon.ttl").read_bytes()
+
+    run_draft_lexicon(monkeypatch, ontology_path, out_dir)
+    second_bytes = (out_dir / "tapi-common.lexicon.ttl").read_bytes()
+
+    assert first_bytes == second_bytes
+
+    out_graph = Graph()
+    out_graph.parse(str(out_dir / "tapi-common.lexicon.ttl"), format="turtle")
+    subject = LEX["tapi-common-access-port"]
+    prov_uris = [str(u) for u in out_graph.objects(subject, PROV.wasDerivedFrom)]
+    assert len(prov_uris) == len(set(prov_uris))
+    assert len(prov_uris) == len(ACCESS_PORT_OCCURRENCES)
+
+
+def test_interrupted_write_leaves_previous_file_intact(tmp_path, monkeypatch):
+    """If rendering raises partway through, the pre-existing lexicon file on
+    disk is unchanged rather than truncated."""
+    import draft_lexicon  # lazy import
+
+    ontology_path = tmp_path / "tapi.ttl"
+    write_ontology(ontology_path, ACCESS_PORT_OCCURRENCES + NODE_EDGE_POINT_OCCURRENCES)
+    out_dir = tmp_path / "out"
+
+    run_draft_lexicon(monkeypatch, ontology_path, out_dir)
+    pre_run_bytes = (out_dir / "tapi-common.lexicon.ttl").read_bytes()
+
+    real_render_concept = draft_lexicon.render_concept
+    call_count = {"n": 0}
+
+    def _raise_on_second_call(*args, **kwargs):
+        call_count["n"] += 1
+        if call_count["n"] == 2:
+            raise RuntimeError("simulated rendering failure")
+        return real_render_concept(*args, **kwargs)
+
+    monkeypatch.setattr(draft_lexicon, "render_concept", _raise_on_second_call)
+
+    with pytest.raises(RuntimeError):
+        run_draft_lexicon(monkeypatch, ontology_path, out_dir)
+
+    post_failure_bytes = (out_dir / "tapi-common.lexicon.ttl").read_bytes()
+    assert post_failure_bytes == pre_run_bytes
