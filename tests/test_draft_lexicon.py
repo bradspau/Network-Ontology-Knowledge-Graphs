@@ -544,3 +544,103 @@ def test_interrupted_write_leaves_previous_file_intact(tmp_path, monkeypatch):
 
     post_failure_bytes = (out_dir / "tapi-common.lexicon.ttl").read_bytes()
     assert post_failure_bytes == pre_run_bytes
+
+
+# ---------------------------------------------------------------------------
+# Task 3: determinism and edge-case contract
+# ---------------------------------------------------------------------------
+
+
+def test_output_is_byte_stable_across_repeat_runs(tmp_path, monkeypatch):
+    """Two independent from-scratch runs over identical inputs produce
+    byte-identical output files, with scopeNote values and
+    prov:wasDerivedFrom URIs each in ascending sorted order."""
+    ontology_path = tmp_path / "tapi.ttl"
+    write_ontology(ontology_path, ACCESS_PORT_OCCURRENCES + NODE_EDGE_POINT_OCCURRENCES)
+
+    out_dir_1 = tmp_path / "out1"
+    out_dir_2 = tmp_path / "out2"
+    run_draft_lexicon(monkeypatch, ontology_path, out_dir_1)
+    run_draft_lexicon(monkeypatch, ontology_path, out_dir_2)
+
+    bytes_1 = (out_dir_1 / "tapi-common.lexicon.ttl").read_bytes()
+    bytes_2 = (out_dir_2 / "tapi-common.lexicon.ttl").read_bytes()
+    assert bytes_1 == bytes_2
+
+    out_graph = Graph()
+    out_graph.parse(str(out_dir_1 / "tapi-common.lexicon.ttl"), format="turtle")
+
+    node_edge_point_subject = LEX["tapi-common-node-edge-point"]
+    scope_notes = [str(v) for v in out_graph.objects(node_edge_point_subject, SKOS.scopeNote)]
+    assert scope_notes == sorted(scope_notes)
+
+    access_port_subject = LEX["tapi-common-access-port"]
+    prov_uris = [str(u) for u in out_graph.objects(access_port_subject, PROV.wasDerivedFrom)]
+    assert prov_uris == sorted(prov_uris)
+    access_port_scope_notes = [str(v) for v in out_graph.objects(access_port_subject, SKOS.scopeNote)]
+    assert access_port_scope_notes == sorted(access_port_scope_notes)
+
+    # Every emitted skos:definition/scopeNote is preceded by a single-line
+    # provenance comment naming a source URI, and no comment line embeds a
+    # newline.
+    raw = (out_dir_1 / "tapi-common.lexicon.ttl").read_text(encoding="utf-8")
+    source_lines = [line for line in raw.splitlines() if "# source:" in line]
+    assert len(source_lines) > 0
+    for line in source_lines:
+        assert line.count("\n") == 0
+
+
+def test_module_with_no_eligible_classes_writes_no_file(tmp_path, monkeypatch):
+    """An ontology input yielding zero eligible OWL classes for a module
+    writes no file for that module and does not truncate an existing one."""
+    out_dir = tmp_path / "out"
+    out_dir.mkdir()
+    sentinel_path = out_dir / "tapi-common.lexicon.ttl"
+    sentinel_path.write_text("SENTINEL: pre-existing content untouched\n", encoding="utf-8")
+
+    # notification is a SKIP_KINDS entry -- classify_uri() resolves it, but
+    # collect_occurrences() drops it before any concept is ever formed, so
+    # the module never appears in this run's fresh data at all.
+    skip_only = tmp_path / "skip_only.ttl"
+    write_ontology(
+        skip_only,
+        [(f"{BASE_URI}/notification/tapi-common/some-event", "some-event", ["An event notification."])],
+    )
+    run_draft_lexicon(monkeypatch, skip_only, out_dir)
+
+    assert sentinel_path.read_text(encoding="utf-8") == "SENTINEL: pre-existing content untouched\n"
+
+
+def test_distinct_local_names_sharing_a_slug_never_share_a_subject(tmp_path, monkeypatch):
+    """Two distinct (module, local_name) concepts whose slugify() output
+    collides (e.g. YANG's own UPPER_SNAKE_CASE identity-naming convention
+    vs. lower-kebab-case grouping/container naming) must never render as
+    the same lex:ReferenceEntry subject (D-06) -- the real corpus case is
+    tapi-photonic-media's TRANSCEIVER_TERMINATION_TYPE identity colliding
+    with its transceiver-termination-type grouping."""
+    ontology_path = tmp_path / "collision.ttl"
+    identity_uri = f"{BASE_URI}/identity/tapi-photonic-media/TRANSCEIVER_TERMINATION_TYPE"
+    grouping_uri = f"{BASE_URI}/grouping/tapi-photonic-media/transceiver-termination-type"
+    write_ontology(
+        ontology_path,
+        [
+            (identity_uri, "TRANSCEIVER_TERMINATION_TYPE", []),
+            (grouping_uri, "transceiver-termination-type", ["A grouping for the transceiver termination type."]),
+        ],
+    )
+    out_dir = tmp_path / "out"
+    run_draft_lexicon(monkeypatch, ontology_path, out_dir)
+
+    raw = (out_dir / "tapi-photonic-media.lexicon.ttl").read_text(encoding="utf-8")
+    subject_lines = [line for line in raw.splitlines() if line.startswith("lex:")]
+    assert len(subject_lines) == len(set(subject_lines)) == 2
+
+    out_graph = Graph()
+    out_graph.parse(str(out_dir / "tapi-photonic-media.lexicon.ttl"), format="turtle")
+    subjects_with_derived_from = {
+        str(s): {str(u) for u in out_graph.objects(s, PROV.wasDerivedFrom)}
+        for s in out_graph.subjects(RDF.type, LEX.ReferenceEntry)
+    }
+    assert len(subjects_with_derived_from) == 2
+    all_uris = {u for uris in subjects_with_derived_from.values() for u in uris}
+    assert all_uris == {identity_uri, grouping_uri}
