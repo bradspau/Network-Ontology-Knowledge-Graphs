@@ -478,12 +478,12 @@ FIXTURE_TAPI: List[FixtureRef] = [
     FixtureRef(
         source="tapi",
         file="tapi-common.lexicon.ttl",
-        lex_id="tapi-common-service-interface-point-tapi-common",
+        lex_id="tapi-common-service-interface-point",
     ),
     FixtureRef(
         source="tapi",
         file="tapi-common.lexicon.ttl",
-        lex_id="tapi-common-node-edge-point-event-notification",
+        lex_id="tapi-common-device-supports-node",
     ),
 ]
 FIXTURE_IETF: List[FixtureRef] = [
@@ -494,7 +494,7 @@ FIXTURE_IETF: List[FixtureRef] = [
     FixtureRef(
         source="ietf",
         file="ietf-network.lexicon.ttl",
-        lex_id="ietf-network-tunnel-termination-point-te",
+        lex_id="ietf-network-tunnel-termination-point",
     ),
 ]
 

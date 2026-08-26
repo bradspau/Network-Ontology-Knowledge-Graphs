@@ -28,7 +28,7 @@ def test_confirmation_rejects_false_cognate(lexicon_dir, scripted_client, capsys
     # The fixture now holds all 11 OTN entries (Plan 02) -- look the false-
     # cognate pair up by lex_id rather than assuming it's still entry [0].
     tapi_entry = next(e for e in tapi_entries if e.lex_id == "tapi-topology-node-edge-point")
-    ietf_entry = next(e for e in ietf_entries if e.lex_id == "ietf-network-tunnel-termination-point-te")
+    ietf_entry = next(e for e in ietf_entries if e.lex_id == "ietf-network-tunnel-termination-point")
 
     candidate = align_lexicons.Candidate(
         tapi=tapi_entry,
@@ -92,7 +92,7 @@ def test_confirm_pair_uses_requested_model(lexicon_dir, scripted_client):
     ietf_entries = align_lexicons.load_fixture_entries(lexicon_dir, align_lexicons.FIXTURE_IETF)
     tapi_entry = next(e for e in tapi_entries if e.lex_id == "tapi-topology-node-edge-point")
     ietf_entry = next(
-        e for e in ietf_entries if e.lex_id == "ietf-network-tunnel-termination-point-te"
+        e for e in ietf_entries if e.lex_id == "ietf-network-tunnel-termination-point"
     )
     candidate = align_lexicons.Candidate(
         tapi=tapi_entry, ietf=ietf_entry, label_score=100.0, origin="label-pass"
