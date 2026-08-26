@@ -445,35 +445,26 @@ def main():
                     # applies at the text level, not just the
                     # occurrence-URI level.
                     #
-                    # Which side's definition/extra_notes split is used as
-                    # the base matters for byte-stability, not just content:
-                    # whichever side recorded strictly more total text for
-                    # this URI reflects a more complete view of its real
-                    # rdfs:comment set, so its role split (which text was
-                    # comments[0] vs comments[1:]) is kept; a tie prefers
-                    # this run's own fresh view. The other side's texts are
-                    # then folded in as additional extra_notes so nothing it
-                    # uniquely knew about is lost.
-                    fresh_texts = ([fresh_occ["definition"]] if fresh_occ["definition"] else []) + list(
-                        fresh_occ["extra_notes"]
-                    )
-                    existing_texts = (
-                        [existing_occ["definition"]] if existing_occ["definition"] else []
-                    ) + list(existing_occ["extra_notes"])
-                    if len(existing_texts) > len(fresh_texts):
-                        base_definition = existing_occ["definition"]
-                        base_extra = list(existing_occ["extra_notes"])
-                        other_texts = fresh_texts
-                    else:
-                        base_definition = fresh_occ["definition"]
-                        base_extra = list(fresh_occ["extra_notes"])
-                        other_texts = existing_texts
-
-                    combined_extra = list(base_extra)
-                    known = set(base_extra)
-                    if base_definition:
-                        known.add(base_definition)
-                    for t in other_texts:
+                    # The already-committed file's role split (which text
+                    # was comments[0] vs comments[1:]) is always kept as the
+                    # base, never overridden by this run's fresh view: this
+                    # mirrors how parsing several ontology files sharing one
+                    # class URI into a single combined graph behaves
+                    # (rdflib unions rdfs:comment triples in first-parsed
+                    # order, so whichever source was seen first keeps the
+                    # comments[0] slot) -- keeping "whatever the file
+                    # already recorded" authoritative for role, and only
+                    # adding a fresh run's genuinely new texts as
+                    # additional extra_notes, is what makes a sequential
+                    # multi-invocation merge byte-identical to a single
+                    # combined invocation regardless of which tree is
+                    # processed first.
+                    final_definition = existing_occ["definition"] or fresh_occ["definition"]
+                    combined_extra = list(existing_occ["extra_notes"])
+                    known = set(combined_extra)
+                    if final_definition:
+                        known.add(final_definition)
+                    for t in [fresh_occ["definition"]] + list(fresh_occ["extra_notes"]):
                         if t and t not in known:
                             combined_extra.append(t)
                             known.add(t)
@@ -482,7 +473,7 @@ def main():
                         {
                             "uri": uri,
                             "label": fresh_occ["label"] or existing_occ["label"],
-                            "definition": base_definition,
+                            "definition": final_definition,
                             "extra_notes": combined_extra,
                             "kind": fresh_occ["kind"],
                         }
@@ -501,9 +492,35 @@ def main():
 
             merged_concepts[local_name] = merged_occs
 
-        for local_name in sorted(merged_concepts.keys(), key=slugify):
+        # Tie-break on local_name itself, not just its slug: two distinct
+        # local_names can slugify identically (e.g. an IdentityKind written
+        # in YANG's own UPPER_SNAKE_CASE convention and a GroupingKind
+        # written in lower-kebab-case both collapse to the same slug via
+        # slugify()'s case-folding). Sorting by slug alone leaves that tie
+        # order undefined, which the caller's non-deterministic module/set
+        # iteration order would then leak into the byte-stability contract.
+        seen_subjects = set()
+        for local_name in sorted(merged_concepts.keys(), key=lambda ln: (slugify(ln), ln)):
             occurrences = merged_concepts[local_name]
             concept_lines = render_concept(module, local_name, occurrences)
+            subject = concept_lines[0]
+            if subject in seen_subjects:
+                # Rare: two distinct local_names slugify to the identical
+                # string (e.g. YANG's own UPPER_SNAKE_CASE identity-naming
+                # convention and a lower-kebab-case grouping/container name
+                # collapse under slugify()'s case-folding). Grouping itself
+                # stays exact on (module, local_name) -- only the rendered
+                # subject slug needs a deterministic disambiguating suffix,
+                # so two genuinely different concepts never share one
+                # lex:ReferenceEntry subject (D-06).
+                suffix = 2
+                candidate = f"{subject}-{suffix}"
+                while candidate in seen_subjects:
+                    suffix += 1
+                    candidate = f"{subject}-{suffix}"
+                subject = candidate
+                concept_lines[0] = subject
+            seen_subjects.add(subject)
             lines.extend(concept_lines)
             total_entries += 1
             if "    lex:needsCuration true ;" in concept_lines:
