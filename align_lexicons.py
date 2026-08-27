@@ -1978,6 +1978,50 @@ def run_confirmation_stage(
     )
 
 
+def recovery_shortlist(
+    tapi_entry: LexiconEntry, eligible_ietf: List[LexiconEntry]
+) -> List[LexiconEntry]:
+    """D-17: recover_misses()'s bounded, evidence-ranked candidate
+    generator -- see <bounding_contract> in 05-04-PLAN.md. Builds two
+    independent shortlists from eligible_ietf and returns their union,
+    deduplicated by lex_id:
+
+    - the top RECOVERY_LABEL_SHORTLIST entries by label_score() descending,
+      ietf.lex_id ascending as tie-break;
+    - the top RECOVERY_STRUCTURAL_SHORTLIST entries by
+      structural_corroboration() descending, ietf.lex_id ascending as
+      tie-break, with a None score mapped to RECOVERY_NO_STRUCTURAL_SIGNAL_
+      RANK -- strictly below every computed score, never coerced to 0.0.
+
+    An entry with fewer eligible IETF entries than either shortlist size
+    keeps all of them. The entry ranked immediately past each shortlist's
+    boundary is dropped, deterministically, by the score-then-lex_id sort
+    key -- never by input list order (T-05-22).
+
+    Returns entries in no particular combined order -- recover_misses()'s
+    own trailing sort by (tapi.lex_id, ietf.lex_id) is what makes the final
+    candidate list reproducible, not this function."""
+    label_ranked = sorted(
+        eligible_ietf,
+        key=lambda e: (-label_score(tapi_entry.pref_label, e.pref_label), e.lex_id),
+    )[:RECOVERY_LABEL_SHORTLIST]
+
+    def _structural_rank_key(entry: LexiconEntry):
+        score = structural_corroboration(tapi_entry, entry)
+        rank_value = score if score is not None else RECOVERY_NO_STRUCTURAL_SIGNAL_RANK
+        return (-rank_value, entry.lex_id)
+
+    structural_ranked = sorted(eligible_ietf, key=_structural_rank_key)[:RECOVERY_STRUCTURAL_SHORTLIST]
+
+    seen_lex_ids = set()
+    shortlist: List[LexiconEntry] = []
+    for entry in label_ranked + structural_ranked:
+        if entry.lex_id not in seen_lex_ids:
+            seen_lex_ids.add(entry.lex_id)
+            shortlist.append(entry)
+    return shortlist
+
+
 def recover_misses(
     client,
     tapi: List[LexiconEntry],
@@ -1999,19 +2043,21 @@ def recover_misses(
     would silently drop the pair the drafts' own OTN worked example calls
     out (docs/reference-lexicons.md section 4.2 and section 6).
 
-    For each TAPI entry left unresolved, builds a Candidate against every
-    IETF entry it was not already paired with (origin="misses-recovery"),
-    sorts the generated pairs by (tapi.lex_id, ietf.lex_id) for a
-    reproducible run, then routes them through the same evidence_gate ->
-    confirm_pair path and shared call budget as the label-driven stage --
-    the D-03 entry is never sent to the model by this pass either.
-
-    Bounded only because the fixture is small (D-01): this pass is
-    quadratic in corpus size as written (every unresolved TAPI entry against
-    every not-yet-paired IETF entry) and MUST be re-bounded -- e.g. with its
-    own blocking/ranking stage -- before Phase 5's full-corpus run. This is
-    a note for the future reader, not a deferral of any work inside this
-    phase's scope.
+    For each TAPI entry left unresolved, builds a Candidate against a
+    bounded per-entry evidence-ranked candidate shortlist (D-17): only the
+    union of RECOVERY_LABEL_SHORTLIST top-label-scoring and
+    RECOVERY_STRUCTURAL_SHORTLIST top-structural-scoring IETF entries it
+    was not already paired with (origin="misses-recovery") is paired,
+    making this pass linear rather than quadratic in corpus size. Both
+    shortlist sizes are pinned by the full-corpus rank measurement tests in
+    tests/test_full_corpus_run.py; the known true positive this pass
+    exists to catch (node-rule-group <-> connectivity-matrix) is retained
+    via the structural signal alone at full-corpus scale -- see the sizing
+    comment above RECOVERY_STRUCTURAL_SHORTLIST in this module. Generated
+    pairs are then sorted by (tapi.lex_id, ietf.lex_id) for a reproducible
+    run and routed through the same evidence_gate -> confirm_pair path and
+    shared call budget as the label-driven stage -- the D-03 entry is never
+    sent to the model by this pass either.
 
     GAP-1/CR-01: returns (results, calls_used) mirroring
     run_confirmation_stage()'s own return shape -- calls_used is this pass's
@@ -2026,9 +2072,12 @@ def recover_misses(
 
     recovery_candidates: List[Candidate] = []
     for tapi_entry in unresolved:
-        for ietf_entry in ietf:
-            if (tapi_entry.lex_id, ietf_entry.lex_id) in already_paired:
-                continue
+        eligible = [
+            ietf_entry
+            for ietf_entry in ietf
+            if (tapi_entry.lex_id, ietf_entry.lex_id) not in already_paired
+        ]
+        for ietf_entry in recovery_shortlist(tapi_entry, eligible):
             recovery_candidates.append(
                 Candidate(
                     tapi=tapi_entry,
