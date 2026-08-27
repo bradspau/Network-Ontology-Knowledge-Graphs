@@ -3293,6 +3293,17 @@ def main() -> None:
         ),
     )
     parser.add_argument(
+        "--full-corpus",
+        action="store_true",
+        help=(
+            "Load every lex:ReferenceEntry in all *.lexicon.ttl files under "
+            "--lexicon-dir (1,777 TAPI / 558 IETF entries across 34 files) "
+            "instead of the default 11-entry curated OTN fixture. The "
+            "default no-flag run stays byte-for-byte unchanged -- this "
+            "flag is what selects the full corpus (D-04)."
+        ),
+    )
+    parser.add_argument(
         "--emit-correspondences",
         nargs="?",
         type=Path,
@@ -3368,13 +3379,22 @@ def main() -> None:
         )
         return
 
-    tapi_entries = load_fixture_entries(args.lexicon_dir, FIXTURE_TAPI)
-    ietf_entries = load_fixture_entries(args.lexicon_dir, FIXTURE_IETF)
+    # D-04: the branch is confined to these two lines -- label_pass(),
+    # run_confirmation_stage() and recover_misses() all take entry lists
+    # and are shape-agnostic to their length, so nothing else in main()
+    # needs to know which mode ran.
+    if args.full_corpus:
+        tapi_entries, ietf_entries = load_all_entries(args.lexicon_dir)
+    else:
+        tapi_entries = load_fixture_entries(args.lexicon_dir, FIXTURE_TAPI)
+        ietf_entries = load_fixture_entries(args.lexicon_dir, FIXTURE_IETF)
 
+    loading_mode = "full-corpus" if args.full_corpus else "fixture"
     print(
         f"=== align_lexicons run: lexicon_dir={args.lexicon_dir} "
         f"model={args.model} label_threshold={args.label_threshold:.1f} "
-        f"max_calls={args.max_calls} lexicon_version={lexicon_version} ==="
+        f"max_calls={args.max_calls} lexicon_version={lexicon_version} "
+        f"loading_mode={loading_mode} ==="
     )
 
     candidates = label_pass(tapi_entries, ietf_entries, args.label_threshold)
