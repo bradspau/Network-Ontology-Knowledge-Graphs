@@ -2949,6 +2949,66 @@ def _review_annotation_lines(record: "ReviewRecord") -> List[str]:
     return lines
 
 
+def _n3_string_scan_step(text: str, i: int, in_triple: bool, in_simple: bool) -> Tuple[int, bool, bool]:
+    """Advances one N3-literal-aware step over `text` from index `i`,
+    mirroring rdflib's own Literal(...).n3() escaping rules: a backslash
+    escapes exactly the following character (never toggles string state on
+    its own), and an unescaped '\"\"\"'/'\"' run opens or closes a
+    triple-quoted or simple-quoted string literal. Returns the advanced
+    index and the (in_triple, in_simple) state after consuming one token.
+    Shared by _annotation_block_terminator() and _iter_block_statements()
+    so both use exactly one definition of "inside a string" (CR-01)."""
+    n = len(text)
+    ch = text[i]
+    if in_triple:
+        if ch == "\\" and i + 1 < n:
+            return i + 2, in_triple, in_simple
+        if text[i : i + 3] == '"""':
+            return i + 3, False, in_simple
+        return i + 1, in_triple, in_simple
+    if in_simple:
+        if ch == "\\" and i + 1 < n:
+            return i + 2, in_triple, in_simple
+        if ch == '"':
+            return i + 1, in_triple, False
+        return i + 1, in_triple, in_simple
+    if text[i : i + 3] == '"""':
+        return i + 3, True, in_simple
+    if ch == '"':
+        return i + 1, in_triple, True
+    return i + 1, in_triple, in_simple
+
+
+def _annotation_block_terminator(lines: List[str], header_idx: int) -> Optional[int]:
+    """CR-01: scans forward from header_idx+1 for the block's real
+    terminating line -- the last predicate-assignment line before a
+    genuine blank-line separator. render_correspondences_ttl() always
+    emits exactly one blank line after every block, so a blank line is a
+    reliable boundary UNLESS it is itself raw content inside a still-open
+    multi-line literal (a paragraph break embedded in evidence_quote,
+    e.g.), which the old "does this line end with a period" heuristic
+    could not tell apart from real Turtle-star structure at all. Tracks N3
+    string-literal state across line boundaries via _n3_string_scan_step()
+    so an embedded raw newline is recognized as literal content rather
+    than mistaken for a block terminator. Returns None only when the block
+    has no content at all (header is the file's last line); otherwise
+    falls back to the last line in the file when no blank-line boundary is
+    found before EOF -- callers still validate the terminator line ends in
+    a bare period before splicing."""
+    if header_idx + 1 >= len(lines):
+        return None
+    in_triple = False
+    in_simple = False
+    for i in range(header_idx + 1, len(lines)):
+        if lines[i].strip() == "" and not (in_triple or in_simple):
+            return i - 1
+        j = 0
+        line = lines[i]
+        while j < len(line):
+            j, in_triple, in_simple = _n3_string_scan_step(line, j, in_triple, in_simple)
+    return len(lines) - 1
+
+
 def _locate_annotation_block(
     lines: List[str], tapi_lex_id: str, predicate: str, ietf_lex_id: str
 ) -> Tuple[int, int]:
@@ -2965,16 +3025,41 @@ def _locate_annotation_block(
             "correspondences.ttl -- a worklist row must name a "
             "correspondence the target file actually contains"
         )
-    terminator_idx = None
-    for i in range(header_idx + 1, len(lines)):
-        if lines[i].strip().endswith("."):
-            terminator_idx = i
-            break
+    terminator_idx = _annotation_block_terminator(lines, header_idx)
     if terminator_idx is None:
         raise MalformedWorklistError(
             f"no terminating line found for block {header!r}"
         )
     return header_idx, terminator_idx
+
+
+def _iter_block_statements(lines: List[str], header_idx: int, terminator_idx: int):
+    """CR-01: yields (predicate, raw_value_text) for each `lex:predicate
+    value {;|.}` statement inside the annotation block spanning
+    lines[header_idx+1 : terminator_idx+1]. Walks the block's TEXT
+    character-by-character with the same N3-string-aware state machine
+    _annotation_block_terminator() uses, splitting on a top-level ';'/'.'
+    (i.e. one that is not inside an open string literal) rather than
+    assuming one statement per physical line -- so a value whose literal
+    spans multiple lines (an embedded raw newline in evidence_quote) is
+    still returned whole, never truncated at the first internal line."""
+    block_text = "\n".join(lines[header_idx + 1 : terminator_idx + 1])
+    in_triple = False
+    in_simple = False
+    i = 0
+    n = len(block_text)
+    stmt_start = 0
+    while i < n:
+        ch = block_text[i]
+        if not in_triple and not in_simple and ch in ";.":
+            statement = block_text[stmt_start:i].strip()
+            if statement.startswith("lex:"):
+                pred, _, value = statement.partition(" ")
+                yield pred, value.strip()
+            stmt_start = i + 1
+            i += 1
+            continue
+        i, in_triple, in_simple = _n3_string_scan_step(block_text, i, in_triple, in_simple)
 
 
 def render_reviewed_gap_block(record: "ReviewRecord", gap_reason: str) -> List[str]:
@@ -3002,25 +3087,37 @@ def _read_block_evidence_quote(lines: List[str], header_idx: int, terminator_idx
     """Reads the lex:evidenceQuote literal's text out of an already-located
     <<...>> annotation block, by parsing just that one predicate-object
     pair as a standalone Turtle triple -- reusing rdflib's own
-    literal-unescaping rules rather than hand-rolling a second one. Returns
-    None when lex:evidenceQuote is absent from the block."""
-    for line in lines[header_idx + 1 : terminator_idx + 1]:
-        stripped = line.strip()
-        if not stripped.startswith("lex:evidenceQuote "):
+    literal-unescaping rules rather than hand-rolling a second one. Walks
+    the block via _iter_block_statements() (CR-01) so a multi-line
+    evidenceQuote value is captured whole rather than truncated at its
+    first embedded newline. Returns None when lex:evidenceQuote is absent
+    from the block, or when the extracted literal fails to parse (WR-02) --
+    callers already treat None as "canonical quote unavailable, skip the
+    distinctness check for this row" rather than crashing the CLI."""
+    for pred, value_text in _iter_block_statements(lines, header_idx, terminator_idx):
+        if pred != "lex:evidenceQuote":
             continue
-        value_part = stripped[len("lex:evidenceQuote ") :].strip()
-        first_quote = value_part.find('"')
-        last_quote = value_part.rfind('"')
-        if first_quote == -1 or last_quote <= first_quote:
+        try:
+            probe = Graph()
+            probe.parse(
+                data=f"@prefix lex: <{LEX}> .\n<urn:x:probe> lex:evidenceQuote {value_text} .",
+                format="turtle",
+            )
+        except Exception as exc:
+            # Best-effort probe parse for an advisory SC4 distinctness check
+            # only -- never the canonical write path. A malformed or
+            # unexpected literal here must degrade to "quote unavailable",
+            # not propagate a raw rdflib parser exception out of
+            # write_reviewed_correspondences() (WR-02).
+            print(
+                "WARNING: lex:evidenceQuote literal could not be parsed for "
+                f"the SC4 distinctness check ({exc.__class__.__name__}: {exc}) "
+                "-- skipping distinctness check for this row"
+            )
             return None
-        literal_text = value_part[first_quote : last_quote + 1]
-        probe = Graph()
-        probe.parse(
-            data=f"@prefix lex: <{LEX}> .\n<urn:x:probe> lex:evidenceQuote {literal_text} .",
-            format="turtle",
-        )
         for _, _, obj in probe.triples((None, LEX.evidenceQuote, None)):
             return str(obj)
+        return None
     return None
 
 

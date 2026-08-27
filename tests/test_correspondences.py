@@ -975,6 +975,202 @@ def test_applying_the_same_worklist_twice_is_refused(fixture_entries, tmp_path, 
     assert corr_path.read_bytes() == bytes_after_first
 
 
+def test_multiline_evidence_quote_and_validator_argument_survive_review_splice(
+    fixture_entries, tmp_path, lexicon_dir
+):
+    """CR-01 regression (05-REVIEW.md): render_correspondences_ttl()
+    legitimately renders a multi-line evidence_quote/validator_counter_argument
+    as a raw embedded newline inside a triple-quoted N3 literal (rdflib's own
+    Literal(...).n3() behavior -- see
+    test_multiline_evidence_quote_stays_contiguous_regardless_of_order). The
+    Phase 5 splice path (_locate_annotation_block/apply_review_to_correspondences)
+    must locate this block's real boundary correctly even though a naive
+    line-based "does this line end with a period" scan mistakes the embedded
+    newline for real Turtle-star block structure, silently splicing the
+    review predicates INSIDE the still-open literal instead of after it."""
+    _, _, by_lex_id = fixture_entries
+    multiline_quote = "First sentence ends here.\nSecond line continues the quote and matters too."
+    multiline_counter_argument = "The strongest case still fails.\nSee the second line too."
+    multiline_pair = _pair_result(
+        by_lex_id["tapi-topology-node"],
+        by_lex_id["ietf-network-node"],
+        "confirm_exact_match",
+        evidence_quote=multiline_quote,
+        confidence=_confidence(validator_counter_argument=multiline_counter_argument),
+    )
+    other_pair = _pair_result(
+        by_lex_id["tapi-topology-node-rule-group"],
+        by_lex_id["ietf-network-connectivity-matrix"],
+        "confirm_close_match",
+        confidence=_confidence(tier="medium"),
+    )
+    triples = align_lexicons.correspondences_from_results(
+        [multiline_pair, other_pair], FAKE_VERSION, FAKE_MODEL
+    )
+    corr_path = tmp_path / "correspondences.ttl"
+    original_text = align_lexicons.render_correspondences_ttl(triples, FAKE_VERSION, FAKE_MODEL)
+    corr_path.write_text(original_text)
+    # Confirms the fixture reproduces the raw-newline literal shape CR-01
+    # depends on before the splice is even attempted.
+    assert multiline_quote in original_text
+
+    multiline_triple = next(t for t in triples if t.tapi_lex_id == "tapi-topology-node")
+    other_triple = next(t for t in triples if t.tapi_lex_id == "tapi-topology-node-rule-group")
+
+    records = [
+        align_lexicons.ReviewRecord(
+            row_id=f"C:{multiline_triple.tapi_lex_id}:{multiline_triple.ietf_lex_id}:{multiline_triple.predicate}",
+            kind="correspondence",
+            tapi_lex_id=multiline_triple.tapi_lex_id,
+            ietf_lex_id=multiline_triple.ietf_lex_id,
+            predicate=multiline_triple.predicate,
+            verdict="reject",
+            reason="Reviewer disagrees despite the multi-line evidence.",
+        ),
+        align_lexicons.ReviewRecord(
+            row_id=f"C:{other_triple.tapi_lex_id}:{other_triple.ietf_lex_id}:{other_triple.predicate}",
+            kind="correspondence",
+            tapi_lex_id=other_triple.tapi_lex_id,
+            ietf_lex_id=other_triple.ietf_lex_id,
+            predicate=other_triple.predicate,
+            verdict="accept",
+            reason="ok",
+        ),
+    ]
+
+    align_lexicons.write_reviewed_correspondences(corr_path, records, lexicon_dir)
+
+    reviewed_text = corr_path.read_text()
+
+    # The multi-line literals survive completely intact -- not torn apart,
+    # not truncated by the splice's boundary detection.
+    assert multiline_quote in reviewed_text
+    assert multiline_counter_argument in reviewed_text
+    assert (
+        'lex:evidenceQuote """First sentence ends here.\n'
+        'Second line continues the quote and matters too.""" ;' in reviewed_text
+    )
+
+    # Each block's review predicates landed in that block's OWN annotation
+    # section -- after the closing """, never spliced inside the still-open
+    # multi-line literal, and never leaking into the other block.
+    multiline_header = (
+        f"<<lex:{multiline_triple.tapi_lex_id} {multiline_triple.predicate} "
+        f"lex:{multiline_triple.ietf_lex_id}>>"
+    )
+    other_header = (
+        f"<<lex:{other_triple.tapi_lex_id} {other_triple.predicate} lex:{other_triple.ietf_lex_id}>>"
+    )
+    multiline_block = reviewed_text.split(multiline_header, 1)[1].split("<<lex:", 1)[0]
+    other_block = reviewed_text.split(other_header, 1)[1]
+    assert 'lex:reviewVerdict "rejected"' in multiline_block
+    assert 'lex:reviewVerdict "accepted"' in other_block
+    assert 'lex:reviewVerdict "accepted"' not in multiline_block
+    # The block still terminates in a single period -- proof the terminator
+    # line was correctly relocated to the block's real end, not truncated
+    # onto an internal line of the multi-line literal (05-REVIEW.md's
+    # demonstrated corruption shape).
+    assert multiline_block.rstrip().endswith('.')
+
+    # The base section (SKOS match triples) is completely untouched and
+    # still parses -- the corruption CR-01 describes would break this.
+    base_section = reviewed_text.split(align_lexicons.CORRESPONDENCE_ANNOTATION_SEPARATOR)[0]
+    graph = Graph()
+    graph.parse(data=base_section, format="turtle")
+    match_triples = list(graph.triples((None, align_lexicons.SKOS.exactMatch, None))) + list(
+        graph.triples((None, align_lexicons.SKOS.closeMatch, None))
+    )
+    assert len(match_triples) == 2
+
+
+def test_rederivation_citation_matching_multiline_evidence_quote_is_refused(
+    fixture_entries, tmp_path, lexicon_dir
+):
+    """CR-01's second failure mode: the SC4 distinctness check calls
+    _read_block_evidence_quote(), which used to parse only the single
+    physical line it found -- crashing with an unhandled rdflib
+    AssertionError on a multi-line evidenceQuote instead of ever reaching
+    this comparison. A correct fix must reconstruct the FULL multi-line
+    canonical quote so a citation that merely restates it is still caught,
+    not just avoid crashing."""
+    _, _, by_lex_id = fixture_entries
+    multiline_quote = "First sentence ends here.\nSecond line continues the quote and matters too."
+    pair = _pair_result(
+        by_lex_id["tapi-topology-node"],
+        by_lex_id["ietf-network-node"],
+        "confirm_exact_match",
+        evidence_quote=multiline_quote,
+    )
+    triples = align_lexicons.correspondences_from_results([pair], FAKE_VERSION, FAKE_MODEL)
+    corr_path = tmp_path / "correspondences.ttl"
+    corr_path.write_text(align_lexicons.render_correspondences_ttl(triples, FAKE_VERSION, FAKE_MODEL))
+    original_bytes = corr_path.read_bytes()
+    triple = triples[0]
+
+    record = align_lexicons.ReviewRecord(
+        row_id=f"C:{triple.tapi_lex_id}:{triple.ietf_lex_id}:{triple.predicate}",
+        kind="correspondence",
+        tapi_lex_id=triple.tapi_lex_id,
+        ietf_lex_id=triple.ietf_lex_id,
+        predicate=triple.predicate,
+        verdict="accept",
+        reason="ok",
+        re_derived=True,
+        rederivation_citation=multiline_quote,  # byte-identical to the matcher's own quote
+    )
+
+    with pytest.raises(align_lexicons.MalformedWorklistError, match="byte-identical"):
+        align_lexicons.write_reviewed_correspondences(corr_path, [record], lexicon_dir)
+
+    assert corr_path.read_bytes() == original_bytes
+
+
+def test_blank_line_inside_evidence_quote_is_not_mistaken_for_block_boundary(
+    fixture_entries, tmp_path, lexicon_dir
+):
+    """CR-01 edge case beyond the review's own repro: normalize_evidence_text()
+    keeps evidence_quote UNCHANGED, including a genuine blank-line paragraph
+    break the model quoted verbatim. The block-boundary detector must tell
+    that literal blank line apart from the real blank line
+    render_correspondences_ttl() emits AFTER every block -- both are
+    byte-identical "" lines; only N3 string-literal state distinguishes
+    them."""
+    _, _, by_lex_id = fixture_entries
+    paragraph_quote = "Paragraph one.\n\nParagraph two after a blank line."
+    pair = _pair_result(
+        by_lex_id["tapi-topology-node"],
+        by_lex_id["ietf-network-node"],
+        "confirm_exact_match",
+        evidence_quote=paragraph_quote,
+    )
+    triples = align_lexicons.correspondences_from_results([pair], FAKE_VERSION, FAKE_MODEL)
+    corr_path = tmp_path / "correspondences.ttl"
+    corr_path.write_text(align_lexicons.render_correspondences_ttl(triples, FAKE_VERSION, FAKE_MODEL))
+    triple = triples[0]
+
+    record = align_lexicons.ReviewRecord(
+        row_id=f"C:{triple.tapi_lex_id}:{triple.ietf_lex_id}:{triple.predicate}",
+        kind="correspondence",
+        tapi_lex_id=triple.tapi_lex_id,
+        ietf_lex_id=triple.ietf_lex_id,
+        predicate=triple.predicate,
+        verdict="accept",
+        reason="looks good",
+    )
+
+    align_lexicons.write_reviewed_correspondences(corr_path, [record], lexicon_dir)
+    reviewed_text = corr_path.read_text()
+
+    assert paragraph_quote in reviewed_text
+    assert 'lex:reviewVerdict "accepted"' in reviewed_text
+    assert 'lex:reviewReason "looks good"' in reviewed_text
+    header = f"<<lex:{triple.tapi_lex_id} {triple.predicate} lex:{triple.ietf_lex_id}>>"
+    block = reviewed_text.split(header, 1)[1]
+    assert block.strip().endswith(
+        'lex:reviewVerdict "accepted" ;\n    lex:reviewReason "looks good" .'
+    )
+
+
 def test_worklist_from_a_different_lexicon_version_is_refused(fixture_entries, tmp_path, lexicon_dir):
     corr_path, rows, triples = _build_two_reviewed_pairs(fixture_entries, tmp_path)
     original_bytes = corr_path.read_bytes()
