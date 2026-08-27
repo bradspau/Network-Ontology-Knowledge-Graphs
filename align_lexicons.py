@@ -1001,6 +1001,48 @@ FIXTURE_IETF: List[FixtureRef] = [
 # ONE call counter against this cap (threat T-01-04).
 DEFAULT_MAX_CALLS = len(FIXTURE_TAPI) * len(FIXTURE_IETF) - 1
 
+# Phase 5 Plan 04/D-17: recover_misses()'s bounded, evidence-ranked
+# recovery-candidate shortlist sizes -- see <bounding_contract> in
+# 05-04-PLAN.md. Measured 2026-08-27 against yang4owl/lexicon/ at commit
+# 02df1053c35132cff30a093e7d08919fa653851f by ranking all 558 real IETF
+# entries against tapi-topology-node-rule-group under each signal exactly
+# as <bounding_contract> specifies (pinned by
+# tests/test_full_corpus_run.py::test_known_true_positive_label_rank_at_
+# full_corpus / ..._structural_rank_at_full_corpus -- a corpus change that
+# moves this pair's rank fails those tests rather than silently dropping
+# it):
+#   label rank of ietf-network-connectivity-matrix:      425 of 558
+#   structural rank of ietf-network-connectivity-matrix: 153 of 558
+#
+# RECOVERY_STRUCTURAL_SHORTLIST is set with >25% headroom over the measured
+# structural rank (153 * 1.25 = 191.25, rounded up to 200) and is the SOLE
+# retention guarantee for this known true positive -- see the deviation
+# recorded in 05-04-SUMMARY.md. RECOVERY_LABEL_SHORTLIST is deliberately
+# NOT sized to also retain it: the measured label rank (425 of 558) sits in
+# the "no plausible correspondent by name" cluster LABEL_SIGNAL_FLOOR's own
+# comment already documents for this exact pair (label_score=23.53) --
+# retaining it via label alone would require a cap of ~550 (~98.6% of the
+# 558-entry corpus), which would leave the recovery pass functionally
+# unbounded for every OTHER unresolved entry too, defeating this plan's
+# purpose for zero net benefit (the pair is already retained via
+# structural). Per <bounding_contract>'s own "two independent chances, not
+# two requirements" design, RECOVERY_LABEL_SHORTLIST is instead sized to
+# give a real, independent recovery chance to entries whose true
+# correspondent has NO structural signal at all (an empty source-path
+# token set on either side -- see structural_corroboration()'s None
+# contract) while still contributing meaningfully to volume reduction.
+RECOVERY_LABEL_SHORTLIST = 100
+RECOVERY_STRUCTURAL_SHORTLIST = 200
+RECOVERY_CANDIDATES_PER_ENTRY = RECOVERY_LABEL_SHORTLIST + RECOVERY_STRUCTURAL_SHORTLIST
+
+# structural_corroboration() returns a raw token-overlap ratio always in
+# [0.0, 1.0] when it returns a value at all, and returns None -- never
+# 0.0 -- when either entry's source-path token set is empty ("no signal
+# available", not "signal computed and zero"). -1.0 sits strictly below
+# every possible computed score, so a missing signal can never outrank a
+# computed zero when both are mapped through this sentinel for ranking.
+RECOVERY_NO_STRUCTURAL_SIGNAL_RANK = -1.0
+
 
 # ── Evidence normalization ──────────────────────────────────────────────
 
