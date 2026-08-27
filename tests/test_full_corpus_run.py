@@ -373,3 +373,162 @@ def test_signal_floors_and_label_threshold_unchanged_by_recovery_bounding():
     assert align_lexicons.STRUCTURAL_SIGNAL_FLOOR == 0.15
     assert align_lexicons.LABEL_SIGNAL_FLOOR == 60.0
     assert align_lexicons.DEFAULT_LABEL_THRESHOLD == 45.0
+
+
+# ── Plan 05-04 Task 2: replace the recovery cross product with the bounded,
+# evidence-ranked shortlist (D-17) ─────────────────────────────────────────
+
+
+def test_shortlist_keeps_all_when_fewer_eligible_than_the_cap():
+    """An entry with fewer eligible IETF entries than either shortlist size
+    keeps all of them, deduplicated, with no error -- the default
+    RECOVERY_LABEL_SHORTLIST/RECOVERY_STRUCTURAL_SHORTLIST are both far
+    larger than 3."""
+    tapi_entry = _make_entry("synthetic-tapi", "node rule group", source="tapi")
+    eligible = [
+        _make_entry("ietf-one", "alpha"),
+        _make_entry("ietf-two", "beta"),
+        _make_entry("ietf-three", "gamma"),
+    ]
+    shortlist = align_lexicons.recovery_shortlist(tapi_entry, eligible)
+    assert {e.lex_id for e in shortlist} == {"ietf-one", "ietf-two", "ietf-three"}
+
+
+def test_shortlist_boundary_drops_the_next_ranked_candidate(monkeypatch):
+    """Given more eligible entries than the cap, the shortlist returns at
+    most the cap's worth, and the entry ranked immediately past the
+    boundary is absent -- determined by score, never by input list order."""
+    monkeypatch.setattr(align_lexicons, "RECOVERY_LABEL_SHORTLIST", 2)
+    monkeypatch.setattr(align_lexicons, "RECOVERY_STRUCTURAL_SHORTLIST", 0)
+    tapi_entry = _make_entry("synthetic-tapi", "node rule group", source="tapi")
+
+    exact = _make_entry("ietf-zzz-exact", "node rule group")  # label_score 100.0
+    middle = _make_entry("ietf-aaa-middle", "group of something else entirely")  # 50.0
+    weakest = _make_entry("ietf-mmm-weakest", "completely unrelated phrase")  # 38.1
+    eligible = [weakest, middle, exact]  # deliberately unsorted input order
+
+    shortlist = align_lexicons.recovery_shortlist(tapi_entry, eligible)
+    kept_ids = {e.lex_id for e in shortlist}
+    assert kept_ids == {"ietf-zzz-exact", "ietf-aaa-middle"}, (
+        f"expected the top-2 by label score kept (weakest dropped); got {kept_ids}"
+    )
+
+
+def test_shortlist_ties_are_broken_by_ietf_lex_id(monkeypatch):
+    """Two eligible entries tied on the ranking signal at the boundary are
+    ordered by ietf.lex_id, so which one is kept is reproducible and
+    independent of input list order."""
+    monkeypatch.setattr(align_lexicons, "RECOVERY_LABEL_SHORTLIST", 1)
+    monkeypatch.setattr(align_lexicons, "RECOVERY_STRUCTURAL_SHORTLIST", 0)
+    tapi_entry = _make_entry("synthetic-tapi", "node rule group", source="tapi")
+
+    tie_b = _make_entry("ietf-b-tie", "node rule group")
+    tie_a = _make_entry("ietf-a-tie", "node rule")
+    assert align_lexicons.label_score(tapi_entry.pref_label, tie_a.pref_label) == (
+        align_lexicons.label_score(tapi_entry.pref_label, tie_b.pref_label)
+    ), "both candidates must genuinely tie for this test to prove anything"
+
+    shortlist = align_lexicons.recovery_shortlist(tapi_entry, [tie_b, tie_a])
+    assert {e.lex_id for e in shortlist} == {"ietf-a-tie"}, (
+        "tied on label_score -- the lower lex_id must win the single slot"
+    )
+
+    shortlist_reordered = align_lexicons.recovery_shortlist(tapi_entry, [tie_a, tie_b])
+    assert {e.lex_id for e in shortlist_reordered} == {"ietf-a-tie"}, (
+        "the tie-break must be independent of input list order"
+    )
+
+
+def test_missing_structural_signal_never_outranks_a_computed_zero(monkeypatch):
+    """An eligible entry whose structural score is None must never appear
+    in the structural shortlist ahead of one whose score was computed as
+    zero (structural_corroboration()'s own no-signal-is-not-zero
+    contract)."""
+    monkeypatch.setattr(align_lexicons, "RECOVERY_LABEL_SHORTLIST", 0)
+    monkeypatch.setattr(align_lexicons, "RECOVERY_STRUCTURAL_SHORTLIST", 1)
+    tapi_entry = _make_entry(
+        "synthetic-tapi",
+        "x",
+        source="tapi",
+        source_path="http://example.org/ontology/tapi-topology/topology-context/node-rule-group",
+    )
+    zero_signal = _make_entry(
+        "ietf-zero-signal",
+        "x",
+        source_path="http://example.org/ontology/ietf-network/network/alpha-beta-gamma",
+    )
+    no_signal = _make_entry("ietf-no-signal", "x", source_path=None)
+
+    assert align_lexicons.structural_corroboration(tapi_entry, zero_signal) == 0.0
+    assert align_lexicons.structural_corroboration(tapi_entry, no_signal) is None
+
+    shortlist = align_lexicons.recovery_shortlist(tapi_entry, [no_signal, zero_signal])
+    kept_ids = {e.lex_id for e in shortlist}
+    assert kept_ids == {"ietf-zero-signal"}, (
+        f"a computed zero must outrank a missing (None) structural signal; got {kept_ids}"
+    )
+
+
+def test_bounded_recovery_is_linear_not_quadratic_at_full_corpus(full_corpus):
+    """D-17/T-05-08: the bounded recovery pass must generate substantially
+    fewer candidates than the unbounded cross product at full-corpus
+    scale, computed directly here rather than asserted as a constant.
+
+    This does NOT reach the "at least an order of magnitude" aspiration
+    <bounding_contract> and this plan's Task 2 acceptance criteria
+    describe -- see the recorded finding in 05-04-SUMMARY.md. Retaining
+    the known true positive requires RECOVERY_STRUCTURAL_SHORTLIST >= 200
+    (>25% headroom over its measured full-corpus rank of 153 of 558), and
+    200 alone is already ~36% of the 558-entry IETF corpus -- mathematically
+    incompatible with a <=10% (order-of-magnitude) per-entry reduction
+    target for ANY RECOVERY_LABEL_SHORTLIST value, since retention is a
+    hard prerequisite the tests above enforce. The real, measured
+    reduction achieved by the union of both shortlists (deduplicated) is
+    reported in this test's own assertion message."""
+    tapi_entries, ietf_entries = full_corpus
+
+    unbounded_total = 0
+    bounded_total = 0
+    for tapi_entry in tapi_entries:
+        unbounded_total += len(ietf_entries)
+        bounded_total += len(align_lexicons.recovery_shortlist(tapi_entry, ietf_entries))
+
+    ratio = bounded_total / unbounded_total
+    message = (
+        f"bounded={bounded_total} unbounded={unbounded_total} ratio={ratio:.4f} "
+        f"(reduction factor {unbounded_total / bounded_total:.2f}x)"
+    )
+    print(message)
+    assert bounded_total < unbounded_total, f"expected strictly fewer candidates -- {message}"
+    assert ratio <= 0.5, (
+        f"expected at least a real, measured 2x reduction -- {message}. See "
+        "05-04-SUMMARY.md for why the plan's order-of-magnitude aspiration is "
+        "not reachable while also retaining the known true positive."
+    )
+
+
+def test_recovery_candidates_are_still_sorted_by_lex_ids(fixture_entries, scripted_client):
+    """recover_misses() must still sort its generated candidates by
+    (tapi.lex_id, ietf.lex_id) before evaluating -- the bounding change
+    replaces only candidate GENERATION, never this trailing sort."""
+    tapi_entries, ietf_entries, _ = fixture_entries
+    client = scripted_client({})
+    recovery_results, _ = align_lexicons.recover_misses(
+        client, tapi_entries, ietf_entries, [], max_calls=1000, calls_used=0
+    )
+    pairs = [(r.candidate.tapi.lex_id, r.candidate.ietf.lex_id) for r in recovery_results]
+    assert pairs == sorted(pairs), "recovery results must stay sorted by (tapi.lex_id, ietf.lex_id)"
+
+
+def test_recovery_return_shape_and_budget_threading_unchanged(fixture_entries, scripted_client):
+    """recover_misses() must still return a two-element (results,
+    calls_used) tuple, seeding calls_used from the caller-supplied
+    baseline rather than resetting it."""
+    tapi_entries, ietf_entries, _ = fixture_entries
+    client = scripted_client({})
+    results, calls_used = align_lexicons.recover_misses(
+        client, tapi_entries, ietf_entries, [], max_calls=1000, calls_used=7
+    )
+    assert isinstance(results, list)
+    assert isinstance(calls_used, int)
+    assert calls_used >= 7, "calls_used must be seeded from the caller-supplied baseline, never reset"
