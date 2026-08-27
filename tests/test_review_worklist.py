@@ -269,6 +269,199 @@ def test_main_apply_review_flag_parses_worklist_and_annotates_artifact_with_no_c
     assert "1" in captured.out
 
 
+# -- Task 3: worklist parser input-validation boundary ----------------------
+
+
+def _rendered_worklist(fixture_entries):
+    _, _, by_lex_id = fixture_entries
+    results = _two_confirmed_results(by_lex_id)
+    triples = align_lexicons.correspondences_from_results(results, FAKE_VERSION, FAKE_MODEL)
+    rows = align_lexicons.build_worklist_rows(triples, results, gap_records=[])
+    text = align_lexicons.render_review_worklist(rows, FAKE_VERSION, FAKE_MODEL)
+    return text, rows, triples
+
+
+def _find_data_line_index(text: str, row_id: str) -> int:
+    lines = text.splitlines()
+    for i, line in enumerate(lines):
+        stripped = line.strip()
+        if stripped.startswith("|") and stripped.strip("|").split("|")[0].strip() == row_id:
+            return i
+    raise AssertionError(f"row {row_id!r} not found in worklist text")
+
+
+def test_duplicate_row_id_is_a_malformed_worklist_error(fixture_entries):
+    text, rows, _ = _rendered_worklist(fixture_entries)
+    marked = _mark_row_verdict(text, rows[0].row_id, verdict="accept", reason="first")
+
+    # Duplicate the first data row verbatim (same row_id, second verdict).
+    lines = marked.splitlines()
+    idx = _find_data_line_index(marked, rows[0].row_id)
+    duplicated = lines[:idx + 1] + [lines[idx]] + lines[idx + 1:]
+    duplicated_text = "\n".join(duplicated) + "\n"
+
+    with pytest.raises(align_lexicons.MalformedWorklistError, match=rows[0].row_id):
+        align_lexicons.parse_review_worklist(duplicated_text)
+
+
+def test_unknown_verdict_word_is_a_malformed_worklist_error(fixture_entries):
+    text, rows, _ = _rendered_worklist(fixture_entries)
+    marked = _mark_row_verdict(text, rows[0].row_id, verdict="maybe", reason="bad word")
+
+    with pytest.raises(align_lexicons.MalformedWorklistError, match="maybe"):
+        align_lexicons.parse_review_worklist(marked)
+
+
+def test_verdict_word_case_is_normalized_before_the_check(fixture_entries):
+    text, rows, _ = _rendered_worklist(fixture_entries)
+    marked = _mark_row_verdict(text, rows[0].row_id, verdict="ACCEPT", reason="capitalized")
+
+    records, _, _ = align_lexicons.parse_review_worklist(marked)
+
+    assert len(records) == 1
+    assert records[0].verdict == "accept"
+
+
+def test_missing_column_is_a_malformed_worklist_error(fixture_entries):
+    text, rows, _ = _rendered_worklist(fixture_entries)
+    marked = _mark_row_verdict(text, rows[0].row_id, verdict="accept", reason="x")
+    idx = _find_data_line_index(marked, rows[0].row_id)
+    lines = marked.splitlines()
+    stripped = lines[idx].strip()
+    cells = [c.strip() for c in stripped.strip("|").split("|")]
+    truncated_cells = cells[:-1]  # drop the last column
+    lines[idx] = "| " + " | ".join(truncated_cells) + " |"
+    truncated_text = "\n".join(lines) + "\n"
+
+    with pytest.raises(align_lexicons.MalformedWorklistError):
+        align_lexicons.parse_review_worklist(truncated_text)
+
+
+def test_every_malformed_row_is_reported_in_one_error(fixture_entries):
+    text, rows, _ = _rendered_worklist(fixture_entries)
+    marked = _mark_row_verdict(text, rows[0].row_id, verdict="not-a-real-verdict", reason="bad")
+    lines = marked.splitlines()
+
+    # Defect 2: truncate the second row's cell count.
+    idx1 = _find_data_line_index(marked, rows[1].row_id)
+    stripped1 = lines[idx1].strip()
+    cells1 = [c.strip() for c in stripped1.strip("|").split("|")][:-1]
+    lines[idx1] = "| " + " | ".join(cells1) + " |"
+
+    # Defect 3: duplicate the first row's (already-defective) line.
+    idx0 = _find_data_line_index(marked, rows[0].row_id)
+    lines = lines[: idx0 + 1] + [lines[idx0]] + lines[idx0 + 1 :]
+
+    broken_text = "\n".join(lines) + "\n"
+
+    with pytest.raises(align_lexicons.MalformedWorklistError) as exc_info:
+        align_lexicons.parse_review_worklist(broken_text)
+
+    message = str(exc_info.value)
+    assert "not-a-real-verdict" in message
+    assert message.count("\n- ") >= 2  # at least the "N defect(s)" header plus 2 bullet lines
+
+
+def test_malformed_worklist_writes_nothing(fixture_entries, tmp_path, lexicon_dir):
+    text, rows, triples = _rendered_worklist(fixture_entries)
+    corr_path = tmp_path / "correspondences.ttl"
+    corr_path.write_text(align_lexicons.render_correspondences_ttl(triples, FAKE_VERSION, FAKE_MODEL))
+    original_bytes = corr_path.read_bytes()
+
+    marked = _mark_row_verdict(text, rows[0].row_id, verdict="not-a-real-verdict", reason="bad")
+
+    with pytest.raises(align_lexicons.MalformedWorklistError):
+        records, version, model = align_lexicons.parse_review_worklist(marked)
+        align_lexicons.write_reviewed_correspondences(
+            corr_path, records, lexicon_dir, worklist_lexicon_version=version, worklist_model=model
+        )
+
+    assert corr_path.read_bytes() == original_bytes
+
+
+def test_row_id_absent_from_target_raises_rather_than_silently_skipped(
+    fixture_entries, tmp_path, lexicon_dir
+):
+    text, rows, triples = _rendered_worklist(fixture_entries)
+    # Write a target correspondences.ttl containing only the SECOND triple --
+    # the first row's block genuinely does not exist in this target file.
+    only_second = [t for t in triples if t.tapi_lex_id == rows[1].tapi_lex_id]
+    corr_path = tmp_path / "correspondences.ttl"
+    corr_path.write_text(
+        align_lexicons.render_correspondences_ttl(only_second, FAKE_VERSION, FAKE_MODEL)
+    )
+    original_bytes = corr_path.read_bytes()
+
+    marked = _mark_row_verdict(text, rows[0].row_id, verdict="accept", reason="x")
+    records, version, model = align_lexicons.parse_review_worklist(marked)
+
+    with pytest.raises(align_lexicons.MalformedWorklistError, match=rows[0].row_id):
+        align_lexicons.write_reviewed_correspondences(
+            corr_path, records, lexicon_dir, worklist_lexicon_version=version, worklist_model=model
+        )
+
+    assert corr_path.read_bytes() == original_bytes
+
+
+def test_escaped_pipe_and_newline_round_trip_through_a_reason_cell():
+    original = "line one|line two\nline three"
+    escaped = align_lexicons.escape_worklist_cell(original)
+    assert "\n" not in escaped
+    assert "|" not in escaped
+    assert align_lexicons.unescape_worklist_cell(escaped) == original
+
+
+def test_empty_worklist_still_emits_header_and_explicit_no_rows_line():
+    text = align_lexicons.render_review_worklist([], FAKE_VERSION, FAKE_MODEL)
+
+    assert "| " + " | ".join(align_lexicons.WORKLIST_COLUMNS) + " |" in text
+    assert any(line.strip().startswith("_") for line in text.splitlines())
+
+    records, lexicon_version, model = align_lexicons.parse_review_worklist(text)
+    assert records == []
+    assert lexicon_version == FAKE_VERSION
+    assert model == FAKE_MODEL
+
+
+def test_correspondence_rows_are_sorted_by_lex_ids_and_predicate(fixture_entries):
+    _, _, by_lex_id = fixture_entries
+    exact = _pair_result(
+        by_lex_id["tapi-topology-node"], by_lex_id["ietf-network-node"], "confirm_exact_match"
+    )
+    close = _pair_result(
+        by_lex_id["tapi-topology-node-rule-group"],
+        by_lex_id["ietf-network-connectivity-matrix"],
+        "confirm_close_match",
+        confidence=_confidence(tier="medium"),
+    )
+    forward = align_lexicons.correspondences_from_results([exact, close], FAKE_VERSION, FAKE_MODEL)
+    reordered = align_lexicons.correspondences_from_results([close, exact], FAKE_VERSION, FAKE_MODEL)
+
+    forward_rows = align_lexicons.build_worklist_rows(
+        forward, [exact, close], gap_records=[]
+    )
+    reordered_rows = align_lexicons.build_worklist_rows(
+        reordered, [close, exact], gap_records=[]
+    )
+
+    assert [r.row_id for r in forward_rows] == [r.row_id for r in reordered_rows]
+    expected_order = sorted(
+        [r.row_id for r in forward_rows],
+        key=lambda rid: tuple(align_lexicons._decode_row_id(rid)[1:]),
+    )
+    assert [r.row_id for r in forward_rows] == expected_order
+
+
+def test_worklist_contains_no_absolute_path_or_environment_value(fixture_entries, monkeypatch):
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "sk-super-secret-value-should-never-leak")
+    text, _, _ = _rendered_worklist(fixture_entries)
+
+    assert "sk-super-secret-value-should-never-leak" not in text
+    assert "ANTHROPIC_API_KEY" not in text
+    assert "/Users/" not in text
+    assert "/home/" not in text
+
+
 # -- Helpers shared across tasks --------------------------------------------
 
 
