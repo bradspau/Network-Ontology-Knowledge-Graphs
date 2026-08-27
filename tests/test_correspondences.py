@@ -829,6 +829,225 @@ def test_gap_and_false_cognate_are_present_in_the_gap_report(
     assert ids["ttp_i"] in stdout
 
 
+def _build_two_reviewed_pairs(fixture_entries, tmp_path):
+    """Shared setup for Phase 5 Plan 05-01 Task 2: two confirmed
+    correspondences written as a correspondences.ttl on disk, plus their
+    worklist rows, ready for a test to mark one row's verdict and drive
+    write_reviewed_correspondences()."""
+    _, _, by_lex_id = fixture_entries
+    exact = _pair_result(
+        by_lex_id["tapi-topology-node"], by_lex_id["ietf-network-node"], "confirm_exact_match"
+    )
+    close = _pair_result(
+        by_lex_id["tapi-topology-node-rule-group"],
+        by_lex_id["ietf-network-connectivity-matrix"],
+        "confirm_close_match",
+        confidence=_confidence(tier="medium"),
+    )
+    results = [exact, close]
+    triples = align_lexicons.correspondences_from_results(results, FAKE_VERSION, FAKE_MODEL)
+    corr_path = tmp_path / "correspondences.ttl"
+    corr_path.write_text(align_lexicons.render_correspondences_ttl(triples, FAKE_VERSION, FAKE_MODEL))
+    rows = align_lexicons.build_worklist_rows(triples, results, gap_records=[])
+    return corr_path, rows, triples
+
+
+def _mark_row(worklist_text: str, row_id: str, *, verdict: str, reason: str = "") -> str:
+    """Same hand-edit helper as test_review_worklist.py's own
+    _mark_row_verdict -- duplicated locally rather than imported so this
+    file has no test-module-to-test-module dependency."""
+    escaped_reason = align_lexicons.escape_worklist_cell(reason)
+    lines = worklist_text.splitlines()
+    out = []
+    for line in lines:
+        stripped = line.strip()
+        if not stripped.startswith("|"):
+            out.append(line)
+            continue
+        cells = [c.strip() for c in stripped.strip("|").split("|")]
+        if len(cells) != len(align_lexicons.WORKLIST_COLUMNS) or cells[0] != row_id:
+            out.append(line)
+            continue
+        cells[align_lexicons.WORKLIST_COLUMNS.index("verdict")] = verdict
+        cells[align_lexicons.WORKLIST_COLUMNS.index("reason")] = escaped_reason
+        out.append("| " + " | ".join(cells) + " |")
+    return "\n".join(out) + ("\n" if worklist_text.endswith("\n") else "")
+
+
+# ── Phase 5 Plan 05-01 Task 2: keep-the-triple, idempotency and provenance
+# guards on the review pass ─────────────────────────────────────────────
+
+
+def test_rejected_correspondence_keeps_its_base_triple(fixture_entries, tmp_path, lexicon_dir):
+    corr_path, rows, triples = _build_two_reviewed_pairs(fixture_entries, tmp_path)
+    reviewed_row = rows[0]
+    worklist_text = align_lexicons.render_review_worklist(rows, FAKE_VERSION, FAKE_MODEL)
+    marked = _mark_row(worklist_text, reviewed_row.row_id, verdict="reject", reason="Reviewer disagrees.")
+    records, version, model = align_lexicons.parse_review_worklist(marked)
+
+    align_lexicons.write_reviewed_correspondences(
+        corr_path, records, lexicon_dir, worklist_lexicon_version=version, worklist_model=model
+    )
+
+    reviewed_text = corr_path.read_text()
+    base_section = reviewed_text.split(align_lexicons.CORRESPONDENCE_ANNOTATION_SEPARATOR)[0]
+    graph = Graph()
+    graph.parse(data=base_section, format="turtle")
+    match_triples = list(graph.triples((None, align_lexicons.SKOS.exactMatch, None))) + list(
+        graph.triples((None, align_lexicons.SKOS.closeMatch, None))
+    )
+    assert len(match_triples) == 2  # both base triples still present
+
+    annotation_section = reviewed_text.split(align_lexicons.CORRESPONDENCE_ANNOTATION_SEPARATOR)[1]
+    assert 'lex:reviewVerdict "rejected"' in annotation_section
+
+
+def test_uncertain_correspondence_keeps_its_base_triple(fixture_entries, tmp_path, lexicon_dir):
+    corr_path, rows, triples = _build_two_reviewed_pairs(fixture_entries, tmp_path)
+    reviewed_row = rows[0]
+    worklist_text = align_lexicons.render_review_worklist(rows, FAKE_VERSION, FAKE_MODEL)
+    marked = _mark_row(worklist_text, reviewed_row.row_id, verdict="uncertain", reason="Not sure.")
+    records, version, model = align_lexicons.parse_review_worklist(marked)
+
+    align_lexicons.write_reviewed_correspondences(
+        corr_path, records, lexicon_dir, worklist_lexicon_version=version, worklist_model=model
+    )
+
+    reviewed_text = corr_path.read_text()
+    base_section = reviewed_text.split(align_lexicons.CORRESPONDENCE_ANNOTATION_SEPARATOR)[0]
+    graph = Graph()
+    graph.parse(data=base_section, format="turtle")
+    match_triples = list(graph.triples((None, align_lexicons.SKOS.exactMatch, None))) + list(
+        graph.triples((None, align_lexicons.SKOS.closeMatch, None))
+    )
+    assert len(match_triples) == 2
+
+    annotation_section = reviewed_text.split(align_lexicons.CORRESPONDENCE_ANNOTATION_SEPARATOR)[1]
+    assert 'lex:reviewVerdict "uncertain"' in annotation_section
+
+
+def test_base_section_still_parses_after_review_splice(fixture_entries, tmp_path, lexicon_dir):
+    corr_path, rows, triples = _build_two_reviewed_pairs(fixture_entries, tmp_path)
+    original_base = corr_path.read_text().split(align_lexicons.CORRESPONDENCE_ANNOTATION_SEPARATOR)[0]
+    original_graph = Graph()
+    original_graph.parse(data=original_base, format="turtle")
+    original_count = len(
+        list(original_graph.triples((None, align_lexicons.SKOS.exactMatch, None)))
+    ) + len(list(original_graph.triples((None, align_lexicons.SKOS.closeMatch, None))))
+
+    worklist_text = align_lexicons.render_review_worklist(rows, FAKE_VERSION, FAKE_MODEL)
+    marked = _mark_row(worklist_text, rows[0].row_id, verdict="reject", reason="x")
+    records, version, model = align_lexicons.parse_review_worklist(marked)
+    align_lexicons.write_reviewed_correspondences(
+        corr_path, records, lexicon_dir, worklist_lexicon_version=version, worklist_model=model
+    )
+
+    reviewed_text = corr_path.read_text()
+    # Same diff-confined-to-annotations property, asserted directly: the
+    # base section (everything above the separator) is byte-identical.
+    reviewed_base = reviewed_text.split(align_lexicons.CORRESPONDENCE_ANNOTATION_SEPARATOR)[0]
+    assert reviewed_base == original_base
+
+    graph = Graph()
+    graph.parse(data=reviewed_base, format="turtle")
+    reviewed_count = len(
+        list(graph.triples((None, align_lexicons.SKOS.exactMatch, None)))
+    ) + len(list(graph.triples((None, align_lexicons.SKOS.closeMatch, None))))
+    assert reviewed_count == original_count
+
+
+def test_applying_the_same_worklist_twice_is_refused(fixture_entries, tmp_path, lexicon_dir):
+    corr_path, rows, triples = _build_two_reviewed_pairs(fixture_entries, tmp_path)
+    worklist_text = align_lexicons.render_review_worklist(rows, FAKE_VERSION, FAKE_MODEL)
+    marked = _mark_row(worklist_text, rows[0].row_id, verdict="accept", reason="ok")
+    records, version, model = align_lexicons.parse_review_worklist(marked)
+
+    align_lexicons.write_reviewed_correspondences(
+        corr_path, records, lexicon_dir, worklist_lexicon_version=version, worklist_model=model
+    )
+    bytes_after_first = corr_path.read_bytes()
+
+    with pytest.raises(align_lexicons.AlreadyReviewedError, match=rows[0].row_id):
+        align_lexicons.write_reviewed_correspondences(
+            corr_path, records, lexicon_dir, worklist_lexicon_version=version, worklist_model=model
+        )
+
+    assert corr_path.read_bytes() == bytes_after_first
+
+
+def test_worklist_from_a_different_lexicon_version_is_refused(fixture_entries, tmp_path, lexicon_dir):
+    corr_path, rows, triples = _build_two_reviewed_pairs(fixture_entries, tmp_path)
+    original_bytes = corr_path.read_bytes()
+    worklist_text = align_lexicons.render_review_worklist(rows, "c" * 40, FAKE_MODEL)
+    marked = _mark_row(worklist_text, rows[0].row_id, verdict="accept", reason="ok")
+    records, version, model = align_lexicons.parse_review_worklist(marked)
+    assert version == "c" * 40
+
+    with pytest.raises(align_lexicons.WorklistProvenanceMismatch, match=FAKE_VERSION):
+        align_lexicons.write_reviewed_correspondences(
+            corr_path, records, lexicon_dir, worklist_lexicon_version=version, worklist_model=model
+        )
+
+    assert corr_path.read_bytes() == original_bytes
+
+    # Same holds for a differing model value.
+    worklist_text_model = align_lexicons.render_review_worklist(rows, FAKE_VERSION, "claude-other-model")
+    marked_model = _mark_row(worklist_text_model, rows[0].row_id, verdict="accept", reason="ok")
+    records2, version2, model2 = align_lexicons.parse_review_worklist(marked_model)
+    with pytest.raises(align_lexicons.WorklistProvenanceMismatch, match=FAKE_MODEL):
+        align_lexicons.write_reviewed_correspondences(
+            corr_path, records2, lexicon_dir, worklist_lexicon_version=version2, worklist_model=model2
+        )
+    assert corr_path.read_bytes() == original_bytes
+
+
+def test_adversarial_reviewer_reason_cannot_inject_triples(fixture_entries, tmp_path, lexicon_dir):
+    corr_path, rows, triples = _build_two_reviewed_pairs(fixture_entries, tmp_path)
+    payload = (
+        'has "quotes", a backslash \\, an embedded triple-quote """ run, '
+        'and a fragment shaped like an injection: <<lex:evil skos:exactMatch '
+        'lex:evil2>> lex:pwned "yes" . # lex:tapi-topology-node skos:exactMatch lex:ietf-network-node .'
+    )
+    worklist_text = align_lexicons.render_review_worklist(rows, FAKE_VERSION, FAKE_MODEL)
+    marked = _mark_row(worklist_text, rows[0].row_id, verdict="reject", reason=payload)
+    records, version, model = align_lexicons.parse_review_worklist(marked)
+
+    align_lexicons.write_reviewed_correspondences(
+        corr_path, records, lexicon_dir, worklist_lexicon_version=version, worklist_model=model
+    )
+
+    reviewed_text = corr_path.read_text()
+    base_section = reviewed_text.split(align_lexicons.CORRESPONDENCE_ANNOTATION_SEPARATOR)[0]
+    graph = Graph()
+    graph.parse(data=base_section, format="turtle")
+    match_triples = list(graph.triples((None, align_lexicons.SKOS.exactMatch, None)))
+    assert len(match_triples) == 1
+    subj, _, obj = match_triples[0]
+    assert str(subj) == "http://example.org/ontology/lexicon-vocab#tapi-topology-node"
+    assert str(obj) == "http://example.org/ontology/lexicon-vocab#ietf-network-node"
+
+
+def test_review_write_refuses_a_path_inside_the_lexicon_directory(fixture_entries, lexicon_dir, tmp_path):
+    corr_path, rows, triples = _build_two_reviewed_pairs(fixture_entries, tmp_path)
+    worklist_text = align_lexicons.render_review_worklist(rows, FAKE_VERSION, FAKE_MODEL)
+    marked = _mark_row(worklist_text, rows[0].row_id, verdict="accept", reason="ok")
+    records, version, model = align_lexicons.parse_review_worklist(marked)
+
+    inside_lexicon = lexicon_dir / "correspondences.ttl"
+    with pytest.raises(ValueError):
+        align_lexicons.write_reviewed_correspondences(
+            inside_lexicon, records, lexicon_dir, worklist_lexicon_version=version, worklist_model=model
+        )
+    assert not inside_lexicon.exists()
+
+    lexicon_shaped = tmp_path / "tapi-topology.lexicon.ttl"
+    with pytest.raises(ValueError):
+        align_lexicons.write_reviewed_correspondences(
+            lexicon_shaped, records, lexicon_dir, worklist_lexicon_version=version, worklist_model=model
+        )
+    assert not lexicon_shaped.exists()
+
+
 def test_run_summary_still_reports_confirmed_escalated_and_gap_counts_together(
     scripted_client, monkeypatch, tmp_path, capsys
 ):
