@@ -213,3 +213,163 @@ def test_default_run_still_loads_the_eleven_entry_fixture(recording_client, caps
     assert "loading_mode=fixture" in captured.out
     assert "tapi entries loaded: 6" in captured.out
     assert "ietf entries loaded: 5" in captured.out
+
+
+# ── Plan 05-04 Task 1: measure where the known true-positive correspondent
+# ranks under each recovery signal at full-corpus scale, and pin the
+# shortlist sizes to that measurement rather than a guess (D-17) ──────────
+
+NODE_RULE_GROUP_LEX_ID = "tapi-topology-node-rule-group"
+CONNECTIVITY_MATRIX_LEX_ID = "ietf-network-connectivity-matrix"
+
+
+def _by_lex_id(entries, lex_id):
+    return next(e for e in entries if e.lex_id == lex_id)
+
+
+def _make_entry(lex_id, pref_label, source="ietf", source_path=None):
+    """Synthetic LexiconEntry factory for the boundary/tie/sentinel tests
+    below -- mirrors test_align_lexicons.py's own direct-construction
+    pattern (e.g. test_canonical_example_only_entry_reaches_confirmation_
+    with_its_text_in_prompt)."""
+    return align_lexicons.LexiconEntry(
+        source=source,
+        lex_id=lex_id,
+        pref_label=pref_label,
+        definition=None,
+        scope_notes=[],
+        canonical_example=None,
+        needs_curation=False,
+        source_path=source_path,
+    )
+
+
+def _label_rank(tapi_entry, ietf_entries, target_lex_id):
+    """Rank position (1-indexed) of target_lex_id when ietf_entries is
+    sorted by label_score(tapi_entry, ietf) descending, ietf.lex_id
+    ascending as tie-break -- exactly the ranking <bounding_contract>
+    specifies for the label shortlist."""
+    ranked = sorted(
+        ietf_entries,
+        key=lambda e: (-align_lexicons.label_score(tapi_entry.pref_label, e.pref_label), e.lex_id),
+    )
+    return next(i for i, e in enumerate(ranked, start=1) if e.lex_id == target_lex_id)
+
+
+def _structural_rank(tapi_entry, ietf_entries, target_lex_id):
+    """Rank position (1-indexed) of target_lex_id when ietf_entries is
+    sorted by structural_corroboration(tapi_entry, ietf) descending,
+    ietf.lex_id ascending as tie-break, with a None score mapped to
+    RECOVERY_NO_STRUCTURAL_SIGNAL_RANK -- structural_corroboration()'s own
+    no-signal-is-not-zero contract, never coerced to 0.0."""
+    def _key(e):
+        score = align_lexicons.structural_corroboration(tapi_entry, e)
+        rank_value = score if score is not None else align_lexicons.RECOVERY_NO_STRUCTURAL_SIGNAL_RANK
+        return (-rank_value, e.lex_id)
+
+    ranked = sorted(ietf_entries, key=_key)
+    return next(i for i, e in enumerate(ranked, start=1) if e.lex_id == target_lex_id)
+
+
+def test_known_true_positive_label_rank_at_full_corpus(full_corpus):
+    """Where does ietf-network-connectivity-matrix actually rank against
+    tapi-topology-node-rule-group by label_score, among all 558 real IETF
+    entries? RESEARCH.md Pitfall 1's own caution (low structural 0.0625,
+    moderate label 23.53, both hand-computed against the 5-entry fixture
+    only) says nothing about the full-corpus RANK position, which is what
+    actually determines whether a top-K label shortlist can retain it --
+    this test measures that directly rather than guessing."""
+    tapi_entries, ietf_entries = full_corpus
+    node_rule_group = _by_lex_id(tapi_entries, NODE_RULE_GROUP_LEX_ID)
+
+    rank = _label_rank(node_rule_group, ietf_entries, CONNECTIVITY_MATRIX_LEX_ID)
+    print(f"measured label rank of {CONNECTIVITY_MATRIX_LEX_ID}: {rank} of {len(ietf_entries)}")
+
+    assert 1 <= rank <= len(ietf_entries), (
+        f"expected a finite rank position among {len(ietf_entries)} IETF "
+        f"entries; measured rank={rank}"
+    )
+    rank_again = _label_rank(node_rule_group, ietf_entries, CONNECTIVITY_MATRIX_LEX_ID)
+    assert rank_again == rank, "label rank must be reproducible across ranking passes"
+
+
+def test_known_true_positive_structural_rank_at_full_corpus(full_corpus):
+    """Same measurement, structural_corroboration signal. This test and the
+    label-rank test above are the ONLY place either shortlist size is
+    justified -- see the sizing comment above RECOVERY_LABEL_SHORTLIST/
+    RECOVERY_STRUCTURAL_SHORTLIST in align_lexicons.py."""
+    tapi_entries, ietf_entries = full_corpus
+    node_rule_group = _by_lex_id(tapi_entries, NODE_RULE_GROUP_LEX_ID)
+
+    rank = _structural_rank(node_rule_group, ietf_entries, CONNECTIVITY_MATRIX_LEX_ID)
+    print(f"measured structural rank of {CONNECTIVITY_MATRIX_LEX_ID}: {rank} of {len(ietf_entries)}")
+
+    assert 1 <= rank <= len(ietf_entries), (
+        f"expected a finite rank position among {len(ietf_entries)} IETF "
+        f"entries; measured rank={rank}"
+    )
+    rank_again = _structural_rank(node_rule_group, ietf_entries, CONNECTIVITY_MATRIX_LEX_ID)
+    assert rank_again == rank, "structural rank must be reproducible across ranking passes"
+
+
+def test_configured_shortlists_retain_the_known_true_positive(full_corpus):
+    """The union guarantee stated as one truth: at least one of the two
+    CONFIGURED shortlist sizes retains ietf-network-connectivity-matrix
+    when ranked against tapi-topology-node-rule-group at full-corpus
+    scale.
+
+    The measured label rank (425 of 558) sits in the "no plausible
+    correspondent by name" cluster LABEL_SIGNAL_FLOOR's own comment already
+    documents for this exact pair (label_score=23.53): retaining it via a
+    label-ranked shortlist alone would require a cap of ~550 (~98.6% of the
+    558-entry IETF corpus), which would leave the recovery pass
+    functionally unbounded for every OTHER unresolved entry too --
+    defeating this plan's entire purpose. RECOVERY_LABEL_SHORTLIST is
+    therefore deliberately NOT sized to also retain this specific pair (see
+    the recorded deviation in 05-04-SUMMARY.md); retention is carried
+    entirely by RECOVERY_STRUCTURAL_SHORTLIST, consistent with
+    <bounding_contract>'s own "two independent chances, not two
+    requirements" design rationale."""
+    tapi_entries, ietf_entries = full_corpus
+    node_rule_group = _by_lex_id(tapi_entries, NODE_RULE_GROUP_LEX_ID)
+
+    label_rank = _label_rank(node_rule_group, ietf_entries, CONNECTIVITY_MATRIX_LEX_ID)
+    structural_rank = _structural_rank(node_rule_group, ietf_entries, CONNECTIVITY_MATRIX_LEX_ID)
+
+    retained_by_label = label_rank <= align_lexicons.RECOVERY_LABEL_SHORTLIST
+    retained_by_structural = structural_rank <= align_lexicons.RECOVERY_STRUCTURAL_SHORTLIST
+
+    assert retained_by_label or retained_by_structural, (
+        f"expected at least one shortlist to retain the known true positive "
+        f"(label_rank={label_rank} vs RECOVERY_LABEL_SHORTLIST="
+        f"{align_lexicons.RECOVERY_LABEL_SHORTLIST}, structural_rank={structural_rank} "
+        f"vs RECOVERY_STRUCTURAL_SHORTLIST={align_lexicons.RECOVERY_STRUCTURAL_SHORTLIST})"
+    )
+    assert retained_by_structural, (
+        "retention is carried by the structural shortlist by design -- the "
+        f"structural rank ({structural_rank}) must fit within "
+        f"RECOVERY_STRUCTURAL_SHORTLIST ({align_lexicons.RECOVERY_STRUCTURAL_SHORTLIST})"
+    )
+
+
+def test_recovery_candidates_per_entry_is_the_sum_of_both_shortlists():
+    assert align_lexicons.RECOVERY_CANDIDATES_PER_ENTRY == (
+        align_lexicons.RECOVERY_LABEL_SHORTLIST + align_lexicons.RECOVERY_STRUCTURAL_SHORTLIST
+    )
+
+
+def test_no_structural_signal_sentinel_is_below_every_computed_score():
+    """structural_corroboration() returns a raw token-overlap ratio always
+    in [0.0, 1.0] when it returns a value at all -- the sentinel a None
+    score maps to must sit strictly below that whole range."""
+    assert align_lexicons.RECOVERY_NO_STRUCTURAL_SIGNAL_RANK < 0.0
+
+
+def test_signal_floors_and_label_threshold_unchanged_by_recovery_bounding():
+    """MUST NOT re-fit STRUCTURAL_SIGNAL_FLOOR/LABEL_SIGNAL_FLOOR/
+    DEFAULT_LABEL_THRESHOLD while sizing the recovery shortlists (Task 1
+    prohibition, mirrors test_signal_floors_are_unchanged_by_this_phase
+    above for Plan 03's own scope)."""
+    assert align_lexicons.STRUCTURAL_SIGNAL_FLOOR == 0.15
+    assert align_lexicons.LABEL_SIGNAL_FLOOR == 60.0
+    assert align_lexicons.DEFAULT_LABEL_THRESHOLD == 45.0
