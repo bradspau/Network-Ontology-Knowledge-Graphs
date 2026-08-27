@@ -1043,6 +1043,32 @@ RECOVERY_CANDIDATES_PER_ENTRY = RECOVERY_LABEL_SHORTLIST + RECOVERY_STRUCTURAL_S
 # computed zero when both are mapped through this sentinel for ranking.
 RECOVERY_NO_STRUCTURAL_SIGNAL_RANK = -1.0
 
+# Phase 2 D-04: a confirmed pair costs a confirmation call plus a
+# validator self-check -- no candidate can cost more than that. Used by
+# resolve_max_calls() to size a full-corpus run's budget from the run's
+# own real candidate/entry counts rather than a measured-once literal.
+CALLS_PER_CANDIDATE_CEILING = 2
+
+
+def resolve_max_calls(
+    full_corpus: bool, tapi_entries: List[LexiconEntry], candidates: List[Candidate]
+) -> int:
+    """D-03/D-17: resolves --max-calls's value when the flag is omitted
+    (args.max_calls is None) -- see <budget_contract> in 05-04-PLAN.md. Not
+    full-corpus mode: returns DEFAULT_MAX_CALLS unchanged, so a
+    fixture-mode run with no flag resolves to exactly the value it
+    resolved to before this plan. Full-corpus mode: computes the budget
+    from the run's own real inputs -- the label pass's real candidate
+    count, the real loaded TAPI entry count, and this plan's own
+    RECOVERY_CANDIDATES_PER_ENTRY bound -- times
+    CALLS_PER_CANDIDATE_CEILING. Every term comes from the run's own
+    inputs; never a measured-once literal."""
+    if not full_corpus:
+        return DEFAULT_MAX_CALLS
+    return (
+        len(candidates) + len(tapi_entries) * RECOVERY_CANDIDATES_PER_ENTRY
+    ) * CALLS_PER_CANDIDATE_CEILING
+
 
 # ── Evidence normalization ──────────────────────────────────────────────
 
@@ -3374,13 +3400,18 @@ def main() -> None:
     parser.add_argument(
         "--max-calls",
         type=int,
-        default=DEFAULT_MAX_CALLS,
+        default=None,
         help=(
             "Hard cap on total confirmation calls across the label-driven "
             "confirmation stage and the misses-recovery pass combined. "
-            "Defaults to strictly fewer than the full fixture cross product. "
-            "Exceeding the cap raises rather than silently continuing "
-            "(ROADMAP SC5, threat T-01-04)."
+            "When omitted, computed from the run's own candidate count and "
+            "entry count (resolve_max_calls(), D-03/D-17): strictly fewer "
+            "than the full fixture cross product in fixture mode, or "
+            "sized from the real label-pass candidate count, entry count "
+            "and recovery-shortlist bound in --full-corpus mode. An "
+            "explicit value is used verbatim. Exceeding the cap raises "
+            "rather than silently continuing (ROADMAP SC5, threat "
+            "T-01-04)."
         ),
     )
     parser.add_argument(
@@ -3480,15 +3511,31 @@ def main() -> None:
         tapi_entries = load_fixture_entries(args.lexicon_dir, FIXTURE_TAPI)
         ietf_entries = load_fixture_entries(args.lexicon_dir, FIXTURE_IETF)
 
+    # Plan 05-04/D-03: label_pass() moves here, above the run-header print,
+    # so resolve_max_calls() below can use its real candidate count when
+    # --max-calls is omitted. label_pass() is pure and its output ordering
+    # is already deterministic, so moving its call changes no printed
+    # output order EXCEPT one cosmetic consequence: block_candidates()'s
+    # empty-label-token warnings (label_pass() calls block_candidates()
+    # internally) now print before the header rather than between the
+    # header and the "Label pass proposed..." line below.
+    candidates = label_pass(tapi_entries, ietf_entries, args.label_threshold)
+
+    # Plan 05-04/D-03: an explicit --max-calls value is used verbatim --
+    # resolve_max_calls() is never consulted. An omitted value (None) is
+    # computed from this run's own real inputs <budget_contract>.
+    resolved_max_calls = (
+        args.max_calls if args.max_calls is not None else resolve_max_calls(args.full_corpus, tapi_entries, candidates)
+    )
+
     loading_mode = "full-corpus" if args.full_corpus else "fixture"
     print(
         f"=== align_lexicons run: lexicon_dir={args.lexicon_dir} "
         f"model={args.model} label_threshold={args.label_threshold:.1f} "
-        f"max_calls={args.max_calls} lexicon_version={lexicon_version} "
+        f"max_calls={resolved_max_calls} lexicon_version={lexicon_version} "
         f"loading_mode={loading_mode} ==="
     )
 
-    candidates = label_pass(tapi_entries, ietf_entries, args.label_threshold)
     print(f"Label pass proposed {len(candidates)} candidate(s) (not matches -- see verdicts below).\n")
 
     # Client reads ANTHROPIC_API_KEY from the environment -- never pass
@@ -3523,14 +3570,14 @@ def main() -> None:
         label_results, budget_calls_used = run_confirmation_stage(
             client,
             candidates,
-            args.max_calls,
+            resolved_max_calls,
             model=args.model,
             label_threshold=args.label_threshold,
         )
         label_stage_done = True
 
         recovery_results, budget_calls_used = recover_misses(
-            client, tapi_entries, ietf_entries, label_results, args.max_calls, budget_calls_used,
+            client, tapi_entries, ietf_entries, label_results, resolved_max_calls, budget_calls_used,
             model=args.model,
             label_threshold=args.label_threshold,
         )
@@ -3570,7 +3617,7 @@ def main() -> None:
         lexicon_dir=args.lexicon_dir,
         model=args.model,
         label_threshold=args.label_threshold,
-        max_calls=args.max_calls,
+        max_calls=resolved_max_calls,
         tapi_entry_count=len(tapi_entries),
         ietf_entry_count=len(ietf_entries),
         candidates_proposed=len(candidates),
