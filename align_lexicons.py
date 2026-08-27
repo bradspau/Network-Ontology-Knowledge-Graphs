@@ -475,6 +475,49 @@ WORKLIST_COLUMNS: Tuple[str, ...] = (
 
 WORKLIST_ROW_KINDS: Tuple[str, ...] = ("correspondence", "gap")
 
+# <ranking_contract>: TIER_RANK/WORKLIST_KIND_RANK/GAP_REASON_RANK are all
+# derived from the pipeline's own module constants above -- never a
+# hand-written parallel tuple that could drift from them (REV-02 ordering).
+#
+# TIER_RANK: CONFIDENCE_TIERS reversed, so "low" sorts first (0) and "high"
+# sorts last (2) -- D-09's low-first row order.
+TIER_RANK: Dict[str, int] = {tier: i for i, tier in enumerate(reversed(CONFIDENCE_TIERS))}
+
+# WORKLIST_KIND_RANK: WORKLIST_ROW_KINDS reversed, so "gap" sorts first (0)
+# and "correspondence" sorts second (1) -- D-10's gaps-rank-above-
+# correspondences row order.
+WORKLIST_KIND_RANK: Dict[str, int] = {kind: i for i, kind in enumerate(reversed(WORKLIST_ROW_KINDS))}
+
+# GAP_REASON_RANK: ALL_GAP_REASONS with "insufficient-evidence" moved to the
+# end and the other three codes kept in their existing relative order --
+# D-12's insufficient-evidence-ranks-last row order.
+GAP_REASON_RANK: Dict[str, int] = {
+    reason: i
+    for i, reason in enumerate(
+        [r for r in ALL_GAP_REASONS if r != "insufficient-evidence"] + ["insufficient-evidence"]
+    )
+}
+
+# The gap-reason-rank component a correspondence row's rank key uses -- one
+# past the highest real GAP_REASON_RANK value, so this component alone can
+# never reorder a correspondence row relative to another correspondence row
+# (the kind-rank component already separates gaps from correspondences).
+WORKLIST_GAP_SENTINEL_RANK: int = len(GAP_REASON_RANK)
+
+# The upper bound of evidence_strength()'s return range (0..3 inclusive) --
+# three independent corroborating signals, see evidence_strength()'s own
+# docstring and <ranking_contract>.
+EVIDENCE_STRENGTH_MAX = 3
+
+# <reviewed_gap_contract>: the one-line comment introducing the reviewed-gap
+# Turtle block a review pass inserts immediately before
+# CORRESPONDENCE_ANNOTATION_SEPARATOR, inside the base plain-Turtle section.
+REVIEWED_GAP_SECTION_COMMENT = (
+    "# Reviewed gaps: a reviewer's adjudication about a TAPI entry left "
+    "without a confirmed correspondent. Never a skos:exactMatch/closeMatch "
+    "triple (D-10; Phase 4 D-02)."
+)
+
 # <worklist_contract> cell-escaping rules: a literal newline becomes the HTML
 # line-break tag GFM already renders; a literal pipe becomes its HTML
 # numeric character reference. Neither escape sequence itself contains the
@@ -504,6 +547,23 @@ WORKLIST_HEADER_TEMPLATE = (
     "unreviewed -- it will never be defaulted or inferred. Only `verdict`, "
     "`reason`, `re_derived`, and `rederivation_citation` are read back; do "
     "not hand-edit any other column.\n"
+    "\n"
+    "Gap rows (`kind` = gap): `verdict` means something different here than "
+    "on a correspondence row. `accept` means you agree the gap is genuine "
+    "(no correspondent exists). `reject` means you believe a correspondent "
+    "exists and the matcher missed it. `uncertain` means unsettled.\n"
+    "\n"
+    "Re-derivation columns (`re_derived`, `rederivation_citation`) apply "
+    "only to a `high`-tier correspondence row -- every other row shows `-` "
+    "and is not editable there. `re_derived` starts at `N`; set it to `Y` "
+    "only after you have independently re-derived the correspondence from "
+    "the source YANG text yourself, never by re-reading the matcher's own "
+    "`evidence_quote` column. `rederivation_citation` must then name that "
+    "independent source, distinct from `evidence_quote` -- accepting a "
+    "high-tier row without both a `Y` marker and a non-empty, independent "
+    "citation is refused when the worklist is applied. This tool cannot "
+    "verify that a citation is a truthful quotation of source YANG text; "
+    "it can only make its absence impossible to hide.\n"
     "\n"
     "Cell escaping: if a `reason` or `rederivation_citation` you type "
     "contains a literal newline, write it as `{newline_escape}` instead. If "
@@ -821,6 +881,14 @@ class WorklistRow:
     ietf_label: Optional[str] = None  # None on a gap row
     predicate: Optional[str] = None  # None on a gap row
     evidence_quote: str = ""
+    # <rederivation_contract>: "N" (the reviewer's starting state) on a
+    # high-tier correspondence row, None (rendered as the empty-cell marker)
+    # on every other row -- medium, low, and every gap row.
+    re_derived: Optional[str] = None
+    # <rederivation_contract>: "" (blank, reviewer-fillable) on a high-tier
+    # correspondence row, None (rendered as the empty-cell marker) on every
+    # other row.
+    rederivation_citation: Optional[str] = None
 
     def __post_init__(self) -> None:
         if self.kind not in WORKLIST_ROW_KINDS:
@@ -864,6 +932,12 @@ class ReviewRecord:
     reason: Optional[str] = None
     re_derived: Optional[bool] = None
     rederivation_citation: Optional[str] = None
+    # Plan 05-02/D-10: a gap row's own gap_reason code, needed to reconstruct
+    # its lex:ReviewedGap resource -- there is no colon-encoded channel for
+    # it in row_id (unlike tapi_lex_id/ietf_lex_id/predicate), so it is read
+    # from the worklist's own gap_reason display column for gap-kind rows
+    # only, and validated here exactly as GapRecord.gap_reason itself is.
+    gap_reason: Optional[str] = None
 
     def __post_init__(self) -> None:
         if not self.row_id:
@@ -878,6 +952,11 @@ class ReviewRecord:
                 "ReviewRecord invariant violated: kind 'correspondence' "
                 f"requires predicate in {sorted(CORRESPONDENCE_PREDICATES.values())!r}, "
                 f"got {self.predicate!r}"
+            )
+        if self.kind == "gap" and self.gap_reason not in ALL_GAP_REASONS:
+            raise ValueError(
+                "ReviewRecord invariant violated: kind 'gap' requires "
+                f"gap_reason in {ALL_GAP_REASONS!r}, got {self.gap_reason!r}"
             )
 
 
@@ -2285,18 +2364,85 @@ def unescape_worklist_cell(value: str) -> str:
     return value.replace(WORKLIST_PIPE_ESCAPE, "|").replace(WORKLIST_NEWLINE_ESCAPE, "\n")
 
 
+def evidence_strength(confidence: Optional["ConfidenceBreakdown"]) -> int:
+    """<ranking_contract>: counts how many of three independent signals
+    corroborate a pair's confidence -- label_definition_agreement is True; a
+    structural_corroboration that is not None and is at or above
+    STRUCTURAL_SIGNAL_FLOOR; and an agreeing validator (validator_ran and
+    validator_agrees both True). Returns 0 for confidence=None (a gap row
+    has no ConfidenceBreakdown at all). Reads STRUCTURAL_SIGNAL_FLOOR as an
+    existing constant without modifying it -- the floor is fitted to the
+    locked 11-entry fixture and carries its own explicit do-not-re-fit
+    prohibition."""
+    if confidence is None:
+        return 0
+    count = 0
+    if confidence.label_definition_agreement:
+        count += 1
+    if (
+        confidence.structural_corroboration is not None
+        and confidence.structural_corroboration >= STRUCTURAL_SIGNAL_FLOOR
+    ):
+        count += 1
+    if confidence.validator_ran and confidence.validator_agrees:
+        count += 1
+    return count
+
+
+def worklist_rank_key(row: "WorklistRow") -> Tuple[int, int, int, int, int, Tuple[str, str, str]]:
+    """<ranking_contract>: the single six-component tuple key driving the
+    worklist's one sort call -- gaps before correspondences; within the gap
+    block, ranked by gap-reason code (insufficient-evidence last); within
+    correspondences, low tier to high tier with an escalated correspondence
+    ahead of its uncontested same-tier peers, weakest evidence first; and a
+    final lexicographic tie-break so two rows agreeing on every ranked field
+    still sort deterministically. No component is a float -- ordering must
+    never depend on floating-point representation."""
+    kind_rank = WORKLIST_KIND_RANK[row.kind]
+    gap_reason_rank = GAP_REASON_RANK[row.gap_reason] if row.kind == "gap" else WORKLIST_GAP_SENTINEL_RANK
+    tier_rank = TIER_RANK[row.tier] if row.tier in TIER_RANK else 0
+    escalated_rank = 0 if row.escalated else 1
+    evidence_rank = row.evidence_strength
+    tie_break = (row.tapi_lex_id, row.ietf_lex_id or "", row.predicate or "")
+    return (kind_rank, gap_reason_rank, tier_rank, escalated_rank, evidence_rank, tie_break)
+
+
+def render_worklist_coverage(rows: List["WorklistRow"]) -> List[str]:
+    """<ranking_contract> visible-but-empty discipline, mirroring
+    print_run_summary()'s pre-populated zero counts: every CONFIDENCE_TIERS
+    member and every ALL_GAP_REASONS code is listed with its row count,
+    including an explicit zero, rather than an absent line."""
+    tier_counts: Dict[str, int] = {tier: 0 for tier in CONFIDENCE_TIERS}
+    reason_counts: Dict[str, int] = {reason: 0 for reason in ALL_GAP_REASONS}
+    for row in rows:
+        if row.kind == "correspondence" and row.tier in tier_counts:
+            tier_counts[row.tier] += 1
+        elif row.kind == "gap" and row.gap_reason in reason_counts:
+            reason_counts[row.gap_reason] += 1
+    lines: List[str] = ["", "## Coverage", "", "Confidence tiers (correspondence rows):"]
+    for tier in CONFIDENCE_TIERS:
+        lines.append(f"- {tier}: {tier_counts[tier]}")
+    lines.append("")
+    lines.append("Gap reasons (gap rows):")
+    for reason in ALL_GAP_REASONS:
+        lines.append(f"- {reason}: {reason_counts[reason]}")
+    return lines
+
+
 def build_worklist_rows(
     triples: List["CorrespondenceTriple"],
     results: List["PairResult"],
     gap_records: List["GapRecord"],
 ) -> List["WorklistRow"]:
-    """Plan 05-01 (this task): correspondence rows only, sorted on the same
-    (tapi_lex_id, ietf_lex_id, predicate) key correspondences_from_results()
-    already sorts on (D-06/reproducibility: rows that compare equal on every
-    other field never reorder between two runs over identical input).
+    """Builds one WorklistRow per confirmed correspondence and one per
+    GapRecord, then returns them in the single deterministic order the
+    module's rank-key function produces -- gaps first (ranked by gap-reason
+    code), then correspondences low tier to high tier with escalations
+    ahead of their same-tier peers, weakest evidence first, lexicographic
+    tie-break last (<ranking_contract>). Exactly one sort call, at the end,
+    over the whole combined list -- never a per-group or per-tier presort.
     `results` supplies the TAPI/IETF skos:prefLabel text for display --
-    CorrespondenceTriple itself carries only lex ids. `gap_records` is
-    accepted but unused until Plan 05-02 adds gap rows (P-03/D-10)."""
+    CorrespondenceTriple itself carries only lex ids."""
     labels_by_pair: Dict[Tuple[str, str], Tuple[str, str]] = {
         (r.candidate.tapi.lex_id, r.candidate.ietf.lex_id): (
             r.candidate.tapi.pref_label,
@@ -2304,26 +2450,59 @@ def build_worklist_rows(
         )
         for r in results
     }
-    ordered = sorted(triples, key=lambda t: (t.tapi_lex_id, t.ietf_lex_id, t.predicate))
     rows: List[WorklistRow] = []
-    for t in ordered:
+    for t in triples:
         tapi_label, ietf_label = labels_by_pair.get((t.tapi_lex_id, t.ietf_lex_id), ("", ""))
+        tier = t.confidence.tier if t.confidence else ""
         rows.append(
             WorklistRow(
                 row_id=worklist_row_id("correspondence", t.tapi_lex_id, t.ietf_lex_id, t.predicate),
                 kind="correspondence",
-                tier=t.confidence.tier if t.confidence else "",
+                tier=tier,
                 escalated=t.confidence.escalated if t.confidence else None,
                 gap_reason="",
-                evidence_strength=0,
+                evidence_strength=evidence_strength(t.confidence),
                 tapi_lex_id=t.tapi_lex_id,
                 tapi_label=tapi_label,
                 ietf_lex_id=t.ietf_lex_id,
                 ietf_label=ietf_label,
                 predicate=t.predicate,
                 evidence_quote=t.evidence_quote,
+                # <rederivation_contract>: D-13's "all high-tier
+                # correspondences" -- the starting marker is written here,
+                # unconditionally, for every high-tier row the run confirms.
+                re_derived=("N" if tier == "high" else None),
+                rederivation_citation=("" if tier == "high" else None),
             )
         )
+    for record in gap_records:
+        entry = record.entry
+        structural_display = (
+            f"{record.best_structural_score:.2f}"
+            if record.best_structural_score is not None
+            else "(none available)"
+        )
+        evaluated_against_display = (
+            ", ".join(record.evaluated_against) if record.evaluated_against else "(none)"
+        )
+        rows.append(
+            WorklistRow(
+                row_id=worklist_row_id("gap", entry.lex_id),
+                kind="gap",
+                tier="",
+                escalated=None,
+                gap_reason=record.gap_reason,
+                evidence_strength=0,
+                tapi_lex_id=entry.lex_id,
+                tapi_label=entry.pref_label,
+                evidence_quote=(
+                    f"label_score={record.best_label_score:.2f} "
+                    f"structural_score={structural_display} "
+                    f"evaluated_against={evaluated_against_display}"
+                ),
+            )
+        )
+    rows.sort(key=worklist_rank_key)
     return rows
 
 
@@ -2343,10 +2522,15 @@ def _render_worklist_row(row: "WorklistRow") -> str:
         escape_worklist_cell(row.evidence_quote) if row.evidence_quote else WORKLIST_EMPTY_CELL,
         "",  # verdict -- reviewer fills; blank means unreviewed, never defaulted
         "",  # reason -- reviewer fills
-        # re_derived: only meaningful on a high-tier correspondence row
-        # (Plan 05-02); "-" elsewhere rather than an editable blank cell.
-        "" if row.tier == "high" else WORKLIST_EMPTY_CELL,
-        "",  # rederivation_citation -- reviewer fills
+        # <rederivation_contract>: None means "not applicable" (renders the
+        # empty-cell marker); a non-None string is reviewer-editable
+        # (renders literally, including a legitimately blank "" cell).
+        (row.re_derived if row.re_derived is not None else WORKLIST_EMPTY_CELL),
+        (
+            escape_worklist_cell(row.rederivation_citation)
+            if row.rederivation_citation is not None
+            else WORKLIST_EMPTY_CELL
+        ),
     ]
     assert len(cells) == len(WORKLIST_COLUMNS)
     return "| " + " | ".join(cells) + " |"
@@ -2377,6 +2561,7 @@ def render_review_worklist(rows: List["WorklistRow"], lexicon_version: str, mode
     else:
         for row in rows:
             lines.append(_render_worklist_row(row))
+    lines.extend(render_worklist_coverage(rows))
     return "\n".join(lines) + "\n"
 
 
@@ -2415,7 +2600,16 @@ def parse_review_worklist(text: str) -> Tuple[List["ReviewRecord"], str, str]:
     walk raises ONE MalformedWorklistError listing every collected defect --
     never returns partial records alongside defects. A blank `verdict` cell
     means unreviewed: skipped, never defaulted or coerced (the project's
-    non-fabrication discipline applied to the review layer itself)."""
+    non-fabrication discipline applied to the review layer itself).
+
+    Plan 05-02 extends this same pass with two more checks. A gap-kind row's
+    gap_reason cell is read and validated (it has no colon-encoded channel
+    in row_id the way tapi_lex_id/ietf_lex_id/predicate do, so it must come
+    from the display column itself, then validated exactly as
+    GapRecord.gap_reason is). And the <rederivation_contract> SC4 gate:
+    accepting a high-tier correspondence row without both an explicit
+    re_derived='Y' marker and a non-empty rederivation_citation is refused,
+    alongside every other defect, never silently allowed through."""
     version_match = _WORKLIST_VERSION_RE.search(text)
     model_match = _WORKLIST_MODEL_RE.search(text)
     lexicon_version = version_match.group(1).strip() if version_match else ""
@@ -2479,12 +2673,43 @@ def parse_review_worklist(text: str) -> Tuple[List["ReviewRecord"], str, str]:
             defects.append(f"row {row_id!r} (worklist line {line_no + 1}): {exc}")
             continue
 
+        gap_reason_value: Optional[str] = None
+        if kind == "gap":
+            gap_reason_cell = cells[WORKLIST_COLUMNS.index("gap_reason")].strip()
+            if gap_reason_cell not in ALL_GAP_REASONS:
+                defects.append(
+                    f"row {row_id!r} (worklist line {line_no + 1}): gap row's "
+                    f"gap_reason cell {gap_reason_cell!r} must be one of "
+                    f"{ALL_GAP_REASONS!r}"
+                )
+                continue
+            gap_reason_value = gap_reason_cell
+
         reason = unescape_worklist_cell(cells[WORKLIST_COLUMNS.index("reason")])
         re_derived_cell = cells[WORKLIST_COLUMNS.index("re_derived")].strip()
         re_derived = {"Y": True, "N": False}.get(re_derived_cell)
-        rederivation_citation = unescape_worklist_cell(
-            cells[WORKLIST_COLUMNS.index("rederivation_citation")]
+        rederivation_citation_cell = cells[WORKLIST_COLUMNS.index("rederivation_citation")].strip()
+        rederivation_citation = (
+            None
+            if rederivation_citation_cell in ("", WORKLIST_EMPTY_CELL)
+            else unescape_worklist_cell(cells[WORKLIST_COLUMNS.index("rederivation_citation")])
         )
+
+        # <rederivation_contract> SC4 gate: reading the display-only tier
+        # cell here is safe -- it decides whether a business rule applies,
+        # it is never trusted for row identity (P-04 stays about row_id).
+        if kind == "correspondence" and verdict == "accept":
+            tier_cell = cells[WORKLIST_COLUMNS.index("tier")].strip()
+            if tier_cell == "high" and (
+                re_derived_cell != "Y" or rederivation_citation_cell in ("", WORKLIST_EMPTY_CELL)
+            ):
+                defects.append(
+                    f"row {row_id!r} (worklist line {line_no + 1}): a "
+                    "high-tier acceptance requires re_derived='Y' and a "
+                    "non-empty rederivation_citation independently drawn "
+                    "from source YANG text (SC4, D-13/D-14)"
+                )
+                continue
 
         try:
             record = ReviewRecord(
@@ -2496,7 +2721,8 @@ def parse_review_worklist(text: str) -> Tuple[List["ReviewRecord"], str, str]:
                 verdict=verdict,
                 reason=reason or None,
                 re_derived=re_derived,
-                rederivation_citation=rederivation_citation or None,
+                rederivation_citation=rederivation_citation,
+                gap_reason=gap_reason_value,
             )
         except ValueError as exc:
             defects.append(f"row {row_id!r} (worklist line {line_no + 1}): {exc}")
@@ -2566,21 +2792,83 @@ def _locate_annotation_block(
     return header_idx, terminator_idx
 
 
-def apply_review_to_correspondences(existing_text: str, records: List["ReviewRecord"]) -> str:
-    """<splice_contract>: a text splice over existing_text.splitlines(),
-    never a Graph().parse() round trip (rdflib 7.6 raises BadSyntax on the
-    <<...>> blocks this writes -- CORRESPONDENCES.md:147-152). Only
-    kind == "correspondence" records are applied this phase -- gap-record
-    review persistence is reserved for Plan 05-02 (P-03).
+def render_reviewed_gap_block(record: "ReviewRecord", gap_reason: str) -> List[str]:
+    """<reviewed_gap_contract>: the plain-Turtle lines for one reviewed
+    gap's lex:ReviewedGap resource. Every literal goes through
+    RdfLiteral(...).n3(), mirroring _annotation_fields()'s discipline. Never
+    emits a skos:exactMatch/closeMatch triple -- a gap adjudication is a
+    distinct resource, not a correspondence (D-10; Phase 4 D-02)."""
+    subject = f"{REVIEWED_GAP_SUBJECT_PREFIX}{record.tapi_lex_id}"
+    fields: List[Tuple[str, str]] = [
+        ("lex:gapSubject", f"lex:{record.tapi_lex_id}"),
+        ("lex:gapReason", RdfLiteral(gap_reason).n3()),
+        ("lex:reviewVerdict", RdfLiteral(REVIEW_VERDICT_ANNOTATION[record.verdict]).n3()),
+    ]
+    if record.reason:
+        fields.append(("lex:reviewReason", RdfLiteral(record.reason).n3()))
+    lines = [f"{subject} a lex:ReviewedGap ;"]
+    for i, (pred, value) in enumerate(fields):
+        terminator = " ." if i == len(fields) - 1 else " ;"
+        lines.append(f"    {pred} {value}{terminator}")
+    return lines
 
-    Collect-then-raise, twice (P-05's shape): first every row_id whose block
-    header cannot be located in existing_text (MalformedWorklistError,
-    naming all of them -- this is also write_reviewed_correspondences()'s
-    "resolve every record's block header before splicing any of them"
-    guard, implemented once here rather than duplicated at both call
-    sites); then every block that already carries lex:reviewVerdict
-    (AlreadyReviewedError, naming all of them -- no overwrite flag). Nothing
-    is spliced unless both checks pass clean.
+
+def _read_block_evidence_quote(lines: List[str], header_idx: int, terminator_idx: int) -> Optional[str]:
+    """Reads the lex:evidenceQuote literal's text out of an already-located
+    <<...>> annotation block, by parsing just that one predicate-object
+    pair as a standalone Turtle triple -- reusing rdflib's own
+    literal-unescaping rules rather than hand-rolling a second one. Returns
+    None when lex:evidenceQuote is absent from the block."""
+    for line in lines[header_idx + 1 : terminator_idx + 1]:
+        stripped = line.strip()
+        if not stripped.startswith("lex:evidenceQuote "):
+            continue
+        value_part = stripped[len("lex:evidenceQuote ") :].strip()
+        first_quote = value_part.find('"')
+        last_quote = value_part.rfind('"')
+        if first_quote == -1 or last_quote <= first_quote:
+            return None
+        literal_text = value_part[first_quote : last_quote + 1]
+        probe = Graph()
+        probe.parse(
+            data=f"@prefix lex: <{LEX}> .\n<urn:x:probe> lex:evidenceQuote {literal_text} .",
+            format="turtle",
+        )
+        for _, _, obj in probe.triples((None, LEX.evidenceQuote, None)):
+            return str(obj)
+    return None
+
+
+def apply_review_to_correspondences(existing_text: str, records: List["ReviewRecord"]) -> str:
+    """<splice_contract>/<reviewed_gap_contract>: a text splice over
+    existing_text.splitlines(), never a Graph().parse() round trip (rdflib
+    7.6 raises BadSyntax on the <<...>> blocks this writes --
+    CORRESPONDENCES.md:147-152).
+
+    Correspondence-kind records splice lex:review* predicates onto their
+    own <<...>> annotation block, exactly as Plan 05-01 established.
+    Gap-kind records (Plan 05-02) never touch the annotation-block section
+    at all -- they insert one lex:ReviewedGap block per reviewed gap,
+    sorted by tapi_lex_id, immediately before
+    CORRESPONDENCE_ANNOTATION_SEPARATOR, inside the base plain-Turtle
+    section (D-10; Phase 4 D-02: a gap is never a skos:exactMatch/
+    closeMatch triple).
+
+    Idempotency, file-wide, first: if the target already contains ANY
+    lex:ReviewedGap resource, the whole pass is refused before any other
+    check runs -- mirrors the per-block AlreadyReviewedError guard below,
+    applied once at file scope since a reviewed-gap resource has no
+    pre-existing block to inspect per-row the way a correspondence does.
+
+    Collect-then-raise, twice, for correspondence records (P-05's shape):
+    first every row_id whose block header cannot be located in
+    existing_text (MalformedWorklistError, naming all of them -- this is
+    also write_reviewed_correspondences()'s "resolve every record's block
+    header before splicing any of them" guard, implemented once here
+    rather than duplicated at both call sites); then every block that
+    already carries lex:reviewVerdict (AlreadyReviewedError, naming all of
+    them -- no overwrite flag). Nothing is spliced unless both checks pass
+    clean.
 
     D-16/P-01 (keep-the-triple): this function only ever edits lines at or
     below a block's own header -- inside the RDF-star annotation section --
@@ -2588,7 +2876,15 @@ def apply_review_to_correspondences(existing_text: str, records: List["ReviewRec
     triple (in the base section, above CORRESPONDENCE_ANNOTATION_SEPARATOR)
     is untouched by construction, never by a filtering step that has to
     remember not to drop it."""
+    if "a lex:ReviewedGap" in existing_text:
+        raise AlreadyReviewedError(
+            "apply_review_to_correspondences: refusing -- the target file "
+            "already contains a lex:ReviewedGap resource (no overwrite "
+            "flag -- start from a freshly emitted artifact)"
+        )
+
     corr_records = [r for r in records if r.kind == "correspondence"]
+    gap_records_reviewed = [r for r in records if r.kind == "gap"]
     lines = existing_text.splitlines()
 
     missing: List[str] = []
@@ -2638,7 +2934,24 @@ def apply_review_to_correspondences(existing_text: str, records: List["ReviewRec
         lines = lines[: terminator_idx + 1] + new_lines + lines[terminator_idx + 1 :]
 
     trailing_newline = "\n" if existing_text.endswith("\n") else ""
-    return "\n".join(lines) + trailing_newline
+    reviewed_text = "\n".join(lines) + trailing_newline
+
+    if gap_records_reviewed:
+        if CORRESPONDENCE_ANNOTATION_SEPARATOR not in reviewed_text:
+            raise MalformedWorklistError(
+                "apply_review_to_correspondences: target file has no "
+                "CORRESPONDENCE_ANNOTATION_SEPARATOR -- cannot locate the "
+                "base section to splice reviewed-gap resource(s) into"
+            )
+        gap_block_lines: List[str] = [REVIEWED_GAP_SECTION_COMMENT, ""]
+        for r in sorted(gap_records_reviewed, key=lambda rec: rec.tapi_lex_id):
+            gap_block_lines.extend(render_reviewed_gap_block(r, r.gap_reason))
+            gap_block_lines.append("")
+        gap_block_text = "\n".join(gap_block_lines)
+        base, _, annotations = reviewed_text.partition(CORRESPONDENCE_ANNOTATION_SEPARATOR)
+        reviewed_text = base + gap_block_text + "\n" + CORRESPONDENCE_ANNOTATION_SEPARATOR + annotations
+
+    return reviewed_text
 
 
 def _read_artifact_provenance(existing_text: str) -> Tuple[str, str]:
@@ -2670,8 +2983,17 @@ def write_reviewed_correspondences(
     lexicon_version/worklist_model are given (the values parse_review_
     worklist() returned), refuses with WorklistProvenanceMismatch -- before
     any read of the annotation blocks -- when they don't match the target
-    artifact's own recorded lex:lexiconVersion/lex:model (T-05-04). Returns
-    the number of correspondence-kind records applied."""
+    artifact's own recorded lex:lexiconVersion/lex:model (T-05-04).
+
+    <rederivation_contract> distinctness check (Plan 05-02): a
+    rederivation_citation that is byte-identical, after stripping, to the
+    matcher's own recorded lex:evidenceQuote for that same correspondence
+    is refused here -- collect-then-raise across every offending record, so
+    nothing is written when any is found. Compared against the target
+    artifact's own canonical quote, never against the worklist's
+    display-only evidence_quote column (Plan 05-01 P-04).
+
+    Returns the number of correspondence-kind records applied."""
     resolved_path = Path(correspondences_path).resolve()
     resolved_lexicon_dir = Path(lexicon_dir).resolve()
     if resolved_path == resolved_lexicon_dir or resolved_lexicon_dir in resolved_path.parents:
@@ -2702,6 +3024,34 @@ def write_reviewed_correspondences(
                 "write_reviewed_correspondences refused: worklist provenance "
                 "does not match the target artifact -- " + "; ".join(mismatches)
             )
+
+    # SC4 distinctness check (<rederivation_contract>): a citation that only
+    # restates the matcher's own recorded evidence quote proves nothing was
+    # independently re-derived. A record whose block header can't be
+    # located is skipped here -- apply_review_to_correspondences() below
+    # reports that as its own MalformedWorklistError.
+    probe_lines = existing_text.splitlines()
+    distinctness_defects: List[str] = []
+    for r in records:
+        if r.kind != "correspondence" or not r.rederivation_citation or not r.rederivation_citation.strip():
+            continue
+        try:
+            header_idx, terminator_idx = _locate_annotation_block(
+                probe_lines, r.tapi_lex_id, r.predicate, r.ietf_lex_id
+            )
+        except MalformedWorklistError:
+            continue
+        canonical_quote = _read_block_evidence_quote(probe_lines, header_idx, terminator_idx)
+        if canonical_quote is not None and r.rederivation_citation.strip() == canonical_quote.strip():
+            distinctness_defects.append(r.row_id)
+    if distinctness_defects:
+        raise MalformedWorklistError(
+            "write_reviewed_correspondences: rederivation_citation is "
+            "byte-identical to the matcher's own recorded lex:evidenceQuote "
+            "for row(s): " + ", ".join(sorted(distinctness_defects)) + " -- "
+            "a citation that only restates the matcher's own evidence "
+            "proves nothing was independently re-derived (SC4)"
+        )
 
     reviewed_text = apply_review_to_correspondences(existing_text, records)
     resolved_path.write_text(reviewed_text, encoding="utf-8")
