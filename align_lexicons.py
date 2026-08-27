@@ -1036,10 +1036,77 @@ def normalize_evidence_text(text: Optional[str], pref_label: str) -> Optional[st
 # ── Fixture loading ──────────────────────────────────────────────────────
 
 
+def _entry_from_subject(graph: Graph, subject, source: str) -> Optional[LexiconEntry]:
+    """The per-entry construction body shared by load_fixture_entries() and
+    the full-corpus loader below, extracted so the two loaders can never
+    drift in how they normalize a field (D-04). Returns None -- after
+    printing the same skip warning the fixture loader always printed -- for
+    an entry with no usable skos:prefLabel; every other field applies
+    normalize_evidence_text(), the multi-valued scope-note collection, the
+    typed-boolean curation read, and the provenance path read exactly as
+    before this extraction."""
+    lex_id = str(subject)[len(str(LEX)):]
+
+    raw_pref_label = graph.value(subject, SKOS.prefLabel)
+    pref_label = str(raw_pref_label) if raw_pref_label is not None else ""
+    if not pref_label.strip():
+        print(f"WARNING: {lex_id!r} has no usable skos:prefLabel -- skipping entry")
+        return None
+
+    raw_definition = graph.value(subject, SKOS.definition)
+    raw_definition = str(raw_definition) if raw_definition is not None else None
+    definition = normalize_evidence_text(raw_definition, pref_label)
+
+    # Collect ALL skos:scopeNote values via graph.objects(), not
+    # graph.value() -- at least one fixture entry (lex:ietf-network-node)
+    # carries two distinct skos:scopeNote triples, and Graph.value()
+    # returns an arbitrary one of them.
+    raw_scope_notes = [str(v) for v in graph.objects(subject, SKOS.scopeNote)]
+    normalized_scope_notes = [
+        normalize_evidence_text(raw, pref_label) for raw in raw_scope_notes
+    ]
+    scope_notes = sorted(note for note in normalized_scope_notes if note is not None)
+
+    raw_example = graph.value(subject, LEX.canonicalExample)
+    raw_example = str(raw_example) if raw_example is not None else None
+    canonical_example = normalize_evidence_text(raw_example, pref_label)
+
+    raw_needs_curation = graph.value(subject, LEX.needsCuration)
+    # WR-01: bool() on an rdflib Literal is always True for a non-empty
+    # string, including "false"^^xsd:boolean -- Literal is a str
+    # subclass with no __bool__ override for typed literals. toPython()
+    # converts a typed xsd:boolean literal to a real Python bool first,
+    # so an explicit lex:needsCuration false is honored rather than
+    # silently coerced to True.
+    needs_curation = (
+        bool(raw_needs_curation.toPython()) if raw_needs_curation is not None else False
+    )
+
+    # D-02: the containment path structural_corroboration() reads. A
+    # missing prov:wasDerivedFrom is a legitimate, expected value --
+    # treated exactly as permissively as definition/canonical_example
+    # already treat absence: no warning, no raise.
+    raw_source_path = graph.value(subject, PROV.wasDerivedFrom)
+    source_path = str(raw_source_path) if raw_source_path is not None else None
+
+    return LexiconEntry(
+        source=source,
+        lex_id=lex_id,
+        pref_label=pref_label,
+        definition=definition,
+        scope_notes=scope_notes,
+        canonical_example=canonical_example,
+        needs_curation=needs_curation,
+        source_path=source_path,
+    )
+
+
 def load_fixture_entries(lexicon_dir: Path, refs: List[FixtureRef]) -> List[LexiconEntry]:
     """Parses each distinct file named in refs into one shared rdflib.Graph,
     then resolves each ref's LEX[lex_id] by its explicit lex: id -- never by
-    scanning for a matching skos:prefLabel (D-01)."""
+    scanning for a matching skos:prefLabel (D-01). Per-entry field
+    normalization lives in _entry_from_subject(), shared with the
+    full-corpus loader below so the two can never drift."""
     graph = Graph()
     parsed_files = set()
     for ref in refs:
@@ -1056,61 +1123,62 @@ def load_fixture_entries(lexicon_dir: Path, refs: List[FixtureRef]) -> List[Lexi
                 f"expected a lex:ReferenceEntry at {subject}"
             )
 
-        raw_pref_label = graph.value(subject, SKOS.prefLabel)
-        pref_label = str(raw_pref_label) if raw_pref_label is not None else ""
-        if not pref_label.strip():
-            print(f"WARNING: {ref.lex_id!r} has no usable skos:prefLabel -- skipping entry")
+        entry = _entry_from_subject(graph, subject, ref.source)
+        if entry is None:
             continue
-
-        raw_definition = graph.value(subject, SKOS.definition)
-        raw_definition = str(raw_definition) if raw_definition is not None else None
-        definition = normalize_evidence_text(raw_definition, pref_label)
-
-        # Collect ALL skos:scopeNote values via graph.objects(), not
-        # graph.value() -- at least one fixture entry (lex:ietf-network-node)
-        # carries two distinct skos:scopeNote triples, and Graph.value()
-        # returns an arbitrary one of them.
-        raw_scope_notes = [str(v) for v in graph.objects(subject, SKOS.scopeNote)]
-        normalized_scope_notes = [
-            normalize_evidence_text(raw, pref_label) for raw in raw_scope_notes
-        ]
-        scope_notes = sorted(note for note in normalized_scope_notes if note is not None)
-
-        raw_example = graph.value(subject, LEX.canonicalExample)
-        raw_example = str(raw_example) if raw_example is not None else None
-        canonical_example = normalize_evidence_text(raw_example, pref_label)
-
-        raw_needs_curation = graph.value(subject, LEX.needsCuration)
-        # WR-01: bool() on an rdflib Literal is always True for a non-empty
-        # string, including "false"^^xsd:boolean -- Literal is a str
-        # subclass with no __bool__ override for typed literals. toPython()
-        # converts a typed xsd:boolean literal to a real Python bool first,
-        # so an explicit lex:needsCuration false is honored rather than
-        # silently coerced to True.
-        needs_curation = (
-            bool(raw_needs_curation.toPython()) if raw_needs_curation is not None else False
-        )
-
-        # D-02: the containment path structural_corroboration() reads. A
-        # missing prov:wasDerivedFrom is a legitimate, expected value --
-        # treated exactly as permissively as definition/canonical_example
-        # already treat absence: no warning, no raise.
-        raw_source_path = graph.value(subject, PROV.wasDerivedFrom)
-        source_path = str(raw_source_path) if raw_source_path is not None else None
-
-        entries.append(
-            LexiconEntry(
-                source=ref.source,
-                lex_id=ref.lex_id,
-                pref_label=pref_label,
-                definition=definition,
-                scope_notes=scope_notes,
-                canonical_example=canonical_example,
-                needs_curation=needs_curation,
-                source_path=source_path,
-            )
-        )
+        entries.append(entry)
     return entries
+
+
+# ── Full-corpus loading (D-04: opt-in, sibling of the fixture loader) ────
+
+# The committed side-assignment rule's filename prefix (side_for_lexicon_
+# file() below); a file whose name begins with this is the TAPI side.
+TAPI_LEXICON_FILE_PREFIX = "tapi-"
+
+
+def side_for_lexicon_file(filename: str) -> str:
+    """The committed side-assignment rule that produced CURATION-AUDIT.md's
+    1,777/558 counts, ported (not re-derived) from
+    audit_lexicon_curation.py's side_for() (yang4owl/lexicon/
+    CURATION-AUDIT.md line 5) so the two stay reconciled: a file whose name
+    begins with TAPI_LEXICON_FILE_PREFIX is the TAPI side; every other
+    *.lexicon.ttl file -- the ietf-* modules plus the two non-IETF-named
+    files simap-yang and iana-hardware -- is the IETF side, never
+    excluded."""
+    return "tapi" if filename.startswith(TAPI_LEXICON_FILE_PREFIX) else "ietf"
+
+
+def load_all_entries(lexicon_dir: Path) -> Tuple[List[LexiconEntry], List[LexiconEntry]]:
+    """Reads every lex:ReferenceEntry in every *.lexicon.ttl file under
+    lexicon_dir, rather than resolving a fixed list of explicit lex: ids --
+    the only thing that differs from the fixture loader above is how a
+    subject is discovered; every per-entry field comes from the same
+    _entry_from_subject(). Files are enumerated with sorted(); within a
+    file, graph.subjects() iteration order is not guaranteed stable, so
+    each file's own entries are sorted by lex_id before being extended onto
+    the returned side list. Two loads over the same committed corpus
+    therefore produce identically ordered entry lists."""
+    tapi_entries: List[LexiconEntry] = []
+    ietf_entries: List[LexiconEntry] = []
+    for lexicon_file in sorted(lexicon_dir.glob("*.lexicon.ttl")):
+        graph = Graph()
+        graph.parse(str(lexicon_file), format="turtle")
+        source = side_for_lexicon_file(lexicon_file.name)
+
+        file_entries: List[LexiconEntry] = []
+        for subject in graph.subjects(RDF.type, LEX.ReferenceEntry):
+            entry = _entry_from_subject(graph, subject, source)
+            if entry is None:
+                continue
+            file_entries.append(entry)
+        file_entries.sort(key=lambda e: e.lex_id)
+
+        if source == "tapi":
+            tapi_entries.extend(file_entries)
+        else:
+            ietf_entries.extend(file_entries)
+    return tapi_entries, ietf_entries
 
 
 # ── Label pass ───────────────────────────────────────────────────────────
