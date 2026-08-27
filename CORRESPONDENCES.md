@@ -117,6 +117,110 @@ the pair dropped from the artifact. Only `reject` and `insufficient_evidence`
 verdicts are excluded from the artifact entirely — they stay in the run's
 stdout gap report instead.
 
+## Review verdicts: what a correspondence's presence does not tell you
+
+Phase 5 adds a reviewer's adjudication as a second layer of RDF-star
+annotations on the same `<<...>>` block documented above. Four predicates,
+appended immediately after the twelve pipeline predicates, in this fixed
+order:
+
+| Predicate | Value | Present when |
+|---|---|---|
+| `lex:reviewVerdict` | one of `"accepted"`, `"rejected"`, `"uncertain"` | the reviewer recorded a verdict for this correspondence |
+| `lex:reviewReason` | the reviewer's free-text reason | the reviewer recorded a non-empty reason |
+| `lex:reviewRederived` | `"true"`/`"false"`, typed `xsd:boolean` | the correspondence is `high` tier **and** was reviewed — never present on a `medium`/`low` tier row, since only `high`-tier correspondences carry a re-derivation requirement (SC4) |
+| `lex:rederivedFrom` | the reviewer's independent source citation, drawn from the source YANG module's own description text | a citation was supplied |
+
+Extending the annotation block already shown above (a real `high`-tier,
+`skos:exactMatch` block) with a reviewed, accepted, re-derived verdict —
+the twelve pipeline predicates are unchanged, the four review predicates
+are new:
+
+```turtle
+<<lex:tapi-topology-link skos:exactMatch lex:ietf-network-link>>
+    lex:confidenceTier "high" ;
+    lex:evidenceQuote "A link represents a physical or logical connection." ;
+    lex:lexiconVersion "3f2a9c1..." ;
+    lex:model "claude-..." ;
+    lex:decidedBy "confirmation-pass" ;
+    lex:decidingSignal "definition-text" ;
+    lex:labelDefinitionAgreement "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
+    lex:structuralCorroboration "0.20"^^<http://www.w3.org/2001/XMLSchema#decimal> ;
+    lex:validatorRan "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
+    lex:validatorAgrees "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
+    lex:validatorCounterArgument "The strongest case against this verdict still fails." ;
+    lex:escalated "false"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
+    lex:reviewVerdict "accepted" ;
+    lex:reviewReason "Both descriptions agree a link is a directed connection between two termination points; cardinality and directionality match on both sides." ;
+    lex:reviewRederived "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
+    lex:rederivedFrom "tapi-topology.yang's own 'link' description, re-read independently of the evidenceQuote above, cross-checked against ietf-network.yang's 'link' description." .
+```
+
+**A `skos:exactMatch` or `skos:closeMatch` triple's presence in the base
+section does NOT mean the correspondence was accepted.** A rejected or
+uncertain correspondence deliberately keeps its base triple (D-16) —
+annotated with its verdict, not deleted — because this project's normative
+source requires that where confidence can't be established, that MUST be
+surfaced rather than hidden (`docs/reference-lexicons.md` §4.1's
+surface-don't-force MUST). A rejected pair with its reasoning still
+visible is stronger evidence for the working group than a silent deletion,
+and it lets a reader audit the matcher's failures as well as its
+successes.
+
+An annotation block can be in exactly one of three states, and they are
+not interchangeable:
+
+1. **Accepted** — `lex:reviewVerdict "accepted"` is present in the block.
+2. **Rejected or uncertain** — `lex:reviewVerdict "rejected"` or
+   `lex:reviewVerdict "uncertain"` is present. The base
+   `skos:exactMatch`/`skos:closeMatch` triple is still there, by design
+   (D-16) — its presence alone never distinguishes this state from state 1.
+3. **Not yet reviewed** — no `lex:reviewVerdict` predicate at all appears
+   in the block. This is a real, distinct third state, not a synonym for
+   either of the above.
+
+A downstream query that filters on triple existence alone, rather than on
+`lex:reviewVerdict`'s value, will read a rejection as an endorsement.
+Filter on the verdict, never on the bare triple's presence.
+
+## Reviewed gaps
+
+A reviewer's adjudication about a TAPI entry the matcher left without a
+confirmed correspondent (a gap) persists as its own resource type — never
+as a `skos:exactMatch`/`skos:closeMatch` triple, because a gap is not a
+correspondence (D-10; Phase 4 D-02):
+
+```turtle
+lex:gap-tapi-topology-node-rule-group a lex:ReviewedGap ;
+    lex:gapSubject lex:tapi-topology-node-rule-group ;
+    lex:gapReason "insufficient-evidence" ;
+    lex:reviewVerdict "accepted" ;
+    lex:reviewReason "Source YANG description for this entry is a single restated sentence with no distinguishing detail -- no correspondent could be established from it, and none should be assumed." .
+```
+
+Four predicates: `lex:gapSubject` (the TAPI entry the gap is about, always
+present), `lex:gapReason` (the matcher's own gap-reason code, always
+present), `lex:reviewVerdict` (the reviewer's `accepted`/`rejected`/
+`uncertain` adjudication of *the gap itself* — see `REVIEW-PROTOCOL.md`
+for what these three words mean on a gap row, which is not the same
+meaning they carry on a correspondence row), and `lex:reviewReason`
+(present when the reviewer supplied a non-empty reason).
+
+These resources live in the plain-Turtle **base** section — above the
+`RDF-star annotations` separator comment, alongside the artifact resource
+and the `skos:exactMatch`/`closeMatch` triples — not inside a `<<...>>`
+annotation block. That placement matters for loading: unlike the
+annotation blocks documented above (which `rdflib` 7.6.0 cannot parse — see
+"Loading the file" below), a `lex:ReviewedGap` resource **is** ordinary
+Turtle and **does** parse with `rdflib`, along with the rest of the base
+section.
+
+See `REVIEW-PROTOCOL.md` for the reviewer-facing half of this workflow:
+what the worklist looks like, what the three verdict words mean in each
+context, and what the tool enforces versus what only a human reviewer can
+guarantee. This file documents the artifact for its *consumer*; that file
+documents the process for its *producer*.
+
 ## The scope statement
 
 Every artifact carries a machine-readable scope statement on the artifact
@@ -172,7 +276,7 @@ is verified once, manually, as phase-completion evidence:
 
 ```bash
 # Record the inputs both runs must share, before running either:
-git -C lexicon rev-parse HEAD
+git -C lexicon log -1 --format=%H -- .
 # ... note args.model too, e.g. the --model value or its default
 
 python3 align_lexicons.py --emit-correspondences /tmp/run1.ttl
