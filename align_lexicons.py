@@ -107,6 +107,12 @@ DEFAULT_CORRESPONDENCES_PATH = Path(__file__).resolve().parent / "correspondence
 # lexicon-shaped file elsewhere.
 LEXICON_FILE_SUFFIX = ".lexicon.ttl"
 
+# Phase 5/REV-01: where review-worklist.md lands when --emit-worklist is
+# given with no value. A sibling of align_lexicons.py, mirroring
+# DEFAULT_CORRESPONDENCES_PATH's own placement (not inside
+# DEFAULT_LEXICON_DIR -- write_review_worklist() refuses that regardless).
+DEFAULT_WORKLIST_PATH = Path(__file__).resolve().parent / "review-worklist.md"
+
 # Every prov:wasDerivedFrom URI in this corpus begins with this prefix. The
 # four tokens it contributes (http, example, org, ontology) are identical
 # for every single entry and therefore pure noise in a token-overlap
@@ -351,6 +357,33 @@ class DirtyLexiconError(RuntimeError):
     this check."""
 
 
+class MalformedWorklistError(RuntimeError):
+    """Phase 5/D-07/P-05: raised by parse_review_worklist() and
+    apply_review_to_correspondences()/write_reviewed_correspondences() when
+    the completed worklist cannot be trusted as-is -- a duplicate row_id, an
+    unknown verdict word, a wrong cell count, or a row_id absent from the
+    target correspondences.ttl. Collect-then-raise: every defect found is
+    named in the one raised error, and nothing is written when the defect
+    list is non-empty (a half-applied canonical record is the exact silent-
+    corruption failure this exists to prevent)."""
+
+
+class WorklistProvenanceMismatch(RuntimeError):
+    """T-05-04: raised by write_reviewed_correspondences() when the
+    worklist's recorded lexicon_version or model does not match the target
+    correspondences.ttl's own lex:correspondence-artifact resource -- a
+    worklist from one run must never annotate another run's
+    correspondences. Raised before any splice."""
+
+
+class AlreadyReviewedError(RuntimeError):
+    """T-05-03: raised by apply_review_to_correspondences() when one or more
+    located blocks already carry lex:reviewVerdict -- there is no overwrite
+    flag; a second application is either a mistake or a re-review that
+    should start from a freshly emitted artifact. Raised before any
+    splice, naming every already-annotated block."""
+
+
 CONFIRMED_VERDICTS = ("confirm_exact_match", "confirm_close_match")
 
 # OUT-01/D-01: the compact SKOS predicate each CONFIRMED_VERDICTS member
@@ -367,6 +400,15 @@ CORRESPONDENCE_PREDICATES: Dict[str, str] = {
 # <artifact_contract> specifies. render_correspondences_ttl() iterates this
 # constant (never a hardcoded predicate sequence at the call site), so the
 # module constant is the single source of truth for annotation ordering.
+#
+# Phase 5/P-07: this tuple stays byte-for-byte unchanged -- do NOT append
+# the review predicates here. tests/test_correspondences.py:160 computes
+# annotation_section.index(pred) for every member of this tuple against a
+# freshly rendered, UNREVIEWED artifact; appending a review predicate would
+# raise ValueError in that existing green test. The review predicates live
+# in the sibling REVIEW_ANNOTATION_ORDER constant below, appended by
+# apply_review_to_correspondences() to the same <<...>> block, after these
+# twelve, only when a correspondence is actually reviewed.
 CORRESPONDENCE_ANNOTATION_ORDER: Tuple[str, ...] = (
     "lex:confidenceTier",
     "lex:evidenceQuote",
@@ -381,6 +423,97 @@ CORRESPONDENCE_ANNOTATION_ORDER: Tuple[str, ...] = (
     "lex:validatorCounterArgument",
     "lex:escalated",
 )
+
+# Phase 5/REV-01: the three verdict words a reviewer types into a worklist's
+# `verdict` column (P-08: no reviewer-identity field alongside them).
+REVIEW_VERDICTS: Tuple[str, ...] = ("accept", "reject", "uncertain")
+
+# D-16/P-01: the Turtle string each REVIEW_VERDICTS word renders as, keyed on
+# REVIEW_VERDICTS' own tuple positions -- never retyped literals -- so the
+# two lists can never diverge, mirroring how CORRESPONDENCE_PREDICATES is
+# keyed on CONFIRMED_VERDICTS above.
+REVIEW_VERDICT_ANNOTATION: Dict[str, str] = {
+    REVIEW_VERDICTS[0]: "accepted",
+    REVIEW_VERDICTS[1]: "rejected",
+    REVIEW_VERDICTS[2]: "uncertain",
+}
+
+# P-06/P-07: the sibling to CORRESPONDENCE_ANNOTATION_ORDER -- the four
+# review predicates apply_review_to_correspondences() appends to an already-
+# rendered <<...>> block, in this fixed order, after the twelve pipeline
+# predicates above. lex:reviewRederived/lex:rederivedFrom are populated only
+# from Plan 05-02 onward (high-tier re-derivation columns); reserved here so
+# the constant's shape never has to change.
+REVIEW_ANNOTATION_ORDER: Tuple[str, ...] = (
+    "lex:reviewVerdict",
+    "lex:reviewReason",
+    "lex:reviewRederived",
+    "lex:rederivedFrom",
+)
+
+# <worklist_contract>: the sixteen worklist columns in fixed order. Columns
+# 1 and 13-16 are parsed back by parse_review_worklist(); the rest are
+# generator-written, display-only (P-04).
+WORKLIST_COLUMNS: Tuple[str, ...] = (
+    "row_id",
+    "kind",
+    "tier",
+    "escalated",
+    "gap_reason",
+    "evidence_strength",
+    "tapi_lex_id",
+    "tapi_label",
+    "ietf_lex_id",
+    "ietf_label",
+    "predicate",
+    "evidence_quote",
+    "verdict",
+    "reason",
+    "re_derived",
+    "rederivation_citation",
+)
+
+WORKLIST_ROW_KINDS: Tuple[str, ...] = ("correspondence", "gap")
+
+# <worklist_contract> cell-escaping rules: a literal newline becomes the HTML
+# line-break tag GFM already renders; a literal pipe becomes its HTML
+# numeric character reference. Neither escape sequence itself contains the
+# character it stands for, so escape/unescape are safe to apply in either
+# order.
+WORKLIST_NEWLINE_ESCAPE = "<br>"
+WORKLIST_PIPE_ESCAPE = "&#124;"
+
+# The literal cell value for a column that legitimately does not apply to a
+# given row's kind (e.g. `tier` on a gap row, `predicate` on a gap row) --
+# distinct from a blank cell, which means "reviewer left this unset."
+WORKLIST_EMPTY_CELL = "-"
+
+# <worklist_contract> header block: generated, never hand-edited. Formatted
+# by render_review_worklist() with this run's lexicon_version/model/row
+# count, and parsed back out by parse_review_worklist() via the same
+# `- lexicon_version: ` / `- model: ` line shapes.
+WORKLIST_HEADER_TEMPLATE = (
+    "# Review Worklist\n"
+    "\n"
+    "- lexicon_version: {lexicon_version}\n"
+    "- model: {model}\n"
+    "- row_count: {row_count}\n"
+    "\n"
+    "Reviewer instructions: fill in the `verdict` column with exactly one "
+    "of {verdicts} (case-insensitive). Leave `verdict` blank to leave a row "
+    "unreviewed -- it will never be defaulted or inferred. Only `verdict`, "
+    "`reason`, `re_derived`, and `rederivation_citation` are read back; do "
+    "not hand-edit any other column.\n"
+    "\n"
+    "Cell escaping: if a `reason` or `rederivation_citation` you type "
+    "contains a literal newline, write it as `{newline_escape}` instead. If "
+    "it contains a literal pipe character `|`, write it as `{pipe_escape}` "
+    "instead.\n"
+)
+
+# P-03 (reserved this plan, consumed in Plan 05-02): the subject prefix a
+# reviewed gap's plain-Turtle lex:ReviewedGap resource will use.
+REVIEWED_GAP_SUBJECT_PREFIX = "lex:gap-"
 
 # D-09: the artifact-level resource stating the type-level-only scope as a
 # machine-readable triple, not a header comment.
@@ -667,6 +800,85 @@ class CorrespondenceTriple:
             lexicon_version=lexicon_version,
             model=model,
         )
+
+
+@dataclass
+class WorklistRow:
+    """Phase 5/REV-01: a generated worklist row -- render_review_worklist()'s
+    input. __post_init__ invariants are written in the same shape/message
+    style as PairResult.__post_init__ (mirrors this file's existing
+    "true by construction" discipline)."""
+
+    row_id: str
+    kind: str  # a WORKLIST_ROW_KINDS member
+    tier: str  # a CONFIDENCE_TIERS member, or "" on a gap row (Plan 05-02)
+    escalated: Optional[bool]  # None on a gap row
+    gap_reason: str  # an ALL_GAP_REASONS member, or "" on a correspondence row
+    evidence_strength: int
+    tapi_lex_id: str
+    tapi_label: str
+    ietf_lex_id: Optional[str] = None  # None on a gap row
+    ietf_label: Optional[str] = None  # None on a gap row
+    predicate: Optional[str] = None  # None on a gap row
+    evidence_quote: str = ""
+
+    def __post_init__(self) -> None:
+        if self.kind not in WORKLIST_ROW_KINDS:
+            raise ValueError(
+                f"WorklistRow invariant violated: kind {self.kind!r} must be "
+                f"one of {WORKLIST_ROW_KINDS!r}"
+            )
+        if self.tier and self.tier not in CONFIDENCE_TIERS:
+            raise ValueError(
+                f"WorklistRow invariant violated: tier {self.tier!r} must be "
+                f"empty or one of {CONFIDENCE_TIERS!r}"
+            )
+        if self.gap_reason and self.gap_reason not in ALL_GAP_REASONS:
+            raise ValueError(
+                f"WorklistRow invariant violated: gap_reason {self.gap_reason!r} "
+                f"must be empty or one of {ALL_GAP_REASONS!r}"
+            )
+        if self.kind == "correspondence" and (not self.ietf_lex_id or not self.predicate):
+            raise ValueError(
+                "WorklistRow invariant violated: kind 'correspondence' "
+                "requires a non-empty ietf_lex_id and predicate"
+            )
+
+
+@dataclass
+class ReviewRecord:
+    """Phase 5/D-07: a validated, parsed worklist row -- parse_review_
+    worklist()'s output and apply_review_to_correspondences()'s input. Per
+    P-04, only the reviewer-editable columns (verdict/reason/re_derived/
+    rederivation_citation) plus row_id are genuinely parsed from the
+    worklist table; kind/tapi_lex_id/ietf_lex_id/predicate are DECODED from
+    row_id itself (worklist_row_id()'s own encoding), never re-read from the
+    display-only columns."""
+
+    row_id: str
+    kind: str
+    tapi_lex_id: str
+    ietf_lex_id: Optional[str]
+    predicate: Optional[str]
+    verdict: str  # a REVIEW_VERDICTS member, already normalized (strip/lower)
+    reason: Optional[str] = None
+    re_derived: Optional[bool] = None
+    rederivation_citation: Optional[str] = None
+
+    def __post_init__(self) -> None:
+        if not self.row_id:
+            raise ValueError("ReviewRecord invariant violated: row_id must be non-empty")
+        if self.verdict not in REVIEW_VERDICTS:
+            raise ValueError(
+                f"ReviewRecord invariant violated: verdict {self.verdict!r} "
+                f"must be one of {REVIEW_VERDICTS!r}"
+            )
+        if self.kind == "correspondence" and self.predicate not in CORRESPONDENCE_PREDICATES.values():
+            raise ValueError(
+                "ReviewRecord invariant violated: kind 'correspondence' "
+                f"requires predicate in {sorted(CORRESPONDENCE_PREDICATES.values())!r}, "
+                f"got {self.predicate!r}"
+            )
 
 
 # D-01: fixture entries are pulled by explicit lex: id, never by scanning for
@@ -2018,6 +2230,484 @@ def write_correspondences_ttl(
     resolved_path.write_text(text, encoding="utf-8")
 
 
+# ── Review worklist (Phase 5/REV-01) ────────────────────────────────────
+
+
+def worklist_row_id(
+    kind: str, tapi_lex_id: str, ietf_lex_id: Optional[str] = None, predicate: Optional[str] = None
+) -> str:
+    """<worklist_contract>: `C:<tapi_lex_id>:<ietf_lex_id>:<predicate>` for a
+    correspondence row, `G:<tapi_lex_id>` for a gap row. The internal
+    separator is a colon (not a pipe) so the value survives a pipe-delimited
+    table row untouched."""
+    if kind == "correspondence":
+        if not ietf_lex_id or not predicate:
+            raise ValueError(
+                "worklist_row_id: kind 'correspondence' requires a non-empty "
+                "ietf_lex_id and predicate"
+            )
+        return f"C:{tapi_lex_id}:{ietf_lex_id}:{predicate}"
+    if kind == "gap":
+        return f"G:{tapi_lex_id}"
+    raise ValueError(f"worklist_row_id: kind must be one of {WORKLIST_ROW_KINDS!r}, got {kind!r}")
+
+
+def _decode_row_id(row_id: str) -> Tuple[str, str, Optional[str], Optional[str]]:
+    """The inverse of worklist_row_id(): (kind, tapi_lex_id, ietf_lex_id,
+    predicate). Used by parse_review_worklist() so kind/tapi_lex_id/
+    ietf_lex_id/predicate are never re-read from the worklist's own
+    display-only columns (P-04) -- row_id is the single source for them.
+    predicate itself may contain a colon (e.g. "skos:exactMatch"), so the
+    correspondence form splits with maxsplit=2, keeping the third segment
+    (the predicate) intact."""
+    if row_id.startswith("C:"):
+        parts = row_id[2:].split(":", 2)
+        if len(parts) != 3 or not all(parts):
+            raise ValueError(f"malformed correspondence row_id {row_id!r}")
+        tapi_lex_id, ietf_lex_id, predicate = parts
+        return "correspondence", tapi_lex_id, ietf_lex_id, predicate
+    if row_id.startswith("G:"):
+        tapi_lex_id = row_id[2:]
+        if not tapi_lex_id:
+            raise ValueError(f"malformed gap row_id {row_id!r}")
+        return "gap", tapi_lex_id, None, None
+    raise ValueError(f"row_id {row_id!r} does not start with 'C:' or 'G:'")
+
+
+def escape_worklist_cell(value: str) -> str:
+    """<worklist_contract> cell escaping, generator direction: a literal
+    newline -> WORKLIST_NEWLINE_ESCAPE, a literal pipe -> WORKLIST_PIPE_ESCAPE."""
+    return value.replace("\n", WORKLIST_NEWLINE_ESCAPE).replace("|", WORKLIST_PIPE_ESCAPE)
+
+
+def unescape_worklist_cell(value: str) -> str:
+    """The exact inverse of escape_worklist_cell()."""
+    return value.replace(WORKLIST_PIPE_ESCAPE, "|").replace(WORKLIST_NEWLINE_ESCAPE, "\n")
+
+
+def build_worklist_rows(
+    triples: List["CorrespondenceTriple"],
+    results: List["PairResult"],
+    gap_records: List["GapRecord"],
+) -> List["WorklistRow"]:
+    """Plan 05-01 (this task): correspondence rows only, sorted on the same
+    (tapi_lex_id, ietf_lex_id, predicate) key correspondences_from_results()
+    already sorts on (D-06/reproducibility: rows that compare equal on every
+    other field never reorder between two runs over identical input).
+    `results` supplies the TAPI/IETF skos:prefLabel text for display --
+    CorrespondenceTriple itself carries only lex ids. `gap_records` is
+    accepted but unused until Plan 05-02 adds gap rows (P-03/D-10)."""
+    labels_by_pair: Dict[Tuple[str, str], Tuple[str, str]] = {
+        (r.candidate.tapi.lex_id, r.candidate.ietf.lex_id): (
+            r.candidate.tapi.pref_label,
+            r.candidate.ietf.pref_label,
+        )
+        for r in results
+    }
+    ordered = sorted(triples, key=lambda t: (t.tapi_lex_id, t.ietf_lex_id, t.predicate))
+    rows: List[WorklistRow] = []
+    for t in ordered:
+        tapi_label, ietf_label = labels_by_pair.get((t.tapi_lex_id, t.ietf_lex_id), ("", ""))
+        rows.append(
+            WorklistRow(
+                row_id=worklist_row_id("correspondence", t.tapi_lex_id, t.ietf_lex_id, t.predicate),
+                kind="correspondence",
+                tier=t.confidence.tier if t.confidence else "",
+                escalated=t.confidence.escalated if t.confidence else None,
+                gap_reason="",
+                evidence_strength=0,
+                tapi_lex_id=t.tapi_lex_id,
+                tapi_label=tapi_label,
+                ietf_lex_id=t.ietf_lex_id,
+                ietf_label=ietf_label,
+                predicate=t.predicate,
+                evidence_quote=t.evidence_quote,
+            )
+        )
+    return rows
+
+
+def _render_worklist_row(row: "WorklistRow") -> str:
+    cells = [
+        row.row_id,
+        row.kind,
+        row.tier if row.tier else WORKLIST_EMPTY_CELL,
+        (WORKLIST_EMPTY_CELL if row.escalated is None else ("Y" if row.escalated else "N")),
+        row.gap_reason if row.gap_reason else WORKLIST_EMPTY_CELL,
+        str(row.evidence_strength),
+        row.tapi_lex_id,
+        escape_worklist_cell(row.tapi_label) if row.tapi_label else WORKLIST_EMPTY_CELL,
+        row.ietf_lex_id if row.ietf_lex_id else WORKLIST_EMPTY_CELL,
+        escape_worklist_cell(row.ietf_label) if row.ietf_label else WORKLIST_EMPTY_CELL,
+        row.predicate if row.predicate else WORKLIST_EMPTY_CELL,
+        escape_worklist_cell(row.evidence_quote) if row.evidence_quote else WORKLIST_EMPTY_CELL,
+        "",  # verdict -- reviewer fills; blank means unreviewed, never defaulted
+        "",  # reason -- reviewer fills
+        # re_derived: only meaningful on a high-tier correspondence row
+        # (Plan 05-02); "-" elsewhere rather than an editable blank cell.
+        "" if row.tier == "high" else WORKLIST_EMPTY_CELL,
+        "",  # rederivation_citation -- reviewer fills
+    ]
+    assert len(cells) == len(WORKLIST_COLUMNS)
+    return "| " + " | ".join(cells) + " |"
+
+
+def render_review_worklist(rows: List["WorklistRow"], lexicon_version: str, model: str) -> str:
+    """<worklist_contract>: header block, then exactly one GFM pipe table.
+    Zero rows still emits the header, the column header row, the GFM
+    separator row, and one explicit no-rows line -- never an omitted table
+    (this file's established visible-but-empty discipline,
+    print_gap_report())."""
+    header = WORKLIST_HEADER_TEMPLATE.format(
+        lexicon_version=lexicon_version,
+        model=model,
+        row_count=len(rows),
+        verdicts=", ".join(REVIEW_VERDICTS),
+        newline_escape=WORKLIST_NEWLINE_ESCAPE,
+        pipe_escape=WORKLIST_PIPE_ESCAPE,
+    )
+    lines: List[str] = [header]
+    lines.append("| " + " | ".join(WORKLIST_COLUMNS) + " |")
+    lines.append("|" + "|".join(["---"] * len(WORKLIST_COLUMNS)) + "|")
+    if not rows:
+        lines.append(
+            "_This run produced no correspondence and no gap -- the table "
+            "above is intentionally empty, not omitted._"
+        )
+    else:
+        for row in rows:
+            lines.append(_render_worklist_row(row))
+    return "\n".join(lines) + "\n"
+
+
+def write_review_worklist(
+    path: Path, rows: List["WorklistRow"], lexicon_version: str, model: str, lexicon_dir: Path
+) -> None:
+    """Reuses write_correspondences_ttl()'s two refusal guards verbatim in
+    shape (T-04-05's discipline extended to the worklist path)."""
+    resolved_path = Path(path).resolve()
+    resolved_lexicon_dir = Path(lexicon_dir).resolve()
+    if resolved_path == resolved_lexicon_dir or resolved_lexicon_dir in resolved_path.parents:
+        raise ValueError(
+            f"write_review_worklist refused: output path {resolved_path} is "
+            f"inside the lexicon directory {resolved_lexicon_dir} -- would "
+            "risk overwriting the corpus the run matched against (mirrors "
+            "T-04-05)"
+        )
+    if resolved_path.name.endswith(LEXICON_FILE_SUFFIX):
+        raise ValueError(
+            f"write_review_worklist refused: output path {resolved_path} is "
+            f"named like a lexicon file (suffix {LEXICON_FILE_SUFFIX!r}) -- "
+            "refusing in case of a mistyped --emit-worklist path"
+        )
+    text = render_review_worklist(rows, lexicon_version, model)
+    resolved_path.parent.mkdir(parents=True, exist_ok=True)
+    resolved_path.write_text(text, encoding="utf-8")
+
+
+_WORKLIST_VERSION_RE = re.compile(r"^- lexicon_version: (.+)$", re.MULTILINE)
+_WORKLIST_MODEL_RE = re.compile(r"^- model: (.+)$", re.MULTILINE)
+
+
+def parse_review_worklist(text: str) -> Tuple[List["ReviewRecord"], str, str]:
+    """D-07/P-05: a collect-then-raise validation pass. Walks every data
+    row, appends a defect message for each violation found, and after the
+    walk raises ONE MalformedWorklistError listing every collected defect --
+    never returns partial records alongside defects. A blank `verdict` cell
+    means unreviewed: skipped, never defaulted or coerced (the project's
+    non-fabrication discipline applied to the review layer itself)."""
+    version_match = _WORKLIST_VERSION_RE.search(text)
+    model_match = _WORKLIST_MODEL_RE.search(text)
+    lexicon_version = version_match.group(1).strip() if version_match else ""
+    model = model_match.group(1).strip() if model_match else ""
+
+    lines = text.splitlines()
+    try:
+        header_idx = next(
+            i for i, l in enumerate(lines) if l.strip().startswith("| " + WORKLIST_COLUMNS[0])
+        )
+    except StopIteration:
+        raise MalformedWorklistError(
+            "parse_review_worklist: no worklist table found (missing the "
+            f"{WORKLIST_COLUMNS[0]!r} header row)"
+        )
+
+    data_start = header_idx + 2  # skip the header row and the GFM separator row
+    seen_row_ids: Dict[str, int] = {}
+    defects: List[str] = []
+    records: List[ReviewRecord] = []
+
+    for line_no in range(data_start, len(lines)):
+        stripped = lines[line_no].strip()
+        if not stripped.startswith("|"):
+            break  # end of table
+        cells = [c.strip() for c in stripped.strip("|").split("|")]
+        if len(cells) != len(WORKLIST_COLUMNS):
+            defects.append(
+                f"worklist line {line_no + 1}: expected {len(WORKLIST_COLUMNS)} "
+                f"cells, got {len(cells)}"
+            )
+            continue
+
+        row_id = cells[0]
+        if not row_id:
+            defects.append(f"worklist line {line_no + 1}: empty row_id")
+            continue
+        if row_id in seen_row_ids:
+            defects.append(
+                f"duplicate row_id {row_id!r} (first seen at worklist line "
+                f"{seen_row_ids[row_id] + 1}, again at line {line_no + 1})"
+            )
+            continue
+        seen_row_ids[row_id] = line_no
+
+        verdict_cell = cells[WORKLIST_COLUMNS.index("verdict")].strip()
+        if not verdict_cell:
+            continue  # unreviewed -- never defaulted or inferred
+
+        verdict = verdict_cell.strip().lower()
+        if verdict not in REVIEW_VERDICTS:
+            defects.append(
+                f"row {row_id!r} (worklist line {line_no + 1}): unknown "
+                f"verdict word {verdict_cell!r}, expected one of {REVIEW_VERDICTS!r}"
+            )
+            continue
+
+        try:
+            kind, tapi_lex_id, ietf_lex_id, predicate = _decode_row_id(row_id)
+        except ValueError as exc:
+            defects.append(f"row {row_id!r} (worklist line {line_no + 1}): {exc}")
+            continue
+
+        reason = unescape_worklist_cell(cells[WORKLIST_COLUMNS.index("reason")])
+        re_derived_cell = cells[WORKLIST_COLUMNS.index("re_derived")].strip()
+        re_derived = {"Y": True, "N": False}.get(re_derived_cell)
+        rederivation_citation = unescape_worklist_cell(
+            cells[WORKLIST_COLUMNS.index("rederivation_citation")]
+        )
+
+        try:
+            record = ReviewRecord(
+                row_id=row_id,
+                kind=kind,
+                tapi_lex_id=tapi_lex_id,
+                ietf_lex_id=ietf_lex_id,
+                predicate=predicate,
+                verdict=verdict,
+                reason=reason or None,
+                re_derived=re_derived,
+                rederivation_citation=rederivation_citation or None,
+            )
+        except ValueError as exc:
+            defects.append(f"row {row_id!r} (worklist line {line_no + 1}): {exc}")
+            continue
+        records.append(record)
+
+    if defects:
+        raise MalformedWorklistError(
+            f"parse_review_worklist: worklist has {len(defects)} defect(s), "
+            "nothing was applied:\n" + "\n".join(f"- {d}" for d in defects)
+        )
+
+    return records, lexicon_version, model
+
+
+def _review_annotation_fields(record: "ReviewRecord") -> Dict[str, Optional[str]]:
+    """Mirrors _annotation_fields()'s None-means-omitted convention: a
+    review field with no value is entirely absent from the block, exactly
+    as lex:structuralCorroboration etc. are already omitted when None."""
+    return {
+        "lex:reviewVerdict": RdfLiteral(REVIEW_VERDICT_ANNOTATION[record.verdict]).n3(),
+        "lex:reviewReason": RdfLiteral(record.reason).n3() if record.reason else None,
+        "lex:reviewRederived": (
+            RdfLiteral(record.re_derived).n3() if record.re_derived is not None else None
+        ),
+        "lex:rederivedFrom": (
+            RdfLiteral(record.rederivation_citation).n3() if record.rederivation_citation else None
+        ),
+    }
+
+
+def _review_annotation_lines(record: "ReviewRecord") -> List[str]:
+    fields = _review_annotation_fields(record)
+    present = [(pred, fields[pred]) for pred in REVIEW_ANNOTATION_ORDER if fields[pred] is not None]
+    lines: List[str] = []
+    for i, (pred, value) in enumerate(present):
+        terminator = " ." if i == len(present) - 1 else " ;"
+        lines.append(f"    {pred} {value}{terminator}")
+    return lines
+
+
+def _locate_annotation_block(
+    lines: List[str], tapi_lex_id: str, predicate: str, ietf_lex_id: str
+) -> Tuple[int, int]:
+    """Returns (header_line_idx, terminator_line_idx) for the <<...>> block
+    matching this correspondence. <splice_contract>: the header line is the
+    exact string render_correspondences_ttl() emits; a record whose header
+    line is absent from the file is a mismatch error, not a silent skip."""
+    header = f"<<lex:{tapi_lex_id} {predicate} lex:{ietf_lex_id}>>"
+    try:
+        header_idx = next(i for i, l in enumerate(lines) if l.strip() == header)
+    except StopIteration:
+        raise MalformedWorklistError(
+            f"block header {header!r} not found in the target "
+            "correspondences.ttl -- a worklist row must name a "
+            "correspondence the target file actually contains"
+        )
+    terminator_idx = None
+    for i in range(header_idx + 1, len(lines)):
+        if lines[i].strip().endswith("."):
+            terminator_idx = i
+            break
+    if terminator_idx is None:
+        raise MalformedWorklistError(
+            f"no terminating line found for block {header!r}"
+        )
+    return header_idx, terminator_idx
+
+
+def apply_review_to_correspondences(existing_text: str, records: List["ReviewRecord"]) -> str:
+    """<splice_contract>: a text splice over existing_text.splitlines(),
+    never a Graph().parse() round trip (rdflib 7.6 raises BadSyntax on the
+    <<...>> blocks this writes -- CORRESPONDENCES.md:147-152). Only
+    kind == "correspondence" records are applied this phase -- gap-record
+    review persistence is reserved for Plan 05-02 (P-03).
+
+    Collect-then-raise, twice (P-05's shape): first every row_id whose block
+    header cannot be located in existing_text (MalformedWorklistError,
+    naming all of them -- this is also write_reviewed_correspondences()'s
+    "resolve every record's block header before splicing any of them"
+    guard, implemented once here rather than duplicated at both call
+    sites); then every block that already carries lex:reviewVerdict
+    (AlreadyReviewedError, naming all of them -- no overwrite flag). Nothing
+    is spliced unless both checks pass clean.
+
+    D-16/P-01 (keep-the-triple): this function only ever edits lines at or
+    below a block's own header -- inside the RDF-star annotation section --
+    so a rejected or uncertain verdict's base skos:exactMatch/closeMatch
+    triple (in the base section, above CORRESPONDENCE_ANNOTATION_SEPARATOR)
+    is untouched by construction, never by a filtering step that has to
+    remember not to drop it."""
+    corr_records = [r for r in records if r.kind == "correspondence"]
+    lines = existing_text.splitlines()
+
+    missing: List[str] = []
+    located: Dict[str, Tuple[int, int]] = {}
+    for r in corr_records:
+        try:
+            header_idx, terminator_idx = _locate_annotation_block(
+                lines, r.tapi_lex_id, r.predicate, r.ietf_lex_id
+            )
+        except MalformedWorklistError:
+            missing.append(r.row_id)
+            continue
+        located[r.row_id] = (header_idx, terminator_idx)
+
+    if missing:
+        raise MalformedWorklistError(
+            "apply_review_to_correspondences: row_id(s) not found in the "
+            "target correspondences.ttl: " + ", ".join(sorted(missing))
+        )
+
+    already_reviewed: List[str] = []
+    for r in corr_records:
+        header_idx, terminator_idx = located[r.row_id]
+        block_lines = lines[header_idx : terminator_idx + 1]
+        if any("lex:reviewVerdict" in l for l in block_lines):
+            already_reviewed.append(r.row_id)
+
+    if already_reviewed:
+        raise AlreadyReviewedError(
+            "apply_review_to_correspondences: refusing -- block(s) already "
+            "carry a review verdict: " + ", ".join(sorted(already_reviewed))
+            + " (no overwrite flag -- start from a freshly emitted artifact)"
+        )
+
+    # Splice bottom-up (highest header_idx first) so earlier line indices
+    # computed above stay valid as later blocks are edited.
+    for r in sorted(corr_records, key=lambda rec: located[rec.row_id][0], reverse=True):
+        header_idx, terminator_idx = located[r.row_id]
+        new_lines = _review_annotation_lines(r)
+        stripped_terminator = lines[terminator_idx].rstrip()
+        if not stripped_terminator.endswith("."):
+            raise MalformedWorklistError(
+                f"apply_review_to_correspondences: block terminator line "
+                f"{stripped_terminator!r} does not end in a period"
+            )
+        lines[terminator_idx] = stripped_terminator[:-1].rstrip() + " ;"
+        lines = lines[: terminator_idx + 1] + new_lines + lines[terminator_idx + 1 :]
+
+    trailing_newline = "\n" if existing_text.endswith("\n") else ""
+    return "\n".join(lines) + trailing_newline
+
+
+def _read_artifact_provenance(existing_text: str) -> Tuple[str, str]:
+    """Reads lex:lexiconVersion/lex:model off the target's own
+    lex:correspondence-artifact resource, from the base (plain-Turtle)
+    section only -- never attempts to parse the whole file, since the
+    annotation section below CORRESPONDENCE_ANNOTATION_SEPARATOR is Turtle*
+    and unparseable by rdflib 7.6 (<splice_contract>)."""
+    base_section = existing_text.split(CORRESPONDENCE_ANNOTATION_SEPARATOR)[0]
+    graph = Graph()
+    graph.parse(data=base_section, format="turtle")
+    subject = LEX["correspondence-artifact"]
+    version = graph.value(subject, LEX.lexiconVersion)
+    model = graph.value(subject, LEX.model)
+    return (str(version) if version is not None else "", str(model) if model is not None else "")
+
+
+def write_reviewed_correspondences(
+    correspondences_path: Path,
+    records: List["ReviewRecord"],
+    lexicon_dir: Path,
+    worklist_lexicon_version: Optional[str] = None,
+    worklist_model: Optional[str] = None,
+) -> int:
+    """Splices `records` onto the correspondences.ttl already on disk at
+    correspondences_path, in place. Reuses write_correspondences_ttl()'s two
+    path refusal guards verbatim in shape (T-05-05: a review write through a
+    different, unguarded path would reopen T-04-05). When worklist_
+    lexicon_version/worklist_model are given (the values parse_review_
+    worklist() returned), refuses with WorklistProvenanceMismatch -- before
+    any read of the annotation blocks -- when they don't match the target
+    artifact's own recorded lex:lexiconVersion/lex:model (T-05-04). Returns
+    the number of correspondence-kind records applied."""
+    resolved_path = Path(correspondences_path).resolve()
+    resolved_lexicon_dir = Path(lexicon_dir).resolve()
+    if resolved_path == resolved_lexicon_dir or resolved_lexicon_dir in resolved_path.parents:
+        raise ValueError(
+            f"write_reviewed_correspondences refused: {resolved_path} is "
+            f"inside the lexicon directory {resolved_lexicon_dir} (T-04-05)"
+        )
+    if resolved_path.name.endswith(LEXICON_FILE_SUFFIX):
+        raise ValueError(
+            f"write_reviewed_correspondences refused: {resolved_path} is "
+            f"named like a lexicon file (suffix {LEXICON_FILE_SUFFIX!r})"
+        )
+
+    existing_text = resolved_path.read_text(encoding="utf-8")
+
+    if worklist_lexicon_version is not None or worklist_model is not None:
+        artifact_version, artifact_model = _read_artifact_provenance(existing_text)
+        mismatches: List[str] = []
+        if worklist_lexicon_version is not None and worklist_lexicon_version != artifact_version:
+            mismatches.append(
+                f"lexicon_version: worklist={worklist_lexicon_version!r} "
+                f"artifact={artifact_version!r}"
+            )
+        if worklist_model is not None and worklist_model != artifact_model:
+            mismatches.append(f"model: worklist={worklist_model!r} artifact={artifact_model!r}")
+        if mismatches:
+            raise WorklistProvenanceMismatch(
+                "write_reviewed_correspondences refused: worklist provenance "
+                "does not match the target artifact -- " + "; ".join(mismatches)
+            )
+
+    reviewed_text = apply_review_to_correspondences(existing_text, records)
+    resolved_path.write_text(reviewed_text, encoding="utf-8")
+    return len([r for r in records if r.kind == "correspondence"])
+
+
 # ── Run summary ──────────────────────────────────────────────────────────
 
 
@@ -2198,6 +2888,37 @@ def main() -> None:
             "unchanged (OUT-01)."
         ),
     )
+    parser.add_argument(
+        "--emit-worklist",
+        nargs="?",
+        type=Path,
+        const=DEFAULT_WORKLIST_PATH,
+        default=None,
+        help=(
+            "Write a Markdown review worklist to PATH (defaults to "
+            "review-worklist.md next to this script when given with no "
+            "value). Written only when this flag is given -- the default "
+            "no-flag run stays unchanged (REV-01)."
+        ),
+    )
+    parser.add_argument(
+        "--apply-review",
+        type=Path,
+        default=None,
+        help=(
+            "Review-application mode: parse the completed worklist at PATH "
+            "and splice reviewer verdicts into --correspondences-path, "
+            "print the number of correspondences annotated, and exit "
+            "without constructing an Anthropic client or running the "
+            "matcher pipeline (REV-01/D-07)."
+        ),
+    )
+    parser.add_argument(
+        "--correspondences-path",
+        type=Path,
+        default=DEFAULT_CORRESPONDENCES_PATH,
+        help="The target correspondences.ttl for --apply-review.",
+    )
     args = parser.parse_args()
 
     # D-06/D-05: both run before any LLM call is possible (the client is
@@ -2208,6 +2929,26 @@ def main() -> None:
     # the same reproducibility problem one step earlier. No bypass exists.
     assert_lexicon_clean(args.lexicon_dir)
     lexicon_version = resolve_lexicon_version(args.lexicon_dir)
+
+    # T-05-13: placed immediately after the two guards above (never before
+    # them, so D-06's no-bypass guarantee still holds on every invocation)
+    # and before the Anthropic client is constructed below -- --apply-review
+    # never bills a call.
+    if args.apply_review is not None:
+        worklist_text = args.apply_review.read_text(encoding="utf-8")
+        records, worklist_lexicon_version, worklist_model = parse_review_worklist(worklist_text)
+        annotated_count = write_reviewed_correspondences(
+            args.correspondences_path,
+            records,
+            args.lexicon_dir,
+            worklist_lexicon_version=worklist_lexicon_version,
+            worklist_model=worklist_model,
+        )
+        print(
+            f"Applied review verdicts to {annotated_count} correspondence(s) "
+            f"in {args.correspondences_path}"
+        )
+        return
 
     tapi_entries = load_fixture_entries(args.lexicon_dir, FIXTURE_TAPI)
     ietf_entries = load_fixture_entries(args.lexicon_dir, FIXTURE_IETF)
@@ -2348,6 +3089,25 @@ def main() -> None:
                 f"Wrote {len(emitted_triples)} correspondence(s) to "
                 f"{args.emit_correspondences}"
             )
+
+    # REV-01: same stopped_early suppression as --emit-correspondences above
+    # -- a budget-truncated run's worklist would misstate what the run
+    # established.
+    if args.emit_worklist is not None:
+        if stopped_early:
+            print(
+                "No worklist written -- the run stopped early "
+                f"({stop_reason}); a partial worklist would misstate what "
+                "the run established.",
+                file=sys.stderr,
+            )
+        else:
+            worklist_triples = correspondences_from_results(results, lexicon_version, args.model)
+            worklist_rows = build_worklist_rows(worklist_triples, results, gap_records)
+            write_review_worklist(
+                args.emit_worklist, worklist_rows, lexicon_version, args.model, args.lexicon_dir
+            )
+            print(f"Wrote {len(worklist_rows)} worklist row(s) to {args.emit_worklist}")
 
     if stopped_early:
         # CR-03: still exit non-zero (the budget cap is a deliberate hard
