@@ -532,3 +532,144 @@ def test_recovery_return_shape_and_budget_threading_unchanged(fixture_entries, s
     assert isinstance(results, list)
     assert isinstance(calls_used, int)
     assert calls_used >= 7, "calls_used must be seeded from the caller-supplied baseline, never reset"
+
+
+# ── Plan 05-04 Task 3: compute the call budget from the run's own inputs
+# (D-03) ─────────────────────────────────────────────────────────────────
+
+
+def test_calls_per_candidate_ceiling_is_two():
+    """Phase 2 D-04: a confirmed pair costs a confirmation call plus a
+    validator self-check -- no candidate can cost more than that."""
+    assert align_lexicons.CALLS_PER_CANDIDATE_CEILING == 2
+
+
+def test_resolve_max_calls_not_full_corpus_returns_the_fixture_default():
+    """Not full-corpus mode: resolve_max_calls() returns DEFAULT_MAX_CALLS
+    unchanged, so a fixture-mode run with no flag resolves to exactly the
+    value it resolved to before this plan."""
+    assert align_lexicons.resolve_max_calls(False, [], []) == align_lexicons.DEFAULT_MAX_CALLS
+
+
+def test_resolve_max_calls_full_corpus_is_computed_from_the_given_inputs():
+    """Full-corpus mode: every term comes from the run's own inputs -- the
+    real candidate count, the real loaded TAPI entry count, and this
+    plan's own RECOVERY_CANDIDATES_PER_ENTRY bound -- times
+    CALLS_PER_CANDIDATE_CEILING. No measured-once literal."""
+    fake_tapi_entries = [object()] * 17
+    fake_candidates = [object()] * 41
+    resolved = align_lexicons.resolve_max_calls(True, fake_tapi_entries, fake_candidates)
+    expected = (
+        len(fake_candidates) + len(fake_tapi_entries) * align_lexicons.RECOVERY_CANDIDATES_PER_ENTRY
+    ) * align_lexicons.CALLS_PER_CANDIDATE_CEILING
+    assert resolved == expected
+
+
+def test_omitted_max_calls_in_full_corpus_mode_is_computed_from_run_inputs(full_corpus):
+    """The same computation, driven from the real, loaded full corpus and a
+    real label_pass() run -- not synthetic inputs -- so this test proves
+    the formula against real volume, not just its own arithmetic."""
+    tapi_entries, ietf_entries = full_corpus
+    candidates = align_lexicons.label_pass(
+        tapi_entries, ietf_entries, align_lexicons.DEFAULT_LABEL_THRESHOLD
+    )
+    resolved = align_lexicons.resolve_max_calls(True, tapi_entries, candidates)
+    expected = (
+        len(candidates) + len(tapi_entries) * align_lexicons.RECOVERY_CANDIDATES_PER_ENTRY
+    ) * align_lexicons.CALLS_PER_CANDIDATE_CEILING
+    assert resolved == expected
+    assert resolved > align_lexicons.DEFAULT_MAX_CALLS, (
+        "a full-corpus computed budget must reflect real corpus volume, not "
+        "the 11-entry fixture default"
+    )
+
+
+def test_explicit_max_calls_flag_is_used_verbatim(recording_client, capsys, monkeypatch):
+    """An explicitly supplied --max-calls value is used exactly as given;
+    resolve_max_calls() is never consulted. 17 is deliberately smaller than
+    the fixture run's real spend -- the point of this test is that the
+    explicit value prints verbatim regardless of whether the run completes,
+    so a CallBudgetExceeded stop (SystemExit) is tolerated exactly as
+    test_full_corpus_flag_selects_the_full_loader above already tolerates
+    one for the same reason."""
+    monkeypatch.setattr(sys, "argv", ["align_lexicons.py", "--max-calls", "17"])
+    monkeypatch.setattr(align_lexicons.anthropic, "Anthropic", lambda: recording_client)
+
+    try:
+        align_lexicons.main()
+    except SystemExit:
+        pass
+
+    captured = capsys.readouterr()
+    assert "max_calls=17 " in captured.out, "the run header must print the explicit value verbatim"
+    assert "max_calls: 17" in captured.out, "the run summary must report the explicit value verbatim"
+
+
+def test_omitted_max_calls_in_fixture_mode_resolves_to_the_fixture_default(
+    recording_client, capsys, monkeypatch
+):
+    """A fixture-mode run with no --max-calls flag resolves to exactly
+    DEFAULT_MAX_CALLS -- identical to the behavior before this plan."""
+    monkeypatch.setattr(sys, "argv", ["align_lexicons.py"])
+    monkeypatch.setattr(align_lexicons.anthropic, "Anthropic", lambda: recording_client)
+
+    align_lexicons.main()
+
+    captured = capsys.readouterr()
+    assert f"max_calls={align_lexicons.DEFAULT_MAX_CALLS} " in captured.out
+    assert f"max_calls: {align_lexicons.DEFAULT_MAX_CALLS}" in captured.out
+
+
+def test_full_corpus_budget_exceeded_still_prints_partial_results_and_exits_non_zero(
+    recording_client, capsys, monkeypatch
+):
+    """CR-03 at full-corpus scale: a --max-calls cap tight enough to trigger
+    CallBudgetExceeded mid-run must still print a transcript block, the gap
+    report and the run summary -- exiting non-zero only after everything
+    computed so far has printed (mirrors test_main_prints_partial_run_on_
+    budget_exceeded in test_align_lexicons.py, at full-corpus scale)."""
+    monkeypatch.setattr(sys, "argv", ["align_lexicons.py", "--full-corpus", "--max-calls", "1"])
+    monkeypatch.setattr(align_lexicons.anthropic, "Anthropic", lambda: recording_client)
+
+    with pytest.raises(SystemExit) as exc_info:
+        align_lexicons.main()
+    assert exc_info.value.code == 1
+
+    captured = capsys.readouterr()
+    assert "candidate origin:" in captured.out, "partial run must still print at least one transcript block"
+    assert "=== Gap report ===" in captured.out
+    assert "=== Run summary ===" in captured.out
+    assert "STOPPED EARLY" in captured.err
+
+
+def test_budget_exceeded_full_corpus_run_writes_no_artifact_and_no_worklist(
+    recording_client, monkeypatch, tmp_path
+):
+    """REV-01/OUT-01: a budget-truncated full-corpus run must write neither
+    the correspondences artifact nor the review worklist, even when both
+    flags were given -- a partial artifact/worklist would misstate what the
+    run established."""
+    artifact_path = tmp_path / "correspondences.ttl"
+    worklist_path = tmp_path / "review-worklist.md"
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            "align_lexicons.py",
+            "--full-corpus",
+            "--max-calls",
+            "1",
+            "--emit-correspondences",
+            str(artifact_path),
+            "--emit-worklist",
+            str(worklist_path),
+        ],
+    )
+    monkeypatch.setattr(align_lexicons.anthropic, "Anthropic", lambda: recording_client)
+
+    with pytest.raises(SystemExit) as exc_info:
+        align_lexicons.main()
+    assert exc_info.value.code == 1
+
+    assert not artifact_path.exists()
+    assert not worklist_path.exists()
