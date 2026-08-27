@@ -423,7 +423,16 @@ def test_empty_worklist_still_emits_header_and_explicit_no_rows_line():
     assert model == FAKE_MODEL
 
 
-def test_correspondence_rows_are_sorted_by_lex_ids_and_predicate(fixture_entries):
+def test_correspondence_rows_are_order_independent_and_rank_key_sorted(fixture_entries):
+    """Plan 05-02 supersedes Plan 01's naive lex-id-only ordering
+    assumption: row order is now driven by the full rank key
+    (<ranking_contract>), which orders by tier before lex ids -- a
+    medium-tier row sorts ahead of a high-tier row regardless of lex id.
+    The order-independence property this test originally proved (two runs
+    over reordered input produce identical row order) still holds and is
+    still the thing worth proving; only the "expected order" derivation
+    changes to reflect the real ranking contract instead of a bare lex-id
+    sort."""
     _, _, by_lex_id = fixture_entries
     exact = _pair_result(
         by_lex_id["tapi-topology-node"], by_lex_id["ietf-network-node"], "confirm_exact_match"
@@ -445,11 +454,13 @@ def test_correspondence_rows_are_sorted_by_lex_ids_and_predicate(fixture_entries
     )
 
     assert [r.row_id for r in forward_rows] == [r.row_id for r in reordered_rows]
-    expected_order = sorted(
-        [r.row_id for r in forward_rows],
-        key=lambda rid: tuple(align_lexicons._decode_row_id(rid)[1:]),
-    )
-    assert [r.row_id for r in forward_rows] == expected_order
+    expected_order = sorted(forward_rows, key=align_lexicons.worklist_rank_key)
+    assert [r.row_id for r in forward_rows] == [r.row_id for r in expected_order]
+    # The medium-tier row ranks ahead of the high-tier row even though its
+    # tapi_lex_id sorts lexicographically after it -- proves tier, not lex
+    # id, is the dominant ranking component.
+    assert forward_rows[0].tier == "medium"
+    assert forward_rows[1].tier == "high"
 
 
 def test_worklist_contains_no_absolute_path_or_environment_value(fixture_entries, monkeypatch):
@@ -460,6 +471,615 @@ def test_worklist_contains_no_absolute_path_or_environment_value(fixture_entries
     assert "ANTHROPIC_API_KEY" not in text
     assert "/Users/" not in text
     assert "/home/" not in text
+
+
+# -- Plan 05-02 Task 1: ranking -- low tier first, escalations ahead -------
+
+
+def test_tier_rank_is_derived_from_confidence_tiers():
+    expected = {tier: i for i, tier in enumerate(reversed(align_lexicons.CONFIDENCE_TIERS))}
+    assert align_lexicons.TIER_RANK == expected
+    assert (
+        align_lexicons.TIER_RANK["low"]
+        < align_lexicons.TIER_RANK["medium"]
+        < align_lexicons.TIER_RANK["high"]
+    )
+
+
+def test_gap_reason_rank_is_derived_from_all_gap_reasons():
+    expected_order = [
+        r for r in align_lexicons.ALL_GAP_REASONS if r != "insufficient-evidence"
+    ] + ["insufficient-evidence"]
+    expected = {reason: i for i, reason in enumerate(expected_order)}
+    assert align_lexicons.GAP_REASON_RANK == expected
+    assert sorted(align_lexicons.GAP_REASON_RANK) == sorted(align_lexicons.ALL_GAP_REASONS)
+    assert (
+        max(align_lexicons.GAP_REASON_RANK, key=align_lexicons.GAP_REASON_RANK.get)
+        == "insufficient-evidence"
+    )
+
+
+def test_evidence_strength_counts_three_signals():
+    full = _confidence(
+        label_definition_agreement=True,
+        structural_corroboration=align_lexicons.STRUCTURAL_SIGNAL_FLOOR,
+        validator_ran=True,
+        validator_agrees=True,
+        escalated=False,
+        tier="high",
+    )
+    assert align_lexicons.evidence_strength(full) == 3
+
+    none_signals = align_lexicons.ConfidenceBreakdown(
+        label_definition_agreement=False,
+        structural_corroboration=None,
+        validator_ran=False,
+        validator_agrees=None,
+        validator_counter_argument=None,
+        escalated=False,
+        tier="low",
+    )
+    assert align_lexicons.evidence_strength(none_signals) == 0
+    assert align_lexicons.evidence_strength(None) == 0
+
+
+def test_rows_run_low_then_medium_then_high(fixture_entries):
+    _, _, by_lex_id = fixture_entries
+    high = _pair_result(
+        by_lex_id["tapi-topology-node"], by_lex_id["ietf-network-node"], "confirm_exact_match",
+        confidence=_confidence(tier="high"),
+    )
+    medium = _pair_result(
+        by_lex_id["tapi-topology-node-rule-group"],
+        by_lex_id["ietf-network-connectivity-matrix"],
+        "confirm_close_match",
+        confidence=_confidence(tier="medium"),
+    )
+    low = _pair_result(
+        by_lex_id["tapi-topology-link"], by_lex_id["ietf-network-link"], "confirm_close_match",
+        confidence=_confidence(tier="low", structural_corroboration=None),
+    )
+    results = [high, medium, low]
+    triples = align_lexicons.correspondences_from_results(results, FAKE_VERSION, FAKE_MODEL)
+
+    rows = align_lexicons.build_worklist_rows(triples, results, gap_records=[])
+
+    assert [r.tier for r in rows] == ["low", "medium", "high"]
+
+
+def test_escalated_correspondence_precedes_its_uncontested_peer(fixture_entries):
+    _, _, by_lex_id = fixture_entries
+    uncontested = _pair_result(
+        by_lex_id["tapi-topology-node"], by_lex_id["ietf-network-node"], "confirm_exact_match",
+        confidence=_confidence(tier="medium"),
+    )
+    escalated = _pair_result(
+        by_lex_id["tapi-topology-node-rule-group"],
+        by_lex_id["ietf-network-connectivity-matrix"],
+        "confirm_close_match",
+        confidence=_confidence(tier="medium", validator_agrees=False, escalated=True),
+    )
+    results = [uncontested, escalated]
+    triples = align_lexicons.correspondences_from_results(results, FAKE_VERSION, FAKE_MODEL)
+
+    rows = align_lexicons.build_worklist_rows(triples, results, gap_records=[])
+
+    assert [r.tapi_lex_id for r in rows] == [
+        escalated.candidate.tapi.lex_id,
+        uncontested.candidate.tapi.lex_id,
+    ]
+
+
+def test_rank_key_contains_no_float(fixture_entries):
+    _, _, by_lex_id = fixture_entries
+    result = _pair_result(
+        by_lex_id["tapi-topology-node"], by_lex_id["ietf-network-node"], "confirm_exact_match",
+        confidence=_confidence(tier="high", structural_corroboration=0.1429),
+    )
+    triples = align_lexicons.correspondences_from_results([result], FAKE_VERSION, FAKE_MODEL)
+    rows = align_lexicons.build_worklist_rows(triples, [result], gap_records=[])
+
+    key = align_lexicons.worklist_rank_key(rows[0])
+
+    def _flatten(value):
+        if isinstance(value, tuple):
+            for v in value:
+                yield from _flatten(v)
+        else:
+            yield value
+
+    assert all(not isinstance(c, float) for c in _flatten(key))
+
+
+def test_identical_rank_prefix_is_separated_by_lex_id_tie_break(fixture_entries):
+    _, _, by_lex_id = fixture_entries
+    a = _pair_result(
+        by_lex_id["tapi-topology-node"], by_lex_id["ietf-network-node"], "confirm_exact_match",
+        confidence=_confidence(tier="high"),
+    )
+    b = _pair_result(
+        by_lex_id["tapi-topology-node-rule-group"],
+        by_lex_id["ietf-network-connectivity-matrix"],
+        "confirm_close_match",
+        confidence=_confidence(tier="high"),
+    )
+    results = [a, b]
+    triples = align_lexicons.correspondences_from_results(results, FAKE_VERSION, FAKE_MODEL)
+
+    rows = align_lexicons.build_worklist_rows(triples, results, gap_records=[])
+
+    assert len(rows) == 2
+    assert rows[0].tapi_lex_id < rows[1].tapi_lex_id
+
+
+def test_two_renders_of_identical_rows_are_byte_identical(fixture_entries):
+    _, _, by_lex_id = fixture_entries
+    results = _two_confirmed_results(by_lex_id)
+    triples = align_lexicons.correspondences_from_results(results, FAKE_VERSION, FAKE_MODEL)
+    rows = align_lexicons.build_worklist_rows(triples, results, gap_records=[])
+
+    text1 = align_lexicons.render_review_worklist(rows, FAKE_VERSION, FAKE_MODEL)
+    text2 = align_lexicons.render_review_worklist(list(rows), FAKE_VERSION, FAKE_MODEL)
+
+    assert text1 == text2
+
+
+def test_empty_tier_and_reason_buckets_render_explicit_zeros(fixture_entries):
+    _, _, by_lex_id = fixture_entries
+    result = _pair_result(
+        by_lex_id["tapi-topology-node"], by_lex_id["ietf-network-node"], "confirm_exact_match",
+        confidence=_confidence(tier="high"),
+    )
+    triples = align_lexicons.correspondences_from_results([result], FAKE_VERSION, FAKE_MODEL)
+    rows = align_lexicons.build_worklist_rows(triples, [result], gap_records=[])
+
+    text = align_lexicons.render_review_worklist(rows, FAKE_VERSION, FAKE_MODEL)
+
+    assert "- low: 0" in text
+    assert "- medium: 0" in text
+    assert "- high: 1" in text
+    for reason in align_lexicons.ALL_GAP_REASONS:
+        assert f"- {reason}: 0" in text
+
+
+# -- Plan 05-02 Task 2: gap rows share the worklist; reviewed gaps persist --
+# -- as plain Turtle --------------------------------------------------------
+
+
+def _gap_record(entry, gap_reason="structural", evaluated_against=None, best_label_score=10.0,
+                 best_structural_score=None):
+    return align_lexicons.GapRecord(
+        entry=entry,
+        gap_reason=gap_reason,
+        best_label_score=best_label_score,
+        best_structural_score=best_structural_score,
+        evaluated_against=evaluated_against if evaluated_against is not None else ["ietf-network-node"],
+        deciding_signals=["definition-text"],
+    )
+
+
+def test_gap_rows_precede_every_correspondence_row(fixture_entries):
+    _, _, by_lex_id = fixture_entries
+    result = _pair_result(
+        by_lex_id["tapi-topology-node"], by_lex_id["ietf-network-node"], "confirm_exact_match",
+        confidence=_confidence(tier="low"),
+    )
+    triples = align_lexicons.correspondences_from_results([result], FAKE_VERSION, FAKE_MODEL)
+    gap = _gap_record(by_lex_id["tapi-topology-link"])
+
+    rows = align_lexicons.build_worklist_rows(triples, [result], gap_records=[gap])
+
+    assert rows[0].kind == "gap"
+    assert rows[1].kind == "correspondence"
+
+
+def test_insufficient_evidence_gaps_rank_last_among_gaps(fixture_entries):
+    _, _, by_lex_id = fixture_entries
+    structural_gap = _gap_record(by_lex_id["tapi-topology-link"], gap_reason="structural")
+    insufficient_gap = _gap_record(
+        by_lex_id["tapi-topology-node-rule-group"],
+        gap_reason="insufficient-evidence",
+        evaluated_against=[],
+    )
+
+    rows = align_lexicons.build_worklist_rows([], [], gap_records=[structural_gap, insufficient_gap])
+
+    assert [r.gap_reason for r in rows] == ["structural", "insufficient-evidence"]
+
+
+def test_row_count_equals_correspondences_plus_gaps(fixture_entries):
+    _, _, by_lex_id = fixture_entries
+    result = _pair_result(
+        by_lex_id["tapi-topology-node"], by_lex_id["ietf-network-node"], "confirm_exact_match",
+        confidence=_confidence(tier="medium"),
+    )
+    triples = align_lexicons.correspondences_from_results([result], FAKE_VERSION, FAKE_MODEL)
+    gap = _gap_record(by_lex_id["tapi-topology-link"])
+
+    rows = align_lexicons.build_worklist_rows(triples, [result], gap_records=[gap])
+    text = align_lexicons.render_review_worklist(rows, FAKE_VERSION, FAKE_MODEL)
+
+    assert len(rows) == len(triples) + 1
+    data_lines = [
+        line for line in text.splitlines()
+        if line.strip().startswith("| C:") or line.strip().startswith("| G:")
+    ]
+    assert len(data_lines) == len(rows)
+
+
+def test_gap_row_shape(fixture_entries):
+    _, _, by_lex_id = fixture_entries
+    entry = by_lex_id["tapi-topology-link"]
+    gap = _gap_record(entry, gap_reason="ontological-content")
+
+    rows = align_lexicons.build_worklist_rows([], [], gap_records=[gap])
+
+    row = rows[0]
+    assert row.kind == "gap"
+    assert row.gap_reason == "ontological-content"
+    assert row.tier == ""
+    assert row.escalated is None
+    assert row.ietf_lex_id is None
+    assert row.ietf_label is None
+    assert row.predicate is None
+    assert row.row_id == align_lexicons.worklist_row_id("gap", entry.lex_id)
+
+
+def test_main_emit_worklist_row_count_equals_correspondences_plus_gaps(
+    scripted_client, monkeypatch, tmp_path, fixture_entries
+):
+    from tests.test_correspondences import _otn_worked_example_ids, _otn_worked_example_verdicts
+
+    ids = _otn_worked_example_ids()
+    client = scripted_client(_otn_worked_example_verdicts(ids))
+    output_path = tmp_path / "review-worklist.md"
+    monkeypatch.setattr(sys, "argv", ["align_lexicons.py", "--emit-worklist", str(output_path)])
+    monkeypatch.setattr(align_lexicons.anthropic, "Anthropic", lambda: client)
+
+    align_lexicons.main()
+
+    text = output_path.read_text()
+    correspondence_rows = [l for l in text.splitlines() if l.strip().startswith("| C:")]
+    gap_rows = [l for l in text.splitlines() if l.strip().startswith("| G:")]
+    # FIXTURE_TAPI has 6 entries; the OTN-worked-example client script
+    # confirms 4 of them, leaving exactly 2 as gaps.
+    assert len(correspondence_rows) == 4
+    assert len(gap_rows) == 2
+
+
+def test_reviewed_gap_is_written_as_plain_turtle_in_the_base_section(fixture_entries):
+    _, _, by_lex_id = fixture_entries
+    result = _pair_result(
+        by_lex_id["tapi-topology-node"], by_lex_id["ietf-network-node"], "confirm_exact_match",
+        confidence=_confidence(tier="high"),
+    )
+    triples = align_lexicons.correspondences_from_results([result], FAKE_VERSION, FAKE_MODEL)
+    existing_text = align_lexicons.render_correspondences_ttl(triples, FAKE_VERSION, FAKE_MODEL)
+    gap_entry = by_lex_id["tapi-topology-link"]
+    gap = _gap_record(gap_entry, gap_reason="ontological-content")
+
+    rows = align_lexicons.build_worklist_rows(triples, [result], gap_records=[gap])
+    gap_row = next(r for r in rows if r.kind == "gap")
+    worklist_text = align_lexicons.render_review_worklist(rows, FAKE_VERSION, FAKE_MODEL)
+    marked = _mark_row_verdict(
+        worklist_text, gap_row.row_id, verdict="accept", reason="Genuinely no counterpart."
+    )
+
+    records, _, _ = align_lexicons.parse_review_worklist(marked)
+    reviewed_text = align_lexicons.apply_review_to_correspondences(existing_text, records)
+
+    assert reviewed_text.index("lex:ReviewedGap") < reviewed_text.index(
+        align_lexicons.CORRESPONDENCE_ANNOTATION_SEPARATOR
+    )
+    base_section = reviewed_text.split(align_lexicons.CORRESPONDENCE_ANNOTATION_SEPARATOR)[0]
+    assert 'lex:gapReason "ontological-content"' in base_section
+    assert 'lex:reviewVerdict "accepted"' in base_section
+
+
+def test_reviewed_gap_is_never_a_skos_match_triple(fixture_entries):
+    _, _, by_lex_id = fixture_entries
+    result = _pair_result(
+        by_lex_id["tapi-topology-node"], by_lex_id["ietf-network-node"], "confirm_exact_match",
+        confidence=_confidence(tier="high"),
+    )
+    triples = align_lexicons.correspondences_from_results([result], FAKE_VERSION, FAKE_MODEL)
+    existing_text = align_lexicons.render_correspondences_ttl(triples, FAKE_VERSION, FAKE_MODEL)
+    gap_entry = by_lex_id["tapi-topology-link"]
+    gap = _gap_record(gap_entry)
+    rows = align_lexicons.build_worklist_rows(triples, [result], gap_records=[gap])
+    gap_row = next(r for r in rows if r.kind == "gap")
+    worklist_text = align_lexicons.render_review_worklist(rows, FAKE_VERSION, FAKE_MODEL)
+    marked = _mark_row_verdict(worklist_text, gap_row.row_id, verdict="reject", reason="probably missed")
+
+    records, _, _ = align_lexicons.parse_review_worklist(marked)
+    reviewed_text = align_lexicons.apply_review_to_correspondences(existing_text, records)
+
+    gap_subject = f"{align_lexicons.REVIEWED_GAP_SUBJECT_PREFIX}{gap_entry.lex_id}"
+    for line in reviewed_text.splitlines():
+        if gap_subject in line:
+            assert "skos:exactMatch" not in line
+            assert "skos:closeMatch" not in line
+
+
+def test_base_section_parses_after_reviewed_gap_splice(fixture_entries):
+    _, _, by_lex_id = fixture_entries
+    result = _pair_result(
+        by_lex_id["tapi-topology-node"], by_lex_id["ietf-network-node"], "confirm_exact_match",
+        confidence=_confidence(tier="high"),
+    )
+    triples = align_lexicons.correspondences_from_results([result], FAKE_VERSION, FAKE_MODEL)
+    existing_text = align_lexicons.render_correspondences_ttl(triples, FAKE_VERSION, FAKE_MODEL)
+    gap_entry = by_lex_id["tapi-topology-link"]
+    gap = _gap_record(gap_entry)
+    rows = align_lexicons.build_worklist_rows(triples, [result], gap_records=[gap])
+    gap_row = next(r for r in rows if r.kind == "gap")
+    worklist_text = align_lexicons.render_review_worklist(rows, FAKE_VERSION, FAKE_MODEL)
+    marked = _mark_row_verdict(worklist_text, gap_row.row_id, verdict="uncertain", reason="need a second look")
+
+    records, _, _ = align_lexicons.parse_review_worklist(marked)
+    reviewed_text = align_lexicons.apply_review_to_correspondences(existing_text, records)
+
+    base_section = reviewed_text.split(align_lexicons.CORRESPONDENCE_ANNOTATION_SEPARATOR)[0]
+    graph = Graph()
+    graph.parse(data=base_section, format="turtle")
+    assert any(str(p).endswith("gapReason") for _, p, _ in graph)
+
+
+def test_applying_a_worklist_to_an_already_reviewed_gap_file_is_refused(
+    fixture_entries, tmp_path, lexicon_dir
+):
+    _, _, by_lex_id = fixture_entries
+    result = _pair_result(
+        by_lex_id["tapi-topology-node"], by_lex_id["ietf-network-node"], "confirm_exact_match",
+        confidence=_confidence(tier="high"),
+    )
+    triples = align_lexicons.correspondences_from_results([result], FAKE_VERSION, FAKE_MODEL)
+    corr_path = tmp_path / "correspondences.ttl"
+    corr_path.write_text(align_lexicons.render_correspondences_ttl(triples, FAKE_VERSION, FAKE_MODEL))
+    gap_entry = by_lex_id["tapi-topology-link"]
+    gap = _gap_record(gap_entry)
+    rows = align_lexicons.build_worklist_rows(triples, [result], gap_records=[gap])
+    gap_row = next(r for r in rows if r.kind == "gap")
+    worklist_text = align_lexicons.render_review_worklist(rows, FAKE_VERSION, FAKE_MODEL)
+    marked = _mark_row_verdict(worklist_text, gap_row.row_id, verdict="accept", reason="genuine gap")
+
+    records, version, model = align_lexicons.parse_review_worklist(marked)
+    align_lexicons.write_reviewed_correspondences(
+        corr_path, records, lexicon_dir, worklist_lexicon_version=version, worklist_model=model
+    )
+
+    with pytest.raises(align_lexicons.AlreadyReviewedError):
+        align_lexicons.write_reviewed_correspondences(
+            corr_path, records, lexicon_dir, worklist_lexicon_version=version, worklist_model=model
+        )
+
+
+# -- Plan 05-02 Task 3: independent re-derivation columns, and the SC4 gate -
+
+
+def _high_tier_result(by_lex_id):
+    return _pair_result(
+        by_lex_id["tapi-topology-node"], by_lex_id["ietf-network-node"], "confirm_exact_match",
+        confidence=_confidence(tier="high"),
+        evidence_quote="A node represents a set of managed resources.",
+    )
+
+
+def _mark_rederivation(worklist_text, row_id, *, verdict, reason="", re_derived="", citation=""):
+    escaped_citation = align_lexicons.escape_worklist_cell(citation)
+    escaped_reason = align_lexicons.escape_worklist_cell(reason)
+    lines = worklist_text.splitlines()
+    out = []
+    for line in lines:
+        stripped = line.strip()
+        if not stripped.startswith("|"):
+            out.append(line)
+            continue
+        cells = [c.strip() for c in stripped.strip("|").split("|")]
+        if len(cells) != len(align_lexicons.WORKLIST_COLUMNS) or cells[0] != row_id:
+            out.append(line)
+            continue
+        cells[align_lexicons.WORKLIST_COLUMNS.index("verdict")] = verdict
+        cells[align_lexicons.WORKLIST_COLUMNS.index("reason")] = escaped_reason
+        cells[align_lexicons.WORKLIST_COLUMNS.index("re_derived")] = re_derived
+        cells[align_lexicons.WORKLIST_COLUMNS.index("rederivation_citation")] = escaped_citation
+        out.append("| " + " | ".join(cells) + " |")
+    return "\n".join(out) + ("\n" if worklist_text.endswith("\n") else "")
+
+
+def test_high_tier_row_carries_rederivation_columns(fixture_entries):
+    _, _, by_lex_id = fixture_entries
+    result = _high_tier_result(by_lex_id)
+    triples = align_lexicons.correspondences_from_results([result], FAKE_VERSION, FAKE_MODEL)
+
+    rows = align_lexicons.build_worklist_rows(triples, [result], gap_records=[])
+
+    row = rows[0]
+    assert row.re_derived == "N"
+    assert row.rederivation_citation == ""
+    text = align_lexicons.render_review_worklist(rows, FAKE_VERSION, FAKE_MODEL)
+    data_line = next(l for l in text.splitlines() if l.strip().startswith(f"| {row.row_id}"))
+    cells = [c.strip() for c in data_line.strip().strip("|").split("|")]
+    assert cells[align_lexicons.WORKLIST_COLUMNS.index("re_derived")] == "N"
+    assert cells[align_lexicons.WORKLIST_COLUMNS.index("rederivation_citation")] == ""
+
+
+def test_non_high_tier_row_has_no_rederivation_columns(fixture_entries):
+    _, _, by_lex_id = fixture_entries
+    result = _pair_result(
+        by_lex_id["tapi-topology-node"], by_lex_id["ietf-network-node"], "confirm_exact_match",
+        confidence=_confidence(tier="medium"),
+    )
+    triples = align_lexicons.correspondences_from_results([result], FAKE_VERSION, FAKE_MODEL)
+
+    rows = align_lexicons.build_worklist_rows(triples, [result], gap_records=[])
+
+    row = rows[0]
+    assert row.re_derived is None
+    assert row.rederivation_citation is None
+    text = align_lexicons.render_review_worklist(rows, FAKE_VERSION, FAKE_MODEL)
+    data_line = next(l for l in text.splitlines() if l.strip().startswith(f"| {row.row_id}"))
+    cells = [c.strip() for c in data_line.strip().strip("|").split("|")]
+    assert cells[align_lexicons.WORKLIST_COLUMNS.index("re_derived")] == align_lexicons.WORKLIST_EMPTY_CELL
+    assert (
+        cells[align_lexicons.WORKLIST_COLUMNS.index("rederivation_citation")]
+        == align_lexicons.WORKLIST_EMPTY_CELL
+    )
+
+
+def test_high_tier_accept_without_rederivation_is_refused(fixture_entries):
+    _, _, by_lex_id = fixture_entries
+    result = _high_tier_result(by_lex_id)
+    triples = align_lexicons.correspondences_from_results([result], FAKE_VERSION, FAKE_MODEL)
+    rows = align_lexicons.build_worklist_rows(triples, [result], gap_records=[])
+    text = align_lexicons.render_review_worklist(rows, FAKE_VERSION, FAKE_MODEL)
+    row = rows[0]
+
+    marked = _mark_rederivation(text, row.row_id, verdict="accept", reason="ok", re_derived="N", citation="")
+    with pytest.raises(align_lexicons.MalformedWorklistError, match=row.row_id):
+        align_lexicons.parse_review_worklist(marked)
+
+    marked2 = _mark_rederivation(
+        text, row.row_id, verdict="accept", reason="ok", re_derived="Y", citation=""
+    )
+    with pytest.raises(align_lexicons.MalformedWorklistError, match=row.row_id):
+        align_lexicons.parse_review_worklist(marked2)
+
+
+def test_high_tier_accept_with_citation_parses_cleanly(fixture_entries):
+    _, _, by_lex_id = fixture_entries
+    result = _high_tier_result(by_lex_id)
+    triples = align_lexicons.correspondences_from_results([result], FAKE_VERSION, FAKE_MODEL)
+    rows = align_lexicons.build_worklist_rows(triples, [result], gap_records=[])
+    text = align_lexicons.render_review_worklist(rows, FAKE_VERSION, FAKE_MODEL)
+    row = rows[0]
+
+    marked = _mark_rederivation(
+        text, row.row_id, verdict="accept", reason="ok", re_derived="Y",
+        citation="ietf-network.yang line 42: 'node' container definition.",
+    )
+
+    records, _, _ = align_lexicons.parse_review_worklist(marked)
+
+    assert len(records) == 1
+    assert records[0].re_derived is True
+    assert records[0].rederivation_citation == "ietf-network.yang line 42: 'node' container definition."
+
+
+def test_medium_tier_accept_with_empty_rederivation_cells_parses_cleanly(fixture_entries):
+    _, _, by_lex_id = fixture_entries
+    result = _pair_result(
+        by_lex_id["tapi-topology-node"], by_lex_id["ietf-network-node"], "confirm_exact_match",
+        confidence=_confidence(tier="medium"),
+    )
+    triples = align_lexicons.correspondences_from_results([result], FAKE_VERSION, FAKE_MODEL)
+    rows = align_lexicons.build_worklist_rows(triples, [result], gap_records=[])
+    text = align_lexicons.render_review_worklist(rows, FAKE_VERSION, FAKE_MODEL)
+    row = rows[0]
+
+    marked = _mark_row_verdict(text, row.row_id, verdict="accept", reason="ok")
+
+    records, _, _ = align_lexicons.parse_review_worklist(marked)
+
+    assert len(records) == 1
+    assert records[0].re_derived is None
+    assert records[0].rederivation_citation is None
+
+
+def test_high_tier_reject_with_no_citation_parses_cleanly(fixture_entries):
+    _, _, by_lex_id = fixture_entries
+    result = _high_tier_result(by_lex_id)
+    triples = align_lexicons.correspondences_from_results([result], FAKE_VERSION, FAKE_MODEL)
+    rows = align_lexicons.build_worklist_rows(triples, [result], gap_records=[])
+    text = align_lexicons.render_review_worklist(rows, FAKE_VERSION, FAKE_MODEL)
+    row = rows[0]
+
+    marked = _mark_row_verdict(text, row.row_id, verdict="reject", reason="not convinced")
+
+    records, _, _ = align_lexicons.parse_review_worklist(marked)
+
+    assert len(records) == 1
+    assert records[0].verdict == "reject"
+
+
+def test_high_tier_accept_with_citation_equal_to_evidence_quote_is_refused(
+    fixture_entries, tmp_path, lexicon_dir
+):
+    _, _, by_lex_id = fixture_entries
+    result = _high_tier_result(by_lex_id)
+    triples = align_lexicons.correspondences_from_results([result], FAKE_VERSION, FAKE_MODEL)
+    corr_path = tmp_path / "correspondences.ttl"
+    existing_text = align_lexicons.render_correspondences_ttl(triples, FAKE_VERSION, FAKE_MODEL)
+    corr_path.write_text(existing_text)
+    original_bytes = corr_path.read_bytes()
+
+    rows = align_lexicons.build_worklist_rows(triples, [result], gap_records=[])
+    text = align_lexicons.render_review_worklist(rows, FAKE_VERSION, FAKE_MODEL)
+    row = rows[0]
+
+    marked = _mark_rederivation(
+        text, row.row_id, verdict="accept", reason="ok", re_derived="Y",
+        citation=result.evidence_quote,
+    )
+
+    records, version, model = align_lexicons.parse_review_worklist(marked)
+    with pytest.raises(align_lexicons.MalformedWorklistError, match=row.row_id):
+        align_lexicons.write_reviewed_correspondences(
+            corr_path, records, lexicon_dir, worklist_lexicon_version=version, worklist_model=model
+        )
+    assert corr_path.read_bytes() == original_bytes
+
+
+def test_high_tier_acceptance_splices_rederivation_predicates(fixture_entries, tmp_path, lexicon_dir):
+    _, _, by_lex_id = fixture_entries
+    result = _high_tier_result(by_lex_id)
+    triples = align_lexicons.correspondences_from_results([result], FAKE_VERSION, FAKE_MODEL)
+    corr_path = tmp_path / "correspondences.ttl"
+    corr_path.write_text(align_lexicons.render_correspondences_ttl(triples, FAKE_VERSION, FAKE_MODEL))
+
+    rows = align_lexicons.build_worklist_rows(triples, [result], gap_records=[])
+    text = align_lexicons.render_review_worklist(rows, FAKE_VERSION, FAKE_MODEL)
+    row = rows[0]
+    marked = _mark_rederivation(
+        text, row.row_id, verdict="accept", reason="ok", re_derived="Y",
+        citation="ietf-network.yang: node container, independently checked against source.",
+    )
+    records, version, model = align_lexicons.parse_review_worklist(marked)
+
+    align_lexicons.write_reviewed_correspondences(
+        corr_path, records, lexicon_dir, worklist_lexicon_version=version, worklist_model=model
+    )
+
+    reviewed_text = corr_path.read_text()
+    assert 'lex:reviewRederived "true"^^<http://www.w3.org/2001/XMLSchema#boolean>' in reviewed_text
+    assert (
+        'lex:rederivedFrom "ietf-network.yang: node container, independently checked against source."'
+        in reviewed_text
+    )
+
+
+def test_no_citation_omits_rederived_from_predicate(fixture_entries, tmp_path, lexicon_dir):
+    _, _, by_lex_id = fixture_entries
+    result = _pair_result(
+        by_lex_id["tapi-topology-node"], by_lex_id["ietf-network-node"], "confirm_exact_match",
+        confidence=_confidence(tier="medium"),
+    )
+    triples = align_lexicons.correspondences_from_results([result], FAKE_VERSION, FAKE_MODEL)
+    corr_path = tmp_path / "correspondences.ttl"
+    corr_path.write_text(align_lexicons.render_correspondences_ttl(triples, FAKE_VERSION, FAKE_MODEL))
+
+    rows = align_lexicons.build_worklist_rows(triples, [result], gap_records=[])
+    text = align_lexicons.render_review_worklist(rows, FAKE_VERSION, FAKE_MODEL)
+    row = rows[0]
+    marked = _mark_row_verdict(text, row.row_id, verdict="accept", reason="ok")
+    records, version, model = align_lexicons.parse_review_worklist(marked)
+
+    align_lexicons.write_reviewed_correspondences(
+        corr_path, records, lexicon_dir, worklist_lexicon_version=version, worklist_model=model
+    )
+
+    reviewed_text = corr_path.read_text()
+    assert "lex:rederivedFrom" not in reviewed_text
 
 
 # -- Helpers shared across tasks --------------------------------------------
