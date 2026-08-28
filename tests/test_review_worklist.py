@@ -887,6 +887,26 @@ def _mark_rederivation(worklist_text, row_id, *, verdict, reason="", re_derived=
     return "\n".join(out) + ("\n" if worklist_text.endswith("\n") else "")
 
 
+def _tamper_tier_cell(worklist_text, row_id, tier):
+    """Mirrors _mark_rederivation()'s structure exactly but touches ONLY the
+    `tier` display cell -- used to prove a hand-edit to that one cell is the
+    entire tamper under test (05-06 gap closure, CR-02 reproduction)."""
+    lines = worklist_text.splitlines()
+    out = []
+    for line in lines:
+        stripped = line.strip()
+        if not stripped.startswith("|"):
+            out.append(line)
+            continue
+        cells = [c.strip() for c in stripped.strip("|").split("|")]
+        if len(cells) != len(align_lexicons.WORKLIST_COLUMNS) or cells[0] != row_id:
+            out.append(line)
+            continue
+        cells[align_lexicons.WORKLIST_COLUMNS.index("tier")] = tier
+        out.append("| " + " | ".join(cells) + " |")
+    return "\n".join(out) + ("\n" if worklist_text.endswith("\n") else "")
+
+
 def test_high_tier_row_carries_rederivation_columns(fixture_entries):
     _, _, by_lex_id = fixture_entries
     result = _high_tier_result(by_lex_id)
@@ -1080,6 +1100,207 @@ def test_no_citation_omits_rederived_from_predicate(fixture_entries, tmp_path, l
 
     reviewed_text = corr_path.read_text()
     assert "lex:rederivedFrom" not in reviewed_text
+
+
+# -- Plan 05-06 gap closure Task 1: SC4 tier authority moves from the -------
+# -- worklist's display cell to the target artifact's own recorded ---------
+# -- lex:confidenceTier (CR-02 reproduction, 05-VERIFICATION.md) -----------
+
+
+def test_read_block_confidence_tier_reads_a_high_tier_block(fixture_entries):
+    _, _, by_lex_id = fixture_entries
+    result = _high_tier_result(by_lex_id)
+    triples = align_lexicons.correspondences_from_results([result], FAKE_VERSION, FAKE_MODEL)
+    text = align_lexicons.render_correspondences_ttl(triples, FAKE_VERSION, FAKE_MODEL)
+    lines = text.splitlines()
+    triple = triples[0]
+
+    header_idx, terminator_idx = align_lexicons._locate_annotation_block(
+        lines, triple.tapi_lex_id, triple.predicate, triple.ietf_lex_id
+    )
+
+    assert align_lexicons._read_block_confidence_tier(lines, header_idx, terminator_idx) == "high"
+
+
+def test_read_block_confidence_tier_reads_a_medium_tier_block(fixture_entries):
+    _, _, by_lex_id = fixture_entries
+    result = _pair_result(
+        by_lex_id["tapi-topology-node"], by_lex_id["ietf-network-node"], "confirm_exact_match",
+        confidence=_confidence(tier="medium"),
+    )
+    triples = align_lexicons.correspondences_from_results([result], FAKE_VERSION, FAKE_MODEL)
+    text = align_lexicons.render_correspondences_ttl(triples, FAKE_VERSION, FAKE_MODEL)
+    lines = text.splitlines()
+    triple = triples[0]
+
+    header_idx, terminator_idx = align_lexicons._locate_annotation_block(
+        lines, triple.tapi_lex_id, triple.predicate, triple.ietf_lex_id
+    )
+
+    assert align_lexicons._read_block_confidence_tier(lines, header_idx, terminator_idx) == "medium"
+
+
+def test_read_block_confidence_tier_returns_none_when_the_predicate_is_absent(fixture_entries):
+    _, _, by_lex_id = fixture_entries
+    result = _high_tier_result(by_lex_id)
+    triples = align_lexicons.correspondences_from_results([result], FAKE_VERSION, FAKE_MODEL)
+    text = align_lexicons.render_correspondences_ttl(triples, FAKE_VERSION, FAKE_MODEL)
+    # Simulate a hand-edited/corrupted artifact whose block never recorded a
+    # tier at all -- _annotation_fields() always emits this predicate for a
+    # generator-produced artifact, so its absence proves a hand edit.
+    stripped_text = "\n".join(
+        line for line in text.splitlines() if "lex:confidenceTier" not in line
+    )
+    lines = stripped_text.splitlines()
+    triple = triples[0]
+
+    header_idx, terminator_idx = align_lexicons._locate_annotation_block(
+        lines, triple.tapi_lex_id, triple.predicate, triple.ietf_lex_id
+    )
+
+    assert align_lexicons._read_block_confidence_tier(lines, header_idx, terminator_idx) is None
+
+
+def test_read_block_confidence_tier_survives_a_preceding_multiline_evidence_quote():
+    """CR-01 case: _read_block_confidence_tier() must walk the block via
+    _iter_block_statements() (the N3-string-aware scanner), not a naive
+    per-line scan, so a multi-line lex:evidenceQuote earlier in the block
+    cannot truncate the walk before lex:confidenceTier is reached."""
+    lines = [
+        "<<lex:tapi-topology-node skos:exactMatch lex:ietf-network-node>>",
+        '    lex:evidenceQuote """First sentence ends here.',
+        'Second line continues the quote and matters too.""" ;',
+        '    lex:confidenceTier "high" ;',
+        '    lex:lexiconVersion "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb" .',
+        "",
+    ]
+
+    header_idx, terminator_idx = align_lexicons._locate_annotation_block(
+        lines, "tapi-topology-node", "skos:exactMatch", "ietf-network-node"
+    )
+
+    assert align_lexicons._read_block_confidence_tier(lines, header_idx, terminator_idx) == "high"
+
+
+def test_review_record_without_worklist_tier_defaults_to_none():
+    record = align_lexicons.ReviewRecord(
+        row_id="x",
+        kind="correspondence",
+        tapi_lex_id="t",
+        ietf_lex_id="i",
+        predicate="skos:exactMatch",
+        verdict="accept",
+    )
+
+    assert record.worklist_tier is None
+
+
+def test_parse_review_worklist_sets_worklist_tier_on_correspondence_and_gap_rows(fixture_entries):
+    _, _, by_lex_id = fixture_entries
+    result = _pair_result(
+        by_lex_id["tapi-topology-node"], by_lex_id["ietf-network-node"], "confirm_exact_match",
+        confidence=_confidence(tier="medium"),
+    )
+    triples = align_lexicons.correspondences_from_results([result], FAKE_VERSION, FAKE_MODEL)
+    gap = _gap_record(by_lex_id["tapi-topology-link"])
+    rows = align_lexicons.build_worklist_rows(triples, [result], gap_records=[gap])
+    text = align_lexicons.render_review_worklist(rows, FAKE_VERSION, FAKE_MODEL)
+
+    corr_row = next(r for r in rows if r.kind == "correspondence")
+    gap_row = next(r for r in rows if r.kind == "gap")
+    marked = _mark_row_verdict(text, corr_row.row_id, verdict="accept", reason="ok")
+    marked = _mark_row_verdict(marked, gap_row.row_id, verdict="accept", reason="genuine gap")
+
+    records, _, _ = align_lexicons.parse_review_worklist(marked)
+
+    corr_record = next(r for r in records if r.kind == "correspondence")
+    gap_record = next(r for r in records if r.kind == "gap")
+    assert corr_record.worklist_tier == "medium"
+    assert gap_record.worklist_tier == align_lexicons.WORKLIST_EMPTY_CELL
+
+
+def test_tampered_tier_cell_cannot_disable_the_high_tier_gate(fixture_entries, tmp_path, lexicon_dir):
+    """05-VERIFICATION.md missing item 2 / CR-02's exact reproduction: a
+    genuinely high-tier correspondence, accepted after only the worklist's
+    tier cell was edited to a non-high value. parse_review_worklist()
+    (Check A) is correctly bypassed by the tamper -- that IS the defect
+    being contained here, not fixed at parse time. The binding refusal must
+    come from write_reviewed_correspondences() (Check B), which reads the
+    target artifact's own lex:confidenceTier instead."""
+    _, _, by_lex_id = fixture_entries
+    result = _high_tier_result(by_lex_id)
+    triples = align_lexicons.correspondences_from_results([result], FAKE_VERSION, FAKE_MODEL)
+    corr_path = tmp_path / "correspondences.ttl"
+    corr_path.write_text(align_lexicons.render_correspondences_ttl(triples, FAKE_VERSION, FAKE_MODEL))
+
+    rows = align_lexicons.build_worklist_rows(triples, [result], gap_records=[])
+    assert rows[0].tier == "high"  # proves the row is genuinely high-tier
+    text = align_lexicons.render_review_worklist(rows, FAKE_VERSION, FAKE_MODEL)
+    row = rows[0]
+
+    marked = _mark_rederivation(
+        text, row.row_id, verdict="accept", reason="looks fine", re_derived="N", citation=""
+    )
+    tampered = _tamper_tier_cell(marked, row.row_id, tier="medium")
+
+    records, version, model = align_lexicons.parse_review_worklist(tampered)
+    assert len(records) == 1  # Check A defeated by the tamper -- documents the defect, not the fix
+
+    with pytest.raises(align_lexicons.MalformedWorklistError, match=row.row_id):
+        align_lexicons.write_reviewed_correspondences(
+            corr_path, records, lexicon_dir, worklist_lexicon_version=version, worklist_model=model
+        )
+
+
+def test_tampered_tier_worklist_writes_nothing(fixture_entries, tmp_path, lexicon_dir):
+    _, _, by_lex_id = fixture_entries
+    result = _high_tier_result(by_lex_id)
+    triples = align_lexicons.correspondences_from_results([result], FAKE_VERSION, FAKE_MODEL)
+    corr_path = tmp_path / "correspondences.ttl"
+    corr_path.write_text(align_lexicons.render_correspondences_ttl(triples, FAKE_VERSION, FAKE_MODEL))
+    original_bytes = corr_path.read_bytes()
+
+    rows = align_lexicons.build_worklist_rows(triples, [result], gap_records=[])
+    text = align_lexicons.render_review_worklist(rows, FAKE_VERSION, FAKE_MODEL)
+    row = rows[0]
+    marked = _mark_rederivation(
+        text, row.row_id, verdict="accept", reason="looks fine", re_derived="N", citation=""
+    )
+    tampered = _tamper_tier_cell(marked, row.row_id, tier="medium")
+    records, version, model = align_lexicons.parse_review_worklist(tampered)
+
+    with pytest.raises(align_lexicons.MalformedWorklistError):
+        align_lexicons.write_reviewed_correspondences(
+            corr_path, records, lexicon_dir, worklist_lexicon_version=version, worklist_model=model
+        )
+
+    assert corr_path.read_bytes() == original_bytes
+
+
+def test_medium_tier_block_still_accepts_with_empty_rederivation_cells(fixture_entries, tmp_path, lexicon_dir):
+    """Non-regression control: the new artifact-sourced gate adds no
+    refusal on the non-high path when the worklist cell is untouched."""
+    _, _, by_lex_id = fixture_entries
+    result = _pair_result(
+        by_lex_id["tapi-topology-node"], by_lex_id["ietf-network-node"], "confirm_exact_match",
+        confidence=_confidence(tier="medium"),
+    )
+    triples = align_lexicons.correspondences_from_results([result], FAKE_VERSION, FAKE_MODEL)
+    corr_path = tmp_path / "correspondences.ttl"
+    corr_path.write_text(align_lexicons.render_correspondences_ttl(triples, FAKE_VERSION, FAKE_MODEL))
+
+    rows = align_lexicons.build_worklist_rows(triples, [result], gap_records=[])
+    text = align_lexicons.render_review_worklist(rows, FAKE_VERSION, FAKE_MODEL)
+    row = rows[0]
+    marked = _mark_row_verdict(text, row.row_id, verdict="accept", reason="ok")  # tier cell untouched
+    records, version, model = align_lexicons.parse_review_worklist(marked)
+
+    align_lexicons.write_reviewed_correspondences(
+        corr_path, records, lexicon_dir, worklist_lexicon_version=version, worklist_model=model
+    )
+
+    reviewed_text = corr_path.read_text()
+    assert 'lex:reviewVerdict "accepted"' in reviewed_text
 
 
 # -- Helpers shared across tasks --------------------------------------------
