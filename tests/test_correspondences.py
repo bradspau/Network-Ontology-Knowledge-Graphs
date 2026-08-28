@@ -1137,11 +1137,17 @@ def test_blank_line_inside_evidence_quote_is_not_mistaken_for_block_boundary(
     them."""
     _, _, by_lex_id = fixture_entries
     paragraph_quote = "Paragraph one.\n\nParagraph two after a blank line."
+    # Plan 05-06 (CR-02 gap closure): tier is pinned to "medium" so this
+    # test's own concern -- block-boundary detection around a literal blank
+    # line inside evidence_quote -- is not entangled with the (correct, new)
+    # SC4 authoritative gate, which would otherwise refuse this genuinely
+    # high-tier accept for lacking a re-derivation the test never sets.
     pair = _pair_result(
         by_lex_id["tapi-topology-node"],
         by_lex_id["ietf-network-node"],
         "confirm_exact_match",
         evidence_quote=paragraph_quote,
+        confidence=_confidence(tier="medium"),
     )
     triples = align_lexicons.correspondences_from_results([pair], FAKE_VERSION, FAKE_MODEL)
     corr_path = tmp_path / "correspondences.ttl"

@@ -938,6 +938,15 @@ class ReviewRecord:
     # from the worklist's own gap_reason display column for gap-kind rows
     # only, and validated here exactly as GapRecord.gap_reason itself is.
     gap_reason: Optional[str] = None
+    # Plan 05-06 (CR-02 gap closure): the worklist's own `tier` cell,
+    # carried verbatim from parser to writer for a write-time cross-check
+    # against the target artifact's own recorded lex:confidenceTier. Never
+    # used for row identity (P-04 stays about row_id) and never validated
+    # here -- a tampered value must be COLLECTIBLE as a defect at write
+    # time, not rejected at construction, or the collect-then-raise
+    # contract (D-07) would be broken by surfacing it as an uncollected
+    # parse failure instead.
+    worklist_tier: Optional[str] = None
 
     def __post_init__(self) -> None:
         if not self.row_id:
@@ -2794,7 +2803,17 @@ def parse_review_worklist(text: str) -> Tuple[List["ReviewRecord"], str, str]:
     GapRecord.gap_reason is). And the <rederivation_contract> SC4 gate:
     accepting a high-tier correspondence row without both an explicit
     re_derived='Y' marker and a non-empty rederivation_citation is refused,
-    alongside every other defect, never silently allowed through."""
+    alongside every other defect, never silently allowed through.
+
+    Plan 05-06 (CR-02 gap closure): the SC4 branch below is a parse-time
+    fast fail ONLY -- a convenience check whose authority is the worklist's
+    own display cell, easily bypassed by editing that one cell. It is not
+    the guarantee. The binding SC4 gate lives downstream, in
+    write_reviewed_correspondences(), where the target artifact's own
+    recorded lex:confidenceTier is readable. Every record this function
+    returns also carries the worklist's tier cell verbatim on
+    ReviewRecord.worklist_tier, so the writer can cross-check it against
+    the artifact and catch a tamper this parse-time check alone cannot."""
     version_match = _WORKLIST_VERSION_RE.search(text)
     model_match = _WORKLIST_MODEL_RE.search(text)
     lexicon_version = version_match.group(1).strip() if version_match else ""
@@ -2880,11 +2899,22 @@ def parse_review_worklist(text: str) -> Tuple[List["ReviewRecord"], str, str]:
             else unescape_worklist_cell(cells[WORKLIST_COLUMNS.index("rederivation_citation")])
         )
 
-        # <rederivation_contract> SC4 gate: reading the display-only tier
-        # cell here is safe -- it decides whether a business rule applies,
-        # it is never trusted for row identity (P-04 stays about row_id).
+        # Plan 05-06 (CR-02): read the tier cell once, for every row --
+        # carried through to the writer on worklist_tier regardless of kind
+        # or verdict, so the write-time cross-check below has a value to
+        # compare even for rows this parse-time branch never inspects.
+        tier_cell = cells[WORKLIST_COLUMNS.index("tier")].strip()
+
+        # <rederivation_contract> SC4 branch: a parse-time FAST FAIL only,
+        # keyed on the worklist's own display cell. This is a convenience
+        # check that catches an honest reviewer's omission immediately --
+        # it is NOT the binding guarantee, and it can be bypassed by
+        # editing this one cell (CR-02, 05-VERIFICATION.md). The
+        # authoritative gate is in write_reviewed_correspondences(), which
+        # reads the target artifact's own recorded lex:confidenceTier via
+        # ReviewRecord.worklist_tier's cross-check instead of trusting this
+        # cell alone.
         if kind == "correspondence" and verdict == "accept":
-            tier_cell = cells[WORKLIST_COLUMNS.index("tier")].strip()
             if tier_cell == "high" and (
                 re_derived_cell != "Y" or rederivation_citation_cell in ("", WORKLIST_EMPTY_CELL)
             ):
@@ -2908,6 +2938,7 @@ def parse_review_worklist(text: str) -> Tuple[List["ReviewRecord"], str, str]:
                 re_derived=re_derived,
                 rederivation_citation=rederivation_citation,
                 gap_reason=gap_reason_value,
+                worklist_tier=tier_cell,
             )
         except ValueError as exc:
             defects.append(f"row {row_id!r} (worklist line {line_no + 1}): {exc}")
@@ -3121,6 +3152,38 @@ def _read_block_evidence_quote(lines: List[str], header_idx: int, terminator_idx
     return None
 
 
+def _read_block_confidence_tier(lines: List[str], header_idx: int, terminator_idx: int) -> Optional[str]:
+    """Plan 05-06 (CR-02 gap closure): reads the lex:confidenceTier literal's
+    text out of an already-located <<...>> annotation block -- the SC4 gate's
+    ONLY sanctioned source of authority, mirroring _locate_annotation_block()/
+    write_reviewed_correspondences()'s existing pattern for
+    _read_block_evidence_quote(). Walks the block via _iter_block_statements()
+    (CR-01) so a multi-line lex:evidenceQuote elsewhere in the block cannot
+    truncate the walk before lex:confidenceTier is reached.
+
+    Unlike _read_block_evidence_quote(), this does NOT round-trip the value
+    through a Graph().parse() probe: a tier is always one of a closed
+    three-value vocabulary (CONFIDENCE_TIERS), written by
+    RdfLiteral(c.tier).n3() from a value ConfidenceBreakdown.__post_init__
+    already validated, so a plain quote strip is sufficient and a parse
+    round trip would add a failure mode with no benefit an evidence quote
+    (arbitrary free text, arbitrary escapes) does not share.
+
+    Returns None when lex:confidenceTier never appears in the block --
+    _annotation_fields() emits it unconditionally for every correspondence
+    block, so absence means a hand-edited or corrupted artifact, which is
+    exactly why the caller must fail closed rather than treat it as
+    not-high."""
+    for pred, value_text in _iter_block_statements(lines, header_idx, terminator_idx):
+        if pred != "lex:confidenceTier":
+            continue
+        text = value_text.strip()
+        if text.startswith('"') and text.endswith('"') and len(text) >= 2:
+            return text[1:-1]
+        return text or None
+    return None
+
+
 def apply_review_to_correspondences(existing_text: str, records: List["ReviewRecord"]) -> str:
     """<splice_contract>/<reviewed_gap_contract>: a text splice over
     existing_text.splitlines(), never a Graph().parse() round trip (rdflib
@@ -3275,6 +3338,20 @@ def write_reviewed_correspondences(
     artifact's own canonical quote, never against the worklist's
     display-only evidence_quote column (Plan 05-01 P-04).
 
+    Plan 05-06 (CR-02 gap closure) <gate_contract> Check B -- the
+    AUTHORITATIVE SC4 gate, joining the same collect-then-raise pass. Every
+    kind == "correspondence" record with verdict == "accept" is checked,
+    via _read_block_confidence_tier(), against its own target block's
+    recorded lex:confidenceTier (never the worklist's tier column, which
+    parse_review_worklist()'s own SC4 branch already showed can be
+    tampered): a block whose real tier is "high" and
+    whose record lacks a valid re-derivation is refused; a block with no
+    readable lex:confidenceTier at all is refused rather than treated as
+    not-high (fail closed); and a worklist tier cell that disagrees with
+    the block's real tier is refused as its own tamper-evidence defect,
+    independent of the other two. Tier authority is always the artifact,
+    never a worklist column.
+
     Returns the number of correspondence-kind records applied."""
     resolved_path = Path(correspondences_path).resolve()
     resolved_lexicon_dir = Path(lexicon_dir).resolve()
@@ -3307,15 +3384,19 @@ def write_reviewed_correspondences(
                 "does not match the target artifact -- " + "; ".join(mismatches)
             )
 
-    # SC4 distinctness check (<rederivation_contract>): a citation that only
-    # restates the matcher's own recorded evidence quote proves nothing was
-    # independently re-derived. A record whose block header can't be
-    # located is skipped here -- apply_review_to_correspondences() below
-    # reports that as its own MalformedWorklistError.
+    # Combined collect-then-raise pass over every correspondence-kind record
+    # -- the citation-distinctness check (<rederivation_contract>, Plan
+    # 05-02) and the authoritative SC4 tier gate (<gate_contract> Check B,
+    # Plan 05-06) share one loop and one defect list, so exactly one
+    # MalformedWorklistError is ever raised from this function: nothing is
+    # written when ANY defect is found, and a reviewer sees every offending
+    # row together, in one message, in sorted order. A record whose block
+    # header can't be located is skipped here -- apply_review_to_
+    # correspondences() below reports that as its own MalformedWorklistError.
     probe_lines = existing_text.splitlines()
-    distinctness_defects: List[str] = []
+    defects: List[Tuple[str, str]] = []
     for r in records:
-        if r.kind != "correspondence" or not r.rederivation_citation or not r.rederivation_citation.strip():
+        if r.kind != "correspondence":
             continue
         try:
             header_idx, terminator_idx = _locate_annotation_block(
@@ -3323,16 +3404,43 @@ def write_reviewed_correspondences(
             )
         except MalformedWorklistError:
             continue
-        canonical_quote = _read_block_evidence_quote(probe_lines, header_idx, terminator_idx)
-        if canonical_quote is not None and r.rederivation_citation.strip() == canonical_quote.strip():
-            distinctness_defects.append(r.row_id)
-    if distinctness_defects:
+
+        # <gate_contract> Check B: tier authority is this block's own
+        # recorded lex:confidenceTier, never the worklist's tier column --
+        # that column can be tampered without disturbing parse_review_
+        # worklist()'s own (bypassable) parse-time check (CR-02).
+        if r.verdict == "accept":
+            block_tier = _read_block_confidence_tier(probe_lines, header_idx, terminator_idx)
+            if block_tier == "high" and (
+                r.re_derived is not True or not (r.rederivation_citation or "").strip()
+            ):
+                defects.append((
+                    r.row_id,
+                    f"row {r.row_id!r}: SC4 re-derivation refusal -- the target "
+                    'artifact\'s own lex:confidenceTier is "high", which requires '
+                    "re_derived=True and a non-empty rederivation_citation "
+                    "independently drawn from source YANG text (SC4, D-13/D-14)",
+                ))
+
+        # SC4 distinctness check (<rederivation_contract>): a citation that
+        # only restates the matcher's own recorded evidence quote proves
+        # nothing was independently re-derived.
+        if r.rederivation_citation and r.rederivation_citation.strip():
+            canonical_quote = _read_block_evidence_quote(probe_lines, header_idx, terminator_idx)
+            if canonical_quote is not None and r.rederivation_citation.strip() == canonical_quote.strip():
+                defects.append((
+                    r.row_id,
+                    f"row {r.row_id!r}: rederivation_citation is byte-identical "
+                    "to the matcher's own recorded lex:evidenceQuote -- a "
+                    "citation that only restates the matcher's own evidence "
+                    "proves nothing was independently re-derived (SC4)",
+                ))
+
+    if defects:
+        ordered = sorted(defects, key=lambda d: d[0])
         raise MalformedWorklistError(
-            "write_reviewed_correspondences: rederivation_citation is "
-            "byte-identical to the matcher's own recorded lex:evidenceQuote "
-            "for row(s): " + ", ".join(sorted(distinctness_defects)) + " -- "
-            "a citation that only restates the matcher's own evidence "
-            "proves nothing was independently re-derived (SC4)"
+            f"write_reviewed_correspondences: {len(ordered)} defect(s), "
+            "nothing was applied:\n" + "\n".join(f"- {msg}" for _, msg in ordered)
         )
 
     reviewed_text = apply_review_to_correspondences(existing_text, records)
