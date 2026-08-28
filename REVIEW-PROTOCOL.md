@@ -26,12 +26,16 @@ Reviewing is two passes over two commands, never a live interactive tool
 2. **Edit the worklist directly.** Open it in any Markdown-table-capable
    editor. Only four columns are yours to fill: `verdict`, `reason`,
    `re_derived`, `rederivation_citation`. Every other column is
-   generator-written and display-only — read it, but do not edit it. An
-   edit to a display-only column has no effect: the parser below never
-   reads it for anything except display; it recovers a row's real
-   identity (which TAPI entry, which IETF entry, which predicate) from the
-   `row_id` column's own encoding, never from the columns a human might
-   retype.
+   generator-written and display-only — read it, but do not edit it. Row
+   identity (which TAPI entry, which IETF entry, which predicate) is always
+   recovered from the `row_id` column's own encoding, never from a
+   display column a human might retype — that part is true and does not
+   change. But a generator-written column must not be edited, and editing
+   one is *detected*, not ignored: the `tier` column specifically is
+   cross-checked at `--apply-review` time against the target artifact's
+   own recorded `lex:confidenceTier`. A disagreement between what this
+   column says and what the artifact actually records refuses the whole
+   pass and names the offending row — it does not silently pass through.
 
 3. **Read the completed worklist back.**
    ```bash
@@ -52,9 +56,9 @@ generates them:
 |---|---|---|
 | `row_id` | generator | The row's real identity, colon-encoded. Never hand-edit — the parser trusts only this column for identity, never the display columns below it. |
 | `kind` | generator | `correspondence` or `gap`. |
-| `tier` | generator | `high` / `medium` / `low` for a correspondence row; `-` for a gap row. |
+| `tier` | generator | `high` / `medium` / `low` for a correspondence row; `-` for a gap row. Cross-checked against the target artifact's own `lex:confidenceTier` when the worklist is applied — the high-tier acceptance gate is decided by the artifact's recorded value, never by this cell, and a disagreement between the two refuses the whole pass. |
 | `escalated` | generator | `Y` if the validator disagreed with the confirmed verdict, `N` otherwise; `-` for a gap row. |
-| `gap_reason` | generator | One of the four gap-reason codes for a gap row; `-` for a correspondence row. |
+| `gap_reason` | generator, reviewer-consumed | One of the four gap-reason codes for a gap row; `-` for a correspondence row. Generator-written, but not display-only in the way most other columns are: `--apply-review` reads it back and writes it straight into the persisted `lex:gapReason` value, so an edit here does change the recorded reason code. Unlike `tier`, this column cannot be cross-checked against the artifact — a gap has no representation in `correspondences.ttl` until this same pass writes its `lex:ReviewedGap` resource, so there is nothing to compare against yet. |
 | `evidence_strength` | generator | 0-3, how many corroborating signals support the row. |
 | `tapi_lex_id` | generator | The TAPI-side lexicon entry id. |
 | `tapi_label` | generator | The TAPI-side `skos:prefLabel`. |
@@ -180,9 +184,17 @@ check fails:
    worklist is refused.
 3. **The column count** — every data row must have exactly sixteen cells;
    a row with the wrong count is refused.
-4. **The high-tier acceptance gate** — accepting a `high`-tier
-   correspondence row without `re_derived = Y` *and* a non-empty
-   `rederivation_citation` is refused (SC4).
+4. **The high-tier acceptance gate, in two places with different
+   authority.** A parse-time check reads this worklist's own `tier` cell
+   as a fast first-line refusal — it catches an honest reviewer's omission
+   immediately, before the target artifact is even opened, but it is a
+   convenience, not the guarantee: it can be bypassed by editing the cell.
+   The binding refusal happens at `--apply-review` (write) time and is
+   keyed on the *target artifact's own recorded* `lex:confidenceTier`,
+   never on this worklist's `tier` cell — accepting a row whose artifact
+   tier is genuinely `high` without `re_derived = Y` *and* a non-empty
+   `rederivation_citation` is refused regardless of what the cell says
+   (SC4).
 5. **The citation-distinctness check** — a `rederivation_citation`
    byte-identical (after stripping) to the matcher's own recorded
    `lex:evidenceQuote` is refused.
@@ -201,6 +213,17 @@ check fails:
 9. **A row naming a correspondence absent from the target file** — a
    `row_id` the target `correspondences.ttl` has no matching block for is
    refused, not silently skipped.
+10. **The tier cross-check** — a correspondence row whose `tier` cell
+    disagrees with the target block's own recorded `lex:confidenceTier`
+    refuses the whole pass, naming the row and both values (the worklist's
+    and the artifact's). This is independent of item 4: a row can fail
+    both at once (a `high` block whose cell was tampered to `medium` and
+    accepted with no citation), exactly one, or neither.
+11. **An unreadable tier** — an accept-verdict correspondence row whose
+    target block carries no `lex:confidenceTier` statement at all refuses
+    the pass, rather than proceeding as if the row were not high-tier. A
+    generator-produced artifact always carries this predicate; its absence
+    means the artifact was hand-edited or corrupted.
 
 ## What no tool can check
 
@@ -213,7 +236,13 @@ own guarantee. The mechanical gate makes an absent or lazy citation
 impossible to hide; it cannot make a fabricated one impossible to write.
 This is precisely where the tool's guarantee ends and your judgement
 begins — do not mistake passing the mechanical gate for having verified
-the correspondence.
+the correspondence. The mechanical gate itself is now decided by the
+target artifact's own recorded value, not by anything typed into this
+worklist — closing the gap between what earlier revisions of this document
+promised and what the tool actually did. That correction narrows, but does
+not remove, the one thing above: the tool can now guarantee that a
+high-tier acceptance was never rubber-stamped past an unread tier column,
+but it still cannot guarantee that your citation is true.
 
 ## When the application pass refuses
 
