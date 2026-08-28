@@ -3408,19 +3408,53 @@ def write_reviewed_correspondences(
         # <gate_contract> Check B: tier authority is this block's own
         # recorded lex:confidenceTier, never the worklist's tier column --
         # that column can be tampered without disturbing parse_review_
-        # worklist()'s own (bypassable) parse-time check (CR-02).
+        # worklist()'s own (bypassable) parse-time check (CR-02). Scoped to
+        # verdict == "accept" (a reject/uncertain verdict is never gated on
+        # tier at all -- <gate_contract>).
         if r.verdict == "accept":
             block_tier = _read_block_confidence_tier(probe_lines, header_idx, terminator_idx)
-            if block_tier == "high" and (
-                r.re_derived is not True or not (r.rederivation_citation or "").strip()
-            ):
+            if block_tier is None:
+                # Plan 05-06: _annotation_fields() emits lex:confidenceTier
+                # unconditionally for every correspondence block, so its
+                # absence here means a hand-edited or corrupted artifact.
+                # Fail closed -- an unreadable tier must never be treated
+                # as "not high" (unlike _read_block_evidence_quote()'s
+                # legitimate degrade-to-skip, which only disables an
+                # advisory distinctness comparison, not a safety gate).
                 defects.append((
                     r.row_id,
-                    f"row {r.row_id!r}: SC4 re-derivation refusal -- the target "
-                    'artifact\'s own lex:confidenceTier is "high", which requires '
-                    "re_derived=True and a non-empty rederivation_citation "
-                    "independently drawn from source YANG text (SC4, D-13/D-14)",
+                    f"row {r.row_id!r}: tier unreadable -- the target artifact's "
+                    "block carries no lex:confidenceTier statement at all, so "
+                    "the SC4 gate cannot be evaluated; the write is refused "
+                    "rather than treating an unreadable tier as not-high",
                 ))
+            else:
+                if block_tier == "high" and (
+                    r.re_derived is not True or not (r.rederivation_citation or "").strip()
+                ):
+                    defects.append((
+                        r.row_id,
+                        f"row {r.row_id!r}: SC4 re-derivation refusal -- the target "
+                        'artifact\'s own lex:confidenceTier is "high", which requires '
+                        "re_derived=True and a non-empty rederivation_citation "
+                        "independently drawn from source YANG text (SC4, D-13/D-14)",
+                    ))
+                # <gate_contract>: tier mismatch is independent of the SC4
+                # refusal above -- a row can produce both (a high block
+                # tampered to medium, accepted with no citation), exactly
+                # one, or neither. Comparison is strip()-then-== with no
+                # case normalization of any kind -- a hand-typed 'High'
+                # against a recorded 'high' is a mismatch, not a match.
+                if r.worklist_tier is not None and r.worklist_tier.strip() != block_tier:
+                    defects.append((
+                        r.row_id,
+                        f"row {r.row_id!r}: tier mismatch -- the worklist's own "
+                        f"tier cell ({r.worklist_tier.strip()!r}) disagrees with "
+                        f"the target artifact's recorded lex:confidenceTier "
+                        f"({block_tier!r}); a stale or tampered worklist can "
+                        "never be silently applied to an artifact it disagrees "
+                        "with",
+                    ))
 
         # SC4 distinctness check (<rederivation_contract>): a citation that
         # only restates the matcher's own recorded evidence quote proves
